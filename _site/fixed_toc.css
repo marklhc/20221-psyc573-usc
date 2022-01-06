@@ -1,0 +1,22 @@
+html {
+  scroll-behavior: auto;
+}
+d-article {
+    contain: none;
+}
+
+/* the value in left: will allow you to change the left edge gap */
+/* try using the value I have provided and check if the text goes beyond */
+/* the edge of the screen when you hover over using the mouse pointer */
+/* otherwise modify the values till you get a desirable result */
+
+@media screen and (min-width: 1000px) {
+  #TOC {
+    position: fixed;
+    z-index: 50;
+    left: 1.5em; /* changes the left edge gap */
+    top: 6em; /* changes the top edge gap */
+    max-width: 14%;
+    overflow: auto;
+  }
+}

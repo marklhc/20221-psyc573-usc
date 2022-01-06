@@ -1,0 +1,350 @@
+---
+title: "R Basics"
+date: December 18, 2021
+description: |
+  Review of basic syntax in R
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = "#>", collapse = TRUE)
+```
+
+## Load Packages
+
+```{r load-pkg, message = FALSE}
+library(tidyverse)
+theme_set(theme_classic() +
+    theme(panel.grid.major.y = element_line(color = "grey92")))
+```
+
+## Create an Object and Get Object Information
+
+```{r assign}
+# Create an object named `x`, using the assignment operator `<-`
+x <- c(1, 2)
+# Generally, nothing returns after an assignment. Type `x` to print the object
+x
+# Check the type
+typeof(x)
+# Check the length
+length(x)
+# A quick look of the structure of an object
+str(x)
+```
+
+Another example
+
+```{r assign2}
+y <- as.character(c(seq(1, to = 10, by = 0.5), 99, 99))
+typeof(y)
+str(y)
+```
+
+To find out what the `seq()` function does, use
+
+```{r help}
+?seq
+```
+
+## Piping
+
+A pipe operator is an alternative way to do multiple operations on an object. For example, the following code (a) transform `y` to numbers, (b) recode the value 99 to missing, and (c) obtain the mean. The traditional way to do it in R is through nested parentheses:
+
+```{r nested-parentheses}
+# 3. Get the mean
+mean(
+    # 2. Recode 99 to missing
+    na_if(
+        # 1. transform to numbers
+        as.numeric(y), 99
+    ),
+    na.rm = TRUE
+)
+```
+
+What's inconvenient is that the last operation needs to be put first. Also, it's hard to keep track of the parentheses. Some users, including myself, prefer the alternative way of doing the same as the above code:
+
+```{r pipe}
+y %>%
+    # 1. transform to numbers
+    as.numeric() %>%
+    # 2. Recode 99 to missing
+    na_if(99) %>%
+    # 3. Get the mean
+    mean(na.rm = TRUE)
+```
+
+The pipe operator works by taking the object before `%>%` as the first argument for the function after `%>%`. So `y %>% as.numeric()` is the same as `as.numeric(y)`, and `y2 %>% na_if(99)` is the same as `na_if(y2, 99)`. 
+
+<aside>
+Note: The `%>%` operator requires loading the `tidyverse` package (specifically `magrittr` package). Since R 4.1.0, one can use `|>` for piping without loading any packages. While in the future `|>` is probably the preferred way, for now we'll stick to `%>%` to make things compatible for older versions of R.
+</aside>
+
+## Vector, Matrix, Array, List, and Data Frames
+
+```{r object-types-vector}
+# Vector
+(vector_a <- 1:10)
+typeof(vector_a)
+is.vector(vector_a)  # check whether it is a vector
+vector_a[2:3]  # select the second and the third elements
+(vector_b <- c("classical", "frequentisti", "Bayesian"))
+typeof(vector_b)  # character vector
+logical_b <- vector_b == "Bayesian"
+typeof(logical_b)  # logical vector
+```
+
+```{r object-types-matrix}
+# Matrix
+matrix_c <- matrix(1:10, nrow = 5, ncol = 2)
+rownames(matrix_c) <- paste0("row", 1:5)
+colnames(matrix_c) <- c("var1", "var2")
+matrix_c
+typeof(matrix_c)
+class(matrix_c)
+str(matrix_c)
+is.vector(matrix_c)  # check whether it is a vector
+is.matrix(matrix_c)  # check whether it is a matrix
+matrix_c[c("row1", "row5"), ]  # select rows 1 and 5
+matrix_c[, 1]  # select first column (converted to a vector)
+```
+
+```{r object-types-array}
+# Array: An array can have one, two, or more dimensions. 
+# A matrix is also an array.
+array_d <- array(rnorm(8), dim = c(2, 2, 2))
+array_d
+str(array_d)
+typeof(array_d)  # numeric type
+class(array_d)
+is.matrix(array_d)
+is.array(array_d)
+array_d[1, 1,]  # use 3 indices for a 3-D array
+```
+
+```{r object-types-list}
+# List
+# An array is a vector where each component can have a different type
+list_e <- list("abc", 5, 2.57, TRUE)
+typeof(list_e)
+class(list_e)  # `list` for both type of class
+str(list_e)
+list_e[1]  # extract first element, and put it in a list
+list_e[[1]]  # extract first element
+list_f <- list(name = "abc", age = 5)  # named list
+# Can also extract element by name (as opposed to by position)
+list_f$name
+is.vector(list_f)  # a one-dimension list is a special type of vector
+```
+
+```{r object-types-data-frame}
+# Data Frame
+# A data frame is a special type of list with two dimensions.
+# It is a list of multiple column vectors
+(dataframe_c <- as.data.frame(matrix_c))
+typeof(dataframe_c)  # type is list
+class(dataframe_c)  # data.frame
+dataframe_c[c(1, 2),]  # subset using matrix method
+dataframe_c$var1  # extract columns using list method
+dataframe_c[[1]]  # same as above
+# select first column, and put it as a data.frame(list)
+dataframe_c[1]
+```
+
+## Plotting
+
+The popular `ggplot2` package uses the "grammar of graphics" approach to plotting. It is an elegant and comprehensive system for graphics, but requires mastering some vocabularies. As a quick start, each plot requires specifying
+
+- Some layer(s) of **geometric** elements (e.g., points, lines, boxplots, etc)
+- Mapping of some data/variables to some **aesthetic** attributes (e.g., axis, color, point shape)
+
+To learn more, please take a look on the cheatsheet: https://www.rstudio.com/resources/cheatsheets/
+
+For example, consider the `airquality` data set:
+
+```{r mtcars}
+head(airquality)
+```
+
+One can show the distribution of `Ozone`. On a 2-D Cartesian coordinate system, if we want to show the data in points, each point needs the x- and the y-coordinates. Therefore, the following gives an error as it only maps `Ozone` to the x-axis:
+
+```{r plot-error, error = TRUE}
+ggplot(data = airquality) +
+    # Add a layer of points
+    geom_point(aes(x = Ozone))
+```
+
+While not very interesting, we can instead specify every point to have a y-coordinate of 0:
+
+```{r plot-y-eq-1}
+ggplot(data = airquality) +
+    # Add a layer of points
+    geom_point(aes(x = Ozone, y = 0))
+```
+
+Some geometric objects (`geom`) assign the y-coordinate automatically. For example, `geom_histogram` uses bars, with the x-coordinate based on the variable, and the y-coordinate based on the counts of each bin
+
+```{r plot-hist}
+ggplot(data = airquality) +
+    # Add a layer of a histogram (a set of bars)
+    geom_histogram(aes(x = Ozone))
+```
+
+### Scatter plot
+
+A scatter plot maps the x- and the y-axes to two variables
+
+```{r plot-scatter}
+ggplot(data = airquality) +
+    # Add a layer of a points
+    geom_point(aes(x = Wind, y = Ozone),
+               # alpha = 0.3 makes points transparent
+               alpha = 0.5)
+```
+
+The x- and y-coordinates are not the only attributes for the `points` geometric object. For example, we can map the sizes of the points to another variable:
+
+```{r plot-scatter-2}
+ggplot(data = airquality) +
+    # Add a layer of a points
+    geom_point(aes(x = Wind, y = Ozone, size = Temp),
+               alpha = 0.3)
+```
+
+### Changing labels
+
+To change the labels of axis and legend, use `labs`:
+
+```{r plot-scatter-2-labs}
+ggplot(data = airquality) +
+    # Add a layer of a points
+    geom_point(aes(x = Wind, y = Ozone, size = Temp),
+               alpha = 0.3) +
+    labs(x = "Wind (mph)", y = "Ozone (ppb)", size = "Temperature (degree F)")
+```
+
+### Different `geom`
+
+We can use other geometric objects. For example, `geom_smooth` adds a smoothing trend
+
+```{r plot-line}
+# By putting `aes()` in the first line, all subsequent layers use the same
+# mapping
+ggplot(aes(x = Wind, y = Ozone), data = airquality) +
+    # Add a layer of points
+    geom_point() +
+    # Add a layer of lines
+    geom_smooth()
+```
+
+### Facet
+
+In many situations, we want to split the data into multiple plots through `facet`. 
+
+```{r plot-facet}
+ggplot(aes(x = Wind, y = Ozone), data = airquality) +
+    # Add a layer of a points
+    geom_point(alpha = 0.3) +
+    # Split by `Month`
+    facet_wrap(~ Month)
+```
+
+## `for` Loop
+
+Using a loop allows one to perform some actions multiple times. See https://r4ds.had.co.nz/iteration.html#introduction-14
+
+The following example shows an example of drawing a random variable from a normal distribution with *SD* = 1, and with the mean equals to the previously generated number.
+
+```{r simulate}
+# Simulate data
+random_numbers <- rep(NA, 100)  # initialize an empty vector
+random_numbers[1] <- 10  # set the first value to 10
+# i = 2 in the first iteration, then 3, then 4, until i = 100
+for (i in 2:100) {
+    # `rnorm(1)` simulate one value from a normal distribution;
+    # `mean = random_numbers[i - 1]` says the mean of the distribution is
+    # from the previously simulated value.
+    random_numbers[i] <- rnorm(1, mean = random_numbers[i - 1])
+}
+# Show the simulated values using ggplot
+ggplot(
+    tibble(iter = 1:100, random_numbers),
+    aes(x = iter, y = random_numbers)
+) +
+    geom_line() +
+    geom_point()
+```
+
+## Custom Function
+
+A function in R is a named object that takes in some inputs, performs some operations, and gives some outputs. 
+
+### Example 1: $a^2 + b$
+
+Here is an example of how you can define your own function, from p. 64 of the text
+
+```{r asqplusb}
+asqplusb <- function(a, b = 1) {
+    c <- a ^ 2 + b  # c = a^2 + b
+    c  # the last line is usually the output
+}
+```
+
+In the above function `asqplusb()`, it takes two inputs: `a` and `b`. The name of these two are called *arguments*. So we say `a` and `b` are the arguments of `asqplusb()`. We can invoke the function like
+
+```{r invoke-asqplusb}
+asqplusb(2, 3)  # a = 2, b = 3, 2^2 + 3 = 7
+# This is equivalent to
+asqplusb(a = 2, b = 3)
+# But not the same as
+asqplusb(b = 2, a = 3)
+```
+
+Note that 2 and 3 are the *values* of the arguments, not the arguments themselves.
+
+Also, notice when we define the function, we say the first argument is `a`, and the second argument is `b = 1`. This means the default value of `b` is 1. So when one call the function without specifying `b`, like
+
+```{r asqplusb-default}
+asqplusb(4)  # a = 4, b = 1, 4^2 + 1 = 17
+```
+
+It is equivalent to
+
+```{r asqplusb-default-2}
+asqplusb(4, b = 1)  # a = 4, b = 1, 4^2 + 1 = 17
+```
+
+### When to use a function?
+
+Writing one's own function is very common in R programming, especially with Bayesian analysis, because a lot of times one needs to perform some procedures more than once, and it is tedious to write similar code every time. A rule of thumb is that if you have a few lines of code that you find yourself typing more than two times, you should write a function for it. As an example, we can wrap the simulation code above into a function that you can try out with different number of iterations:
+
+```{r simulate-func}
+my_simulate <- function(nsim = 100) {
+    # Simulate data
+    random_numbers <- rep(NA, nsim) # initialize an empty vector
+    random_numbers[1] <- 10 # set the first value to 10
+    # i = 2 in the first iteration, then 3, then 4, until i = 100
+    for (i in 2:nsim) {
+        # `rnorm(1)` simulate one value from a normal distribution;
+        # `mean = random_numbers[i - 1]` says the mean of the distribution is
+        # from the previously simulated value.
+        random_numbers[i] <- rnorm(1, mean = random_numbers[i - 1])
+    }
+    # Show the simulated values using ggplot
+    ggplot(
+        tibble(iter = 1:nsim, random_numbers),
+        aes(x = iter, y = random_numbers)
+    ) +
+        geom_line() +
+        geom_point()
+}
+```
+
+Try to call the above function.
+
+<!-- The following chunk is only used in the website -->
+
+```{r, child = "distill-hack.RMarkdown", eval = file.exists("distill-hack.RMarkdown")}
+
+```
+

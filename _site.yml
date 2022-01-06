@@ -1,0 +1,21 @@
+name: "20221-psyc573-usc"
+title: "PSYC 573 Multilevel Modeling (2022 Spring)"
+description: |
+  PSYC 573 Multilevel Modeling (2022 Spring)
+output_dir: "_site"
+theme: theme.css
+exclude: ["distill-hack.RMarkdown"]
+navbar:
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "Syllabus"
+      href: syllabus.html
+    - text: "Notes"
+      menu:
+        - text: "R Basics"
+          href: r_basics.html
+output:
+  distill::distill_article:
+    toc: true
+    css: fixed_toc.css

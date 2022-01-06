@@ -1,0 +1,356 @@
+---
+title: PSYC 573 Bayesian Data Analysis
+description: |
+  Course syllabus (PSYC 573, 2022 Spring)
+output: 
+  distill::distill_article:
+    toc: true
+    css: serif.css
+    fig_caption: false
+  # html_document:
+  #   toc: false
+  #   fig_caption: false
+---
+
+<style> @media print { a[href]::after { content: none !important; } } </style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r usc-logo, echo = FALSE, fig.alt = "Logo of the University of Southern California", out.width = "50%"}
+if (knitr::is_latex_output()) {
+  knitr::include_graphics("primaryshieldwordmark.png")
+} else {
+  knitr::include_graphics(
+    "https://identity.usc.edu/files/2012/01/primaryshieldwordmark.png"
+  )
+}
+```
+
+**Units:** 4  
+**Term--Day--Time:** Spring 2022--Tues & Thurs--10:00-11:50 am
+
+**Location:** WPH 205
+
+**Instructor**: Hok Chio (Mark) Lai  
+**Office Hours:** Tues 12:00--1:00 pm, and by appointment.  
+**Contact Info:** (Email) [hokchiol@usc.edu](mailto:hokchiol@usc.edu), (Slack) https://usc.enterprise.slack.com/.   
+Timeline for replying to emails: within 48 hours.
+
+**IT Help:** ITS, Blackboard  
+**Contact Info:**  
+ITS (Email, Monday — Friday, 8:00 A.M. — 6:00 P.M.) [consult@usc.edu](mailto:consult@usc.edu), 
+(Phone, 24/7/365) 213-740-5555, (Online) [ServiceNow Portal](https://itsusc.service-now.com/)  
+Blackboard (Email, 24/7/365) [blackboard@usc.edu](mailto:blackboard@usc.edu), 
+(Online Help) [Blackboard Help for Students](https://studentblackboardhelp.usc.edu/)
+
+# Course Description
+  
+Bayesian statistics is a coherent framework of doing statistics. It has been one of the biggest ongoing revolutions in quantitative research methods and has been recommended as an alternative to the classical approach of hypothesis testing, as well as a computational device for some problems not easily handled in the classical approach. Students will learn about applications of Bayesian statistical methods specifically on behavioral and social science data and develop skills in conducting Bayesian analysis of real-life data.
+
+The course begins with a brief discussion on the history of the Bayesian method and the Bayesian view of probability and some comments on the philosophical differences between Bayesian and classical statistical analyses. One-parameter models and group comparisons are then discussed, with an emphasis on how Bayesian analysis incorporates information from data to update researchers' beliefs about the world. After an introduction on Markov Chain Monte Carlo Estimation—the engine primarily responsible for the resurrection of Bayesian statistics, the course covers applications of Bayesian statistics in commonly used statistical models, including linear and generalized linear models. It also illustrates the components in the Bayesian workflow, such as the selection of priors, model checking and model comparisons, and missing data handling.
+
+# Learning Objectives
+  
+After the successful completion of this course, students will be able to
+
+1. Describe the foundations of the Bayesian framework of statistics;
+2. Explain to fellow researchers the terminologies in Bayesian analysis, such as prior, posterior, credible intervals, MCMC, etc;
+3. Explain and demonstrate in applications the advantages and disadvantages of the Bayesian approach in comparisons to classical approaches;
+4. Independently perform Bayesian analyses covered in this class using statistical software on real data;
+5. Conduct a research project involving Bayesian analysis and effectively communicate their findings/products in an oral presentation and a written report.
+
+**Prerequisite(s):** None
+
+**Co-Requisite(s):** None
+
+**Concurrent Enrollment:** None
+
+**Recommended Preparation:** PSYC 501: Classic and Modern Statistical Methods I; Experience with R
+
+# Course Notes
+
+Students are expected to finish the reading assignments before class meetings and actively participate in class discussions and activities. A typical class meeting will include lectures, quizzes, software demonstrations, and small-group discussions/activities. Lecture slides/notes will be posted on Blackboard before class meetings, but please note that the lecture slides only serve to guide class discussions and cannot replace the assigned readings. Students are expected to bring laptops to class to follow the software demonstration and work on in-class exercises. 
+
+As announced in the Provost's memo (https://we-are.usc.edu/2021/12/24/12-24-spring-semester-update/), the first week of classes in 2022 Spring will be conducted remotely. In-person instruction will resume starting Week 2. 
+
+# Communication
+
+To promote independence and critical thinking, students are encouraged to work through the following process for obtaining answers to course-related questions before contacting the instructor: 
+
+- consult the course syllabus;
+- consult a classmate or post your questions on Slack;
+- meet with the instructor during office hours or Q&A sessions on Tuesdays;
+- for personal questions, email the instructor at hokchiol@usc.edu
+
+# Technological Proficiency and Hardware/Software Required
+
+- [R](https://cloud.r-project.org/) and [RStudio](https://rstudio.com/products/rstudio/download/) are needed to complete the course assignments. It is highly recommended that students update to the latest versions of both software (R 4.1.0, RStudio 2021.09.0, or above). We will briefly discuss how to set up R and RStudio in Week 1.
+- The textbook and most of the supplemental readings can be accessed through the USC Libraries at https://libraries.usc.edu/
+
+## USC technology rental program
+
+If you need resources to successfully participate in your classes, such as a laptop or internet hotspot, you may be eligible for the university's equipment rental program. To apply, please [submit an application](https://studentbasicneeds.usc.edu/resources/technology-assistance/).
+
+## USC Technology Support Links 
+
+[Zoom information for students](https://keepteaching.usc.edu/students/student-toolkit/classroom/zoom/)
+[Blackboard help for students](https://studentblackboardhelp.usc.edu/)  
+[Slack information for students](https://keepteaching.usc.edu/students/student-toolkit/classroom/slack/)  
+[Software available to USC Campus](https://software.usc.edu/)
+
+# Required Materials
+
+- Kruschke, J. K. (2015). *Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan* (2nd ed.). Academic Press.
+    * Available from USC library (login required): https://www-sciencedirect-com.libproxy2.usc.edu/book/9780124058880/doing-bayesian-data-analysis
+    * Corrigenda: https://docs.google.com/spreadsheets/d/1gWjvDKXfSvEhlrdjevSzf6YqnVcFL3QLPGxybAriIng
+
+# Recommended Materials
+
+E-copies of all below are available at USC Libraries.
+
+- McElreath, R. (2020). *Statistical rethinking: A Bayesian course with examples in R and Stan* (2nd ed.). CRC Press.
+- Gelman, A., Hill, J., & Vehtari, A. (2021). *Regression and Other Stories*. Cambridge University Press. https://doi.org/10.1017/9781139161879 [Very good book on regression]
+- Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D. B. (2014). *Bayesian data analysis* (3rd ed.). CRC Press. [For more technical depth]
+- McGrayne, S. B. (2012). *The theory that would not die: How Bayes' rule cracked the Enigma code, hunted down Russian submarines, and emerged triumphant from two centuries of controversy*. Yale University Press. [A very nice historical account of the Bayes' theorem.]
+
+# Description and Assessment of Assignments{#assignments}
+
+1. In-class exercises (10%). During some of the class sessions, students will participate in quizzes or group exercises. If students miss an exercise for participation credit, they can complete the exercise posted on Blackboard within 24 hours to get credits. 
+2. Homework problems (70%). There will be weekly homework assignments for students to apply the concepts and techniques discussed in class to analytic problems. The assignments typically involve performing data analyses using data sets of your own or provided by the instructor, and interpreting the results with some guided questions. Please submit your work electronically to Blackboard by **Monday 11:59 p.m. Pacific Time** the week after a homework is assigned. See policy on [late work](#late-work).
+3. Final project (20%: 5% prospectus, 15% presentation/final report). You will complete a research project related to Bayesian analysis, typically a report of analyzing real data or a theoretical/methodological analysis about certain aspects of Bayesian data analysis. For empirical analyses, the focuses are (a) formulating and justifying prior distributions from a review of previous literature, (b) obtaining and interpreting posterior distributions, and (c) comprehensive reporting of methods and results. Students can also replicate the analyses of an existing study, as long as the chosen study shared sufficient data and materials and did not use a Bayesian analysis with informative priors. Students interested in project ideas other than an empirical research report (e.g., software package development, systematic review/meta-analysis) are encouraged to discuss their ideas with the instructor. Each student can choose to work on their own or in a group of up to three people.
+
+    There are two grading components for your final project:
+  
+    - Prospectus (5%)  
+    A prospectus about your project should be submitted by **Monday, March 21**. The prospectus should contain a concise description of what you (or your group) plan to do for your project, including a preliminary plan for statistical analysis. The prospectus should be limited to 1 single-spaced page (excluding tables, figures, references, and other supplemental materials).
+
+    - Final Presentation/Report (15%)  
+        If you choose to do a presentation, on **April 26 and 28**, you or your group will give a 15-minute presentation on your project. You will also need to submit your slides to Blackboard for grading **on the day of your presentation**, which should include a link to the reproducible codes for your analyses. A grading rubric on the final presentation will be posted on Blackboard.
+
+        If you choose to do a final report, your report will be due **Tuesday, May 10, at 1:00 p.m. Pacific Time** (the assigned final exam time for the class). There should also be a link to the reproducible codes for your analyses. The final paper should be 6-10 double-spaced pages of text (i.e., excluding title page, references, tables, figures, and appendices).
+
+# Participation
+
+Participation accounts for 10% of the course grade. To earn full credit for participation, students should complete and turn in all in-class exercises. 
+
+# Grading Breakdown
+  
+|        Assignment        | % of Grade |
+| ------------------------ | ---------- |
+| In-class exercises       | 10         |
+| Homework                 | 70         |
+| Prospectus               | 5          |
+| Final Presentation/Paper | 15         |
+| **TOTAL**                | 100        |
+
+# Grading Scale
+  
+Course final grades will be determined using the following scale
+
+  |  
+--|-------
+A | 93-100  
+A-| 89-92  
+B+| 85-88  
+B | 81-84  
+B-| 77-80  
+C+| 73-76  
+C | 70-72  
+C-| Below 70 (failing)
+
+# Assignment Submission
+  
+The assignments should be submitted through Blackboard by Monday at 11:59 p.m. Pacific Time.
+
+# Grading Timeline
+  
+Generally, all graded work will be returned no later than one week from the submission deadline. However, given the high number of students in the class, the instructor may only grade selected questions in each assignment. Solutions will be posted so that students can check their own work. 
+
+# Late work
+  
+Late work will be penalized by a 10% deduction in the assignment grade every 24 hours late unless due to an emergency excused by the instructor. Email the instructor as soon as possible to discuss alternate arrangements due to an emergency.
+
+# Technology in the classroom
+
+## Phones
+
+Your phone should be turned off or in silent mode (not on vibrate), and should not be used in the classroom.
+
+## Tablets and Laptops
+
+During lecture time in the classroom, students can use tablets and laptops only for purposes of viewing course materials and taking notes. Use of tablets and laptops for note taking is strongly discouraged as it may distract both yourself and your peers ([Sana, Weston, & Cepeda, 2013](https://www.sciencedirect.com/science/article/pii/S0360131512002254)). During the in-class exercises, students should use their laptops to complete the assignments.
+
+# Attendance
+  
+Students are expected to attend all Thursday class sessions on time. If they miss a session, they should complete the class exercises and turn in their work within the timeframe specified in [Description and Assessment of Assignments](#assignments).
+
+# Classroom Norms
+
+From USC's [FALL 2021 GUIDE: Return To Campus Protocols](https://we-are.usc.edu/wp-content/uploads/2021/08/2021-Fall-Guide.pdf) document,
+
+> Students, faculty and staff need to be aware of [COVID-19 symptoms](https://studenthealth.usc.edu/files/2020/08/COVID19-symptoms-768x556.jpg), and are required to complete a daily self-screening via [Trojan Check](https://trojancheck.usc.edu/login#/consent) before coming onto campus or leaving their on-campus residence.
+
+> Students, faculty, and staff are required to wear masks indoors, including classrooms, and no food or drink is permitted during class
+
+From USC's [Updated Masking Guidance for Campus Environments](https://coronavirus.usc.edu/2022/01/05/updated-masking-guidance-for-campus-environments/), 
+
+> Individuals on USC campus premises in locations where masking is required are now required to **wear medical grade masks**, which at minimum are surgical masks and may also include higher grade respirator masks (N95, KN95, or KF94).
+
+The following applies to both in-person and online communications (e.g., Slack discussions and email communications)
+
+- Respect each other's views. 
+- In written communication messages, make sure they are something you could say to someone to their face.
+- Recognize and/or remember that we have different backgrounds.
+- Criticize ideas, not individuals or groups.
+- Either support statements with evidence, or speak from personal experience.
+
+# COVID-19 Guidance
+
+Students should consult the latest COVID-19 testing and health protocol requirements for on-campus courses. Continuously updated requirements can be found on the USC COVID-19 resource center website at https://coronavirus.usc.edu/ and https://we-are.usc.edu/.
+
+# Course Evaluation
+
+Student feedback is essential to the instructor and the Department to keep improving this course. Students are encouraged to share their feedback and suggestions in an early-term feedback survey around week 4 to 5, and respond to the standard USC course evaluation survey at the end of the semester.
+
+# (Tentative) Course Schedule: A Weekly Breakdown
+
+```{r course-schedule, eval = FALSE}
+weeks <- c(paste("Week", 1:15), "FINAL")
+start_date <- as.Date("1/10", "%m/%d")
+date1 <- start_date + (seq_len(15) - 1) * 7 + 1
+date2 <- date1 + 2
+dates <- paste(
+  format(date1, format = "%b %d"),
+  "&",
+  ifelse(months(date2) == months(date1),
+    yes = format(date2, format = "%d"),
+    no = format(date2, format = "%b %d")
+  )
+)
+# paste0(weeks, "\n", dates)
+```
+
++----------------+------------------------+----------------------------------+----------------------------------------+
+|                |      Topics/Daily      |             Readings             |               Assignment               |
+|                |       Activities       |                                  |                 Dates                  |
++================+========================+==================================+========================================+
+| Week 1\        | - Overview of          | - Gigerenzer (2004)              | - Exercise: R Markdown                 |
+| Jan 11 & 13    | Bayesian Statistics    | - [Kruschke ch. 2][1]            | - HW 1                                 |
+| (Remote)       | - R programming I      | - Supplemental: [James ch. 1][2] |                                        |
+|                | - R Markdown           | - [Markdown Quick Reference][3]  |                                        |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 2\        | - Probability          | - Kruschke ch. 4                 | - Exercise: Probability                |
+| Jan 18 & 20    | - R programming II     | - Wickham & Grolemund            | - HW 2                                 |
+|                |                        | ch. [7][4], [19][5]              |                                        |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 3\        | - Bayes Theorem        | - Kruschke ch. 5                 | - Exercise: Screening test example     |
+| Jan 25 & 27    |                        |                                  |                                        |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 4\        | - One Parameter Models | - Kruschke ch. 6                 | - Exercise: Graphical check            |
+| Feb 1 & 3      | - Posterior predictive | - [Gabry et al. (2019)][6]       | - HW 3                                 |
+|                | checks                 |                                  |                                        |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 5\        | - MCMC: Metropolis &   | - Kruschke ch. 7                 | - Exercise: Metropolis                 |
+| Feb 8 & 10     | Gibbs                  |                                  | - HW 4                                 |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 6\        | - STAN & HMC           | - Kruschke ch. 14                | - Exercise: Divergent transition       |
+| Feb 15 & 17    |                        | - [MCMC Interactive Gallery][7]  | - HW 5                                 |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 7\        | - Hierarchical models  | - Kruschke ch. 9                 | - Exercise: Identifying data structure |
+| Feb 22 & 24    |                        |                                  | - HW 6                                 |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 8\        | - Group Comparisons    | - Kruschke ch. 12.1, 16          | - Exercise: ROPE                       |
+| Mar 1 & 3      |                        |                                  | - HW 7                                 |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 9\        | - GLM--Overview        | - Kruschke ch. 15                | - Exercise: Comparing GLMs             |
+| Mar 8 & 10     |                        |                                  | - Project prospectus                   |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 10\       |                        |                                  |                                        |
+| Spring Recess  |                        |                                  |                                        |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 11\       | - Linear Regression    | - Kruschke ch. 17, 19            | - Exercise: Dummy coding               |
+| Mar 22 & 24    |                        |                                  | - HW 8                                 |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 12\       | - Multiple Regression  | - Kruschke ch. 18                | - Exercise: Interaction                |
+| Mar 29 & Apr 1 | - Causal Inference I   | - McElreath ch. 6                | - HW 9                                 |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 13\       | - Causal Inference II  | - McElreath ch. 7                | - Exercise: IC vs. BF                  |
+| Apr 5 & 7      | - Model Comparisons    | - Reference on Bayes Factor:     | - HW 10                                |
+|                |                        | Kruschke ch. 10                  |                                        |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 14\       | - Missing Data         | - McElreath ch. 15               | - Exercise: Multiple Imputation        |
+| Apr 12 & 14    |                        |                                  | - HW 11                                |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 15\       | - Extension of linear  | - Kruschke ch. 21--24            | - HW 12                                |
+| Apr 19 & 21    | model                  | (pick topic of interest)         | - Project update                       |
+|                | - Reporting            | - Kruschke ch. 25                |                                        |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| Week 16\       | - Presentation         |                                  |                                        |
+| Apr 26 & 28    |                        |                                  |                                        |
++----------------+------------------------+----------------------------------+----------------------------------------+
+| FINAL          | Final report           |                                  | May 10 1:00 pm PDT                     |
++----------------+------------------------+----------------------------------+----------------------------------------+
+
+[1]: https://drive.google.com/file/d/1tr7XpIVf04S44o5ZploxJcd37Fg1GygV/view
+[2]: https://jim-stone.staff.shef.ac.uk/BookBayes2012/bookbayesch01.pdf
+[3]: https://web.mit.edu/r/current/RStudio/resources/markdown_help.html
+[4]: https://r4ds.had.co.nz/exploratory-data-analysis.html
+[5]: https://r4ds.had.co.nz/functions.html
+[6]: https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssa.12378
+[7]: https://chi-feng.github.io/mcmc-demo/app.html
+
+# Statement on Academic Conduct and Support Systems
+
+## Academic Conduct:
+  
+Plagiarism---presenting someone else's ideas as your own, either verbatim or recast in your own words---is a serious academic offense with serious consequences. Please familiarize yourself with the discussion of plagiarism in *SCampus* in Part B, Section 11, "Behavior Violating University Standards" [policy.usc.edu/scampus-part-b](https://policy.usc.edu/scampus-part-b/). Other forms of academic dishonesty are equally unacceptable. See additional information in SCampus and university policies on scientific misconduct, [policy.usc.edu/scientific-misconduct](https://policy.usc.edu/scientific-misconduct).
+  
+## Support Systems:
+  
+_Counseling and Mental Health - (213) 740-9355 - 24/7 on call_  
+[studenthealth.usc.edu/counseling](https://studenthealth.usc.edu/counseling/)  
+Free and confidential mental health treatment for students, including short-term psychotherapy, group counseling, stress fitness workshops, and crisis intervention.
+
+_National Suicide Prevention Lifeline - 1 (800) 273-8255 - 24/7 on call_  
+[suicidepreventionlifeline.org](https://www.suicidepreventionlifeline.org)  
+Free and confidential emotional support to people in suicidal crisis or emotional distress 24 hours a day, 7 days a week.
+
+_Relationship and Sexual Violence Prevention Services (RSVP) - (213) 740-9355(WELL), press "0" after hours - 24/7 on call_  
+[studenthealth.usc.edu/sexual-assault](https://studenthealth.usc.edu/sexual-assault/)  
+Free and confidential therapy services, workshops, and training for situations related to gender-based harm.
+
+_Office of Equity and Diversity (OED) - (213) 740-5086 | Title IX - (213) 821-8298_  
+[equity.usc.edu](https://equity.usc.edu/), [titleix.usc.edu](https://titleix.usc.edu/)  
+Information about how to get help or help someone affected by harassment or discrimination, rights of protected classes, reporting options, and additional resources for students, faculty, staff, visitors, and applicants.
+
+_Reporting Incidents of Bias or Harassment - (213) 740-5086 or (213) 821-8298_  
+[usc-advocate.symplicity.com/care_report](https://usc-advocate.symplicity.com/care_report/)  
+Avenue to report incidents of bias, hate crimes, and microaggressions to the Office of Equity and Diversity |Title IX for appropriate investigation, supportive measures, and response.
+
+_The Office of Disability Services and Programs - (213) 740-0776_  
+[dsp.usc.edu](https://dsp.usc.edu/)  
+Support and accommodations for students with disabilities. Services include assistance in providing readers/notetakers/interpreters, special accommodations for test taking needs, assistance with architectural barriers, assistive technology, and support for individual needs.
+
+_USC Campus Support and Intervention - (213) 821-4710_  
+[campussupport.usc.edu](https://campussupport.usc.edu/)  
+Assists students and families in resolving complex personal, financial, and academic issues adversely affecting their success as a student.
+
+_Diversity at USC - (213) 740-2101_  
+[diversity.usc.edu](https://diversity.usc.edu/)  
+Information on events, programs and training, the Provost's Diversity and Inclusion Council, Diversity Liaisons for each academic school, chronology, participation, and various resources for students.
+
+_USC Emergency - UPC: (213) 740-4321, HSC: (323) 442-1000 - 24/7 on call_  
+[dps.usc.edu](https://dps.usc.edu/), [emergency.usc.edu](https://emergency.usc.edu/)  
+Emergency assistance and avenue to report a crime. Latest updates regarding safety, including ways in which instruction will be continued if an officially declared emergency makes travel to campus infeasible.
+
+_USC Department of Public Safety - UPC: (213) 740-6000, HSC: (323) 442-1200 - 24/7 on call_  
+[dps.usc.edu](https://dps.usc.edu/)  
+Non-emergency assistance or information. 
+
+## Last updated {.appendix}
+
+```{r, echo = FALSE}
+format(Sys.Date(), "%B %d, %Y")
+```
