@@ -87,25 +87,26 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
   <!--radix_placeholder_meta_tags-->
-  <title>PSYC 573 Multilevel Modeling (2022 Spring): R Basics</title>
+  <title>PSYC 573 Bayesian Data Analysis (2022 Spring): R Basics</title>
 
   <meta property="description" itemprop="description" content="Review of basic syntax in R"/>
 
+  <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"/>
 
   <!--  https://schema.org/Article -->
   <meta property="article:published" itemprop="datePublished" content="2021-12-18"/>
   <meta property="article:created" itemprop="dateCreated" content="2021-12-18"/>
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="PSYC 573 Multilevel Modeling (2022 Spring): R Basics"/>
+  <meta property="og:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): R Basics"/>
   <meta property="og:type" content="article"/>
   <meta property="og:description" content="Review of basic syntax in R"/>
   <meta property="og:locale" content="en_US"/>
-  <meta property="og:site_name" content="PSYC 573 Multilevel Modeling (2022 Spring)"/>
+  <meta property="og:site_name" content="PSYC 573 Bayesian Data Analysis (2022 Spring)"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="PSYC 573 Multilevel Modeling (2022 Spring): R Basics"/>
+  <meta property="twitter:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): R Basics"/>
   <meta property="twitter:description" content="Review of basic syntax in R"/>
 
   <!--/radix_placeholder_meta_tags-->
@@ -2428,7 +2429,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <header class="header header--fixed" role="banner">
 <nav class="distill-site-nav distill-site-header">
 <div class="nav-left">
-<a href="index.html" class="title">PSYC 573 Multilevel Modeling (2022 Spring)</a>
+<a href="index.html" class="title">PSYC 573 Bayesian Data Analysis (2022 Spring)</a>
 </div>
 <div class="nav-right">
 <a href="index.html">Home</a>
@@ -2443,6 +2444,9 @@ Notes
 <a href="r_basics.html">R Basics</a>
 </div>
 </div>
+<a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
+<i class="fab fa-github" aria-hidden="true"></i>
+</a>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
 </div>
 </nav>
@@ -2686,20 +2690,20 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
 </div>
 <pre><code>#&gt; , , 1
 #&gt; 
-#&gt;              [,1]       [,2]
-#&gt; [1,] -0.127125940 -0.5683933
-#&gt; [2,]  0.003396637 -0.6254829
+#&gt;            [,1]      [,2]
+#&gt; [1,] -0.3887852 0.9939798
+#&gt; [2,] -1.5437182 1.1080378
 #&gt; 
 #&gt; , , 2
 #&gt; 
-#&gt;           [,1]       [,2]
-#&gt; [1,]  1.649242  0.6741832
-#&gt; [2,] -1.019481 -0.7365945</code></pre>
+#&gt;            [,1]       [,2]
+#&gt; [1,] -0.6589365 -0.9265619
+#&gt; [2,] -1.1022893  0.6659507</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>array_d</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt;  num [1:2, 1:2, 1:2] -0.1271 0.0034 -0.5684 -0.6255 1.6492 ...</code></pre>
+<pre><code>#&gt;  num [1:2, 1:2, 1:2] -0.389 -1.544 0.994 1.108 -0.659 ...</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/typeof.html'>typeof</a></span><span class='op'>(</span><span class='va'>array_d</span><span class='op'>)</span>  <span class='co'># numeric type</span>
 </code></pre>
@@ -2724,7 +2728,7 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>array_d</span><span class='op'>[</span><span class='fl'>1</span>, <span class='fl'>1</span>,<span class='op'>]</span>  <span class='co'># use 3 indices for a 3-D array</span>
 </code></pre>
 </div>
-<pre><code>#&gt; [1] -0.1271259  1.6492415</code></pre>
+<pre><code>#&gt; [1] -0.3887852 -0.6589365</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2948,7 +2952,8 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
 <p>The following example shows an example of drawing a random variable from a normal distribution with <em>SD</em> = 1, and with the mean equals to the previously generated number.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Simulate data</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2208</span><span class='op'>)</span>  <span class='co'># for reproducibility</span>
+<span class='co'># Simulate data</span>
 <span class='va'>random_numbers</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='fl'>100</span><span class='op'>)</span>  <span class='co'># initialize an empty vector</span>
 <span class='va'>random_numbers</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fl'>10</span>  <span class='co'># set the first value to 10</span>
 <span class='co'># i = 2 in the first iteration, then 3, then 4, until i = 100</span>
@@ -3076,7 +3081,12 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
 <!--radix_placeholder_site_after_body-->
 <!--/radix_placeholder_site_after_body-->
 <!--radix_placeholder_appendices-->
-<div class="appendix-bottom"></div>
+<div class="appendix-bottom">
+<h3 id="updates-and-corrections">Corrections</h3>
+<p>If you see mistakes or want to suggest changes, please <a href="https://github.com/marklhc/20221-psyc573-usc/issues/new">create an issue</a> on the source repository.</p>
+<h3 id="reuse">Reuse</h3>
+<p>Text and figures are licensed under Creative Commons Attribution <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. Source code is available at <a href="https://github.com/marklhc/20221-psyc573-usc">https://github.com/marklhc/20221-psyc573-usc</a>, unless otherwise noted. The figures that have been reused from other sources don't fall under this license and can be recognized by a note in their caption: "Figure from ...".</p>
+</div>
 <!--/radix_placeholder_appendices-->
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">

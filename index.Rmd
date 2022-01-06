@@ -1,7 +1,7 @@
 ---
 title: "PSYC 573 Multilevel Modeling (2022 Spring)"
 description: |
-  Welcome to the website. I hope you enjoy it!
+  Welcome to the website. Let's have a great semester!
 site: distill::distill_website
 ---
 
@@ -12,3 +12,5 @@ knitr::opts_chunk$set(echo = FALSE)
 # https://rstudio.github.io/distill/website.html
 
 ```
+
+This is a course website for PSYC 573 in the 2022 Spring semester. You will find the syllabus, lecture slides, and course notes in the navigation bar in the top right corner. Homework submission will be through [Blackboard](https://blackboard.usc.edu). 

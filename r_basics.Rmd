@@ -256,6 +256,7 @@ Using a loop allows one to perform some actions multiple times. See https://r4ds
 The following example shows an example of drawing a random variable from a normal distribution with *SD* = 1, and with the mean equals to the previously generated number.
 
 ```{r simulate}
+set.seed(2208)  # for reproducibility
 # Simulate data
 random_numbers <- rep(NA, 100)  # initialize an empty vector
 random_numbers[1] <- 10  # set the first value to 10
