@@ -1,0 +1,89 @@
+---
+title: Modules
+description: |
+  Week learning objectives, slides, and task list
+output:
+  distill::distill_article:
+    toc: false
+---
+
+```{r convert-xaringan, include = FALSE}
+# Convert Rmd slides to HTML and PDF
+for (f in dir("slides", pattern = "*.Rmd", full.names = TRUE)) {
+  html_file <- xfun::with_ext(f, "html")
+  pdf_file <- xfun::with_ext(f, "pdf")
+  if (!file.exists(html_file) || file_test("-ot", html_file, f)) {
+    xfun::Rscript_call(rmarkdown::render, args = list(input = f))
+  }
+  if (!file.exists(pdf_file) || file_test("-ot", pdf_file, f)) {
+    pagedown::chrome_print(html_file)
+  }
+}
+```
+
+```{r, include = FALSE}
+library(xaringanExtra, include.only = "embed_xaringan")
+```
+
+```{r panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+::: {.panelset}
+::: {.panel}
+
+# Week 1
+
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Navigate the course website and Blackboard site
+- Identify the Slack channels relevant for the course
+- Describe the historical origin of Bayesian statistics
+- Identify components in research papers involving Bayesian analyses
+- Knit a simple R Markdown file
+
+## Task Lists
+
+1. Review the [syllabus](syllabus.html)
+2. Review the resources (slides and [note][5])
+3. Install/Update R and RStudio on your computer
+4. Attend the Tuesday and Thursday class meetings
+5. Complete the assigned readings
+    * [Gigerenzer (2004)][1]
+    * [Kruschke ch. 2][2]
+    * Supplemental (i.e., optional) reading: [James ch. 1][3]
+    * [Markdown Quick Reference][4]
+6. Introduce yourself on the #introduction Slack channel (as part of HW 1)
+7. Complete Homework 1 (see instruction on Blackboard)
+
+[1]: https://pure.mpg.de/rest/items/item_2101336/component/file_2101335/content
+[2]: https://drive.google.com/file/d/1tr7XpIVf04S44o5ZploxJcd37Fg1GygV/view
+[3]: https://jim-stone.staff.shef.ac.uk/BookBayes2012/bookbayesch01.pdf
+[4]: https://web.mit.edu/r/current/RStudio/resources/markdown_help.html
+[5]: r_basics.html
+
+## Slides
+
+[PDF version](slides/intro.pdf){target="_blank"}
+
+```{r embed-1, echo = FALSE}
+embed_xaringan("slides/intro.html", ratio = "4:3")
+```
+
+:::
+
+::: {.panel}
+
+# Week 2
+
+:::
+
+:::
+
+## Last updated {.appendix}
+
+```{r, echo = FALSE}
+format(Sys.Date(), "%B %d, %Y")
+```

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introduction</title>
+    <meta charset="utf-8" />
+    <meta name="date" content="2022-01-11" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link rel="stylesheet" href="my_style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Introduction
+## PSYC 573
+### University of Southern California
+### January 11, 2022
+
+---
+
+
+class: inverse, mline, center, middle
+
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+--shareagain-twitter: none;
+--shareagain-facebook: none;
+--shareagain-linkedin: none;
+--shareagain-pinterest: none;
+--shareagain-pocket: none;
+--shareagain-reddit: none;
+}</style>
+
+# History of Bayesian Statistics
+
+---
+class: clear
+
+- Video intro: https://www.youtube.com/watch?v=BcvLAw-JRss
+
+&lt;iframe width="480" height="270" src="https://www.youtube.com/embed/BcvLAw-JRss" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
+
+.pull-left[
+
+- A nice popular science book by Sharon Bertsch McGrayne: *The theory that would not die*
+
+]
+
+.pull-right[
+
+
+
+]
+
+---
+
+# Historical Figures
+
+.pull-left[
+
+Thomas Bayes (1701--1762)
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/d/d4/Thomas_Bayes.gif" width="50%" style="display: block; margin: auto;" /&gt;
+
+.font80[
+
+- English Presbyterian minister
+- "An Essay towards solving a Problem in the Doctrine of Chances", edited by Richard Price after Bayes's death
+
+]
+
+]
+
+.pull-right[
+
+Pierre-Simon Laplace (1749--1827)
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/Pierre-Simon_Laplace.jpg" width="40%" style="display: block; margin: auto;" /&gt;
+
+.font80[
+
+- French Mathematician
+- Formalize Bayesian interpretation of probability, and most of the machinery for Bayesian statistics
+
+]
+
+]
+
+???
+
+Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Thomas_Bayes.gif), [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Pierre-Simon_Laplace.jpg)
+
+---
+
+# In the 20th Century
+
+- Bayesian---way to do statistics until early 1920s
+
+- Ronald Fisher and Frequentist scholars took over 
+    * "The theory of inverse probability is founded upon an error, and must be wholly rejected" (Fisher, 1925, p. 10)
+
+.footnote[
+
+[1]: Aldrich, J. (2008). R. A. Fisher on Bayes and Bayes' theorem. *Bayesian Analysis, 3*(1), 161--170.
+
+]
+
+---
+
+# Resurrection
+
+.left-column[
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Alan_Turing_Aged_16.jpg" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+.right-column[
+
+- Alan Turing's algorithms in code breaking in World War II
+
+- *Markov Chain Monte Carlo* (MCMC) algorithm
+    * Bring Bayesian back to the main stream of statistics
+    
+]
+
+???
+
+Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Alan_Turing_Aged_16.jpg)
+
+---
+
+# Why Should You Learn About the Bayesian Way?
+
+- Gigerenzer (2004): It is one tool of your statistical toolbox
+
+--
+
+- Increasingly used as alternative to frequentist statistics
+
+--
+
+- Computationally more stable for complex models
+
+--
+
+- A coherent way of incorporating prior information
+    * Common sense knowledge, previous literature, sequential experiments, etc
+
+---
+
+# Bayesian Idea 1
+
+### Reallocation of credibility across possibilities
+
+Hypothetical example: How effective is a vaccine?
+
+--
+
+Prior (before collecting data)
+
+.pull-left[
+
+&lt;img src="intro_files/figure-html/vaccine-prior-1-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-left[
+
+&lt;img src="intro_files/figure-html/vaccine-prior-2-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Updating Beliefs
+
+After seeing results of a trial
+- 4/5 with the vaccince improved
+- 2/5 without the vaccine improved
+
+--
+
+.pull-left[
+
+&lt;img src="intro_files/figure-html/vaccine-posterior-1-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+&lt;img src="intro_files/figure-html/vaccine-posterior-2-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Possibilities = Parameter Values
+
+- Parameter: Effectiveness of the vaccine
+- Possibilities: Not effective, mildly effective, very effective
+
+&gt; Here the parameter is a discrete variable
+
+--
+
+- Parameter: Risk reduction by taking the vaccine
+- Possibilities: `\((-\infty, \infty)\)` (Any real number)
+
+&gt; Here the parameter is a continuous variable
+
+---
+class: clear
+
+Using Bayesian analysis, one obtains updated/**posterior probability** for every possibility of a parameter, given the **prior** belief and the **data**
+
+&lt;img src="intro_files/figure-html/bayes-three-curves-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Steps of Bayesian Data Analysis
+
+"Turning the Bayesian crank"
+
+1. Identify data
+2. Define a mathematical model with parameters
+3. Specify priors on parameters
+4. Obtain and interpret posterior distributions of the parameters
+5. Posterior predictive check
+
+---
+
+# Example
+
+
+
+Frank et al. (2019, Cognition and Emotion)
+
+- Response time for 2 (Dutch--native vs. English--foreign) `\(\times\)` 2 (lie vs. truth) experimental conditions
+
+&lt;img src="intro_files/figure-html/p_int-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Posterior of Mean RTs by Conditions
+
+L = Lie, T = Truth; D = Dutch, E = English
+
+&lt;img src="intro_files/figure-html/pp_cond-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# From Priors to Posteriors
+
+&lt;img src="intro_files/figure-html/hypothesis-1.png" width="55%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: clear
+
+.pull-left[
+
+### Accepting the Null
+
+]
+
+.pull-right[
+
+&lt;img src="intro_files/figure-html/mcmc_diff-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+### Posterior Predictive Check
+
+&lt;img src="intro_files/figure-html/pp_dens-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Multiple Experiments
+
+
+
+.footnote[
+
+Kay, Nelson, &amp; Hekler (2016, p. 4525, https://dl.acm.org/doi/abs/10.1145/2858036.2858465)
+
+]
+
+---
+class: inverse, mline, center, middle
+
+# Syllabus
+
+---
+class: inverse, mline, center, middle
+
+# Homework 1
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

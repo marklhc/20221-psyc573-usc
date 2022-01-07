@@ -1,0 +1,38 @@
+```{r setup, include=FALSE}
+comma <- function(x, digits. = 2L) format(x, digits = digits., big.mark = ",")
+# chunk options
+knitr::opts_chunk$set(
+    echo = FALSE, message = FALSE,
+    comment = ">#",
+    fig.align = "center", fig.asp = 0.618,
+    out.width = "70%", fig.width = 6,
+    fig.retina = 2
+)
+options(htmltools.dir.version = FALSE)
+
+# Load packages
+# library(xtable)
+library(tidyverse)
+theme_set(theme_classic() +
+    theme(panel.grid.major.y = element_line(color = "grey92")))
+library(gridExtra)
+
+# Global options
+options(digits = 3)
+
+# Set up for references
+# library(RefManageR)
+# BibOptions(check.entries = FALSE,
+#            bib.style = "authoryear",
+#            cite.style = 'authoryear',
+#            style = "markdown",
+#            hyperlink = FALSE,
+#            dashed = FALSE,
+#            max.names = 3L)
+# myBib <- ReadBib("../notes/references.bib", check = FALSE)
+```
+
+```{r share-again, echo = FALSE}
+xaringanExtra::use_share_again()
+xaringanExtra::style_share_again(share_buttons = "none")
+```

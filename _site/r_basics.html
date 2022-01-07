@@ -94,8 +94,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"/>
 
   <!--  https://schema.org/Article -->
-  <meta property="article:published" itemprop="datePublished" content="2021-12-18"/>
-  <meta property="article:created" itemprop="dateCreated" content="2021-12-18"/>
+  <meta property="article:published" itemprop="datePublished" content="2022-01-06"/>
+  <meta property="article:created" itemprop="dateCreated" content="2022-01-06"/>
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
   <meta property="og:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): R Basics"/>
@@ -113,7 +113,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","date","description"]}},"value":[{"type":"character","attributes":{},"value":["R Basics"]},{"type":"character","attributes":{},"value":["December 18, 2021"]},{"type":"character","attributes":{},"value":["Review of basic syntax in R"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","date","description"]}},"value":[{"type":"character","attributes":{},"value":["R Basics"]},{"type":"character","attributes":{},"value":["January 6, 2022"]},{"type":"character","attributes":{},"value":["Review of basic syntax in R"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2211,9 +2211,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   /* inline code bg */
 
-  p code,
-  aside code {
-      background-color: rgba(0, 0, 0, 0.05);
+  d-article p code,
+  d-article aside code {
+      background: rgba(0, 0, 0, 0.05);
   }</style>
   <style type="text/css">
   /* base style */
@@ -2374,7 +2374,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <script src="site_libs/clipboard-2.0.6/clipboard.min.js"></script>
   <link href="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
   <script src="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
-  <script>window.xaringanExtraClipboard(null, {"button":"<i class=\"fa fa-clone fa-2x\" style=\"color: #301e64\"><\/i>","success":"<i class=\"fa fa-check fa-2x\" style=\"color: #90BE6D\"><\/i>","error":"<i class=\"fa fa-times fa-2x\" style=\"color: #F94144\"><\/i>"})</script>
+  <script>window.xaringanExtraClipboard(null, {"button":"<i class=\"fa fa-clone fa-sm\" style=\"color: #301e64\"><\/i>","success":"<i class=\"fa fa-check fa-sm\" style=\"color: #90BE6D\"><\/i>","error":"<i class=\"fa fa-times fa-sm\" style=\"color: #F94144\"><\/i>"})</script>
   <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
   <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
@@ -2421,7 +2421,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"R Basics","description":"Review of basic syntax in R","authors":[],"publishedDate":"2021-12-18T00:00:00.000-08:00"}
+{"title":"R Basics","description":"Review of basic syntax in R","authors":[],"publishedDate":"2022-01-06T00:00:00.000-08:00"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2434,6 +2434,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="nav-right">
 <a href="index.html">Home</a>
 <a href="syllabus.html">Syllabus</a>
+<a href="modules.html">Modules</a>
 <div class="nav-dropdown">
 <button class="nav-dropbtn">
 Notes
@@ -2581,7 +2582,7 @@ Notes
 </div>
 <p>The pipe operator works by taking the object before <code>%&gt;%</code> as the first argument for the function after <code>%&gt;%</code>. So <code>y %&gt;% as.numeric()</code> is the same as <code>as.numeric(y)</code>, and <code>y2 %&gt;% na_if(99)</code> is the same as <code>na_if(y2, 99)</code>.</p>
 <aside>
-Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</code> package (specifically <code>magrittr</code> package). Since R 4.1.0, one can use <code>|&gt;</code> for piping without loading any packages. While in the future <code>|&gt;</code> is probably the preferred way, for now we’ll stick to <code>%&gt;%</code> to make things compatible for older versions of R.
+The <code>%&gt;%</code> operator requires loading the <code>tidyverse</code> package (specifically <code>magrittr</code> package). Since R 4.1.0, one can use <code>|&gt;</code> for piping without loading any packages. While in the future <code>|&gt;</code> is probably the preferred way, for now we’ll stick to <code>%&gt;%</code> to make things compatible for older versions of R.
 </aside>
 <h2 id="vector-matrix-array-list-and-data-frames">Vector, Matrix, Array, List, and Data Frames</h2>
 <div class="layout-chunk" data-layout="l-body">
@@ -2690,20 +2691,20 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
 </div>
 <pre><code>#&gt; , , 1
 #&gt; 
-#&gt;            [,1]      [,2]
-#&gt; [1,] -0.3887852 0.9939798
-#&gt; [2,] -1.5437182 1.1080378
+#&gt;            [,1]     [,2]
+#&gt; [1,]  0.5697523 1.179818
+#&gt; [2,] -0.6374639 1.669194
 #&gt; 
 #&gt; , , 2
 #&gt; 
-#&gt;            [,1]       [,2]
-#&gt; [1,] -0.6589365 -0.9265619
-#&gt; [2,] -1.1022893  0.6659507</code></pre>
+#&gt;            [,1]      [,2]
+#&gt; [1,] -0.1042645 -1.011689
+#&gt; [2,]  0.6262719  1.768244</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>array_d</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt;  num [1:2, 1:2, 1:2] -0.389 -1.544 0.994 1.108 -0.659 ...</code></pre>
+<pre><code>#&gt;  num [1:2, 1:2, 1:2] 0.57 -0.637 1.18 1.669 -0.104 ...</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/typeof.html'>typeof</a></span><span class='op'>(</span><span class='va'>array_d</span><span class='op'>)</span>  <span class='co'># numeric type</span>
 </code></pre>
@@ -2728,7 +2729,7 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>array_d</span><span class='op'>[</span><span class='fl'>1</span>, <span class='fl'>1</span>,<span class='op'>]</span>  <span class='co'># use 3 indices for a 3-D array</span>
 </code></pre>
 </div>
-<pre><code>#&gt; [1] -0.3887852 -0.6589365</code></pre>
+<pre><code>#&gt; [1]  0.5697523 -0.1042645</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2831,12 +2832,14 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
 #&gt; row5    5</code></pre>
 </div>
 <h2 id="plotting">Plotting</h2>
-<p>The popular <code>ggplot2</code> package uses the “grammar of graphics” approach to plotting. It is an elegant and comprehensive system for graphics, but requires mastering some vocabularies. As a quick start, each plot requires specifying</p>
+<p>The popular <code>ggplot2</code> package uses the “grammar of graphics” approach to plotting. It is an elegant and comprehensive system for graphics but requires mastering some vocabulary. As a quick start, each plot requires specifying</p>
 <ul>
 <li>Some layer(s) of <strong>geometric</strong> elements (e.g., points, lines, boxplots, etc)</li>
 <li>Mapping of some data/variables to some <strong>aesthetic</strong> attributes (e.g., axis, color, point shape)</li>
 </ul>
-<p>To learn more, please take a look on the cheatsheet: <a href="https://www.rstudio.com/resources/cheatsheets/" class="uri">https://www.rstudio.com/resources/cheatsheets/</a></p>
+<aside>
+To learn more, please take a look at the cheatsheet: <a href="https://www.rstudio.com/resources/cheatsheets/" class="uri">https://www.rstudio.com/resources/cheatsheets/</a>
+</aside>
 <p>For example, consider the <code>airquality</code> data set:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2860,7 +2863,7 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
 </code></pre>
 </div>
 <pre><code>#&gt; Error: geom_point requires the following missing aesthetics: y</code></pre>
-<p><img src="r_basics_files/figure-html5/plot-error-1.png" width="624" /></p>
+<p><img src="r_basics_files/figure-html5/plot-error-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <p>While not very interesting, we can instead specify every point to have a y-coordinate of 0:</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2870,9 +2873,9 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Ozone</span>, y <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="r_basics_files/figure-html5/plot-y-eq-1-1.png" width="624" /></p>
+<p><img src="r_basics_files/figure-html5/plot-y-eq-1-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>Some geometric objects (<code>geom</code>) assign the y-coordinate automatically. For example, <code>geom_histogram</code> uses bars, with the x-coordinate based on the variable, and the y-coordinate based on the counts of each bin</p>
+<p>Some geometric objects (<code>geom</code>) assign the y-coordinate automatically. For example, <code>geom_histogram</code> uses bars, with the x-coordinate based on the variable and the y-coordinate based on the counts of each bin.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
@@ -2880,7 +2883,7 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_histogram.html'>geom_histogram</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Ozone</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="r_basics_files/figure-html5/plot-hist-1.png" width="624" /></p>
+<p><img src="r_basics_files/figure-html5/plot-hist-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h3 id="scatter-plot">Scatter plot</h3>
 <p>A scatter plot maps the x- and the y-axes to two variables</p>
@@ -2893,7 +2896,7 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
                alpha <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="r_basics_files/figure-html5/plot-scatter-1.png" width="624" /></p>
+<p><img src="r_basics_files/figure-html5/plot-scatter-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <p>The x- and y-coordinates are not the only attributes for the <code>points</code> geometric object. For example, we can map the sizes of the points to another variable:</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2904,7 +2907,7 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
                alpha <span class='op'>=</span> <span class='fl'>0.3</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="r_basics_files/figure-html5/plot-scatter-2-1.png" width="624" /></p>
+<p><img src="r_basics_files/figure-html5/plot-scatter-2-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h3 id="changing-labels">Changing labels</h3>
 <p>To change the labels of axis and legend, use <code>labs</code>:</p>
@@ -2917,7 +2920,7 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Wind (mph)"</span>, y <span class='op'>=</span> <span class='st'>"Ozone (ppb)"</span>, size <span class='op'>=</span> <span class='st'>"Temperature (degree F)"</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="r_basics_files/figure-html5/plot-scatter-2-labs-1.png" width="624" /></p>
+<p><img src="r_basics_files/figure-html5/plot-scatter-2-labs-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h3 id="different-geom">Different <code>geom</code></h3>
 <p>We can use other geometric objects. For example, <code>geom_smooth</code> adds a smoothing trend</p>
@@ -2932,7 +2935,7 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="r_basics_files/figure-html5/plot-line-1.png" width="624" /></p>
+<p><img src="r_basics_files/figure-html5/plot-line-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h3 id="facet">Facet</h3>
 <p>In many situations, we want to split the data into multiple plots through <code>facet</code>.</p>
@@ -2945,11 +2948,11 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span><span class='op'>(</span><span class='op'>~</span> <span class='va'>Month</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="r_basics_files/figure-html5/plot-facet-1.png" width="624" /></p>
+<p><img src="r_basics_files/figure-html5/plot-facet-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h2 id="for-loop"><code>for</code> Loop</h2>
 <p>Using a loop allows one to perform some actions multiple times. See <a href="https://r4ds.had.co.nz/iteration.html#introduction-14" class="uri">https://r4ds.had.co.nz/iteration.html#introduction-14</a></p>
-<p>The following example shows an example of drawing a random variable from a normal distribution with <em>SD</em> = 1, and with the mean equals to the previously generated number.</p>
+<p>The following example shows an example of drawing a random variable from a normal distribution with <em>SD</em> = 1, mean = the previously generated number.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2208</span><span class='op'>)</span>  <span class='co'># for reproducibility</span>
@@ -2972,7 +2975,7 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="r_basics_files/figure-html5/simulate-1.png" width="624" /></p>
+<p><img src="r_basics_files/figure-html5/simulate-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h2 id="custom-function">Custom Function</h2>
 <p>A function in R is a named object that takes in some inputs, performs some operations, and gives some outputs.</p>
@@ -2987,7 +2990,7 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
 </code></pre>
 </div>
 </div>
-<p>In the above function <code>asqplusb()</code>, it takes two inputs: <code>a</code> and <code>b</code>. The name of these two are called <em>arguments</em>. So we say <code>a</code> and <code>b</code> are the arguments of <code>asqplusb()</code>. We can invoke the function like</p>
+<p>The above function <code>asqplusb()</code> takes two inputs: <code>a</code> and <code>b</code>. The names of these two are called <em>arguments</em>. So we say <code>a</code> and <code>b</code> are the arguments of <code>asqplusb()</code>. We can invoke the function like</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>asqplusb</span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>3</span><span class='op'>)</span>  <span class='co'># a = 2, b = 3, 2^2 + 3 = 7</span>
@@ -3007,8 +3010,10 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
 </div>
 <pre><code>#&gt; [1] 11</code></pre>
 </div>
-<p>Note that 2 and 3 are the <em>values</em> of the arguments, not the arguments themselves.</p>
-<p>Also, notice when we define the function, we say the first argument is <code>a</code>, and the second argument is <code>b = 1</code>. This means the default value of <code>b</code> is 1. So when one call the function without specifying <code>b</code>, like</p>
+<aside>
+In the function call, 2 and 3 are the <em>values</em> of the arguments, not the arguments themselves.
+</aside>
+<p>Also, when we define the function, we define the first argument as <code>a</code>, and the second argument as <code>b = 1</code>. The latter means the default value of <code>b</code> is 1. So when one calls the function without specifying <code>b</code>, like</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>asqplusb</span><span class='op'>(</span><span class='fl'>4</span><span class='op'>)</span>  <span class='co'># a = 4, b = 1, 4^2 + 1 = 17</span>
@@ -3025,7 +3030,7 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
 <pre><code>#&gt; [1] 17</code></pre>
 </div>
 <h3 id="when-to-use-a-function">When to use a function?</h3>
-<p>Writing one’s own function is very common in R programming, especially with Bayesian analysis, because a lot of times one needs to perform some procedures more than once, and it is tedious to write similar code every time. A rule of thumb is that if you have a few lines of code that you find yourself typing more than two times, you should write a function for it. As an example, we can wrap the simulation code above into a function that you can try out with different number of iterations:</p>
+<p>Writing one’s own function is very common in R programming, especially with Bayesian analysis, because often one needs to perform some procedures more than once, and it is tedious to write similar code every time. A rule of thumb is that if you have a few lines of code that you find yourself typing more than two times, you should write a function for it. As an example, we can wrap the simulation code above into a function that you can try out with different numbers of iterations:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>my_simulate</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>nsim</span> <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span> <span class='op'>{</span>
@@ -3052,14 +3057,16 @@ Note: The <code>%&gt;%</code> operator requires loading the <code>tidyverse</cod
 </div>
 <p>Try to call the above function.</p>
 <!-- The following chunk is only used in the website -->
-<h2 class="appendix" id="last-updated">Last updated</h2>
+<section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
+<h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code>#&gt; [1] &quot;January 05, 2022&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;January 07, 2022&quot;</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+</section>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

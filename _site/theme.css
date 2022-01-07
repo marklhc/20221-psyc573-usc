@@ -91,7 +91,7 @@ d-article div.sourceCode pre {
 
 /* inline code bg */
 
-p code,
-aside code {
-    background-color: rgba(0, 0, 0, 0.05);
+d-article p code,
+d-article aside code {
+    background: rgba(0, 0, 0, 0.05);
 }

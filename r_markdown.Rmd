@@ -1,0 +1,218 @@
+---
+title: "Introduction to R Markdown"
+author: "Mark Lai"
+date: "January 13, 2022"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## RStudio Intro
+
+```{r}
+print("This is Thursday.")
+```
+
+
+```{r RvsRStudio, eval = !knitr::is_latex_output(), echo = FALSE, fig.cap = "Figure from https://moderndive.netlify.app/", out.extra = "class=external"}
+knitr::include_graphics("https://moderndive.netlify.app/images/shutterstock/R_vs_RStudio_1.png")
+```
+
+<!-- Markdown syntax for including images
+![](https://moderndive.netlify.app/images/shutterstock/R_vs_RStudio_1.png)
+-->
+
+- If you're new to R, follow the online ModernDrive chapter https://moderndive.netlify.app/1-getting-started.html
+- Four Panes:
+    1. Source panel
+    2. Console
+    3. Global environment
+    4. Files/Plots/Packages/Help/Viewer
+
+### Use Projects
+
+I strongly recommend you create an [RStudio project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-Projects) for this course, and use separate projects for your future research/analysis projects. It sets working directory automatically and can save you a lot of troubles.
+
+To create a project, go to `File`, `New Project...`, select "New Directory", "New Project", and then type in the name of a new folder you want to create for the project as well as where you want the folder to locate on your computer.
+
+Next time you open RStudio, **navigate to the top right and find the project you want to work on**
+
+### Recommended Options
+
+> Tools --> Global Options --> 
+
+> - Set "Save workspace to .RData on exit" to "Never".  
+
+> - (Optional) Go to "R Markdown" on the left, and set "Show output preview in" to "Viewer Pane".
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+> Note: R is case sensitive. So `Cars` and `cars` are different. 
+
+```{r cars, results = 'hide'}
+summary(cars[-(1:4), ])
+```
+
+### YAML options
+
+- `title`
+- `author`
+- `date`
+- `output`
+
+### Chunk options
+
+- `include`
+- `echo`
+- `eval`
+- `results = 'hide'`
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo = FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## Install packages
+
+```{r tweet-by-Di-Cook, eval = FALSE}
+tweetrmd::include_tweet("https://twitter.com/visnut/status/1248087845589274624")
+```
+
+```{r change-a-light-bulb, eval = !knitr::is_latex_output(), echo = FALSE}
+knitr::include_graphics("https://pbs.twimg.com/media/EVIZRvPU0AAwgdH?format=jpg")
+```
+
+Check out https://rladiessydney.org/courses/ryouwithme/01-basicbasics-2/
+
+```{r install-tidyverse-here}
+# Install the tidyverse "meta" package
+# install.packages("tidyverse")
+# Install the here package
+# install.packages("here")
+```
+
+## Load a package
+
+> Tip 1: Try the (PC) <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>I</kbd>/(Mac) <kbd>Cmd</kbd> + <kbd>Option</kbd> + <kbd>I</kbd> shortcut for a new code chunk 
+
+> Tip 2: Use <kbd>Tab</kbd> for code completeion
+
+> Tip 3: Use <kbd>Ctrl</kbd> + <kbd>Enter</kbd>/(Mac) <kbd>Cmd</kbd> + <kbd>Return</kbd> for running a line of R code
+
+> Tip 4: Set `message = FALSE` to suppress messages in loading packages
+
+```{r load-package}
+# Load tidyverse
+
+# Load here
+
+```
+
+## Data Frame
+
+```{r data-frame}
+# Load Aids2 data
+data("Aids2", package = "MASS")
+# Extract one column
+
+# Extract column by index (same as last line)
+
+# Extract two rows
+
+# Compute the mean and sd, and chain them together
+
+# Correlation matrix with psych::pairs.panel()
+
+# Find out what a function does (use `?function_name`, e.g., `?pairs.panel`)
+
+```
+
+## Basic Markdown Elements
+
+From RStudio, click `Help` --> `Markdown Quick Reference`
+
+### Italic and bolded texts
+
+This is *italic*
+
+### Lists (Ordered and Unordered)
+
+- Item 1
+- Item 2
+
+### Equations (LaTeX)
+
+Inline: The correlation between $a = b + c + \tau$
+
+Display: 
+
+$$a = b + c + \tau$$
+
+## Cheatsheet
+
+More detailed cheatsheet: https://rmarkdown.rstudio.com/lesson-15.HTML
+
+***
+
+## Exercise
+
+1. Download the Rmd file for the exercise on Blackboard
+2. Change the name on line 3 to yours.
+3. Complete the following in this R Markdown document:
+    a. Copy the following LaTeX equation to below: `\Delta K = \frac{1}{2} mv^2_i`. How does this say about writing Greek letters, fractions, and subscripts/superscripts in LaTeX?
+        $$[Insert equation here]$$
+    b. Run the following. You'll need to remove `eval = FALSE` so that it runs. Write down what each line of the following code chunk does.
+```{r bayestest, indent = '        ', eval = FALSE}
+# Install and load the knitr package first; otherwise it won't run
+theta <- rbeta(1000, shape1 = 2, shape2 = 2)
+c(mean = mean(theta), median = median(theta))
+knitr::kable(data.frame(mean = mean(theta), median = median(theta)))
+```
+    c. Run the following. You'll need to remove `eval = FALSE` so that it runs. Find out what this code chunk does. Be sure to load the missing package.
+```{r scatter-plot, indent = '        ', eval = FALSE}
+pacman::p_load(ggplot2)
+ggplot(data.frame(theta = theta), aes(x = theta)) +
+  geom_density(bw = "SJ")
+```
+    d. Add a code chunk below to show the output of running `sessionInfo()`, which prints out the session information of your computer. Make the code chunk to show only the output, but not the code.
+    e. Knit the document to HTML, PDF, and Word. If you run into an error when knitting to any one of the formats, record the error message. Which format do you prefer? [Note: You may be prompted to install the `tinytex` package for PDF output.]
+    f. Go to the top of this Rmd file, and change the part inside YAML
+    
+        ```
+        output:
+          html_document: default
+        ```
+        
+        to
+        
+        ```
+        output:
+          html_document: 
+              toc: TRUE
+              toc_float: TRUE
+        ```
+        
+        Knit the document again. What does it do?
+    g. Submit the knitted document to Blackboard in your preferred format (HTML, PDF, or WORD)
+
+<!-- The following chunk is only used in the website -->
+
+```{r, echo = FALSE, results = 'asis', eval = file.exists("distill-hack.RMarkdown")}
+knitrenv <- knitr::knit_global()
+assign("knit_input", knitr::current_input(), knitrenv)
+append_res <- knitr::knit_child("distill-hack.RMarkdown",
+    envir = knitrenv, quiet = TRUE
+)
+cat(append_res)
+```

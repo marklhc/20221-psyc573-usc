@@ -40,7 +40,7 @@ Timeline for replying to emails: within 48 hours.
 
 **IT Help:** ITS, Blackboard  
 **Contact Info:**  
-ITS (Email, Monday — Friday, 8:00 A.M. — 6:00 P.M.) [consult@usc.edu](mailto:consult@usc.edu), 
+ITS (Email, Monday -- Friday, 8:00 A.M. -- 6:00 P.M.) [consult@usc.edu](mailto:consult@usc.edu), 
 (Phone, 24/7/365) 213-740-5555, (Online) [ServiceNow Portal](https://itsusc.service-now.com/)  
 Blackboard (Email, 24/7/365) [blackboard@usc.edu](mailto:blackboard@usc.edu), 
 (Online Help) [Blackboard Help for Students](https://studentblackboardhelp.usc.edu/)
@@ -56,7 +56,7 @@ The course begins with a brief discussion on the history of the Bayesian method 
 After the successful completion of this course, students will be able to
 
 1. Describe the foundations of the Bayesian framework of statistics;
-2. Explain to fellow researchers the terminologies in Bayesian analysis, such as prior, posterior, credible intervals, MCMC, etc;
+2. Explain to fellow researchers the terminologies in Bayesian analysis, such as prior, posterior, credible intervals, MCMC, etc.;
 3. Explain and demonstrate in applications the advantages and disadvantages of the Bayesian approach in comparisons to classical approaches;
 4. Independently perform Bayesian analyses covered in this class using statistical software on real data;
 5. Conduct a research project involving Bayesian analysis and effectively communicate their findings/products in an oral presentation and a written report.
@@ -86,12 +86,12 @@ To promote independence and critical thinking, students are encouraged to work t
 
 # Technological Proficiency and Hardware/Software Required
 
-- [R](https://cloud.r-project.org/) and [RStudio](https://rstudio.com/products/rstudio/download/) are needed to complete the course assignments. It is highly recommended that students update to the latest versions of both software (R 4.1.0, RStudio 2021.09.0, or above). We will briefly discuss how to set up R and RStudio in Week 1.
+- [R](https://cloud.r-project.org/) and [RStudio](https://rstudio.com/products/rstudio/download/) are needed to complete the course assignments. It is highly recommended that students update to the latest versions of both software (R 4.1.0, RStudio 2021.09.0, or above). We will briefly discuss setting up R and RStudio in Week 1.
 - The textbook and most of the supplemental readings can be accessed through the USC Libraries at https://libraries.usc.edu/
 
 ## USC technology rental program
 
-If you need resources to successfully participate in your classes, such as a laptop or internet hotspot, you may be eligible for the university's equipment rental program. To apply, please [submit an application](https://studentbasicneeds.usc.edu/resources/technology-assistance/).
+If you need resources to successfully participate in this class, such as a laptop or internet hotspot, you may be eligible for the university's equipment rental program. To apply, please [submit an application](https://studentbasicneeds.usc.edu/resources/technology-assistance/).
 
 ## USC Technology Support Links 
 
@@ -103,7 +103,7 @@ If you need resources to successfully participate in your classes, such as a lap
 # Required Materials
 
 - Kruschke, J. K. (2015). *Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan* (2nd ed.). Academic Press.
-    * Available from USC library (login required): https://www-sciencedirect-com.libproxy2.usc.edu/book/9780124058880/doing-bayesian-data-analysis
+    * Available from USC Libraries (login required): https://www-sciencedirect-com.libproxy2.usc.edu/book/9780124058880/doing-bayesian-data-analysis
     * Corrigenda: https://docs.google.com/spreadsheets/d/1gWjvDKXfSvEhlrdjevSzf6YqnVcFL3QLPGxybAriIng
 
 # Recommended Materials
@@ -118,8 +118,8 @@ E-copies of all below are available at USC Libraries.
 # Description and Assessment of Assignments{#assignments}
 
 1. In-class exercises (10%). During some of the class sessions, students will participate in quizzes or group exercises. If students miss an exercise for participation credit, they can complete the exercise posted on Blackboard within 24 hours to get credits. 
-2. Homework problems (70%). There will be weekly homework assignments for students to apply the concepts and techniques discussed in class to analytic problems. The assignments typically involve performing data analyses using data sets of your own or provided by the instructor, and interpreting the results with some guided questions. Please submit your work electronically to Blackboard by **Monday 11:59 p.m. Pacific Time** the week after a homework is assigned. See policy on [late work](#late-work).
-3. Final project (20%: 5% prospectus, 15% presentation/final report). You will complete a research project related to Bayesian analysis, typically a report of analyzing real data or a theoretical/methodological analysis about certain aspects of Bayesian data analysis. For empirical analyses, the focuses are (a) formulating and justifying prior distributions from a review of previous literature, (b) obtaining and interpreting posterior distributions, and (c) comprehensive reporting of methods and results. Students can also replicate the analyses of an existing study, as long as the chosen study shared sufficient data and materials and did not use a Bayesian analysis with informative priors. Students interested in project ideas other than an empirical research report (e.g., software package development, systematic review/meta-analysis) are encouraged to discuss their ideas with the instructor. Each student can choose to work on their own or in a group of up to three people.
+2. Homework problems (70%). There will be weekly homework assignments for students to apply the concepts and techniques discussed in class to analytic problems. The assignments typically involve performing data analyses using data sets of your own or provided by the instructor, and interpreting the results with guided questions. Please submit your work electronically to Blackboard by **Monday 11:59 p.m. Pacific Time** the week after the homework is assigned. See policy on [late work](#late-work).
+3. Final project (20%: 5% prospectus, 15% presentation/final report). You will complete a research project related to Bayesian analysis, typically a report analyzing real data or a theoretical/methodological analysis of certain aspects of Bayesian data analysis. For empirical analyses, the focuses are (a) formulating and justifying prior distributions from a review of previous literature, (b) obtaining and interpreting posterior distributions, and (c) comprehensive reporting of methods and results. Students can also replicate the analyses of an existing study, as long as the chosen study shared sufficient data and materials and did not use a Bayesian analysis with informative priors. Students interested in project ideas other than an empirical research report (e.g., software package development, systematic review/meta-analysis) are encouraged to discuss their ideas with the instructor. Each student can choose to work on their own or in a group of up to three people.
 
     There are two grading components for your final project:
   
@@ -133,7 +133,7 @@ E-copies of all below are available at USC Libraries.
 
 # Participation
 
-Participation accounts for 10% of the course grade. To earn full credit for participation, students should complete and turn in all in-class exercises. 
+Participation accounts for 10% of the course grade. Students should complete and turn in all in-class exercises to earn full credit for participation. 
 
 # Grading Breakdown
   
@@ -170,7 +170,7 @@ Generally, all graded work will be returned no later than one week from the subm
 
 # Late work
   
-Late work will be penalized by a 10% deduction in the assignment grade every 24 hours late unless due to an emergency excused by the instructor. Email the instructor as soon as possible to discuss alternate arrangements due to an emergency.
+Late work will be penalized by a 10% reduction in the assignment grade every 24 hours late unless due to an emergency excused by the instructor. Please email the instructor as soon as possible to discuss alternate arrangements due to an emergency.
 
 # Technology in the classroom
 
@@ -180,7 +180,7 @@ Your phone should be turned off or in silent mode (not on vibrate), and should n
 
 ## Tablets and Laptops
 
-During lecture time in the classroom, students can use tablets and laptops only for purposes of viewing course materials and taking notes. Use of tablets and laptops for note taking is strongly discouraged as it may distract both yourself and your peers ([Sana, Weston, & Cepeda, 2013](https://www.sciencedirect.com/science/article/pii/S0360131512002254)). During the in-class exercises, students should use their laptops to complete the assignments.
+During lecture time in the classroom, students can use tablets and laptops only for purposes of viewing course materials and taking notes. Use of tablets and laptops for multitasking is strongly discouraged as it may distract both yourself and your peers ([Sana, Weston, & Cepeda, 2013](https://www.sciencedirect.com/science/article/pii/S0360131512002254)). During the in-class exercises, students should use their laptops to complete the assignments.
 
 # Attendance
   
@@ -212,7 +212,7 @@ Students should consult the latest COVID-19 testing and health protocol requirem
 
 # Course Evaluation
 
-Student feedback is essential to the instructor and the Department to keep improving this course. Students are encouraged to share their feedback and suggestions in an early-term feedback survey around week 4 to 5, and respond to the standard USC course evaluation survey at the end of the semester.
+Student feedback is essential to the instructor and the Department to keep improving this course and faculty pedagogy. Students are encouraged to share their feedback and suggestions in an early-term feedback survey around week 4 to 5, and respond to the standard USC course evaluation survey at the end of the semester.
 
 # (Tentative) Course Schedule: A Weekly Breakdown
 
@@ -236,27 +236,27 @@ dates <- paste(
 |                |      Topics/Daily      |             Readings             |               Assignment               |
 |                |       Activities       |                                  |                 Dates                  |
 +================+========================+==================================+========================================+
-| Week 1\        | - Overview of          | - Gigerenzer (2004)              | - Exercise: R Markdown                 |
-| Jan 11 & 13    | Bayesian Statistics    | - [Kruschke ch. 2][1]            | - HW 1                                 |
-| (Remote)       | - R programming I      | - Supplemental: [James ch. 1][2] |                                        |
-|                | - R Markdown           | - [Markdown Quick Reference][3]  |                                        |
+| Week 1\        | - Overview of          | - [Gigerenzer (2004)][1]         | - Exercise: R Markdown                 |
+| Jan 11 & 13    | Bayesian Statistics    | - [Kruschke ch. 2][2]            | - HW 1                                 |
+| (Remote)       | - R Markdown      | - Supplemental: [James ch. 1][3] |                                        |
+|                | - R Markdown           | - [Markdown Quick Reference][4]  |                                        |
 +----------------+------------------------+----------------------------------+----------------------------------------+
 | Week 2\        | - Probability          | - Kruschke ch. 4                 | - Exercise: Probability                |
-| Jan 18 & 20    | - R programming II     | - Wickham & Grolemund            | - HW 2                                 |
-|                |                        | ch. [7][4], [19][5]              |                                        |
+| Jan 18 & 20    | - R programming        | - Wickham & Grolemund            | - HW 2                                 |
+|                |                        | ch. [7][5], [19][6]              |                                        |
 +----------------+------------------------+----------------------------------+----------------------------------------+
-| Week 3\        | - Bayes Theorem        | - Kruschke ch. 5                 | - Exercise: Screening test example     |
-| Jan 25 & 27    |                        |                                  |                                        |
+| Week 3\        | - Bayes Theorem        | - [Gigerenzer (2004)][1]                 | - Exercise: Screening test example     |
+| Jan 25 & 27    |                        | - Kruschke ch. 5                                 |                                        |
 +----------------+------------------------+----------------------------------+----------------------------------------+
 | Week 4\        | - One Parameter Models | - Kruschke ch. 6                 | - Exercise: Graphical check            |
-| Feb 1 & 3      | - Posterior predictive | - [Gabry et al. (2019)][6]       | - HW 3                                 |
+| Feb 1 & 3      | - Posterior predictive | - [Gabry et al. (2019)][7]       | - HW 3                                 |
 |                | checks                 |                                  |                                        |
 +----------------+------------------------+----------------------------------+----------------------------------------+
 | Week 5\        | - MCMC: Metropolis &   | - Kruschke ch. 7                 | - Exercise: Metropolis                 |
 | Feb 8 & 10     | Gibbs                  |                                  | - HW 4                                 |
 +----------------+------------------------+----------------------------------+----------------------------------------+
 | Week 6\        | - STAN & HMC           | - Kruschke ch. 14                | - Exercise: Divergent transition       |
-| Feb 15 & 17    |                        | - [MCMC Interactive Gallery][7]  | - HW 5                                 |
+| Feb 15 & 17    |                        | - [MCMC Interactive Gallery][8]  | - HW 5                                 |
 +----------------+------------------------+----------------------------------+----------------------------------------+
 | Week 7\        | - Hierarchical models  | - Kruschke ch. 9                 | - Exercise: Identifying data structure |
 | Feb 22 & 24    |                        |                                  | - HW 6                                 |
@@ -293,13 +293,14 @@ dates <- paste(
 | FINAL          | Final report           |                                  | May 10 1:00 pm PDT                     |
 +----------------+------------------------+----------------------------------+----------------------------------------+
 
-[1]: https://drive.google.com/file/d/1tr7XpIVf04S44o5ZploxJcd37Fg1GygV/view
-[2]: https://jim-stone.staff.shef.ac.uk/BookBayes2012/bookbayesch01.pdf
-[3]: https://web.mit.edu/r/current/RStudio/resources/markdown_help.html
-[4]: https://r4ds.had.co.nz/exploratory-data-analysis.html
-[5]: https://r4ds.had.co.nz/functions.html
-[6]: https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssa.12378
-[7]: https://chi-feng.github.io/mcmc-demo/app.html
+[1]: https://pure.mpg.de/rest/items/item_2101336/component/file_2101335/content
+[2]: https://drive.google.com/file/d/1tr7XpIVf04S44o5ZploxJcd37Fg1GygV/view
+[3]: https://jim-stone.staff.shef.ac.uk/BookBayes2012/bookbayesch01.pdf
+[4]: https://web.mit.edu/r/current/RStudio/resources/markdown_help.html
+[5]: https://r4ds.had.co.nz/exploratory-data-analysis.html
+[6]: https://r4ds.had.co.nz/functions.html
+[7]: https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssa.12378
+[8]: https://chi-feng.github.io/mcmc-demo/app.html
 
 # Statement on Academic Conduct and Support Systems
 
@@ -352,5 +353,5 @@ Non-emergency assistance or information.
 ## Last updated {.appendix}
 
 ```{r, echo = FALSE}
-format(Sys.Date(), "%B %d, %Y")
+format(file.mtime(knitr::current_input()), "%B %d, %Y")
 ```

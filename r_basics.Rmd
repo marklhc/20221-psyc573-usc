@@ -1,12 +1,15 @@
 ---
 title: "R Basics"
-date: December 18, 2021
+date: January 6, 2022
 description: |
   Review of basic syntax in R
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = "#>", collapse = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment = "#>", collapse = TRUE,
+                      fig.width = 6, fig.asp = 0.618,
+                      out.width = "70%", fig.align = "center",
+                      fig.show = "hold")
 ```
 
 ## Load Packages
@@ -42,7 +45,7 @@ str(y)
 
 To find out what the `seq()` function does, use
 
-```{r help}
+```{r help, eval = FALSE}
 ?seq
 ```
 
@@ -77,7 +80,7 @@ y %>%
 The pipe operator works by taking the object before `%>%` as the first argument for the function after `%>%`. So `y %>% as.numeric()` is the same as `as.numeric(y)`, and `y2 %>% na_if(99)` is the same as `na_if(y2, 99)`. 
 
 <aside>
-Note: The `%>%` operator requires loading the `tidyverse` package (specifically `magrittr` package). Since R 4.1.0, one can use `|>` for piping without loading any packages. While in the future `|>` is probably the preferred way, for now we'll stick to `%>%` to make things compatible for older versions of R.
+The `%>%` operator requires loading the `tidyverse` package (specifically `magrittr` package). Since R 4.1.0, one can use `|>` for piping without loading any packages. While in the future `|>` is probably the preferred way, for now we'll stick to `%>%` to make things compatible for older versions of R.
 </aside>
 
 ## Vector, Matrix, Array, List, and Data Frames
@@ -153,12 +156,14 @@ dataframe_c[1]
 
 ## Plotting
 
-The popular `ggplot2` package uses the "grammar of graphics" approach to plotting. It is an elegant and comprehensive system for graphics, but requires mastering some vocabularies. As a quick start, each plot requires specifying
+The popular `ggplot2` package uses the "grammar of graphics" approach to plotting. It is an elegant and comprehensive system for graphics but requires mastering some vocabulary. As a quick start, each plot requires specifying
 
 - Some layer(s) of **geometric** elements (e.g., points, lines, boxplots, etc)
 - Mapping of some data/variables to some **aesthetic** attributes (e.g., axis, color, point shape)
 
-To learn more, please take a look on the cheatsheet: https://www.rstudio.com/resources/cheatsheets/
+<aside>
+To learn more, please take a look at the cheatsheet: https://www.rstudio.com/resources/cheatsheets/
+</aside>
 
 For example, consider the `airquality` data set:
 
@@ -182,7 +187,7 @@ ggplot(data = airquality) +
     geom_point(aes(x = Ozone, y = 0))
 ```
 
-Some geometric objects (`geom`) assign the y-coordinate automatically. For example, `geom_histogram` uses bars, with the x-coordinate based on the variable, and the y-coordinate based on the counts of each bin
+Some geometric objects (`geom`) assign the y-coordinate automatically. For example, `geom_histogram` uses bars, with the x-coordinate based on the variable and the y-coordinate based on the counts of each bin.
 
 ```{r plot-hist}
 ggplot(data = airquality) +
@@ -253,7 +258,7 @@ ggplot(aes(x = Wind, y = Ozone), data = airquality) +
 
 Using a loop allows one to perform some actions multiple times. See https://r4ds.had.co.nz/iteration.html#introduction-14
 
-The following example shows an example of drawing a random variable from a normal distribution with *SD* = 1, and with the mean equals to the previously generated number.
+The following example shows an example of drawing a random variable from a normal distribution with *SD* = 1, mean = the previously generated number.
 
 ```{r simulate}
 set.seed(2208)  # for reproducibility
@@ -291,7 +296,7 @@ asqplusb <- function(a, b = 1) {
 }
 ```
 
-In the above function `asqplusb()`, it takes two inputs: `a` and `b`. The name of these two are called *arguments*. So we say `a` and `b` are the arguments of `asqplusb()`. We can invoke the function like
+The above function `asqplusb()` takes two inputs: `a` and `b`. The names of these two are called *arguments*. So we say `a` and `b` are the arguments of `asqplusb()`. We can invoke the function like
 
 ```{r invoke-asqplusb}
 asqplusb(2, 3)  # a = 2, b = 3, 2^2 + 3 = 7
@@ -301,9 +306,11 @@ asqplusb(a = 2, b = 3)
 asqplusb(b = 2, a = 3)
 ```
 
-Note that 2 and 3 are the *values* of the arguments, not the arguments themselves.
+<aside>
+In the function call, 2 and 3 are the *values* of the arguments, not the arguments themselves.
+</aside>
 
-Also, notice when we define the function, we say the first argument is `a`, and the second argument is `b = 1`. This means the default value of `b` is 1. So when one call the function without specifying `b`, like
+Also, when we define the function, we define the first argument as `a`, and the second argument as `b = 1`. The latter means the default value of `b` is 1. So when one calls the function without specifying `b`, like
 
 ```{r asqplusb-default}
 asqplusb(4)  # a = 4, b = 1, 4^2 + 1 = 17
@@ -317,7 +324,7 @@ asqplusb(4, b = 1)  # a = 4, b = 1, 4^2 + 1 = 17
 
 ### When to use a function?
 
-Writing one's own function is very common in R programming, especially with Bayesian analysis, because a lot of times one needs to perform some procedures more than once, and it is tedious to write similar code every time. A rule of thumb is that if you have a few lines of code that you find yourself typing more than two times, you should write a function for it. As an example, we can wrap the simulation code above into a function that you can try out with different number of iterations:
+Writing one's own function is very common in R programming, especially with Bayesian analysis, because often one needs to perform some procedures more than once, and it is tedious to write similar code every time. A rule of thumb is that if you have a few lines of code that you find yourself typing more than two times, you should write a function for it. As an example, we can wrap the simulation code above into a function that you can try out with different numbers of iterations:
 
 ```{r simulate-func}
 my_simulate <- function(nsim = 100) {
@@ -345,7 +352,12 @@ Try to call the above function.
 
 <!-- The following chunk is only used in the website -->
 
-```{r, child = "distill-hack.RMarkdown", eval = file.exists("distill-hack.RMarkdown")}
-
+```{r, echo = FALSE, results = 'asis', eval = file.exists("distill-hack.RMarkdown")}
+knitrenv <- knitr::knit_global()
+assign("knit_input", knitr::current_input(), knitrenv)
+append_res <- knitr::knit_child("distill-hack.RMarkdown",
+    envir = knitrenv, quiet = TRUE
+)
+cat(append_res)
 ```
 
