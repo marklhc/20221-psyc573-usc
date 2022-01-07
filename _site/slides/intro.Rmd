@@ -1,0 +1,423 @@
+---
+title: "Introduction"
+subtitle: "PSYC 573"
+institute: "University of Southern California"
+date: "January 11, 2022"
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts, "my_style.css"]
+    lib_dir: libs
+    nature:
+      countIncrementalSlides: false
+params:
+  for_class: false
+---
+
+class: inverse, mline, center, middle
+
+```{r, child = "slide_settings.RMarkdown"}
+```
+
+# History of Bayesian Statistics
+
+---
+class: clear
+
+- Video intro: https://www.youtube.com/watch?v=BcvLAw-JRss
+
+<iframe width="480" height="270" src="https://www.youtube.com/embed/BcvLAw-JRss" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+.pull-left[
+
+- A nice popular science book by Sharon Bertsch McGrayne: *The theory that would not die*
+
+]
+
+.pull-right[
+
+```{r, out.width = '40%', fig.align = 'right', eval = params$for_class}
+knitr::include_graphics(
+  "https://yalebooks.yale.edu/sites/default/files/styles/book_jacket/public/imagecache/external/2b431d126e7aea1707e695a3b54860f9.jpg"
+)
+```
+
+]
+
+---
+
+# Historical Figures
+
+.pull-left[
+
+Thomas Bayes (1701--1762)
+
+```{r, out.width = '50%'}
+knitr::include_graphics(
+    "https://upload.wikimedia.org/wikipedia/commons/d/d4/Thomas_Bayes.gif")
+```
+
+.font80[
+
+- English Presbyterian minister
+- "An Essay towards solving a Problem in the Doctrine of Chances", edited by Richard Price after Bayes's death
+
+]
+
+]
+
+.pull-right[
+
+Pierre-Simon Laplace (1749--1827)
+
+```{r, out.width = '40%'}
+knitr::include_graphics(
+    "https://upload.wikimedia.org/wikipedia/commons/e/e3/Pierre-Simon_Laplace.jpg")
+```
+
+.font80[
+
+- French Mathematician
+- Formalize Bayesian interpretation of probability, and most of the machinery for Bayesian statistics
+
+]
+
+]
+
+???
+
+Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Thomas_Bayes.gif), [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Pierre-Simon_Laplace.jpg)
+
+---
+
+# In the 20th Century
+
+- Bayesian---way to do statistics until early 1920s
+
+- Ronald Fisher and Frequentist scholars took over 
+    * "The theory of inverse probability is founded upon an error, and must be wholly rejected" (Fisher, 1925, p. 10)
+
+.footnote[
+
+[1]: Aldrich, J. (2008). R. A. Fisher on Bayes and Bayes' theorem. *Bayesian Analysis, 3*(1), 161--170.
+
+]
+
+---
+
+# Resurrection
+
+.left-column[
+
+```{r, out.width = '100%'}
+knitr::include_graphics(
+    "https://upload.wikimedia.org/wikipedia/commons/a/a1/Alan_Turing_Aged_16.jpg"
+)
+```
+
+```{r, out.width = '100%', fig.align = "right", eval = params$for_class}
+knitr::include_graphics("images/the_imitation_game.png")
+```
+
+]
+
+.right-column[
+
+- Alan Turing's algorithms in code breaking in World War II
+
+- *Markov Chain Monte Carlo* (MCMC) algorithm
+    * Bring Bayesian back to the main stream of statistics
+    
+]
+
+???
+
+Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Alan_Turing_Aged_16.jpg)
+
+---
+
+# Why Should You Learn About the Bayesian Way?
+
+- Gigerenzer (2004): It is one tool of your statistical toolbox
+
+--
+
+- Increasingly used as alternative to frequentist statistics
+
+--
+
+- Computationally more stable for complex models
+
+--
+
+- A coherent way of incorporating prior information
+    * Common sense knowledge, previous literature, sequential experiments, etc
+
+---
+
+# Bayesian Idea 1
+
+### Reallocation of credibility across possibilities
+
+Hypothetical example: How effective is a vaccine?
+
+--
+
+Prior (before collecting data)
+
+.pull-left[
+
+```{r vaccine-prior-1, out.width = "90%", fig.asp = 0.8, fig.width = 3.8}
+tibble(
+  eff = factor(1:3,
+    labels = c("not effective", "mildly effective", "very effective")
+  ),
+  probs = rep(1 / 3, 3)
+) %>%
+  ggplot(aes(x = eff, y = probs)) +
+  geom_col() +
+  ylim(0, 1) +
+  labs(title = "Person A (Agnostic)", x = NULL, y = "Probability")
+```
+
+]
+
+.pull-left[
+
+```{r vaccine-prior-2, out.width = "90%", fig.asp = 0.8, fig.width = 3.8}
+tibble(
+  eff = factor(1:3,
+    labels = c("not effective", "mildly effective", "very effective")
+  ),
+  probs = c(.1, .4, .5)
+) %>%
+  ggplot(aes(x = eff, y = probs)) +
+  geom_col() +
+  ylim(0, 1) +
+  labs(title = "Person B (Optimist)", x = NULL, y = "Probability")
+```
+
+]
+
+---
+
+# Updating Beliefs
+
+After seeing results of a trial
+- 4/5 with the vaccince improved
+- 2/5 without the vaccine improved
+
+--
+
+.pull-left[
+
+```{r vaccine-posterior-1, out.width = "90%", fig.asp = 0.8, fig.width = 3.8, fig.retina = 2}
+post_unscaled <- c(.3^2, .5^2, .8^2)
+tibble(
+  eff = factor(1:3,
+    labels = c("not effective", "mildly effective", "very effective")
+  ),
+  probs = post_unscaled / sum(post_unscaled)
+) %>%
+  ggplot(aes(x = eff, y = probs)) +
+  geom_col() +
+  ylim(0, 1) +
+  labs(title = "Person A (Agnostic)", x = NULL, y = "Probability")
+```
+
+]
+
+.pull-right[
+
+```{r vaccine-posterior-2, out.width = "90%", fig.asp = 0.8, fig.width = 3.8, fig.retina = 2}
+post_unscaled <- c(.3^2, .5^2, .8^2) * c(.1, .4, .5)
+tibble(
+  eff = factor(1:3,
+    labels = c("not effective", "mildly effective", "very effective")
+  ),
+  probs = post_unscaled / sum(post_unscaled)
+) %>%
+  ggplot(aes(x = eff, y = probs)) +
+  geom_col() +
+  ylim(0, 1) +
+  labs(title = "Person B (Optimist)", x = NULL, y = "Probability")
+```
+
+]
+
+---
+
+# Possibilities = Parameter Values
+
+- Parameter: Effectiveness of the vaccine
+- Possibilities: Not effective, mildly effective, very effective
+
+> Here the parameter is a discrete variable
+
+--
+
+- Parameter: Risk reduction by taking the vaccine
+- Possibilities: $(-\infty, \infty)$ (Any real number)
+
+> Here the parameter is a continuous variable
+
+---
+class: clear
+
+Using Bayesian analysis, one obtains updated/**posterior probability** for every possibility of a parameter, given the **prior** belief and the **data**
+
+```{r bayes-three-curves, fig.retina = 2}
+dnorm_trunc <- function(x, mean = 0, sd = 1, ll = 0, ul = 1) {
+  out <- dnorm(x, mean, sd) / (pnorm(ul, mean, sd) - pnorm(ll, mean, sd))
+  out[x > ul | x < ll] <- 0
+  out
+}
+qnorm_trunc <- function(p, mean = 0, sd = 1, ll = 0, ul = 1) {
+  cdf_ll <- pnorm(ll, mean = mean, sd = sd)
+  cdf_ul <- pnorm(ul, mean = mean, sd = sd)
+  qnorm(cdf_ll + p * (cdf_ul - cdf_ll), mean = mean, sd = sd)
+}
+rnorm_trunc <- function(n, mean = 0, sd = 1, ll = 0, ul = 1) {
+  p <- runif(n)
+  qnorm_trunc(p, mean = mean, sd = sd, ll = ll, ul = ul)
+}
+grid <- seq(0, 1, length.out = 101)
+compute_lik <- function(x, pts = grid, sd = 0.2, binwidth = .01) {
+  lik_vals <- vapply(x, dnorm_trunc,
+    mean = pts, sd = sd,
+    FUN.VALUE = numeric(length(pts))
+  )
+  lik <- apply(lik_vals, 1, prod)
+  lik / sum(lik) / binwidth
+}
+set.seed(4)
+dat_x <- rnorm_trunc(10, mean = 0.6, sd = 0.2)
+lik_x <- compute_lik(dat_x)
+update_probs <- function(prior_probs, lik, binwidth = .01) {
+  post_probs <- prior_probs * lik
+  post_probs / sum(post_probs) / binwidth
+}
+ggplot(tibble(x = c(0, 1)), aes(x = x)) +
+  stat_function(
+    fun = dnorm_trunc, args = list(mean = .8, sd = .1),
+    aes(linetype = "Prior", col = "Prior")
+  ) +
+  geom_line(
+    data = tibble(x = grid, dens = lik_x),
+    aes(
+      x = x, y = dens, linetype = "Likelihood",
+      col = "Likelihood"
+    )
+  ) +
+  geom_line(
+    data = tibble(
+      x = grid,
+      dens = update_probs(
+        dnorm_trunc(grid, .8, .1),
+        lik_x
+      )
+    ),
+    aes(x = x, y = dens, col = "Posterior", linetype = "Posterior")
+  ) +
+  ylim(0, 7) +
+  labs(x = NULL, y = NULL) +
+  scale_color_manual("", values = c("red", "blue", "green")) +
+  scale_linetype_manual("", values = c("twodash", "solid", "dashed"))
+```
+
+---
+
+# Steps of Bayesian Data Analysis
+
+"Turning the Bayesian crank"
+
+1. Identify data
+2. Define a mathematical model with parameters
+3. Specify priors on parameters
+4. Obtain and interpret posterior distributions of the parameters
+5. Posterior predictive check
+
+---
+
+# Example
+
+```{r, include = FALSE}
+source("../replication_Frank_etal_2019.R",
+  local = knitr::knit_global()
+)
+```
+
+Frank et al. (2019, Cognition and Emotion)
+
+- Response time for 2 (Dutch--native vs. English--foreign) $\times$ 2 (lie vs. truth) experimental conditions
+
+```{r p_int, fig.retina = 2}
+p_int
+```
+
+---
+
+# Posterior of Mean RTs by Conditions
+
+L = Lie, T = Truth; D = Dutch, E = English
+
+```{r pp_cond, fig.retina = 2}
+pp_cond
+```
+
+---
+
+# From Priors to Posteriors
+
+```{r hypothesis, out.width = "55%", fig.retina = 2, fig.asp = 1.2, fig.width = 4.7}
+plot(h123)
+```
+
+---
+
+class: clear
+
+.pull-left[
+
+### Accepting the Null
+
+]
+
+.pull-right[
+
+```{r mcmc_diff, fig.retina = 2, out.width = "100%", fig.width = 4.3}
+mcmc_diff
+```
+
+]
+
+--
+
+### Posterior Predictive Check
+
+```{r pp_dens, out.width = "60%", fig.asp = 0.5, fig.retina = 2, fig.width = 5.1}
+pp_dens
+```
+
+---
+
+# Multiple Experiments
+
+```{r, out.width = "100%", eval = params$for_class}
+knitr::include_graphics("images/Kay_etal_2016_fig2.png")
+```
+
+.footnote[
+
+Kay, Nelson, & Hekler (2016, p. 4525, https://dl.acm.org/doi/abs/10.1145/2858036.2858465)
+
+]
+
+---
+class: inverse, mline, center, middle
+
+# Syllabus
+
+---
+class: inverse, mline, center, middle
+
+# Homework 1
