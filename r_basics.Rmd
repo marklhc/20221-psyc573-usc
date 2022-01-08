@@ -113,6 +113,7 @@ matrix_c[, 1]  # select first column (converted to a vector)
 ```
 
 ```{r object-types-array}
+set.seed(123)  # for reproducibility
 # Array: An array can have one, two, or more dimensions. 
 # A matrix is also an array.
 array_d <- array(rnorm(8), dim = c(2, 2, 2))
