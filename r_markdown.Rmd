@@ -179,7 +179,7 @@ theta <- rbeta(1000, shape1 = 2, shape2 = 2)
 c(mean = mean(theta), median = median(theta))
 knitr::kable(data.frame(mean = mean(theta), median = median(theta)))
 ```
-    c. Run the following. You'll need to remove `eval = FALSE` so that it runs. Find out what this code chunk does. Be sure to load the missing package.
+    c. Run the following. You'll need to remove `eval = FALSE` so that it runs. Find out what this code chunk does.
 ```{r scatter-plot, indent = '        ', eval = FALSE}
 pacman::p_load(ggplot2)
 ggplot(data.frame(theta = theta), aes(x = theta)) +

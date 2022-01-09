@@ -51,18 +51,16 @@ By the end of this module, you will be able to
 3. Install/Update R and RStudio on your computer
 4. Attend the Tuesday and Thursday class meetings
 5. Complete the assigned readings
-    * [Gigerenzer (2004)][1]
     * [Kruschke ch. 2][2]
     * Supplemental (i.e., optional) reading: [James ch. 1][3]
     * [Markdown Quick Reference][4]
 6. Introduce yourself on the #introduction Slack channel (as part of HW 1)
 7. Complete Homework 1 (see instruction on Blackboard)
 
-[1]: https://pure.mpg.de/rest/items/item_2101336/component/file_2101335/content
 [2]: https://drive.google.com/file/d/1tr7XpIVf04S44o5ZploxJcd37Fg1GygV/view
 [3]: https://jim-stone.staff.shef.ac.uk/BookBayes2012/bookbayesch01.pdf
 [4]: https://web.mit.edu/r/current/RStudio/resources/markdown_help.html
-[5]: r_basics.html
+[5]: r_markdown.html
 
 ## Slides
 
