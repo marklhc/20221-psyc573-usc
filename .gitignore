@@ -6,6 +6,8 @@
 
 # Website-specific files
 data_files/
+*_class.*
+*_class_files/
 
 # Copyright images
 Kay_etal_2016_fig2.png

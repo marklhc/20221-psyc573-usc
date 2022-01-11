@@ -94,7 +94,7 @@ Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Thomas
 - Bayesian---way to do statistics until early 1920s
 
 - Ronald Fisher and Frequentist scholars took over 
-    * "The theory of inverse probability is founded upon an error, and must be wholly rejected" (Fisher, 1925, p. 10)
+    * "The theory of inverse probability is founded upon an error, and must be wholly rejected" (Fisher, 1925, p. 10)<sup>1</sup>
 
 .footnote[
 
@@ -135,7 +135,7 @@ Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Alan_T
 
 ---
 
-# Why Should You Learn About the Bayesian Way?
+## Why Should You Learn About the Bayesian Way?
 
 - Gigerenzer (2004): It is one tool of your statistical toolbox
 
@@ -361,7 +361,8 @@ p_int
 L = Lie, T = Truth; D = Dutch, E = English
 
 ```{r pp_cond, fig.retina = 2}
-pp_cond
+pp_cond +
+  labs(x = "Response time (second)")
 ```
 
 ---
@@ -395,7 +396,8 @@ mcmc_diff
 ### Posterior Predictive Check
 
 ```{r pp_dens, out.width = "60%", fig.asp = 0.5, fig.retina = 2, fig.width = 5.1}
-pp_dens
+pp_dens +
+  labs(x = "Response time (second)")
 ```
 
 ---
