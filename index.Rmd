@@ -1,5 +1,5 @@
 ---
-title: "PSYC 573 Multilevel Modeling (2022 Spring)"
+title: "PSYC 573 Bayesian Data Analysis (2022 Spring)"
 description: |
   Welcome to the website. Let's have a great semester!
 site: distill::distill_website
