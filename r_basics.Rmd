@@ -12,6 +12,10 @@ knitr::opts_chunk$set(echo = TRUE, comment = "#>", collapse = TRUE,
                       fig.show = "hold")
 ```
 
+```{r programming-pic, echo = FALSE, fig.cap = "Figure from http://www.phdcomics.com/comics/archive/phd031714s.gif", out.extra = "class=external"}
+knitr::include_graphics("http://www.phdcomics.com/comics/archive/phd031714s.gif")
+```
+
 ## Load Packages
 
 ```{r load-pkg, message = FALSE}
@@ -51,7 +55,7 @@ To find out what the `seq()` function does, use
 
 ## Piping
 
-A pipe operator is an alternative way to do multiple operations on an object. For example, the following code (a) transform `y` to numbers, (b) recode the value 99 to missing, and (c) obtain the mean. The traditional way to do it in R is through nested parentheses:
+A pipe operator is an alternative way to do multiple operations on an object. For example, the following code (a) transforms `y` to numbers, (b) recodes the value 99 to missing, and (c) obtains the mean. The traditional way to do it in R is through nested parentheses:
 
 ```{r nested-parentheses}
 # 3. Get the mean
@@ -80,7 +84,7 @@ y %>%
 The pipe operator works by taking the object before `%>%` as the first argument for the function after `%>%`. So `y %>% as.numeric()` is the same as `as.numeric(y)`, and `y2 %>% na_if(99)` is the same as `na_if(y2, 99)`. 
 
 <aside>
-The `%>%` operator requires loading the `tidyverse` package (specifically `magrittr` package). Since R 4.1.0, one can use `|>` for piping without loading any packages. While in the future `|>` is probably the preferred way, for now we'll stick to `%>%` to make things compatible for older versions of R.
+The `%>%` operator requires loading the `tidyverse` package (specifically `magrittr` package). Since R 4.1.0, one can use `|>` for piping without loading any packages. While in the future, `|>` may be the preferred way, for now, we'll stick to `%>%` to make things compatible for older versions of R.
 </aside>
 
 ## Vector, Matrix, Array, List, and Data Frames

@@ -127,9 +127,9 @@ E-copies of all below are available at USC Libraries.
     A prospectus about your project should be submitted by **Monday, March 21**. The prospectus should contain a concise description of what you (or your group) plan to do for your project, including a preliminary plan for statistical analysis. The prospectus should be limited to 1 single-spaced page (excluding tables, figures, references, and other supplemental materials).
 
     - Final Presentation/Report (15%)  
-        If you choose to do a presentation, on **April 26 and 28**, you or your group will give a 15-minute presentation on your project. You will also need to submit your slides to Blackboard for grading **on the day of your presentation**, which should include a link to the reproducible codes for your analyses. A grading rubric on the final presentation will be posted on Blackboard.
+        If you choose to do a presentation, on **April 26 and 28**, you or your group will give a 15-minute presentation on your project. You will also need to submit your slides to Blackboard for grading **on the day of your presentation**, which should include a link to the reproducible code for your analyses. A grading rubric on the final presentation will be posted on Blackboard.
 
-        If you choose to do a final report, your report will be due **Tuesday, May 10, at 1:00 p.m. Pacific Time** (the assigned final exam time for the class). There should also be a link to the reproducible codes for your analyses. The final paper should be 6-10 double-spaced pages of text (i.e., excluding title page, references, tables, figures, and appendices).
+        If you choose to do a final report, your report will be due **Tuesday, May 10, at 1:00 p.m. Pacific Time** (the assigned final exam time for the class). There should also be a link to the reproducible code for your analyses. The final paper should be 6-10 double-spaced pages of text (i.e., excluding title page, references, tables, figures, and appendices).
 
 # Participation
 

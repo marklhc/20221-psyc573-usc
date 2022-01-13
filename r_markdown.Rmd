@@ -161,7 +161,7 @@ $$a = b + c + \tau$$
 
 ## Cheatsheet
 
-More detailed cheatsheet: https://rmarkdown.rstudio.com/lesson-15.HTML
+More detailed cheatsheet: https://raw.githubusercontent.com/rstudio/cheatsheets/main/rmarkdown.pdf
 
 ***
 

@@ -2443,6 +2443,7 @@ Notes
 </button>
 <div class="nav-dropdown-content">
 <a href="r_markdown.html">R Markdown</a>
+<a href="r_basics.html">R Basics</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2489,6 +2490,14 @@ Notes
 <li><a href="#last-updated">Last updated</a></li>
 </ul>
 </nav>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:programming-pic"></span>
+<img src="http://www.phdcomics.com/comics/archive/phd031714s.gif" alt="Figure from http://www.phdcomics.com/comics/archive/phd031714s.gif" width="70%" class=external />
+<p class="caption">
+Figure 1: Figure from <a href="http://www.phdcomics.com/comics/archive/phd031714s.gif" class="uri">http://www.phdcomics.com/comics/archive/phd031714s.gif</a>
+</p>
+</div>
 </div>
 <h2 id="load-packages">Load Packages</h2>
 <div class="layout-chunk" data-layout="l-body">
@@ -2550,7 +2559,7 @@ Notes
 </div>
 </div>
 <h2 id="piping">Piping</h2>
-<p>A pipe operator is an alternative way to do multiple operations on an object. For example, the following code (a) transform <code>y</code> to numbers, (b) recode the value 99 to missing, and (c) obtain the mean. The traditional way to do it in R is through nested parentheses:</p>
+<p>A pipe operator is an alternative way to do multiple operations on an object. For example, the following code (a) transforms <code>y</code> to numbers, (b) recodes the value 99 to missing, and (c) obtains the mean. The traditional way to do it in R is through nested parentheses:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 3. Get the mean</span>
@@ -2582,7 +2591,7 @@ Notes
 </div>
 <p>The pipe operator works by taking the object before <code>%&gt;%</code> as the first argument for the function after <code>%&gt;%</code>. So <code>y %&gt;% as.numeric()</code> is the same as <code>as.numeric(y)</code>, and <code>y2 %&gt;% na_if(99)</code> is the same as <code>na_if(y2, 99)</code>.</p>
 <aside>
-The <code>%&gt;%</code> operator requires loading the <code>tidyverse</code> package (specifically <code>magrittr</code> package). Since R 4.1.0, one can use <code>|&gt;</code> for piping without loading any packages. While in the future <code>|&gt;</code> is probably the preferred way, for now we’ll stick to <code>%&gt;%</code> to make things compatible for older versions of R.
+The <code>%&gt;%</code> operator requires loading the <code>tidyverse</code> package (specifically <code>magrittr</code> package). Since R 4.1.0, one can use <code>|&gt;</code> for piping without loading any packages. While in the future, <code>|&gt;</code> may be the preferred way, for now, we’ll stick to <code>%&gt;%</code> to make things compatible for older versions of R.
 </aside>
 <h2 id="vector-matrix-array-list-and-data-frames">Vector, Matrix, Array, List, and Data Frames</h2>
 <div class="layout-chunk" data-layout="l-body">
@@ -3061,7 +3070,7 @@ In the function call, 2 and 3 are the <em>values</em> of the arguments, not the 
 <section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code>#&gt; [1] &quot;January 08, 2022&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;January 13, 2022&quot;</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 

@@ -13,6 +13,36 @@ params:
   for_class: false
 ---
 
+exclude: `r !params$for_class`
+class: inverse, mline, center, middle
+
+# Warmup Quizz
+
+---
+exclude: `r !params$for_class`
+
+# Scoring
+
+1. a = 1 point, b = 3 points, c = 2 points; 
+2. a = 1 point, b = 3 points, c = 1 point; 
+3. a = 3 points, b = 1 point; 
+4. a = 3 points, b = 1 point.
+
+---
+exclude: `r !params$for_class`
+
+# Scoring
+
+- 4--5: your current thinking is fairly frequentist
+- 9--12: alignment with the Bayesian philosophy
+- 6--8: strengths in both philosophies
+
+???
+
+From https://www.bayesrulesbook.com/chapter-1.html
+
+---
+
 class: inverse, mline, center, middle
 
 ```{r, child = "slide_settings.RMarkdown"}
