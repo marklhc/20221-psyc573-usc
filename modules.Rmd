@@ -76,6 +76,41 @@ embed_xaringan("slides/intro.html", ratio = "4:3")
 
 # Week 2
 
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Explain the **three axioms/properties** of probability
+- Describe the **subjectivist** interpretation of probability, and contrast it with the **frequentist** interpretation
+- Explain the difference between **probability mass** and **probability density**
+- Compute probability density using **simulations**
+- Compute **joint, marginal, and conditional probabilities** with two variables
+- Write an R function and use loops for repeating computations
+
+## Task Lists
+
+1. Complete the assigned readings
+    * Kruschke ch. 4
+    * Wickham & Grolemund ch. [7][6], [19.1-19.5][7]
+2. Review the resources (slides and notes on [probability][8] and [R basics][9])
+3. Attend the Tuesday and Thursday class meetings
+4. Complete Homework 2 (see instruction on Blackboard)
+
+[6]: https://r4ds.had.co.nz/exploratory-data-analysis.html
+[7]: https://r4ds.had.co.nz/functions.html
+[8]: r_basics.html
+[9]: probability.html
+
+## Slides
+
+<!--
+[PDF version](slides/probability.pdf){target="_blank"}
+
+```{r embed-2, echo = FALSE}
+embed_xaringan("slides/probability.html", ratio = "4:3")
+```
+-->
+
 :::
 
 :::
