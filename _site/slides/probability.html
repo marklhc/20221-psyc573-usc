@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Probability</title>
+    <meta charset="utf-8" />
+    <meta name="date" content="2022-01-18" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <link rel="stylesheet" href="my_style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Probability
+## PSYC 573
+### University of Southern California
+### January 18, 2022
+
+---
+
+exclude: TRUE
+
+class: clear, inverse
+background-image: url(https://upload.wikimedia.org/wikipedia/commons/2/28/Casino_Lights_In_Macau.jpg)
+background-position: center
+background-size: contain
+
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+--shareagain-twitter: none;
+--shareagain-facebook: none;
+--shareagain-linkedin: none;
+--shareagain-pinterest: none;
+--shareagain-pocket: none;
+--shareagain-reddit: none;
+}</style>
+
+
+
+
+
+???
+
+Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Casino_Lights_In_Macau.jpg)
+
+---
+
+# History of Probability
+
+- A mathematical way to study uncertainty/randomness
+
+- Origin: To study gambling problems
+
+---
+class: clear
+
+&gt; Someone asks you to play a game. The person will flip a coin. You win $10 if it shows head, and lose $10 if it shows tail. Would you play?
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/6/61/10_Avos_2007_Macao.jpg" width="40%" style="display: block; margin: auto;" /&gt;
+
+--
+exclude: TRUE
+
+Why do you think it is (not) a fair gamble?
+
+???
+
+Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:10_Avos_2007_Macao.jpg)
+
+---
+
+# Kolmogorov Axioms
+
+For an event `\(A_i\)` (e.g., getting a "1" from throwing a die)
+
+- `\(P(A_i) \geq 0\)`  [All probabilities are non-negative]
+
+- `\(P(A_1 \cup A_2 \cup \cdots) = 1\)`  [Union of all possibilities is 1]
+
+- `\(P(A_1) + P(A_2) = P(A_1 \text{ or } A_2)\)` for mutually exclusive `\(A_1\)` and `\(A_2\)` [Addition rule]
+
+---
+
+# Throwing a Die With Six Faces
+
+&lt;img src="images/dice.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+`\(A_1\)` = getting a one, . . . `\(A_6\)` = getting a six
+
+- `\(P(A_i) \geq 0\)`
+- `\(P(\text{the number is 1, 2, 3, 4, 5, or 6}) = 1\)`
+- `\(P(\text{the number is 1 or 2}) = P(A_1) + P(A_2)\)`
+
+Mutually exclusive: `\(A_1\)` and `\(A_2\)` cannot both be true
+
+---
+exclude: TRUE
+class: clear
+
+&gt; Consider two events: `\(A\)` = Hok is Asian and `\(B\)` = Hok is American. Are `\(A\)` and `\(B\)` mutually exclusive?
+
+--
+
+&gt; There is a one-half chance for a sunny day tomorrow and a one-fourth chance for a cloudy day. What is the probability that tomorrow is either sunny or cloudy?
+
+---
+exclude: true
+
+# Pascal's Wager
+
+![](https://upload.wikimedia.org/wikipedia/commons/7/79/Blaise_pascal.jpg)
+
+|     | Believe in God | Don't believe in God |
+|-----|----------------|----------------------|
+| God exists | Gain everything   | Status quo |
+| God does not exist | Lose/Misery | Status quo |
+
+.footnote[
+
+https://plato.stanford.edu/entries/pascal-wager/
+
+]
+
+???
+
+Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Blaise_pascal.jpg)
+
+---
+class: inverse, middle, center
+
+# Interpretations of Probability
+
+
+---
+
+# Ways to Interpret Probability
+
+- **Classical:** Counting rules
+
+- **Frequentist:** long-run relative frequency
+
+- **Subjectivist:** Rational belief
+
+.footnote[
+
+Note: there are other paradigms to interpret probability. See https://plato.stanford.edu/entries/probability-interpret/
+
+]
+
+---
+
+# Classical Interpretation
+
+&lt;img src="images/dice.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+- Number of target outcomes / Number of possible "indifferent" outcomes
+    * E.g., Probability of getting "1" when throwing a die: 1 / 6
+
+---
+
+# Frequentist Interpretation
+
+- Long-run relative frequency of an outcome
+
+.left-column[
+
+.font70[
+
+| Trial | Outcome |
+|:-----:|:-------:|
+|   1   |    2    |
+|   2   |    3    |
+|   3   |    1    |
+|   4   |    3    |
+|   5   |    1    |
+|   6   |    1    |
+|   7   |    5    |
+|   8   |    6    |
+|   9   |    3    |
+|  10   |    3    |
+]
+
+--
+
+]
+
+.right-column[
+&lt;img src="probability_files/figure-html/unnamed-chunk-6-1.png" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+exclude: TRUE
+class: clear
+
+When flipping a fair coin, we say that "the probability of flipping Heads is 0.5." How do you interpret this probability?
+
+&gt; A. If I flip this coin over and over, roughly 50% will be Heads.
+
+&gt; B. Heads and Tails are equally plausible.
+
+---
+class: clear
+
+### Problem of the single case: Some events cannot be repeated
+
+- Probability of Democrats/Republicans "winning" the 2022 election
+
+- Probability of the LA Rams winning the 2022 Super Bowl
+
+--
+
+- Probability that the null hypothesis is true
+
+--
+
+&amp;zwj;Frequentist: probability is not meaningful for these
+
+---
+
+exclude: TRUE
+class: clear
+
+An election is coming up and a pollster claims that candidate A has a 0.9 probability of winning. How do you interpret this probability?
+
+&gt; A. If we observe the election over and over, candidate A will win roughly 90% of the time.
+
+&gt; B. Candidate A is much more likely to win than to lose.
+
+&gt; C. The pollster’s calculation is wrong. Candidate A will either win or lose, thus their probability of winning can only be 0 or 1.
+
+---
+
+# Subjectivist Interpretation
+
+- State of one's mind; the belief of all outcomes
+    * Subjected to the constraints of:
+        * Axioms of probability
+        * That the person possessing the belief is rational
+        
+&lt;img src="probability_files/figure-html/unnamed-chunk-7-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Describing a Subjective Belief
+
+- Assign a value for every possible outcome
+    * Not an easy task
+
+- Use a *probability distribution* to approximate the belief
+    * Usually by following some conventions
+    * Some distributions preferred for computational efficiency
+
+Key to forming *prior* distributions
+
+---
+class: inverse, middle, center
+
+# Probability Distribution
+
+---
+
+# Probability Distributions
+
+- Discrete outcome: Probability **mass**
+
+- Continuous outcome: Probability **density**
+
+&lt;img src="probability_files/figure-html/prob-mass-density-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Probability Density
+
+- If `\(X\)` is continuous, the probability of `\(X\)` having any particular value `\(\to\)` 0
+    * E.g., probability a person's height is 174.3689 cm
+
+Density: 
+`$$P(x_0) = \lim_{\Delta x \to 0} \frac{P(x_0 &lt; X &lt; x_0 + \Delta x)}{\Delta x}$$`
+
+---
+
+# Normal Probability Density
+
+.panelset[
+.panel[.panel-name[Math]
+
+`$$P(x) = \frac{1}{\sqrt{2 \pi} \sigma} \exp\left(-\frac{1}{2}\left[\frac{x - \mu}{\sigma}\right]^2\right)$$`
+
+&lt;img src="probability_files/figure-html/unnamed-chunk-8-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.panel[.panel-name[R Code]
+
+
+```r
+my_normal_density &lt;- function(x, mu, sigma) {
+    exp(- ((x - mu) / sigma) ^2 / 2) / (sigma * sqrt(2 * pi))
+}
+```
+
+]
+]
+
+---
+
+# Some Commonly Used Distributions
+
+![](https://upload.wikimedia.org/wikipedia/commons/6/69/Relationships_among_some_of_univariate_probability_distributions.jpg)
+
+???
+
+Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Relationships_among_some_of_univariate_probability_distributions.jpg)
+
+---
+
+# Summarizing a Probability Distribution
+
+### Central tendency
+
+The center is usually the region of values with high plausibility
+
+- Mean, median, mode
+
+--
+
+### Dispersion
+
+How concentrated the region with high plausibility is
+
+- Variance, standard deviation
+- Median absolute deviation (MAD)
+
+---
+class: clear
+
+### Interval
+
+- One-sided
+- Symmetric
+- Highest density interval (HDI)
+
+&lt;img src="probability_files/figure-html/interval-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+class: inverse, middle, center
+
+# Probability with Multiple Variables
+
+---
+
+# Multiple Variables
+
+- Joint probability: `\(P(X, Y)\)`
+- Marginal probability: `\(P(X)\)`, `\(P(Y)\)`
+
+|     | &gt;= 4   | &lt;= 3   | Marginal (odd/even) |
+|-----|--------|--------|:-----:|
+| odd | 1/6    | 2/6    | 3/6 |
+| even| 2/6    | 1/6    | 3/6 |
+| Marginal (&gt;= 4 or &lt;= 3) | 3/6  | 3/6  |  1  |
+
+---
+class: clear
+
+### Continuous Variables
+
+- Left: Continuous `\(X\)`, Discrete `\(Y\)`
+- Right: Continuous `\(X\)` and `\(Y\)`
+
+&lt;img src="probability_files/figure-html/unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+???
+
+Example of Mixed continuous-discrete variables: `\(X\)` = continuous outcome, `\(Y\)` = binary treatment indicator
+
+---
+
+# Conditional Probability
+
+Knowing the value of `\(B\)`, the relative plausibility of each value of outcome `\(A\)`
+
+`$$P(A \mid B_1) = \frac{P(A, B_1)}{P(B_1)}$$`
+
+E.g., P(Alzheimer's) vs. P(Alzheimer's | family history)
+
+---
+class: clear
+
+E.g., Knowing that the number is odd
+
+|     | &gt;= 4     | &lt;= 3     |
+|-----|----------|----------|
+| odd | &lt;span style="color:red"&gt;1/6&lt;/span&gt;    | &lt;span style="color:red"&gt;2/6&lt;/span&gt;    |
+| ~~even~~| ~~2/6~~    | ~~1/6~~    |
+| Marginal (&gt;= 4 or &lt;= 3) | 3/6  | 3/6  |
+
+---
+class: clear
+
+### Conditional = Joint / Marginal
+
+|     | &gt;= 4     | &lt;= 3     |
+|-----|----------|----------|
+| odd | &lt;span style="color:red"&gt;1/6&lt;/span&gt;    | &lt;span style="color:red"&gt;2/6&lt;/span&gt;    |
+| Marginal (&gt;= 4 or &lt;= 3) | 3/6  | 3/6  |
+| Conditional (odd) | &lt;span style="color:red"&gt;(1/6)&lt;/span&gt; / &lt;span style="color:purple"&gt;(3/6)&lt;/span&gt; = 1/3 | &lt;span style="color:red"&gt;(1/6)&lt;/span&gt; / &lt;span style="color:purple"&gt;(2/6)&lt;/span&gt; = 2/3 |
+
+---
+
+# `\(P(A \mid B) \neq P(B \mid A)\)`
+
+- `\(P\)`(number is six | even number) = 1 / 3
+
+- `\(P\)`(even number | number is six) = 1
+
+Another example: `\(P\)`(road is wet | it rains) vs. `\(P\)`(it rains | road is wet)
+
+- Problem: Not considering other conditions leading to wet road: sprinkler, street cleaning, etc
+
+Sometimes called the *confusion of the inverse* 
+
+---
+
+# Independence
+
+`\(A\)` and `\(B\)` are independent if 
+
+&gt; `\(P(A \mid B) = P(A)\)`
+
+--
+
+E.g.,
+
+- `\(A\)`: A die shows five or more
+- `\(B\)`: A die shows an odd number
+
+--
+
+P(&gt;= 5) = 1/3. P(&gt;=5 | odd number) = ? P(&gt;=5 | even number) = ?
+
+P(&lt;= 5) = 2/3. P(&lt;=5 | odd number) = ? P(&gt;=5 | even number) = ?
+
+---
+
+# Law of Total Probability
+
+.font70[
+
+From conditional `\(P(A \mid B)\)` to marginal `\(P(A)\)`
+
+- If `\(B_1, B_2, \cdots, B_n\)` are all possibilities for an event (so they add up to a probability of 1), then
+
+`\begin{align}
+    P(A) &amp; = P(A, B_1) + P(A, B_2) + \cdots + P(A, B_n)  \\
+         &amp; = P(A \mid B_1)P(B_1) + P(A \mid B_2)P(B_2) + \cdots + P(A \mid B_n) P(B_n)  \\
+         &amp; = \sum_{k = 1}^n P(A \mid B_k) P(B_k)
+\end{align}`
+
+]
+
+&lt;img src="images/total_probability.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+class: clear
+
+&gt; Example: Consider the use of a depression screening test for people with diabetes. For a person with depression, there is an 85% chance the test is positive. For a person without depression, there is a 28.4% chance the test is positive. Assume that 19.1% of people with diabetes have depression. If the test is given to 1,000 people with diabetes, around how many people will be tested positive? 
+
+.footnote[
+
+Data source: https://doi.org/10.1016/s0165-0327(12)70004-6, https://doi.org/10.1371/journal.pone.0218512
+
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -2613,9 +2613,9 @@ Notes
 <h2 id="probability-distributions">Probability Distributions</h2>
 <ul>
 <li><p>Discrete event (e.g., outcome of throwing a die or an election): probability <em>mass</em>. The probability is nonzero, at least for some outcomes. The graph below on the left shows the probability mass of the sum of the numbers from two dice.</p></li>
-<li><p>Continuous event (e.g., temperature): probability <em>density</em>. The probability is basically zero for any outcome. Instead, the probability density is approximated by <span class="math inline">\(P(A - h &lt; a \leq A + h) / (2h)\)</span> for a very small <span class="math inline">\(h\)</span>.</p>
+<li><p>Continuous event (e.g., temperature): probability <em>density</em>. The probability is basically zero for any outcome. Instead, the probability density is approximated by <span class="math inline">\(P(A \leq a \leq A + h) / h\)</span> for a very small <span class="math inline">\(h\)</span>.</p>
 <ul>
-<li>For example, to find the probability density that a person’s well-being score is 80, we first find the probability that a person scores between 79.5 and 80.5 (or 79.9995 and 81.0005), and divide that probability by 1 (or 0.001). See the shaded area of the graph below on the right.</li>
+<li>For example, to find the probability density that a person’s well-being score is 80, we first find the probability that a person scores between 80 and 80.5 (or 80 and 80.0005), and divide that probability by 0.5 (or 0.0005). See the shaded area of the graph below on the right.</li>
 </ul></li>
 </ul>
 <aside>

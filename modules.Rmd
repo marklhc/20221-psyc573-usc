@@ -98,18 +98,16 @@ By the end of this module, you will be able to
 
 [6]: https://r4ds.had.co.nz/exploratory-data-analysis.html
 [7]: https://r4ds.had.co.nz/functions.html
-[8]: r_basics.html
-[9]: probability.html
+[8]: probability.html
+[9]: r_basics.html
 
 ## Slides
 
-<!--
 [PDF version](slides/probability.pdf){target="_blank"}
 
 ```{r embed-2, echo = FALSE}
 embed_xaringan("slides/probability.html", ratio = "4:3")
 ```
--->
 
 :::
 

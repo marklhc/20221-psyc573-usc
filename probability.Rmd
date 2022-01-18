@@ -127,8 +127,8 @@ Assuming that die is (believed to be) fair, you can verify that the probability 
 
 - Discrete event (e.g., outcome of throwing a die or an election): probability *mass*. The probability is nonzero, at least for some outcomes. The graph below on the left shows the probability mass of the sum of the numbers from two dice.
 
-- Continuous event (e.g., temperature): probability *density*. The probability is basically zero for any outcome. Instead, the probability density is approximated by $P(A - h < a \leq A + h) / (2h)$ for a very small $h$. 
-    * For example, to find the probability density that a person's well-being score is 80, we first find the probability that a person scores between 79.5 and 80.5 (or 79.9995 and 81.0005), and divide that probability by 1 (or 0.001). See the shaded area of the graph below on the right.
+- Continuous event (e.g., temperature): probability *density*. The probability is basically zero for any outcome. Instead, the probability density is approximated by $P(A \leq a \leq A + h) / h$ for a very small $h$. 
+    * For example, to find the probability density that a person's well-being score is 80, we first find the probability that a person scores between 80 and 80.5 (or 80 and 80.0005), and divide that probability by 0.5 (or 0.0005). See the shaded area of the graph below on the right.
 
 <aside>
 For many problems in the social and behavioral sciences, the measured variables are not truly continuous, but we still use continuous distributions to approximate them. 
@@ -144,7 +144,7 @@ p_mass <- ggplot(two_dice_probs, aes(x = x, y = prob)) +
     scale_x_continuous(breaks = 2:12) +
     labs(x = "Sum of two dice", y = "Probability mass")
 # Probability density
-shaded <- data.frame(x = seq(79.5, 80.5, length.out = 11))
+shaded <- data.frame(x = seq(80, 80.5, length.out = 11))
 shaded$dens <- dnorm(shaded$x, mean = 78, sd = 5)
 p_dens <- ggplot(data.frame(x = c(75, 85)), aes(x = x)) +
     stat_function(fun = dnorm, args = list(mean = 78, sd = 5)) +
