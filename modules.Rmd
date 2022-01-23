@@ -111,6 +111,47 @@ embed_xaringan("slides/probability.html", ratio = "4:3")
 
 :::
 
+::: {.panel}
+
+# Week 3
+
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Derive **Bayes' rule** from the definition of conditional probability
+- Apply Bayes' rule to obtain **posterior** from prior and data
+- Explain what **data-order invariance** and **exchangeability** are
+- Use **grid approximation** to obtain the posterior for a **Bernoulli** model
+- Describe the influence of **sample size** and **prior** on the posterior
+- Use R to perform **prior predictive checks**
+
+## Task Lists
+
+1. Complete the assigned readings
+    * [Gigerenzer (2004)][1]
+    * Kruschke ch. 5
+2. Review the resources (slides and [note][10])
+3. Attend the Tuesday and Thursday class meetings
+4. No homework for this week, but you may work on Q1 and Q2 for Homework 3 (see instruction on Blackboard)
+
+[1]: https://pure.mpg.de/rest/items/item_2101336/component/file_2101335/content
+[10]: bayes_rule.html
+
+## Slides
+
+<!--
+
+[PDF version](slides/bayes_rule.pdf){target="_blank"}
+
+```{r embed-3, echo = FALSE}
+embed_xaringan("slides/bayes_rule.html", ratio = "4:3")
+```
+
+-->
+
+:::
+
 :::
 
 ## Last updated {.appendix}
