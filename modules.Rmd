@@ -140,15 +140,11 @@ By the end of this module, you will be able to
 
 ## Slides
 
-<!--
-
 [PDF version](slides/bayes_rule.pdf){target="_blank"}
 
 ```{r embed-3, echo = FALSE}
 embed_xaringan("slides/bayes_rule.html", ratio = "4:3")
 ```
-
--->
 
 :::
 

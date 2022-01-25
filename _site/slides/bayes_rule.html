@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Bayes’ Rule</title>
+    <meta charset="utf-8" />
+    <meta name="date" content="2022-01-25" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <link rel="stylesheet" href="my_style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Bayes’ Rule
+## PSYC 573
+### University of Southern California
+### January 25, 2022
+
+---
+
+
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+--shareagain-twitter: none;
+--shareagain-facebook: none;
+--shareagain-linkedin: none;
+--shareagain-pinterest: none;
+--shareagain-pocket: none;
+--shareagain-reddit: none;
+}</style>
+
+
+
+
+
+# Inverse Probability
+
+Conditional probability: `\(P(A \mid B) = \dfrac{P(A, B)}{P(B)}\)`
+
+which yields `\(P(A, B) = P(A \mid B) P(B)\)` (joint = conditional `\(\times\)` marginal)
+
+--
+
+On the other side, `\(P(B \mid A) = \dfrac{P(B, A)}{P(A)}\)`
+
+---
+
+# Bayes' Theorem
+
+`$$P(B \mid A) = \dfrac{P(A \mid B) P(B)}{P(A)}$$`
+
+Which says how can go from `\(P(A \mid B)\)` to `\(P(B \mid A)\)`
+
+--
+
+Consider `\(B_i\)` `\((i = 1, \ldots, n)\)` as one of the many possible mutually exclusive events
+
+`\begin{align}
+  P(B_i \mid A) &amp; = \frac{P(A \mid B_i) P(B_i)}{P(A)}  \\
+             &amp; = \frac{P(A \mid B_i) P(B_i)}{\sum_{k = 1}^n P(A \mid B_k)P(B_k)}
+\end{align}`
+
+---
+class: clear
+
+&gt; A police officer stops a driver *at random* and does a breathalyzer test for the driver. The breathalyzer is known to detect true drunkenness 100% of the time, but in **1%** of the cases, it gives a *false positive* when the driver is sober. We also know that in general, for every **1,000** drivers passing through that spot, **one** is driving drunk. Suppose that the breathalyzer shows positive for the driver. What is the probability that the driver is truly drunk?
+
+---
+exclude: true
+class: clear
+
+.pull-left[
+
+`\(P(\text{positive} \mid \text{drunk}) = 1\)`  
+`\(P(\text{positive} \mid \text{sober}) = 0.01\)`  
+
+]
+
+.pull-right[
+
+`\(P(\text{drunk}) = 1 / 1000\)`  
+`\(P(\text{sober}) = 999 / 1000\)`
+
+]
+
+--
+exclude: true
+
+Using Bayes's Theorem, 
+
+.font70[
+
+`\begin{align}
+  &amp; \quad\; P(\text{drunk} \mid \text{positive})  \\
+  &amp; = \frac{P(\text{positive} \mid \text{drunk}) P(\text{drunk})}
+           {P(\text{positive} \mid \text{drunk}) P(\text{drunk}) + 
+            P(\text{positive} \mid \text{sober}) P(\text{sober})}  \\
+  &amp; = \frac{1 \times 0.001}{1 \times 0.001 + 0.01 \times 0.999} \\
+  &amp; = 100 / 1099 \approx 0.091
+\end{align}`
+
+]
+
+--
+exclude: true
+
+So there is less than 10% chance that the driver is drunk even when the 
+breathalyzer shows positive.
+
+---
+exclude: true
+class: clear
+
+&gt; A. Even with the breathalyzer showing positive, it is still very likely that the driver is not drunk
+
+&gt; B. On the other hand, before the breathalyzer result, the person only has a 0.1% chance of being drunk. The breathalyzer result increases that probability to 9.1% (i.e., 91 times bigger)
+
+--
+exclude: true
+
+Both (A) and (B) are true. It just means that there is still much uncertainty after one positive test
+
+???
+
+Having a second test may be helpful, assuming that what causes a false positive in the first test does not guarantee a false positive in the second test (otherwise, the second test is useless). That's one reason for not having consecutive tests too close in time. 
+
+---
+
+# Gigerenzer (2004)
+
+`\(p\)` value = `\(P\)`(data | hypothesis), not `\(P\)`(hypothesis | data)
+
+--
+
+Consider:
+- `\(H_0\)`: the person is sober (not drunk)
+- data: breathalyzer result
+
+`\(p\)` = `\(P\)`(positive | sober) = 0.01 `\(\rightarrow\)` reject `\(H_0\)` at .05 level
+
+--
+
+However, as we have been, given that `\(P(H_0)\)` is small, `\(P(H_0 \mid \text{data})\)` is still small
+
+---
+class: inverse, middle, center
+
+# Bayesian Data Analysis
+
+---
+
+# Bayes' Theorem in Data Analysis
+
+- Bayesian statistics
+    * more than applying Bayes's theorem
+    * a way to quantify the plausibility of every possible value of some parameter `\(\theta\)`
+        * E.g., population mean, regression coefficient, etc
+    * Goal: **update one's Belief about `\(\theta\)` based on the observed data `\(D\)`**
+
+---
+class: clear
+
+### Going back to the example
+
+Goal: Find the probability that the person is drunk, given the test result
+
+Parameter (`\(\theta\)`): drunk (values: drunk, sober)
+
+Data (`\(D\)`): test (possible values: positive, negative)
+
+--
+
+Bayes' theorem: `\(\underbrace{P(\theta \mid D)}_{\text{posterior}} = \underbrace{P(D \mid \theta)}_{\text{likelihood}} \underbrace{P(\theta)}_{\text{prior}} / \underbrace{P(D)}_{\text{marginal}}\)`
+
+---
+class: clear
+
+Usually, the marginal is not given, so
+
+`$$P(\theta \mid D) = \frac{P(D \mid \theta)P(\theta)}{\sum_{\theta^*} P(D \mid \theta^*)P(\theta^*)}$$`
+
+- `\(P(D)\)` is also called *evidence*, or the *prior predictive distribution*
+    * E.g., probability of a positive test, regardless of the drunk status
+
+---
+
+# Example 2
+
+
+```r
+shiny::runGitHub("plane_search", "marklhc")
+```
+
+- Try choosing different priors. How does your choice affect the posterior?
+- Try adding more data. How does the number of data points affect the posterior?
+
+---
+class: clear
+
+The posterior is a synthesis of two sources of information: prior and data (likelihood)
+
+Generally speaking, a narrower distribution (i.e., smaller variance) means more/stronger information
+- Prior: narrower = more informative/strong
+- Likelihood: narrower = more data/more informative
+
+---
+exclude: true
+
+Exercise:
+
+- Shiny app with a parameter (fixed)
+- Ask students to formulate a prior distribution
+- Flip a coin, and compute the posterior by hand (with R)
+- Use the posterior as prior, flip again, and obtain the posterior again
+- Compare to use the original prior with two coin flips (both numbers and plots)
+- Flip 10 times, and show how the posterior change (using animation in `knitr`)
+
+---
+
+# Setting Priors
+
+.font70[
+- Flat, noninformative, vague
+- Weakly informative: common sense, logic
+- Informative: publicly agreed facts or theories
+]
+
+&lt;img src="bayes_rule_files/figure-html/unnamed-chunk-3-1.png" width="95%" style="display: block; margin: auto;" /&gt;
+
+&gt; *Prior beliefs used in data analysis must be admissible by a skeptical scientific audience (Kruschke, 2015, p. 115)*
+
+---
+
+# Likelihood/Model/Data `\(P(D \mid \theta, M)\)`
+
+&gt; Probability of observing the data **as a function of the parameter(s)**
+
+.font70[
+- Also written as `\(L(\theta \mid D)\)` or `\(L(\theta; D)\)` to emphasize it is a function of `\(\theta\)`
+- Also depends on a chosen model `\(M\)`: `\(P(D \mid \theta, M)\)`
+]
+
+&lt;img src="bayes_rule_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Likelihood of Multiple Data Points
+
+1. Given `\(D_1\)`, obtain *posterior* `\(P(\theta \mid D_1)\)`
+2. Use `\(P(\theta \mid D_1)\)` as *prior*, given `\(D_2\)`, obtain posterior `\(P(\theta \mid D_1, D_2)\)`
+
+The posterior is the same as getting `\(D_2\)` first then `\(D_1\)`, or `\(D_1\)` and `\(D_2\)` together, if
+
+- **data-order invariance** is satisfied, which means
+- `\(D_1\)` and `\(D_2\)` are **exchangeable**
+
+---
+class: clear
+
+# Exchangeability
+
+Joint distribution of the data does not depend on the order of the data
+
+E.g., `\(P(D_1, D_2, D_3) = P(D_2, D_3, D_1) = P(D_3, D_2, D_1)\)`
+
+Example of non-exchangeable data:
+
+- First child = male, second = female vs. first = female, second = male
+- `\(D_1, D_2\)` from School 1; `\(D_3, D_4\)` from School 2 vs. `\(D_1, D_3\)` from School 1; `\(D_2, D_4\)` from School 2
+
+---
+class: inverse, middle, center
+
+# An Example With Binary Outcomes
+
+---
+
+# Coin Flipping
+
+Q: Estimate the probability that a coin gives a head
+
+- `\(\theta\)`: parameter, probability of a head
+
+Flip a coin, showing head
+
+- `\(y = 1\)` for showing head
+
+&gt; How do you obtain the likelihood?
+
+---
+
+# Bernoulli Likelihood
+
+The likelihood depends on the probability model chosen
+- Some models are commonly used, for historical/computational/statistical reasons
+
+One natural way is the **Bernoulli model**
+`$$\begin{align}
+P(y = 1 \mid \theta) &amp; = \theta \\
+P(y = 0 \mid \theta) &amp; = 1 - \theta
+\end{align}$$`
+
+--
+
+The above requires separating `\(y = 1\)` and `\(y = 0\)`. A more compact way is
+`$$P(y \mid \theta) = \theta^y (1 - \theta)^{(1 - y)}$$`
+
+---
+
+# Multiple Observations
+
+Assume the flips are exchangeable given `\(\theta\)`,
+
+`$$\begin{align}
+P(y_1, \ldots, y_N \mid \theta) &amp;= \prod_{i = 1}^N P(y_i \mid \theta) \\
+&amp;= \theta^{\sum_{i = 1}^N y_i} (1 - \theta)^{\sum_{i = 1}^N (1 - y_i)} \\
+&amp;= \theta^z (1 - \theta)^{N - z}
+\end{align}$$`
+
+`\(z\)` = # of heads; `\(N\)` = # of flips
+
+&gt; Note: the likelihood only depends on the number of heads, not the particular sequence of observations
+
+---
+
+# Posterior
+
+### Same posterior, two ways to think about it
+
+Prior belief, weighted by the likelihood
+
+`$$P(\theta \mid y) \propto \underbrace{P(y \mid \theta)}_{\text{weights}} P(\theta)$$`
+
+--
+
+Likelihood, weighted by the strength of prior belief
+
+`$$P(\theta \mid y) \propto \underbrace{P(\theta)}_{\text{weights}} P(\theta \mid y)$$`
+
+---
+
+# Posterior
+
+Say `\(N\)` = 4 and `\(z\)` = 1
+
+E.g., `\(P(\theta \mid y_1 = 1) \propto P(y_1 = 1 \mid \theta) P(\theta)\)`
+
+.font70[
+For pedagogical purpose, we'll discretize the `\(\theta\)` into [.05, .15, .25, ..., .95]
+- Also called **grid approximation**
+]
+
+.pull-left[
+&lt;img src="bayes_rule_files/figure-html/prior-likelihood-1.png" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.pull-right[
+
+&lt;img src="bayes_rule_files/figure-html/product-1.png" width="95%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# How About the Denominator?
+
+Numerator: relative posterior plausibility of the `\(\theta\)` values
+
+We can avoid computing the denominator because
+- The sum of the probabilities need to be 1
+
+--
+
+So, for **discrete** parameters:
+
+- Posterior probabilitiy = relative plausibility / sum of relative plausibilities
+
+--
+
+However, the denominator is useful for computing the *Bayes factor*
+
+---
+
+# Summarizing a Posterior Distribution
+
+.font70[
+Simulate (i.e., draw samples) from the posterior distribution
+]
+
+.panelset[
+.panel[.panel-name[R code]
+
+
+```r
+th &lt;- seq(.05, .95, by = .10)
+pth &lt;- c(.01, .055, .10, .145, .19, .19, .145, .10, .055, .01)
+py_th &lt;- th^1 * (1 - th)^4
+pth_y_unscaled &lt;- pth * py_th
+pth_y &lt;- pth_y_unscaled / sum(pth_y_unscaled)
+post_samples &lt;- sample(th,
+  size = 1000, replace = TRUE,
+  prob = pth_y
+)
+```
+
+]
+
+.panel[.panel-name[Summary]
+
+&lt;img src="bayes_rule_files/figure-html/summarize-post-draws-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+```
+&gt;#   mean median     sd    mad   ci.1   ci.9 
+&gt;#  0.360  0.350  0.143  0.148  0.150  0.550
+```
+
+]
+]
+
+---
+class: clear
+
+### Influence of more samples
+
+`\(N\)` = 40, `\(z\)` = 10
+
+.pull-left[
+&lt;img src="bayes_rule_files/figure-html/prior-likelihood-2-1.png" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.pull-right[
+
+&lt;img src="bayes_rule_files/figure-html/product-2-1.png" width="95%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+class: clear
+
+### Influence of more informative priors
+
+`\(N\)` = 4, `\(z\)` = 1
+
+.pull-left[
+&lt;img src="bayes_rule_files/figure-html/prior-likelihood-3-1.png" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.pull-right[
+
+&lt;img src="bayes_rule_files/figure-html/product-3-1.png" width="95%" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+The prior needs to be well justified
+
+---
+
+# Prior Predictive Distribution
+
+&gt; Bayesian models are **generative**
+
+Simulate data from the prior distribution to check whether the data fit our intuition
+
+- Clearly impossible values/patterns?
+
+- Overly restrictive?
+
+---
+class: clear
+
+`\(P(y) = \int P(y | \theta^*) P(\theta^*) d \theta^*\)`: Simulate a `\(\theta^*\)` from the prior, then simulate data based on `\(\theta^*\)`
+
+&lt;img src="images/prior_predictive.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+class: inverse, middle, center
+
+# Criticism of Bayesian Methods
+
+---
+
+# Criticism of "Subjectivity"
+
+Main controversy: subjectivity in choosing a prior
+
+- Two people with the same data can get different results because of different chosen priors
+
+---
+
+# Counters to the Subjectivity Criticism
+
+- With enough data, different priors hardly make a difference
+
+- Prior: just a way to express the degree of ignorance
+    * One can choose a weakly informative prior so that the Influence of subjective Belief is small
+
+---
+    
+# Counters to the Subjectivity Criticism 2
+    
+Subjectivity in choosing a prior is
+
+- Same as in choosing a model, which is also done in frequentist statistics
+
+- Relatively strong prior needs to be justified, 
+    * Open to critique from other researchers
+
+- Inter-subjectivity `\(\rightarrow\)` Objectivity
+
+---
+
+# Counters to the Subjectivity Criticism 3
+    
+The prior is a way to incorporate previous research efforts to accumulate scientific evidence
+
+&gt; Why should we ignore all previous literature every time we conduct a new study?
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
