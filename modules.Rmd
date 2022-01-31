@@ -148,6 +148,48 @@ embed_xaringan("slides/bayes_rule.html", ratio = "4:3")
 
 :::
 
+::: {.panel}
+
+# Week 4
+
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Apply **Bayesian workflow** to analyze real data with a **Bernoulli** model
+- Explain the idea of a **conjugate prior**
+- Summarize the posterior distribution using **simulations**
+- Apply Bayesian **terminology** in summarizing the posterior
+- Use R to perform **posterior predictive checks**
+
+## Task Lists
+
+1. Complete the assigned readings
+    * Kruschke ch. 6
+    * [Gabry et al. (2019)][11] for an example of posterior predictive checks
+2. Review the resources (slides and [note][12])
+    * If interested, check out the [bonus note on the Poisson model][13]
+3. Attend the Tuesday and Thursday class meetings
+4. Complete Homework 3 (see instruction on Blackboard)
+
+[11]: https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssa.12378
+[12]: beta_Bernoulli_model.html
+[13]: Poisson_model.html
+
+## Slides
+
+<!--
+
+[PDF version](slides/one_parameter_models.pdf){target="_blank"}
+
+```{r embed-4, echo = FALSE}
+embed_xaringan("slides/one_parameter_models.html", ratio = "4:3")
+```
+
+-->
+
+:::
+
 :::
 
 ## Last updated {.appendix}
