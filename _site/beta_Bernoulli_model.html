@@ -87,30 +87,31 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
   <!--radix_placeholder_meta_tags-->
-  <title>PSYC 573 Bayesian Data Analysis (2022 Spring): PSYC 573 Bayesian Data Analysis</title>
+  <title>PSYC 573 Bayesian Data Analysis (2022 Spring): Beta-Bernoulli Model</title>
 
-  <meta property="description" itemprop="description" content="Course syllabus (PSYC 573, 2022 Spring)"/>
 
   <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"/>
 
+  <!--  https://schema.org/Article -->
+  <meta property="article:published" itemprop="datePublished" content="2022-01-27"/>
+  <meta property="article:created" itemprop="dateCreated" content="2022-01-27"/>
+  <meta name="article:author" content="Mark Lai"/>
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): PSYC 573 Bayesian Data Analysis"/>
+  <meta property="og:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): Beta-Bernoulli Model"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="Course syllabus (PSYC 573, 2022 Spring)"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="PSYC 573 Bayesian Data Analysis (2022 Spring)"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): PSYC 573 Bayesian Data Analysis"/>
-  <meta property="twitter:description" content="Course syllabus (PSYC 573, 2022 Spring)"/>
+  <meta property="twitter:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): Beta-Bernoulli Model"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","output"]}},"value":[{"type":"character","attributes":{},"value":["PSYC 573 Bayesian Data Analysis"]},{"type":"character","attributes":{},"value":["Course syllabus (PSYC 573, 2022 Spring)\n"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["toc","css","fig_caption"]}},"value":[{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["serif.css"]},{"type":"logical","attributes":{},"value":[false]}]}]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","author","date"]}},"value":[{"type":"character","attributes":{},"value":["Beta-Bernoulli Model"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Mark Lai"]}]}]},{"type":"character","attributes":{},"value":["January 27, 2022"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2368,6 +2369,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   }</style>
   <!--/radix_placeholder_distill-->
   <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/clipboard-2.0.6/clipboard.min.js"></script>
+  <link href="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
+  <script src="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
+  <script>window.xaringanExtraClipboard(null, {"button":"<i class=\"fa fa-clone fa-sm\" style=\"color: #301e64\"><\/i>","success":"<i class=\"fa fa-check fa-sm\" style=\"color: #90BE6D\"><\/i>","error":"<i class=\"fa fa-times fa-sm\" style=\"color: #F94144\"><\/i>"})</script>
+  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2403,7 +2410,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <!--/radix_placeholder_site_in_header-->
 
-  <link rel="stylesheet" href="serif.css" type="text/css"/>
+  <link rel="stylesheet" href="fixed_toc.css" type="text/css"/>
 
 </head>
 
@@ -2412,7 +2419,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"PSYC 573 Bayesian Data Analysis","description":"Course syllabus (PSYC 573, 2022 Spring)","authors":[]}
+{"title":"Beta-Bernoulli Model","authors":[{"author":"Mark Lai","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2022-01-27T00:00:00.000-08:00","citationText":"Lai, 2022"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2453,539 +2460,530 @@ Notes
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>PSYC 573 Bayesian Data Analysis</h1>
+<h1>Beta-Bernoulli Model</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p><p>Course syllabus (PSYC 573, 2022 Spring)</p></p>
+
 </div>
 
+<div class="d-byline">
+  
+  Mark Lai
+  
+<br/>January 27, 2022
+</div>
 
 <div class="d-article">
 <div class="d-contents d-contents-float">
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#course-description">Course Description</a></li>
-<li><a href="#learning-objectives">Learning Objectives</a></li>
-<li><a href="#course-notes">Course Notes</a></li>
-<li><a href="#communication">Communication</a></li>
-<li><a href="#technological-proficiency-and-hardwaresoftware-required">Technological Proficiency and Hardware/Software Required</a>
+<li><a href="#steps-of-bayesian-data-analysis">Steps of Bayesian Data Analysis</a></li>
+<li><a href="#beta-bernoulli-example">Beta-Bernoulli Example</a>
 <ul>
-<li><a href="#usc-technology-rental-program">USC technology rental program</a></li>
-<li><a href="#usc-technology-support-links">USC Technology Support Links</a></li>
+<li><a href="#bernoulli-model">Bernoulli Model</a></li>
+<li><a href="#exchangeability">Exchangeability</a></li>
+<li><a href="#check-the-support">Check the Support</a></li>
+<li><a href="#conjugate-prior-beta-distribution">Conjugate Prior: Beta Distribution</a>
+<ul>
+<li><a href="#dont-be-stubborn">Don’t Be Stubborn</a></li>
 </ul></li>
-<li><a href="#required-materials">Required Materials</a></li>
-<li><a href="#recommended-materials">Recommended Materials</a></li>
-<li><a href="#assignments">Description and Assessment of Assignments</a></li>
-<li><a href="#participation">Participation</a></li>
-<li><a href="#grading-breakdown">Grading Breakdown</a></li>
-<li><a href="#grading-scale">Grading Scale</a></li>
-<li><a href="#assignment-submission">Assignment Submission</a></li>
-<li><a href="#grading-timeline">Grading Timeline</a></li>
-<li><a href="#late-work">Late work</a></li>
-<li><a href="#technology-in-the-classroom">Technology in the classroom</a>
+<li><a href="#data">Data</a></li>
+<li><a href="#posterior">Posterior</a>
 <ul>
-<li><a href="#phones">Phones</a></li>
-<li><a href="#tablets-and-laptops">Tablets and Laptops</a></li>
+<li><a href="#summarize-the-posterior">Summarize the posterior</a></li>
+<li><a href="#posterior-predictive-check">Posterior Predictive Check</a></li>
+<li><a href="#comparison-to-frequentist-results">Comparison to frequentist results</a></li>
+<li><a href="#sensitivity-to-different-priors">Sensitivity to different priors</a></li>
 </ul></li>
-<li><a href="#attendance">Attendance</a></li>
-<li><a href="#classroom-norms">Classroom Norms</a></li>
-<li><a href="#covid-19-guidance">COVID-19 Guidance</a></li>
-<li><a href="#course-evaluation">Course Evaluation</a></li>
-<li><a href="#tentative-course-schedule-a-weekly-breakdown">(Tentative) Course Schedule: A Weekly Breakdown</a></li>
-<li><a href="#statement-on-academic-conduct-and-support-systems">Statement on Academic Conduct and Support Systems</a>
-<ul>
-<li><a href="#academic-conduct">Academic Conduct:</a></li>
-<li><a href="#support-systems">Support Systems:</a></li>
 <li><a href="#last-updated">Last updated</a></li>
 </ul></li>
 </ul>
 </nav>
 </div>
-<style> @media print { a[href]::after { content: none !important; } } </style>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="https://identity.usc.edu/files/2012/01/primaryshieldwordmark.png" title="Logo of the University of Southern California" alt="Logo of the University of Southern California" width="50%" /></p>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://personality-project.org/r/psych/'>psych</a></span>, include.only <span class='op'>=</span> <span class='st'>"pairs.panels"</span><span class='op'>)</span>  <span class='co'># only load one function</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://mc-stan.org/bayesplot/'>bayesplot</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_classic</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>panel.grid.major.y <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_line</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"grey92"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
 </div>
-<p><strong>Units:</strong> 4<br />
-<strong>Term–Day–Time:</strong> Spring 2022–Tues &amp; Thurs–10:00-11:50 am</p>
-<p><strong>Location:</strong> WPH 205</p>
-<p><strong>Instructor</strong>: Hok Chio (Mark) Lai<br />
-<strong>Office Hours:</strong> Tues 12:00–1:00 pm, and by appointment.<br />
-<strong>Contact Info:</strong> (Email) <a href="mailto:hokchiol@usc.edu">hokchiol@usc.edu</a>, (Slack) <a href="https://usc.enterprise.slack.com/" class="uri">https://usc.enterprise.slack.com/</a>.<br />
-Timeline for replying to emails: within 48 hours.</p>
-<p><strong>IT Help:</strong> ITS, Blackboard<br />
-<strong>Contact Info:</strong><br />
-ITS (Email, Monday – Friday, 8:00 A.M. – 6:00 P.M.) <a href="mailto:consult@usc.edu">consult@usc.edu</a>, (Phone, 24/7/365) 213-740-5555, (Online) <a href="https://itsusc.service-now.com/">ServiceNow Portal</a><br />
-Blackboard (Email, 24/7/365) <a href="mailto:blackboard@usc.edu">blackboard@usc.edu</a>, (Online Help) <a href="https://studentblackboardhelp.usc.edu/">Blackboard Help for Students</a></p>
-<h1 id="course-description">Course Description</h1>
-<p>Bayesian statistics is a coherent framework of doing statistics. It has been one of the biggest ongoing revolutions in quantitative research methods and has been recommended as an alternative to the classical approach of hypothesis testing, as well as a computational device for some problems not easily handled in the classical approach. Students will learn about applications of Bayesian statistical methods specifically on behavioral and social science data and develop skills in conducting Bayesian analysis of real-life data.</p>
-<p>The course begins with a brief discussion on the history of the Bayesian method and the Bayesian view of probability and some comments on the philosophical differences between Bayesian and classical statistical analyses. One-parameter models and group comparisons are then discussed, with an emphasis on how Bayesian analysis incorporates information from data to update researchers’ beliefs about the world. After an introduction on Markov Chain Monte Carlo Estimation—the engine primarily responsible for the resurrection of Bayesian statistics, the course covers applications of Bayesian statistics in commonly used statistical models, including linear and generalized linear models. It also illustrates the components in the Bayesian workflow, such as the selection of priors, model checking and model comparisons, and missing data handling.</p>
-<h1 id="learning-objectives">Learning Objectives</h1>
-<p>After the successful completion of this course, students will be able to</p>
+</div>
+<h1 id="steps-of-bayesian-data-analysis">Steps of Bayesian Data Analysis</h1>
+<p>Some authors described the process as “turning the Bayesian Crank,” as the same workflow applies to a variety of research scenarios.</p>
+<p>Adapted from Kruschke (2015, p.25), I conceptualize Bayesian data analysis as the following steps:</p>
 <ol type="1">
-<li>Describe the foundations of the Bayesian framework of statistics;</li>
-<li>Explain to fellow researchers the terminologies in Bayesian analysis, such as prior, posterior, credible intervals, MCMC, etc.;</li>
-<li>Explain and demonstrate in applications the advantages and disadvantages of the Bayesian approach in comparisons to classical approaches;</li>
-<li>Independently perform Bayesian analyses covered in this class using statistical software on real data;</li>
-<li>Conduct a research project involving Bayesian analysis and effectively communicate their findings/products in an oral presentation and a written report.</li>
+<li><strong>Identify/Collect the data</strong> required to answer the research questions.
+<ol start="2" type="a">
+<li>As a general recommendation, it is helpful to <strong>visualize</strong> the data to get a sense of how the data look, as well as to inspect for any potential anomalies in the data collection.</li>
+</ol></li>
+<li><strong>Choose a statistical model</strong> for the data in relation to the research questions. The model should have sound theoretical justification and have parameters that are meaningful for the research questions.</li>
+<li><strong>Specify prior distributions</strong> for the model parameters. Although this is a subjective endeavor, the priors chosen should be at least sensible to a skeptical audience.</li>
+<li><strong>Obtain the posterior distributions</strong> for the model parameters. As described below and later in the course, this can be obtained by analytical or various mathematical approximations.
+<ol start="2" type="a">
+<li>For mathematical approximations, one should check the algorithms for <strong>convergence</strong> to make sure the results closely mimic the target posterior distributions.</li>
+</ol></li>
+<li>Conduct a <strong>posterior predictive check</strong> to examine the fit between the model and the data, i.e., whether the chosen model with the estimated parameters generate predictions that deviate from the data being analyzed on important features.
+<ol start="2" type="a">
+<li>If the model does not fit the data, one should go back to step 2 to specify a different model.</li>
+</ol></li>
+<li>If the fit between the model and the data is deemed satisfactory, one can proceed to <strong>interpret the results</strong> in the context of the research questions. It is also important to <strong>visualize the results</strong> in ways that are meaningful for the analysis.</li>
 </ol>
-<p><strong>Prerequisite(s):</strong> None</p>
-<p><strong>Co-Requisite(s):</strong> None</p>
-<p><strong>Concurrent Enrollment:</strong> None</p>
-<p><strong>Recommended Preparation:</strong> PSYC 501: Classic and Modern Statistical Methods I; Experience with R</p>
-<h1 id="course-notes">Course Notes</h1>
-<p>Students are expected to finish the reading assignments before class meetings and actively participate in class discussions and activities. A typical class meeting will include lectures, quizzes, software demonstrations, and small-group discussions/activities. Lecture slides/notes will be posted on Blackboard before class meetings, but please note that the lecture slides only serve to guide class discussions and cannot replace the assigned readings. Students are expected to bring laptops to class to follow the software demonstration and work on in-class exercises.</p>
-<p>As announced in the Provost’s memo (<a href="https://we-are.usc.edu/2022/01/07/1-7-22-spring-semester-and-omicron/" class="uri">https://we-are.usc.edu/2022/01/07/1-7-22-spring-semester-and-omicron/</a>), the first two weeks of classes in 2022 Spring will be conducted remotely. In-person instruction is expected to resume starting Week 3.</p>
-<h1 id="communication">Communication</h1>
-<p>To promote independence and critical thinking, students are encouraged to work through the following process for obtaining answers to course-related questions before contacting the instructor:</p>
+<h1 id="beta-bernoulli-example">Beta-Bernoulli Example</h1>
+<p>We will be using a built-in data set in R about patients diagnosed with AIDS in Australia before July 1, 1991. Here is a description of the variables (from the R documentation):</p>
+<figure>
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Australia_states_1931-present.png" class="external" alt="Figure from https://commons.wikimedia.org/wiki/File:Australia_states_1931-present.png" /><figcaption aria-hidden="true">Figure from <a href="https://commons.wikimedia.org/wiki/File:Australia_states_1931-present.png" class="uri">https://commons.wikimedia.org/wiki/File:Australia_states_1931-present.png</a></figcaption>
+</figure>
 <ul>
-<li>consult the course syllabus;</li>
-<li>consult a classmate or post your questions on Slack;</li>
-<li>meet with the instructor during office hours or Q&amp;A sessions on Tuesdays;</li>
-<li>for personal questions, email the instructor at <a href="mailto:hokchiol@usc.edu" class="email">hokchiol@usc.edu</a></li>
+<li><code>state</code>: Grouped state of origin: “NSW”includes ACT and “other” is WA, SA, NT, and TAS.</li>
+<li><code>sex</code>: Sex of patient.</li>
+<li><code>diag</code>:(Julian) date of diagnosis.</li>
+<li><code>death</code>: (Julian) date of death or end of observation.</li>
+<li><code>status</code>: “A” (alive) or “D” (dead) at end of observation.</li>
+<li><code>T.categ</code>: Reported transmission category.</li>
+<li><code>age</code>: Age (years) at diagnosis.</li>
 </ul>
-<h1 id="technological-proficiency-and-hardwaresoftware-required">Technological Proficiency and Hardware/Software Required</h1>
+<p>You should always first plot your data and get some summary statistics:</p>
+<div class="layout-chunk" data-layout="l-body-outset">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"Aids2"</span>, package <span class='op'>=</span> <span class='st'>"MASS"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Aids2</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>#&gt;   state sex  diag death status T.categ age
+#&gt; 1   NSW   M 10905 11081      D      hs  35
+#&gt; 2   NSW   M 11029 11096      D      hs  53
+#&gt; 3   NSW   M  9551  9983      D      hs  42
+#&gt; 4   NSW   M  9577  9654      D    haem  44
+#&gt; 5   NSW   M 10015 10290      D      hs  39
+#&gt; 6   NSW   M  9971 10344      D      hs  36</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/pkg/psych/man/pairs.panels.html'>pairs.panels</a></span><span class='op'>(</span><span class='va'>Aids2</span>, ellipses <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="beta_Bernoulli_model_files/figure-html5/unnamed-chunk-1-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<p>We will be using the <code>status</code> variable. Our simple research question is:</p>
+<pre><code>What was the death rate of AIDS in Australia when the data were collected?</code></pre>
+<h2 id="bernoulli-model">Bernoulli Model</h2>
+<p>If we assume that the outcome of the observations are exchangeable, meaning that the observations can be reordered in any way and still gives the same inference, then one can choose a model: <span class="math display">\[y_i \sim \text{Bern}(\theta) \text{for }i = 1, 2, \ldots, N\]</span></p>
 <ul>
-<li><a href="https://cloud.r-project.org/">R</a> and <a href="https://rstudio.com/products/rstudio/download/">RStudio</a> are needed to complete the course assignments. It is highly recommended that students update to the latest versions of both software (R 4.1.0, RStudio 2021.09.0, or above). We will briefly discuss setting up R and RStudio in Week 1.</li>
-<li>The textbook and most of the supplemental readings can be accessed through the USC Libraries at <a href="https://libraries.usc.edu/" class="uri">https://libraries.usc.edu/</a></li>
+<li><span class="math inline">\(y_i\)</span> = status of observation <span class="math inline">\(i\)</span> (0 = “A”, 1 = “D”)</li>
+<li><span class="math inline">\(N\)</span> = number of patients in the data set</li>
+<li><span class="math inline">\(\theta\)</span> = probability of “D”<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
 </ul>
-<h2 id="usc-technology-rental-program">USC technology rental program</h2>
-<p>If you need resources to successfully participate in this class, such as a laptop or internet hotspot, you may be eligible for the university’s equipment rental program. To apply, please <a href="https://studentbasicneeds.usc.edu/resources/technology-assistance/">submit an application</a>.</p>
-<h2 id="usc-technology-support-links">USC Technology Support Links</h2>
-<p><a href="https://keepteaching.usc.edu/students/student-toolkit/classroom/zoom/">Zoom information for students</a> <a href="https://studentblackboardhelp.usc.edu/">Blackboard help for students</a><br />
-<a href="https://keepteaching.usc.edu/students/student-toolkit/classroom/slack/">Slack information for students</a><br />
-<a href="https://software.usc.edu/">Software available to USC Campus</a></p>
-<h1 id="required-materials">Required Materials</h1>
-<ul>
-<li>Kruschke, J. K. (2015). <em>Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan</em> (2nd ed.). Academic Press.
-<ul>
-<li>Available from USC Libraries (login required): <a href="https://www-sciencedirect-com.libproxy2.usc.edu/book/9780124058880/doing-bayesian-data-analysis" class="uri">https://www-sciencedirect-com.libproxy2.usc.edu/book/9780124058880/doing-bayesian-data-analysis</a></li>
-<li>Corrigenda: <a href="https://docs.google.com/spreadsheets/d/1gWjvDKXfSvEhlrdjevSzf6YqnVcFL3QLPGxybAriIng" class="uri">https://docs.google.com/spreadsheets/d/1gWjvDKXfSvEhlrdjevSzf6YqnVcFL3QLPGxybAriIng</a></li>
-</ul></li>
-</ul>
-<h1 id="recommended-materials">Recommended Materials</h1>
-<p>E-copies of all below are available at USC Libraries.</p>
-<ul>
-<li>McElreath, R. (2020). <em>Statistical rethinking: A Bayesian course with examples in R and Stan</em> (2nd ed.). CRC Press.</li>
-<li>Gelman, A., Hill, J., &amp; Vehtari, A. (2021). <em>Regression and Other Stories</em>. Cambridge University Press. <a href="https://doi.org/10.1017/9781139161879" class="uri">https://doi.org/10.1017/9781139161879</a> [Very good book on regression]</li>
-<li>Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., &amp; Rubin, D. B. (2014). <em>Bayesian data analysis</em> (3rd ed.). CRC Press. [For more technical depth]</li>
-<li>McGrayne, S. B. (2012). <em>The theory that would not die: How Bayes’ rule cracked the Enigma code, hunted down Russian submarines, and emerged triumphant from two centuries of controversy</em>. Yale University Press. [A very nice historical account of the Bayes’ theorem.]</li>
-</ul>
-<h1 id="assignments">Description and Assessment of Assignments</h1>
-<ol type="1">
-<li><p>In-class exercises (10%). During some of the class sessions, students will participate in quizzes or group exercises. If students miss an exercise for participation credit, they can complete the exercise posted on Blackboard within 24 hours to get credits.</p></li>
-<li><p>Homework problems (70%). There will be weekly homework assignments for students to apply the concepts and techniques discussed in class to analytic problems. The assignments typically involve performing data analyses using data sets of your own or provided by the instructor, and interpreting the results with guided questions. Please submit your work electronically to Blackboard by <strong>Monday 11:59 p.m. Pacific Time</strong> the week after the homework is assigned. See policy on <a href="#late-work">late work</a>.</p></li>
-<li><p>Final project (20%: 5% prospectus, 15% presentation/final report). You will complete a research project related to Bayesian analysis, typically a report analyzing real data or a theoretical/methodological analysis of certain aspects of Bayesian data analysis. For empirical analyses, the focuses are (a) formulating and justifying prior distributions from a review of previous literature, (b) obtaining and interpreting posterior distributions, and (c) comprehensive reporting of methods and results. Students can also replicate the analyses of an existing study, as long as the chosen study shared sufficient data and materials and did not use a Bayesian analysis with informative priors. Students interested in project ideas other than an empirical research report (e.g., software package development, systematic review/meta-analysis) are encouraged to discuss their ideas with the instructor. Each student can choose to work on their own or in a group of up to three people.</p>
-<p>There are two grading components for your final project:</p>
-<ul>
-<li><p>Prospectus (5%)<br />
-A prospectus about your project should be submitted by <strong>Monday, March 21</strong>. The prospectus should contain a concise description of what you (or your group) plan to do for your project, including a preliminary plan for statistical analysis. The prospectus should be limited to 1 single-spaced page (excluding tables, figures, references, and other supplemental materials).</p></li>
-<li><p>Final Presentation/Report (15%)<br />
-If you choose to do a presentation, on <strong>April 26 and 28</strong>, you or your group will give a 15-minute presentation on your project. You will also need to submit your slides to Blackboard for grading <strong>on the day of your presentation</strong>, which should include a link to the reproducible code for your analyses. A grading rubric on the final presentation will be posted on Blackboard.</p>
-<p>If you choose to do a final report, your report will be due <strong>Tuesday, May 10, at 1:00 p.m. Pacific Time</strong> (the assigned final exam time for the class). There should also be a link to the reproducible code for your analyses. The final paper should be 6-10 double-spaced pages of text (i.e., excluding title page, references, tables, figures, and appendices).</p></li>
-</ul></li>
-</ol>
-<h1 id="participation">Participation</h1>
-<p>Participation accounts for 10% of the course grade. Students should complete and turn in all in-class exercises to earn full credit for participation.</p>
-<h1 id="grading-breakdown">Grading Breakdown</h1>
+<p>The model states that: the sample data <span class="math inline">\(y\)</span> follows a Bernoulli distribution with <span class="math inline">\(n\)</span> with a parameter <span class="math inline">\(\theta\)</span></p>
+<aside>
+When the data consist of observations that are binary, the variable is called a <em>Bernoulli</em> variable. It is conventional to denote one outcome as success and coded as 1, and the other as failure and coded as 0 (poor terminology maybe, but that’s by convention). Therefore, in the AIDS example, each observation is considered a “Bernoulli” outcome (Alive vs. Dead).
+</aside>
+<h2 id="exchangeability">Exchangeability</h2>
+<p>To illustrate exchangeability in an example, say we take 6 rows in our data set:</p>
+<div class="layout-chunk" data-layout="l-body">
 <table>
 <thead>
 <tr class="header">
-<th>Assignment</th>
-<th>% of Grade</th>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">state</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: right;">diag</th>
+<th style="text-align: right;">death</th>
+<th style="text-align: left;">status</th>
+<th style="text-align: left;">T.categ</th>
+<th style="text-align: right;">age</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>In-class exercises</td>
-<td>10</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">NSW</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">10905</td>
+<td style="text-align: right;">11081</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">hs</td>
+<td style="text-align: right;">35</td>
 </tr>
 <tr class="even">
-<td>Homework</td>
-<td>70</td>
+<td style="text-align: left;">31</td>
+<td style="text-align: left;">NSW</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">10961</td>
+<td style="text-align: right;">11504</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">id</td>
+<td style="text-align: right;">30</td>
 </tr>
 <tr class="odd">
-<td>Prospectus</td>
-<td>5</td>
+<td style="text-align: left;">1802</td>
+<td style="text-align: left;">QLD</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">9495</td>
+<td style="text-align: right;">9753</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">blood</td>
+<td style="text-align: right;">66</td>
 </tr>
 <tr class="even">
-<td>Final Presentation/Paper</td>
-<td>15</td>
+<td style="text-align: left;">1811</td>
+<td style="text-align: left;">QLD</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">10770</td>
+<td style="text-align: right;">11504</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">hsid</td>
+<td style="text-align: right;">29</td>
 </tr>
 <tr class="odd">
-<td><strong>TOTAL</strong></td>
-<td>100</td>
+<td style="text-align: left;">2129</td>
+<td style="text-align: left;">VIC</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">8499</td>
+<td style="text-align: right;">8568</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">hs</td>
+<td style="text-align: right;">43</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2137</td>
+<td style="text-align: left;">VIC</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">9055</td>
+<td style="text-align: right;">9394</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">hs</td>
+<td style="text-align: right;">29</td>
 </tr>
 </tbody>
 </table>
-<h1 id="grading-scale">Grading Scale</h1>
-<p>Course final grades will be determined using the following scale</p>
+</div>
+<p>Now, when we reorder the column <code>status</code> to something like:</p>
+<div class="layout-chunk" data-layout="l-body">
 <table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">state</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: right;">diag</th>
+<th style="text-align: right;">death</th>
+<th style="text-align: left;">status</th>
+<th style="text-align: left;">T.categ</th>
+<th style="text-align: right;">age</th>
+</tr>
+</thead>
 <tbody>
 <tr class="odd">
-<td>A</td>
-<td>93-100</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">NSW</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">10905</td>
+<td style="text-align: right;">11081</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">hs</td>
+<td style="text-align: right;">35</td>
 </tr>
 <tr class="even">
-<td>A-</td>
-<td>89-92</td>
+<td style="text-align: left;">31</td>
+<td style="text-align: left;">NSW</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">10961</td>
+<td style="text-align: right;">11504</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">id</td>
+<td style="text-align: right;">30</td>
 </tr>
 <tr class="odd">
-<td>B+</td>
-<td>85-88</td>
+<td style="text-align: left;">1802</td>
+<td style="text-align: left;">QLD</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">9495</td>
+<td style="text-align: right;">9753</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">blood</td>
+<td style="text-align: right;">66</td>
 </tr>
 <tr class="even">
-<td>B</td>
-<td>81-84</td>
+<td style="text-align: left;">1811</td>
+<td style="text-align: left;">QLD</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">10770</td>
+<td style="text-align: right;">11504</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">hsid</td>
+<td style="text-align: right;">29</td>
 </tr>
 <tr class="odd">
-<td>B-</td>
-<td>77-80</td>
+<td style="text-align: left;">2129</td>
+<td style="text-align: left;">VIC</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">8499</td>
+<td style="text-align: right;">8568</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">hs</td>
+<td style="text-align: right;">43</td>
 </tr>
 <tr class="even">
-<td>C+</td>
-<td>73-76</td>
-</tr>
-<tr class="odd">
-<td>C</td>
-<td>70-72</td>
-</tr>
-<tr class="even">
-<td>C-</td>
-<td>Below 70 (failing)</td>
+<td style="text-align: left;">2137</td>
+<td style="text-align: left;">VIC</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">9055</td>
+<td style="text-align: right;">9394</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">hs</td>
+<td style="text-align: right;">29</td>
 </tr>
 </tbody>
 </table>
-<h1 id="assignment-submission">Assignment Submission</h1>
-<p>The assignments should be submitted through Blackboard by Monday at 11:59 p.m. Pacific Time.</p>
-<h1 id="grading-timeline">Grading Timeline</h1>
-<p>Generally, all graded work will be returned no later than one week from the submission deadline. However, given the high number of students in the class, the instructor may only grade selected questions in each assignment. Solutions will be posted so that students can check their own work.</p>
-<h1 id="late-work">Late work</h1>
-<p>Late work will be penalized by a 10% reduction in the assignment grade every 24 hours late unless due to an emergency excused by the instructor. Please email the instructor as soon as possible to discuss alternate arrangements due to an emergency.</p>
-<h1 id="technology-in-the-classroom">Technology in the classroom</h1>
-<h2 id="phones">Phones</h2>
-<p>Your phone should be turned off or in silent mode (not on vibrate), and should not be used in the classroom.</p>
-<h2 id="tablets-and-laptops">Tablets and Laptops</h2>
-<p>During lecture time in the classroom, students can use tablets and laptops only for purposes of viewing course materials and taking notes. Use of tablets and laptops for multitasking is strongly discouraged as it may distract both yourself and your peers (<a href="https://www.sciencedirect.com/science/article/pii/S0360131512002254">Sana, Weston, &amp; Cepeda, 2013</a>). During the in-class exercises, students should use their laptops to complete the assignments.</p>
-<h1 id="attendance">Attendance</h1>
-<p>Students are expected to attend all Thursday class sessions on time. If they miss a session, they should complete the class exercises and turn in their work within the timeframe specified in <a href="#assignments">Description and Assessment of Assignments</a>.</p>
-<h1 id="classroom-norms">Classroom Norms</h1>
-<p>From USC’s <a href="https://we-are.usc.edu/wp-content/uploads/2021/08/2021-Fall-Guide.pdf">FALL 2021 GUIDE: Return To Campus Protocols</a> document,</p>
+</div>
+<p>If the results are expected to be the same, then we say that the observations are assumed exchangeable. It happens when we assume that all observations have one common mean. However, if we think that there is a mean for females and a different mean for males, we cannot reorder the outcome randomly because they are no longer exchangeable (i.e., you cannot exchange a female score for a male score and expect to get the same results).</p>
 <blockquote>
-<p>Students, faculty and staff need to be aware of <a href="https://studenthealth.usc.edu/files/2020/08/COVID19-symptoms-768x556.jpg">COVID-19 symptoms</a>, and are required to complete a daily self-screening via <a href="https://trojancheck.usc.edu/login#/consent">Trojan Check</a> before coming onto campus or leaving their on-campus residence.</p>
+<p>Exchangeability: A set of observations is said to be exchangeable if their joint probability distribution stays the same under all permutations. Roughly speaking, it means that the observations can be reordered and still provide the same inferences.</p>
 </blockquote>
-<blockquote>
-<p>Students, faculty, and staff are required to wear masks indoors, including classrooms, and no food or drink is permitted during class</p>
-</blockquote>
-<p>From USC’s <a href="https://coronavirus.usc.edu/2022/01/05/updated-masking-guidance-for-campus-environments/">Updated Masking Guidance for Campus Environments</a>,</p>
-<blockquote>
-<p>Individuals on USC campus premises in locations where masking is required are now required to <strong>wear medical grade masks</strong>, which at minimum are surgical masks and may also include higher grade respirator masks (N95, KN95, or KF94).</p>
-</blockquote>
-<p>The following applies to both in-person and online communications (e.g., Slack discussions and email communications)</p>
+<h2 id="check-the-support">Check the Support</h2>
+<p>The first thing is to identify the support of the parameter, <span class="math inline">\(\theta\)</span>. Because <span class="math inline">\(\theta\)</span> is a probability, its support is <span class="math inline">\([0, 1]\)</span>, meaning that it is continuous and can take any value from 0 to 1. For a continuous parameter, there are infinitely many possible values, and it is impossible to specify our beliefs for each value. So more commonly, we choose a probability density function with the same support as the parameter to express our prior belief.</p>
+<h2 id="conjugate-prior-beta-distribution">Conjugate Prior: Beta Distribution</h2>
+<p>A commonly used family of prior distributions for a Bernoulli/binomial model is the <em>Beta distribution</em>, which has two parameters. We can write the prior as <span class="math display">\[P(\theta) \sim \text{Beta}(a, b)\]</span></p>
+<p><span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are the two parameters. Here are a few examples:</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="beta_Bernoulli_model_files/figure-html5/plot_beta-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<p>You will notice that when <span class="math inline">\(a &gt; b\)</span>, there will be more density closer to the right region (i.e., larger <span class="math inline">\(\theta\)</span>), and vice versa. Also, when <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> become larger, the variance decreases.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>A nice interpretation of <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> in a Beta prior distribution is to consider</p>
 <ul>
-<li>Respect each other’s views.</li>
-<li>In written communication messages, make sure they are something you could say to someone to their face.</li>
-<li>Recognize and/or remember that we have different backgrounds.</li>
-<li>Criticize ideas, not individuals or groups.</li>
-<li>Either support statements with evidence, or speak from personal experience.</li>
+<li><span class="math inline">\(a - 1\)</span> = number of prior ‘successes’ (e.g., “D”)</li>
+<li><span class="math inline">\(b - 1\)</span> = number of prior ‘failures’ (e.g., “A”)</li>
 </ul>
-<h1 id="covid-19-guidance">COVID-19 Guidance</h1>
-<p>Students should consult the latest COVID-19 testing and health protocol requirements for on-campus courses. Continuously updated requirements can be found on the USC COVID-19 resource center website at <a href="https://coronavirus.usc.edu/" class="uri">https://coronavirus.usc.edu/</a> and <a href="https://we-are.usc.edu/" class="uri">https://we-are.usc.edu/</a>.</p>
-<h1 id="course-evaluation">Course Evaluation</h1>
-<p>Student feedback is essential to the instructor and the Department to keep improving this course and faculty pedagogy. Students are encouraged to share their feedback and suggestions in an early-term feedback survey around week 4 to 5, and respond to the standard USC course evaluation survey at the end of the semester.</p>
-<h1 id="tentative-course-schedule-a-weekly-breakdown">(Tentative) Course Schedule: A Weekly Breakdown</h1>
+<p>Therefore, with <span class="math inline">\(\text{Beta}(1, 1)\)</span>, one has seen 0 prior success and 0 failure, meaning that there is no prior information (i.e., <em>noninformative</em>). Therefore, it makes sense that all <span class="math inline">\(\theta\)</span> values are equally likely. On the other hand, if one chooses <span class="math inline">\(\text{Beta}(10, 20)\)</span>, one has seen 9 prior successes and 19 prior failures, so one has quite a lot of prior information (indeed more than the data with only 10 observations), so this is a <em>strong</em> prior.</p>
+<blockquote>
+<p>The smaller the variance of the prior distribution, the stronger one’s belief before looking at the data, the more prior information</p>
+</blockquote>
+<p>So by manipulating the values of <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, which are sometimes called <em>hyperparameters</em>, you can control the shape of the prior distribution as well as its strength, so it is quite flexible. Another advantage of using a beta prior is that it is a <em>conjugate prior</em> of the Bernoulli model, which means that the posterior distribution <span class="math inline">\(P(\theta \mid y)\)</span> is also a beta distribution, the same as the prior distribution, although with different parameter values.</p>
+<blockquote>
+<p>Conjugate Prior: For a specific model, conjugate priors yield posterior distributions in the same distribution family as the priors</p>
+</blockquote>
+<p>Conjugacy greatly simplifies the computational burden for Bayesian analyses, so conjugate priors are almost the only ones used in earlier literature. However, this limited the applications of Bayesian methods, as for many problems, no conjugate priors can provide a realistic representation of one’s belief. Modern Bayesian analysis instead relies on <em>simulation-based</em> methods to approximate the posterior distribution, which can accommodate almost any kind of prior distribution. Aside from a few examples in this note, mainly for pedagogical purposes, we will be using simulation-based methods in the coming weeks.</p>
+<h4 id="proof-of-conjugacy">Proof of Conjugacy*</h4>
+<p>To derive the form of the posterior, first recognize that the Beta distribution has the form:</p>
+<p><span class="math display">\[\begin{align}
+  P(\theta) &amp; = \mathrm{B}^{-1}(a, b) \theta^{a - 1} (1 - \theta)^{b - 1} \\
+  &amp; \propto \theta^{a - 1} (1 - \theta)^{b - 1}
+\end{align}\]</span></p>
+<p>Where <span class="math inline">\(\mathrm{B}(\cdot)\)</span> is the beta function which is not very important for the class. As the density function is a function of <span class="math inline">\(\theta\)</span>, it suffices to write only the terms that involve <span class="math inline">\(\theta\)</span>.</p>
+<p>Similarly, <span class="math display">\[P(\mathbf{y} \mid \theta) \propto \theta^z (1 - \theta)^{N - z}.\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[\begin{align}
+  P(\theta \mid \mathbf{y}) &amp; \propto P(y \mid \theta) P(\theta)  \\
+                &amp; \propto \theta^z (1 - \theta)^{N - z} 
+                          \theta^{a - 1} (1 - \theta)^{b - 1}  \\
+                &amp; = \theta^{a + z - 1} (1 - \theta)^{b + N - z - 1}.
+\end{align}\]</span></p>
+<p>If we let <span class="math inline">\(a^* = a + z\)</span>, <span class="math inline">\(b^* = b + N - z\)</span>, we can see that <span class="math inline">\(P(\theta \mid \mathbf{y})\)</span> is in the same form as the prior with <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> replaced by <span class="math inline">\(a^*\)</span> and <span class="math inline">\(b^*\)</span>. Therefore, the posterior is also a beta distribution. So the beta distribution is a conjugate prior for the Bernoulli model.</p>
+<hr />
+<p>In this example, we will choose a <em>weakly informative</em> Beta(2, 2) prior, which represents a weak belief as below:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>th <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_function.html'>stat_function</a></span><span class='op'>(</span>fun <span class='op'>=</span> <span class='va'>dbeta</span>, args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>shape1 <span class='op'>=</span> <span class='fl'>2</span>, shape2 <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/lims.html'>ylim</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='st'>""</span>, x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span>, title <span class='op'>=</span> <span class='st'>"Beta(2, 2)"</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="beta_Bernoulli_model_files/figure-html5/beta-2-2-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<h3 id="dont-be-stubborn">Don’t Be Stubborn</h3>
+<p>One thing to remember is:</p>
+<blockquote>
+<p>A good prior should give a non-zero probability/density for all possible values of a parameter</p>
+</blockquote>
+<p>Otherwise, if the prior density for some parameter values is zero, the posterior density will be zero, regardless of how much the data support those parameter values</p>
+<h2 id="data">Data</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://dplyr.tidyverse.org/reference/count.html'>count</a></span><span class='op'>(</span><span class='va'>Aids2</span>, <span class='va'>status</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>#&gt;   status    n
+#&gt; 1      A 1082
+#&gt; 2      D 1761</code></pre>
+</div>
+<p>The likelihood function is highly concentrated. I ran into some numerical issues as the computation gave zero, so I plotted the log-likelihood instead.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>loglik</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>th</span>, <span class='va'>N</span> <span class='op'>=</span> <span class='fl'>1082</span> <span class='op'>+</span> <span class='fl'>1761</span>, <span class='va'>z</span> <span class='op'>=</span> <span class='fl'>1761</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='va'>z</span> <span class='op'>*</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>th</span><span class='op'>)</span> <span class='op'>+</span> <span class='op'>(</span><span class='va'>N</span> <span class='op'>-</span> <span class='va'>z</span><span class='op'>)</span> <span class='op'>*</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>th</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>th <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.61</span>, <span class='fl'>0.63</span><span class='op'>)</span><span class='op'>)</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_function.html'>stat_function</a></span><span class='op'>(</span>fun <span class='op'>=</span> <span class='va'>loglik</span>, n <span class='op'>=</span> <span class='fl'>501</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='st'>"Log-likelihood"</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="beta_Bernoulli_model_files/figure-html5/status-lik-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<p>Note I only show a range of [0.610, 0.630] for the x-axis, which contains where the likelihood (thus also the log-likelihood) peaked.</p>
+<h2 id="posterior">Posterior</h2>
+<p>Based on the conjugacy, the posterior of <span class="math inline">\(\theta\)</span> is Beta(1,807, 1,116). As we’re using a conjugate prior, the posterior is also a Beta distribution: <span class="math display">\[P(\theta \mid y) \sim \text{Beta}(a + z, b + N - z),\]</span> which is a distribution for <span class="math inline">\(a + z - 1\)</span> successes and <span class="math inline">\(b + N - z\)</span> failures. This makes perfect sense as our prior information as <span class="math inline">\(a - 1\)</span> successes and <span class="math inline">\(b - 1\)</span> failures, and from our data, we have <span class="math inline">\(y\)</span> successes and <span class="math inline">\(n - y\)</span> failures, so our updated belief is based on adding up those successes and failures.</p>
+<h3 id="summarize-the-posterior">Summarize the posterior</h3>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>num_draws</span> <span class='op'>&lt;-</span> <span class='fl'>1000</span>
+<span class='va'>sim_theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>rbeta</a></span><span class='op'>(</span><span class='fl'>1000</span>, shape1 <span class='op'>=</span> <span class='fl'>8</span>, shape2 <span class='op'>=</span> <span class='fl'>6</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>`Bayes estimate` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>sim_theta</span><span class='op'>)</span>,
+  `Posterior median` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/median.html'>median</a></span><span class='op'>(</span><span class='va'>sim_theta</span><span class='op'>)</span>,
+  `Posterior SD` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>sim_theta</span><span class='op'>)</span>,
+  `MAD` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/mad.html'>mad</a></span><span class='op'>(</span><span class='va'>sim_theta</span><span class='op'>)</span>,
+  `90% Credible interval (equal-tailed)` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/quantile.html'>quantile</a></span><span class='op'>(</span><span class='va'>sim_theta</span>, probs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.1</span>, <span class='fl'>.9</span><span class='op'>)</span><span class='op'>)</span>,
+  `90% HDI` <span class='op'>=</span> <span class='fu'>HDInterval</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/HDInterval/man/hdi.html'>hdi</a></span><span class='op'>(</span><span class='va'>sim_theta</span>, credMass <span class='op'>=</span> <span class='fl'>.9</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>#&gt;                           Bayes estimate 
+#&gt;                                0.5683993 
+#&gt;                         Posterior median 
+#&gt;                                0.5655762 
+#&gt;                             Posterior SD 
+#&gt;                                0.1297508 
+#&gt;                                      MAD 
+#&gt;                                0.1324126 
+#&gt; 90% Credible interval (equal-tailed).10% 
+#&gt;                                0.3971719 
+#&gt; 90% Credible interval (equal-tailed).90% 
+#&gt;                                0.7353907 
+#&gt;                            90% HDI.lower 
+#&gt;                                0.3765909 
+#&gt;                            90% HDI.upper 
+#&gt;                                0.8014843</code></pre>
+</div>
+<h3 id="posterior-predictive-check">Posterior Predictive Check</h3>
+<p>Now, we need to know whether the model fits the data well. We don’t have much to check for a Bernoulli model if we only have the <code>status</code> variable. However, as there is information for other variables, we can use them to check the exchangeability assumption. For example, we can ask whether the data from different state categories are exchangeable. The death rate across the 4 state categories are</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre><code>#&gt;        status
+#&gt; state      A    D
+#&gt;   NSW    664 1116
+#&gt;   Other  107  142
+#&gt;   QLD     78  148
+#&gt;   VIC    233  355
+#&gt;        status
+#&gt; state           A         D
+#&gt;   NSW   0.3730337 0.6269663
+#&gt;   Other 0.4297189 0.5702811
+#&gt;   QLD   0.3451327 0.6548673
+#&gt;   VIC   0.3962585 0.6037415</code></pre>
+</div>
+<p>Now, we can generate some predictions from our posterior distribution and our model.</p>
+<div class="layout-chunk" data-layout="l-body-outset">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>plist</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/vector.html'>vector</a></span><span class='op'>(</span><span class='st'>"list"</span>, <span class='fl'>12L</span><span class='op'>)</span>
+<span class='va'>plist</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>
+    <span class='va'>Aids2</span>,
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>state</span>, y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>status</span> <span class='op'>==</span> <span class='st'>"D"</span><span class='op'>)</span>, fill <span class='op'>=</span> <span class='va'>state</span><span class='op'>)</span>
+<span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_bar</a></span><span class='op'>(</span>stat <span class='op'>=</span> <span class='st'>"identity"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/guides.html'>guides</a></span><span class='op'>(</span>fill <span class='op'>=</span> <span class='st'>"none"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Observed data"</span>, y <span class='op'>=</span> <span class='st'>"Number of Deaths"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>axis.title.x <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"red"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/lims.html'>ylim</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1200</span><span class='op'>)</span>
+<span class='kw'>for</span> <span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>11</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='co'># Get the a value from posterior samples</span>
+    <span class='va'>theta_post</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>rbeta</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>1763</span>, <span class='fl'>1084</span><span class='op'>)</span>
+    <span class='co'># For each plausible theta value, generate a status variable</span>
+    <span class='va'>status_new</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"D"</span>, <span class='st'>"A"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Aids2</span><span class='op'>)</span>,
+        replace <span class='op'>=</span> <span class='cn'>TRUE</span>,
+        prob <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>theta_post</span>, <span class='fl'>1</span> <span class='op'>-</span> <span class='va'>theta_post</span><span class='op'>)</span>
+    <span class='op'>)</span>
+    <span class='va'>df_new</span> <span class='op'>&lt;-</span> <span class='va'>Aids2</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+        <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>status <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>status_new</span><span class='op'>)</span><span class='op'>)</span>
+    <span class='va'>plist</span><span class='op'>[[</span><span class='va'>i</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>plist</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'><a href='https://rdrr.io/pkg/psych/man/matrix.addition.html'>%+%</a></span> <span class='va'>df_new</span> <span class='op'>+</span>
+        <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"Simulated data"</span>, <span class='va'>i</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+        <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>axis.title.x <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"black"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='fu'>gridExtra</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html'>grid.arrange</a></span><span class='op'>(</span>grobs <span class='op'>=</span> <span class='va'>plist</span>, nrow <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="beta_Bernoulli_model_files/figure-html5/ppc-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<p>So the observed data (the first subplot) look similar to the simulated data. We can also conduct a posterior predictive check by a test statistic for subgroups. Here we will use the <code>bayesplot</code> package and look at fit across groups:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Draw posterior samples of theta</span>
+<span class='va'>post_sample</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>rbeta</a></span><span class='op'>(</span><span class='fl'>1e4</span>, <span class='fl'>1807</span>, <span class='fl'>1116</span><span class='op'>)</span>
+<span class='co'># Initialize a S by N matrix to store the simulated data</span>
+<span class='va'>y_tilde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='cn'>NA</span>,
+                  nrow <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>post_sample</span><span class='op'>)</span>,
+                  ncol <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>Aids2</span><span class='op'>$</span><span class='va'>status</span><span class='op'>)</span><span class='op'>)</span>
+<span class='kw'>for</span> <span class='op'>(</span><span class='va'>s</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span><span class='op'>(</span><span class='va'>post_sample</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='va'>theta_s</span> <span class='op'>&lt;-</span> <span class='va'>post_sample</span><span class='op'>[</span><span class='va'>s</span><span class='op'>]</span>
+    <span class='va'>status_new</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"D"</span>, <span class='st'>"A"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Aids2</span><span class='op'>)</span>,
+        replace <span class='op'>=</span> <span class='cn'>TRUE</span>,
+        prob <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>theta_s</span>, <span class='fl'>1</span> <span class='op'>-</span> <span class='va'>theta_s</span><span class='op'>)</span>
+    <span class='op'>)</span>
+    <span class='va'>y_tilde</span><span class='op'>[</span><span class='va'>s</span>,<span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>status_new</span> <span class='op'>==</span> <span class='st'>"D"</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='fu'>bayesplot</span><span class='fu'>::</span><span class='fu'><a href='https://mc-stan.org/bayesplot/reference/PPC-test-statistics.html'>ppc_stat_grouped</a></span><span class='op'>(</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>Aids2</span><span class='op'>$</span><span class='va'>status</span> <span class='op'>==</span> <span class='st'>"D"</span><span class='op'>)</span>,
+    yrep <span class='op'>=</span> <span class='va'>y_tilde</span>,
+    group <span class='op'>=</span> <span class='va'>Aids2</span><span class='op'>$</span><span class='va'>state</span>
+<span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="beta_Bernoulli_model_files/figure-html5/ppc-stat-state-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<p>If the fit is good, the mean, indicated by the darker line, should be within the simulated distribution based on the model. So the model that assumes observations are exchangeable across states is not too off, although it seems fitting less well for <code>Other</code> states.</p>
+<h4 id="another-check-on-age">Another check on <code>age</code></h4>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Create an age group indicator</span>
+<span class='va'>age50</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>Aids2</span><span class='op'>$</span><span class='va'>age</span> <span class='op'>&gt;</span> <span class='fl'>50</span>, labels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"&lt;= 50"</span>, <span class='st'>"&gt; 50"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='co'># Draw posterior samples of theta</span>
+<span class='va'>post_sample</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>rbeta</a></span><span class='op'>(</span><span class='fl'>1e4</span>, <span class='fl'>1807</span>, <span class='fl'>1116</span><span class='op'>)</span>
+<span class='co'># Initialize a S by N matrix to store the simulated data</span>
+<span class='va'>y_tilde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='cn'>NA</span>,
+                  nrow <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>post_sample</span><span class='op'>)</span>,
+                  ncol <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>Aids2</span><span class='op'>$</span><span class='va'>status</span><span class='op'>)</span><span class='op'>)</span>
+<span class='kw'>for</span> <span class='op'>(</span><span class='va'>s</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span><span class='op'>(</span><span class='va'>post_sample</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='va'>theta_s</span> <span class='op'>&lt;-</span> <span class='va'>post_sample</span><span class='op'>[</span><span class='va'>s</span><span class='op'>]</span>
+    <span class='va'>status_new</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"D"</span>, <span class='st'>"A"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Aids2</span><span class='op'>)</span>,
+        replace <span class='op'>=</span> <span class='cn'>TRUE</span>,
+        prob <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>theta_s</span>, <span class='fl'>1</span> <span class='op'>-</span> <span class='va'>theta_s</span><span class='op'>)</span>
+    <span class='op'>)</span>
+    <span class='va'>y_tilde</span><span class='op'>[</span><span class='va'>s</span>,<span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>status_new</span> <span class='op'>==</span> <span class='st'>"D"</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='fu'>bayesplot</span><span class='fu'>::</span><span class='fu'><a href='https://mc-stan.org/bayesplot/reference/PPC-test-statistics.html'>ppc_stat_grouped</a></span><span class='op'>(</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>Aids2</span><span class='op'>$</span><span class='va'>status</span> <span class='op'>==</span> <span class='st'>"D"</span><span class='op'>)</span>,
+    yrep <span class='op'>=</span> <span class='va'>y_tilde</span>,
+    group <span class='op'>=</span> <span class='va'>age50</span>
+<span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="beta_Bernoulli_model_files/figure-html5/ppc-stat-age-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<p>As can be seen, the model seems off for those aged 50+.</p>
+<h3 id="comparison-to-frequentist-results">Comparison to frequentist results</h3>
+<p>Using maximum likelihood, the estimated death rate would be <span class="math inline">\(\hat \theta = 1761 / 2843 = 0.62\)</span>, with a standard error (<em>SE</em>) of <span class="math inline">\(\sqrt{0.62 (1 - 0.62) / n} = 0.0091\)</span>, with a 90% confidence interval of <span class="math inline">\([0.6, 0.63]\)</span>, which is similar to the interval with Bayesian inference.</p>
+<h3 id="sensitivity-to-different-priors">Sensitivity to different priors</h3>
+<div class="layout-chunk" data-layout="l-body-outset">
+<p><img src="beta_Bernoulli_model_files/figure-html5/sensitivity-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<p>You can see one needs a very strong prior (equivalent to 600 data points), and with the prior and the data not agreeing to get a substantially different conclusion.</p>
+<!-- The following chunk is only used in the website -->
+<section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
+<h2 class="appendix">Last updated</h2>
+<div class="layout-chunk" data-layout="l-body">
+<pre><code>#&gt; [1] &quot;January 30, 2022&quot;</code></pre>
+</div>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<table>
-<colgroup>
-<col style="width: 14%" />
-<col style="width: 21%" />
-<col style="width: 29%" />
-<col style="width: 34%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th>Topics/Daily Activities</th>
-<th>Readings</th>
-<th>Assignment Dates</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Week 1<br />
-Jan 11 &amp; 13 (Remote)</td>
-<td><ul>
-<li>Overview of Bayesian Statistics</li>
-<li>R Markdown</li>
-</ul></td>
-<td><ul>
-<li><a href="https://drive.google.com/file/d/1tr7XpIVf04S44o5ZploxJcd37Fg1GygV/view">Kruschke ch. 2</a></li>
-<li>Supplemental: <a href="https://jim-stone.staff.shef.ac.uk/BookBayes2012/bookbayesch01.pdf">James ch. 1</a></li>
-<li><a href="https://web.mit.edu/r/current/RStudio/resources/markdown_help.html">Markdown Quick Reference</a></li>
-</ul></td>
-<td><ul>
-<li>Exercise: R Markdown</li>
-<li>HW 1</li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>Week 2<br />
-Jan 18 &amp; 20</td>
-<td><ul>
-<li>Probability</li>
-<li>R programming</li>
-</ul></td>
-<td><ul>
-<li>Kruschke ch. 4</li>
-<li>Wickham &amp; Grolemund ch. <a href="https://r4ds.had.co.nz/exploratory-data-analysis.html">7</a>, <a href="https://r4ds.had.co.nz/functions.html">19</a></li>
-</ul></td>
-<td><ul>
-<li>Exercise: Function &amp; Loop in R</li>
-<li>HW 2</li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>Week 3<br />
-Jan 25 &amp; 27</td>
-<td><ul>
-<li>Bayes Theorem</li>
-</ul></td>
-<td><ul>
-<li><a href="https://pure.mpg.de/rest/items/item_2101336/component/file_2101335/content">Gigerenzer (2004)</a></li>
-<li>Kruschke ch. 5</li>
-</ul></td>
-<td><ul>
-<li>Exercise: Screening test example</li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>Week 4<br />
-Feb 1 &amp; 3</td>
-<td><ul>
-<li>One Parameter Models</li>
-<li>Posterior predictive checks</li>
-</ul></td>
-<td><ul>
-<li>Kruschke ch. 6</li>
-<li><a href="https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssa.12378">Gabry et al. (2019)</a></li>
-</ul></td>
-<td><ul>
-<li>Exercise: Graphical check</li>
-<li>HW 3</li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>Week 5<br />
-Feb 8 &amp; 10</td>
-<td><ul>
-<li>MCMC: Metropolis &amp; Gibbs</li>
-</ul></td>
-<td><ul>
-<li>Kruschke ch. 7</li>
-</ul></td>
-<td><ul>
-<li>Exercise: Metropolis</li>
-<li>HW 4</li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>Week 6<br />
-Feb 15 &amp; 17</td>
-<td><ul>
-<li>STAN &amp; HMC</li>
-</ul></td>
-<td><ul>
-<li>Kruschke ch. 14</li>
-<li><a href="https://chi-feng.github.io/mcmc-demo/app.html">MCMC Interactive Gallery</a></li>
-</ul></td>
-<td><ul>
-<li>Exercise: Divergent transition</li>
-<li>HW 5</li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>Week 7<br />
-Feb 22 &amp; 24</td>
-<td><ul>
-<li>Hierarchical models</li>
-</ul></td>
-<td><ul>
-<li>Kruschke ch. 9</li>
-</ul></td>
-<td><ul>
-<li>Exercise: Identifying data structure</li>
-<li>HW 6</li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>Week 8<br />
-Mar 1 &amp; 3</td>
-<td><ul>
-<li>Group Comparisons</li>
-</ul></td>
-<td><ul>
-<li>Kruschke ch. 12.1, 16</li>
-</ul></td>
-<td><ul>
-<li>Exercise: ROPE</li>
-<li>HW 7</li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>Week 9<br />
-Mar 8 &amp; 10</td>
-<td><ul>
-<li>GLM–Overview</li>
-</ul></td>
-<td><ul>
-<li>Kruschke ch. 15</li>
-</ul></td>
-<td><ul>
-<li>Exercise: Comparing GLMs</li>
-<li>Project prospectus</li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>Week 10<br />
-Spring Recess</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Week 11<br />
-Mar 22 &amp; 24</td>
-<td><ul>
-<li>Linear Regression</li>
-</ul></td>
-<td><ul>
-<li>Kruschke ch. 17, 19</li>
-</ul></td>
-<td><ul>
-<li>Exercise: Dummy coding</li>
-<li>HW 8</li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>Week 12<br />
-Mar 29 &amp; Apr 1</td>
-<td><ul>
-<li>Multiple Regression</li>
-<li>Causal Inference I</li>
-</ul></td>
-<td><ul>
-<li>Kruschke ch. 18</li>
-<li>McElreath ch. 6</li>
-</ul></td>
-<td><ul>
-<li>Exercise: Interaction</li>
-<li>HW 9</li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>Week 13<br />
-Apr 5 &amp; 7</td>
-<td><ul>
-<li>Causal Inference II</li>
-<li>Model Comparisons</li>
-</ul></td>
-<td><ul>
-<li>McElreath ch. 7</li>
-<li>Reference on Bayes Factor: Kruschke ch. 10</li>
-</ul></td>
-<td><ul>
-<li>Exercise: IC vs. BF</li>
-<li>HW 10</li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>Week 14<br />
-Apr 12 &amp; 14</td>
-<td><ul>
-<li>Missing Data</li>
-</ul></td>
-<td><ul>
-<li>McElreath ch. 15</li>
-</ul></td>
-<td><ul>
-<li>Exercise: Multiple Imputation</li>
-<li>HW 11</li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>Week 15<br />
-Apr 19 &amp; 21</td>
-<td><ul>
-<li>Extension of linear model</li>
-<li>Reporting</li>
-</ul></td>
-<td><ul>
-<li>Kruschke ch. 21–24 (pick topic of interest)</li>
-<li>Kruschke ch. 25</li>
-</ul></td>
-<td><ul>
-<li>HW 12</li>
-<li>Project update</li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>Week 16<br />
-Apr 26 &amp; 28</td>
-<td><ul>
-<li>Presentation</li>
-</ul></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>FINAL</td>
-<td>Final report</td>
-<td></td>
-<td>May 10 1:00 pm PDT</td>
-</tr>
-</tbody>
-</table>
-<h1 id="statement-on-academic-conduct-and-support-systems">Statement on Academic Conduct and Support Systems</h1>
-<h2 id="academic-conduct">Academic Conduct:</h2>
-<p>Plagiarism—presenting someone else’s ideas as your own, either verbatim or recast in your own words—is a serious academic offense with serious consequences. Please familiarize yourself with the discussion of plagiarism in <em>SCampus</em> in Part B, Section 11, “Behavior Violating University Standards” <a href="https://policy.usc.edu/scampus-part-b/">policy.usc.edu/scampus-part-b</a>. Other forms of academic dishonesty are equally unacceptable. See additional information in SCampus and university policies on scientific misconduct, <a href="https://policy.usc.edu/scientific-misconduct">policy.usc.edu/scientific-misconduct</a>.</p>
-<h2 id="support-systems">Support Systems:</h2>
-<p><em>Counseling and Mental Health - (213) 740-9355 - 24/7 on call</em><br />
-<a href="https://studenthealth.usc.edu/counseling/">studenthealth.usc.edu/counseling</a><br />
-Free and confidential mental health treatment for students, including short-term psychotherapy, group counseling, stress fitness workshops, and crisis intervention.</p>
-<p><em>National Suicide Prevention Lifeline - 1 (800) 273-8255 - 24/7 on call</em><br />
-<a href="https://www.suicidepreventionlifeline.org">suicidepreventionlifeline.org</a><br />
-Free and confidential emotional support to people in suicidal crisis or emotional distress 24 hours a day, 7 days a week.</p>
-<p><em>Relationship and Sexual Violence Prevention Services (RSVP) - (213) 740-9355(WELL), press “0” after hours - 24/7 on call</em><br />
-<a href="https://studenthealth.usc.edu/sexual-assault/">studenthealth.usc.edu/sexual-assault</a><br />
-Free and confidential therapy services, workshops, and training for situations related to gender-based harm.</p>
-<p><em>Office of Equity and Diversity (OED) - (213) 740-5086 | Title IX - (213) 821-8298</em><br />
-<a href="https://equity.usc.edu/">equity.usc.edu</a>, <a href="https://titleix.usc.edu/">titleix.usc.edu</a><br />
-Information about how to get help or help someone affected by harassment or discrimination, rights of protected classes, reporting options, and additional resources for students, faculty, staff, visitors, and applicants.</p>
-<p><em>Reporting Incidents of Bias or Harassment - (213) 740-5086 or (213) 821-8298</em><br />
-<a href="https://usc-advocate.symplicity.com/care_report/">usc-advocate.symplicity.com/care_report</a><br />
-Avenue to report incidents of bias, hate crimes, and microaggressions to the Office of Equity and Diversity |Title IX for appropriate investigation, supportive measures, and response.</p>
-<p><em>The Office of Disability Services and Programs - (213) 740-0776</em><br />
-<a href="https://dsp.usc.edu/">dsp.usc.edu</a><br />
-Support and accommodations for students with disabilities. Services include assistance in providing readers/notetakers/interpreters, special accommodations for test taking needs, assistance with architectural barriers, assistive technology, and support for individual needs.</p>
-<p><em>USC Campus Support and Intervention - (213) 821-4710</em><br />
-<a href="https://campussupport.usc.edu/">campussupport.usc.edu</a><br />
-Assists students and families in resolving complex personal, financial, and academic issues adversely affecting their success as a student.</p>
-<p><em>Diversity at USC - (213) 740-2101</em><br />
-<a href="https://diversity.usc.edu/">diversity.usc.edu</a><br />
-Information on events, programs and training, the Provost’s Diversity and Inclusion Council, Diversity Liaisons for each academic school, chronology, participation, and various resources for students.</p>
-<p><em>USC Emergency - UPC: (213) 740-4321, HSC: (323) 442-1000 - 24/7 on call</em><br />
-<a href="https://dps.usc.edu/">dps.usc.edu</a>, <a href="https://emergency.usc.edu/">emergency.usc.edu</a><br />
-Emergency assistance and avenue to report a crime. Latest updates regarding safety, including ways in which instruction will be continued if an officially declared emergency makes travel to campus infeasible.</p>
-<p><em>USC Department of Public Safety - UPC: (213) 740-6000, HSC: (323) 442-1200 - 24/7 on call</em><br />
-<a href="https://dps.usc.edu/">dps.usc.edu</a><br />
-Non-emergency assistance or information.</p>
-<h2 class="appendix" id="last-updated">Last updated</h2>
-<div class="layout-chunk" data-layout="l-body">
-<pre><code>[1] &quot;January 22, 2022&quot;</code></pre>
-</div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+</section>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>An additional thing to note for the Bernoulli/binomial model is that, instead of setting the prior on <span class="math inline">\(\theta\)</span>, sometimes we’re more interested in setting the prior for a transformed parameter that has values between <span class="math inline">\(-\infty\)</span> and <span class="math inline">\(\infty\)</span>, such as one on the <em>logit</em> scale (as related to logistic regression).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>The <span class="math inline">\(\mathrm{Beta}(1 / 2, 1 / 2)\)</span> distribution is called a <em>Jeffreys prior</em> (<a href="https://en.wikipedia.org/wiki/Jeffreys_prior" class="uri">https://en.wikipedia.org/wiki/Jeffreys_prior</a>), which is derived according to some statistical principles for different models. One big advantage of a Jeffreys prior is that it is <strong>invariant</strong>, meaningful that the prior will stay the same even under reparameterization. However, like conjugate priors, Jeffreys prior limits the choice of prior even when true prior information is available.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -2993,6 +2991,15 @@ Non-emergency assistance or information.</p>
 <div class="d-appendix">
 </div>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 <!--radix_placeholder_site_after_body-->
 <!--/radix_placeholder_site_after_body-->

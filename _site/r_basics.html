@@ -2446,6 +2446,8 @@ Notes
 <a href="r_basics.html">R Basics</a>
 <a href="probability.html">Probability</a>
 <a href="bayes_rule.html">Bayes' Rule</a>
+<a href="beta_Bernoulli_model.html">Beta-Bernoulli Model</a>
+<a href="Poisson_model.html">(Bonus) Poisson Model</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2874,7 +2876,8 @@ To learn more, please take a look at the cheatsheet: <a href="https://www.rstudi
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Ozone</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt; Error: geom_point requires the following missing aesthetics: y</code></pre>
+<pre><code>#&gt; Error in `check_required_aesthetics()`:
+#&gt; ! geom_point requires the following missing aesthetics: y</code></pre>
 <p><img src="r_basics_files/figure-html5/plot-error-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <p>While not very interesting, we can instead specify every point to have a y-coordinate of 0:</p>

@@ -2437,6 +2437,8 @@ Notes
 <a href="r_basics.html">R Basics</a>
 <a href="probability.html">Probability</a>
 <a href="bayes_rule.html">Bayes' Rule</a>
+<a href="beta_Bernoulli_model.html">Beta-Bernoulli Model</a>
+<a href="Poisson_model.html">(Bonus) Poisson Model</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2703,9 +2705,9 @@ For many problems in the social and behavioral sciences, the measured variables 
 <pre class="sourceCode r"><code class="sourceCode r">
 <span class='co'># Dispersion</span>
 <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
-    variance <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>var</a></span><span class='op'>(</span><span class='va'>sim_s</span><span class='op'>)</span>,
-    sd <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>sim_s</span><span class='op'>)</span>,
-    mad <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/mad.html'>mad</a></span><span class='op'>(</span><span class='va'>sim_s</span><span class='op'>)</span>
+    variance <span class='op'>=</span> <span class='fu'><a href='https://mc-stan.org/posterior/reference/rvar-summaries-over-draws.html'>var</a></span><span class='op'>(</span><span class='va'>sim_s</span><span class='op'>)</span>,
+    sd <span class='op'>=</span> <span class='fu'><a href='https://mc-stan.org/posterior/reference/rvar-summaries-over-draws.html'>sd</a></span><span class='op'>(</span><span class='va'>sim_s</span><span class='op'>)</span>,
+    mad <span class='op'>=</span> <span class='fu'><a href='https://mc-stan.org/posterior/reference/rvar-summaries-over-draws.html'>mad</a></span><span class='op'>(</span><span class='va'>sim_s</span><span class='op'>)</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
