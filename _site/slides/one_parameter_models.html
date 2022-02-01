@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>One Parameter Models</title>
+    <meta charset="utf-8" />
+    <meta name="date" content="2022-02-01" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <link rel="stylesheet" href="my_style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# One Parameter Models
+## PSYC 573
+### University of Southern California
+### February 01, 2022
+
+---
+
+
+class: clear
+background-image: url("images/Bayes_flow.png")
+background-position: center
+
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+--shareagain-twitter: none;
+--shareagain-facebook: none;
+--shareagain-linkedin: none;
+--shareagain-pinterest: none;
+--shareagain-pocket: none;
+--shareagain-reddit: none;
+}</style>
+
+
+
+
+
+---
+class: inverse, center, middle
+
+# An Example of Bernoulli Data
+
+---
+
+# Data (Subsample)
+
+- Patients diagnosed with AIDS in Australia before 1 July 1991
+
+.font70[
+
+|state |sex |diag       |death      |status |T.categ | age|
+|:-----|:---|:----------|:----------|:------|:-------|---:|
+|VIC   |M   |1991-03-05 |1991-07-01 |A      |hs      |  36|
+|NSW   |M   |1987-08-30 |1988-03-11 |D      |hs      |  25|
+|QLD   |M   |1989-10-09 |1990-08-22 |D      |hs      |  36|
+|NSW   |M   |1991-03-17 |1991-07-01 |A      |hs      |  42|
+|NSW   |M   |1986-04-12 |1989-01-31 |D      |hs      |  40|
+|NSW   |M   |1986-09-29 |1987-03-25 |D      |hs      |  69|
+|NSW   |M   |1989-08-24 |1991-07-01 |A      |hs      |  37|
+|Other |F   |1988-10-19 |1991-07-01 |A      |id      |  30|
+|NSW   |M   |1990-04-07 |1991-01-21 |D      |hs      |  30|
+|NSW   |M   |1988-04-28 |1990-04-07 |D      |hs      |  41|
+]
+
+---
+class: clear
+
+.pull-left[
+
+![](https://upload.wikimedia.org/wikipedia/commons/6/6d/Australia_states_1931-present.png)
+
+]
+
+???
+
+Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Australia_states_1931-present.png)
+
+--
+
+.pull-right[
+
+&lt;img src="one_parameter_models_files/figure-html/barplot_Aids2-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+  
+]
+
+--
+
+Let's go through the Bayesian crank
+
+---
+
+# Choose a Model: Bernoulli
+
+Data: `\(y\)` = survival status (0 = "A", 1 = "D")
+
+Parameter: `\(\theta\)` = probability of "D"
+
+Model equation: `\(y_i \sim \text{Bern}(\theta)\)` for `\(i = 1, 2, \ldots, N\)`
+
+- The model states: 
+
+&gt; the sample data `\(y\)` follows a Bernoulli distribution with the common parameter `\(\theta\)`
+
+---
+
+# Bernoulli Likelihood
+
+Notice that there is no subscript for `\(\theta\)`:
+- The model assumes each observation has the same `\(\theta\)`
+- I.e., the observations are exchangeable
+
+`$$P(y_1, y_2, \ldots, y_N) = \theta^z (1 - \theta)^{N - z}$$`
+
+`\(z\)` = number of "successes" ("D")
+- `\(z\)` = 6 in this illustrative sample
+
+---
+class: clear
+
+.pull-left[
+
+.font70[
+
+| theta| likelihood|
+|-----:|----------:|
+|   0.0|    0.00000|
+|   0.1|    0.00000|
+|   0.2|    0.00003|
+|   0.3|    0.00018|
+|   0.4|    0.00053|
+|   0.5|    0.00098|
+|   0.6|    0.00119|
+|   0.7|    0.00095|
+|   0.8|    0.00042|
+|   0.9|    0.00005|
+|   1.0|    0.00000|
+
+]
+]
+
+--
+
+.pull-right[
+
+&lt;img src="one_parameter_models_files/figure-html/th-lik-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+class: inverse, center, middle
+
+# Choosing Priors
+
+---
+
+# Specify a Prior
+
+When choosing priors, start with the **support** of the parameter(s)
+- Values that are possible
+
+Support for `\(\theta\)`: [0, 1]
+
+---
+
+# One Possible Option
+
+Prior belief: `\(\theta\)` is most likely to be in the range `\([.40, .60)\)`,
+and is **5** times more likely than any values outside of that range"
+
+&lt;img src="one_parameter_models_files/figure-html/step-prior-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Conjugate Prior: Beta Distribution
+
+.panelset[
+.panel[.panel-name[Math]
+
+`$$P(\theta \mid a, b) \propto \theta^{a - 1} (1 - \theta)^{b - 1} I_{[0, 1]}$$`
+
+]
+
+.panel[.panel-name[R Code]
+
+
+```r
+a &lt;- 1
+b &lt;- 1
+dbeta(theta1, shape1 = a, shape2 = b)
+```
+
+]
+]
+
+**Conjugate** Prior: yield posterior in the same distribution family as the prior
+
+.footnote[
+
+.font80[
+Some other conjugate distributions: https://en.wikipedia.org/wiki/Conjugate_prior#Table_of_conjugate_distributions
+]
+]
+
+---
+class: clear
+
+Two **hyperparameters**, `\(a\)` and `\(b\)`:
+- `\(a - 1\)` = number of prior 'successes' (e.g., "D")
+- `\(b - 1\)` = number of prior 'failures'
+
+&lt;img src="one_parameter_models_files/figure-html/beta-dist-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+class: clear
+
+When `\(a &gt; b\)`, more density to the right (i.e., larger `\(\theta\)`), and vice versa
+
+Mean = `\(a / (a + b)\)`
+
+Concentration = `\(\kappa = a + b\)`; `\(\uparrow \kappa\)`, `\(\downarrow\)` variance, `\(\uparrow\)` strength of prior
+
+E.g., A Beta(1, 1) prior means 0 prior success and 0 failure
+- i.e., no prior information (i.e., *noninformative*)
+
+---
+
+# Notes on Choosing Priors
+
+- **Give `\(&gt;\)` 0 probability/density for all possible values of a parameter**
+
+- When the prior contains relatively little information
+    * different choices usually make little difference
+
+- Do a prior predictive check
+
+- *Sensitivity analyses* to see how sensitive results are to different reasonable prior choices.
+
+---
+class: inverse, center, middle
+
+# Getting the Posterior
+
+---
+
+# Obtaining the Posterior Analytically
+
+`$$P(\theta \mid y) = \frac{P(y \mid \theta) P(\theta)}{\int_0^1 P(y \mid \theta^*) P(\theta^*) d \theta^*}$$`
+
+The denominator is usually intractable
+
+--
+
+Conjugate prior: Posterior is from a known distribution family
+
+- `\(N\)` trials and `\(z\)` successes
+- `\(\mathrm{Beta}(a, b)\)` prior
+- `\(\Rightarrow\)` `\(\mathrm{Beta}(a + z, b + N - z)\)` posterior
+    * `\(a + \color{red}{z} - 1\)` successes
+    * `\(b + \color{red}{N - z} - 1\)` failures
+
+---
+
+# Back to the Example
+
+`\(N\)` = 10, `\(z\)` = 6
+
+.pull-left[
+Prior: Do you believe that the mortality rate of AIDS is 100%? or 0%?
+- Let's use `\(\kappa = 4\)`, prior mean = 0.5, so `\(a\)` = 2 and `\(b\)` = 2
+]
+
+.pull-right[
+&lt;img src="one_parameter_models_files/figure-html/weak-prior-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Posterior Beta
+
+`$$\theta \mid y \sim \mathrm{Beta}(2 + 6, 2 + 4)$$`
+
+.panelset[
+.panel[.panel-name[R Code]
+
+
+```r
+ggplot(tibble(x = c(0, 1)), aes(x = x)) +
+    stat_function(fun = dbeta,
+                  args = list(shape1 = 8, shape2 = 6)) +
+    labs(title = "Beta(a = 8, b = 6)",
+         x = expression(theta), y = "Density")
+```
+
+]
+
+.panel[.panel-name[Density]
+
+&lt;img src="one_parameter_models_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+---
+
+# Summarizing the Posterior
+
+If the posterior is from a known family, one can evalue summary statistics analytically
+- E.g., `\(E(\theta \mid y) = \int_0^1 \theta P(\theta \mid y) d \theta\)`
+
+However, more often, a simulation-based approach is used to draw samples from the posterior
+
+
+```r
+num_draws &lt;- 1000
+sim_theta &lt;- rbeta(1000, shape1 = 8, shape2 = 6)
+```
+
+---
+class: clear
+
+
+|Statistic |Common name                                   |Value          |
+|:---------|:---------------------------------------------|:--------------|
+|mean      |Bayes estimate/Expected a posteriori (EAP)    |0.563          |
+|median    |Posterior median                              |0.567          |
+|mode      |Maximum a posteriori (MAP)                    |0.577          |
+|SD        |Posterior SD                                  |0.126          |
+|MAD       |MAD                                           |0.13           |
+|80% CI    |(Equal-tailed) Credible interval              |[0.398, 0.727] |
+|80% HDI   |HDI/Highest Posterior Density Interval (HPDI) |[0.404, 0.733] |
+
+---
+
+# Use the Full Data
+
+1082 A, 1761 D `\(\rightarrow\)` `\(N\)` = 2843, `\(z\)` = 1761
+
+Posterior: Beta(1763, 1084)
+
+&lt;img src="one_parameter_models_files/figure-html/beta-post-full-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+class: inverse, middle, center
+
+# Posterior Predictive Check
+
+---
+
+# Posterior Predictive Check
+
+`\(\tilde y\)` = new/future data
+
+Posterior predictive: `\(P(\tilde y \mid y) = \int P(\tilde y \mid \theta, y) P(\theta \mid y) d \theta\)`
+
+--
+
+Simulate `\(\theta^*\)` from posterior --&gt; for each `\(\theta^*\)`, simulate a new data set
+
+--
+
+If the model does not fit the data, any results are basically meaningless at best, and can be very misleading
+
+Requires substantive knowledge and some creativity
+- E.g., are the mortality rates equal across the 4 state categories?
+
+---
+class: clear
+
+&lt;img src="one_parameter_models_files/figure-html/graphic-ppc-1.png" width="95%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Posterior Predictive Check
+
+Some common checks:
+
+- Does the model simulate data with similar distributions as the observed data?
+    * e.g., skewness, range
+- Subsets of observed data that are of more interest?
+    * e.g., old age group
+    * If not fit, age should be incorporated in the model
+
+See an example in Gabry et al. (2019)
+
+---
+class: clear
+
+### Using `bayesplot`
+
+.panelset[
+.panel[.panel-name[Plot]
+
+&lt;img src="one_parameter_models_files/figure-html/ppc-stat-age-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+.font70[
+
+Darker line = observed proportion of "D"; histogram = simulated plausible statistics based on the model and the posterior
+
+The model with one-parameter, which assumes exchangeability, does not fit those age 50+
+
+- May need more than one `\(\theta\)`
+
+]
+]
+
+.panel[.panel-name[R code]
+
+.font50[
+
+
+```r
+# Create an age group indicator
+age50 &lt;- factor(Aids2$age &gt; 50, labels = c("&lt;= 50", "&gt; 50"))
+# Draw posterior samples of theta
+post_sample &lt;- rbeta(1e4, 1807, 1116)
+# Initialize an S by N matrix to store the simulated data
+y_tilde &lt;- matrix(NA,
+                  nrow = length(post_sample),
+                  ncol = length(Aids2$status))
+for (s in seq_along(post_sample)) {
+    theta_s &lt;- post_sample[s]
+    status_new &lt;- sample(c("D", "A"), nrow(Aids2),
+        replace = TRUE,
+        prob = c(theta_s, 1 - theta_s)
+    )
+    y_tilde[s,] &lt;- as.numeric(status_new == "D")
+}
+bayesplot::ppc_stat_grouped(
+    as.numeric(Aids2$status == "D"),
+    yrep = y_tilde,
+    group = age50
+)
+```
+
+]
+
+]
+]
+
+---
+class: inverse, center, middle
+
+# Other One-Parameter Models
+
+---
+
+# Binomial Model
+
+- For count outcome: `\(y_i \sim \mathrm{Bin}(N_i, \theta)\)`
+    * `\(\theta\)`: rate of occurrence (per trial)
+- Conjugate prior: Beta
+- E.g.,
+    * `\(y\)` minority candidates in `\(N\)` new hires
+    * `\(y\)` out of `\(N\)` symptoms checked
+    * A word appears `\(y\)` times in a tweet of `\(N\)` number of words
+
+---
+
+# Poisson Model
+
+- For count outcome: `\(y_i \sim \mathrm{Pois}(\theta)\)`
+    * `\(\theta\)`: rate of occurrence
+- Conjugate prior: Gamma
+- E.g., 
+    * Drinking `\(y\)` times in a week
+    * `\(y\)` hate crimes in a year for a county
+    * `\(y\)` people visiting a store in an hour
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

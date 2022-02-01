@@ -178,15 +178,11 @@ By the end of this module, you will be able to
 
 ## Slides
 
-<!--
-
 [PDF version](slides/one_parameter_models.pdf){target="_blank"}
 
 ```{r embed-4, echo = FALSE}
 embed_xaringan("slides/one_parameter_models.html", ratio = "4:3")
 ```
-
--->
 
 :::
 

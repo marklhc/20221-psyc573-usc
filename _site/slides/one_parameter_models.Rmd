@@ -1,0 +1,588 @@
+---
+title: "One Parameter Models"
+subtitle: "PSYC 573"
+institute: "University of Southern California"
+date: "February 01, 2022"
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts, "my_style.css"]
+    lib_dir: libs
+    nature:
+      countIncrementalSlides: false
+params:
+  for_class: false
+---
+
+class: clear
+background-image: url("images/Bayes_flow.png")
+background-position: center
+
+```{r, child = "slide_settings.RMarkdown"}
+```
+
+```{r xaringan-panelset, echo = FALSE}
+xaringanExtra::use_panelset()
+```
+
+```{r xaringan-scribble, echo = FALSE, eval = params$for_class}
+xaringanExtra::use_scribble()
+```
+
+---
+class: inverse, center, middle
+
+# An Example of Bernoulli Data
+
+---
+
+# Data (Subsample)
+
+- Patients diagnosed with AIDS in Australia before 1 July 1991
+
+.font70[
+```{r Aids2_sub}
+data("Aids2", package = "MASS")
+set.seed(15)
+Aids2_sub <- Aids2 %>% sample_n(10)
+Aids2_sub <- Aids2_sub %>% 
+  mutate_at(vars(diag, death), as.Date, "1960-01-01")
+Aids2_sub %>% knitr::kable()
+```
+]
+
+---
+class: clear
+
+.pull-left[
+
+![](https://upload.wikimedia.org/wikipedia/commons/6/6d/Australia_states_1931-present.png)
+
+]
+
+???
+
+Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Australia_states_1931-present.png)
+
+--
+
+.pull-right[
+
+```{r barplot_Aids2, out.width='100%', fig.width = 4.2}
+ggplot(Aids2_sub, aes(x = status, fill = status)) +
+  geom_bar() +
+  guides(fill = "none") +
+  scale_fill_manual(values = c("grey", "red")) +
+  ylim(0, 10) +
+  labs(title = "observed data") +
+  theme(axis.title.x = element_text(color = "red"))
+```
+  
+]
+
+--
+
+Let's go through the Bayesian crank
+
+---
+
+# Choose a Model: Bernoulli
+
+Data: $y$ = survival status (0 = "A", 1 = "D")
+
+Parameter: $\theta$ = probability of "D"
+
+Model equation: $y_i \sim \text{Bern}(\theta)$ for $i = 1, 2, \ldots, N$
+
+- The model states: 
+
+> the sample data $y$ follows a Bernoulli distribution with the common parameter $\theta$
+
+---
+
+# Bernoulli Likelihood
+
+Notice that there is no subscript for $\theta$:
+- The model assumes each observation has the same $\theta$
+- I.e., the observations are exchangeable
+
+$$P(y_1, y_2, \ldots, y_N) = \theta^z (1 - \theta)^{N - z}$$
+
+$z$ = number of "successes" ("D")
+- $z$ = 6 in this illustrative sample
+
+---
+class: clear
+
+.pull-left[
+
+.font70[
+```{r th-data}
+th <- seq(0, 1, by = 0.1)
+bern_lik <- function(th, z = 6, n = 10) {
+  th^z * (1 - th)^(n - z)
+}
+tibble(
+  theta = th,
+  likelihood = bern_lik(th)
+) %>%
+  knitr::kable(digits = c(1, 5))
+```
+
+]
+]
+
+--
+
+.pull-right[
+
+```{r th-lik, fig.width = 4.29, out.width = "100%"}
+ggplot(
+  tibble(x = c(0, 1)),
+  aes(x = x)
+) +
+  stat_function(fun = bern_lik, col = "red") +
+  labs(
+    x = expression(theta),
+    y = "likelihood"
+  )
+```
+
+]
+
+---
+class: inverse, center, middle
+
+# Choosing Priors
+
+---
+
+# Specify a Prior
+
+When choosing priors, start with the **support** of the parameter(s)
+- Values that are possible
+
+Support for $\theta$: [0, 1]
+
+---
+
+# One Possible Option
+
+Prior belief: `\(\theta\)` is most likely to be in the range $[.40, .60)$,
+and is **5** times more likely than any values outside of that range"
+
+```{r step-prior, fig.asp = .75}
+ggplot(tibble(x = c(0, 1)), aes(x = x)) +
+  stat_function(
+    fun = stepfun(c(0.40, 0.60),
+      c(1 / 1.8, 5 / 1.8, 1 / 1.8),
+      f = 0
+    ),
+    n = 501
+  ) +
+  labs(x = expression(theta), y = "density") +
+  scale_x_continuous(breaks = c(0, 0.40, 0.60, 1)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+  ylim(0, 3)
+```
+
+---
+
+# Conjugate Prior: Beta Distribution
+
+.panelset[
+.panel[.panel-name[Math]
+
+$$P(\theta \mid a, b) \propto \theta^{a - 1} (1 - \theta)^{b - 1} I_{[0, 1]}$$
+
+]
+
+.panel[.panel-name[R Code]
+
+```{r, eval = FALSE, echo = TRUE}
+a <- 1
+b <- 1
+dbeta(theta1, shape1 = a, shape2 = b)
+```
+
+]
+]
+
+**Conjugate** Prior: yield posterior in the same distribution family as the prior
+
+.footnote[
+
+.font80[
+Some other conjugate distributions: https://en.wikipedia.org/wiki/Conjugate_prior#Table_of_conjugate_distributions
+]
+]
+
+---
+class: clear
+
+Two **hyperparameters**, $a$ and $b$:
+- $a - 1$ = number of prior 'successes' (e.g., "D")
+- $b - 1$ = number of prior 'failures'
+
+```{r beta-dist, fig.width = 7.71, out.width = "90%"}
+plist <- vector("list", 6L)
+params_list <- list(
+  c(a = 0.5, b = 0.5),
+  c(a = 1, b = 1),
+  c(a = 2, b = 4),
+  c(a = 4, b = 2),
+  c(a = 8, b = 8),
+  c(a = 10, b = 20)
+)
+for (i in 1:6) {
+  a <- params_list[[i]]["a"]
+  b <- params_list[[i]]["b"]
+  plist[[i]] <- ggplot(tibble(th = c(0, 1)), aes(x = th)) +
+    stat_function(fun = dbeta, args = list(shape1 = a, shape2 = b)) +
+    ylim(0, 5) +
+    annotate("text",
+      x = Inf, y = Inf, hjust = 1, vjust = 1,
+      label = paste("a =", a, "b =", b)
+    ) +
+    labs(y = "", x = expression(theta))
+}
+gridExtra::grid.arrange(grobs = plist, nrow = 2)
+```
+
+---
+class: clear
+
+When $a > b$, more density to the right (i.e., larger $\theta$), and vice versa
+
+Mean = $a / (a + b)$
+
+Concentration = $\kappa = a + b$; $\uparrow \kappa$, $\downarrow$ variance, $\uparrow$ strength of prior
+
+E.g., A Beta(1, 1) prior means 0 prior success and 0 failure
+- i.e., no prior information (i.e., *noninformative*)
+
+---
+
+# Notes on Choosing Priors
+
+- **Give $>$ 0 probability/density for all possible values of a parameter**
+
+- When the prior contains relatively little information
+    * different choices usually make little difference
+
+- Do a prior predictive check
+
+- *Sensitivity analyses* to see how sensitive results are to different reasonable prior choices.
+
+---
+class: inverse, center, middle
+
+# Getting the Posterior
+
+---
+
+# Obtaining the Posterior Analytically
+
+$$P(\theta \mid y) = \frac{P(y \mid \theta) P(\theta)}{\int_0^1 P(y \mid \theta^*) P(\theta^*) d \theta^*}$$
+
+The denominator is usually intractable
+
+--
+
+Conjugate prior: Posterior is from a known distribution family
+
+- $N$ trials and $z$ successes
+- $\mathrm{Beta}(a, b)$ prior
+- $\Rightarrow$ $\mathrm{Beta}(a + z, b + N - z)$ posterior
+    * $a + \color{red}{z} - 1$ successes
+    * $b + \color{red}{N - z} - 1$ failures
+
+---
+
+# Back to the Example
+
+$N$ = 10, $z$ = 6
+
+.pull-left[
+Prior: Do you believe that the mortality rate of AIDS is 100%? or 0%?
+- Let's use $\kappa = 4$, prior mean = 0.5, so $a$ = 2 and $b$ = 2
+]
+
+.pull-right[
+```{r weak-prior, out.width = "100%", fig.width = 4.29}
+ggplot(tibble(th = c(0, 1)), aes(x = th)) +
+    stat_function(fun = dbeta, args = list(shape1 = 2, shape2 = 2)) +
+    ylim(0, 3) +
+    annotate("text",
+      x = Inf, y = Inf, hjust = 1, vjust = 1,
+      label = paste("a =", 2, "b =", 2)
+    ) +
+    labs(y = "", x = expression(theta))
+```
+]
+
+---
+
+# Posterior Beta
+
+$$\theta \mid y \sim \mathrm{Beta}(2 + 6, 2 + 4)$$
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```{r beta-8-6, echo = TRUE, eval = FALSE}
+ggplot(tibble(x = c(0, 1)), aes(x = x)) +
+    stat_function(fun = dbeta,
+                  args = list(shape1 = 8, shape2 = 6)) +
+    labs(title = "Beta(a = 8, b = 6)",
+         x = expression(theta), y = "Density")
+```
+
+]
+
+.panel[.panel-name[Density]
+
+```{r, ref.label = "beta-8-6", echo = FALSE}
+```
+
+]
+]
+
+---
+
+# Summarizing the Posterior
+
+If the posterior is from a known family, one can evalue summary statistics analytically
+- E.g., $E(\theta \mid y) = \int_0^1 \theta P(\theta \mid y) d \theta$
+
+However, more often, a simulation-based approach is used to draw samples from the posterior
+
+```{r sim-theta, echo = TRUE}
+num_draws <- 1000
+sim_theta <- rbeta(1000, shape1 = 8, shape2 = 6)
+```
+
+---
+class: clear
+
+```{r}
+tibble(
+  Statistic = c(
+    "mean", "median", "mode", "SD", "MAD", "80% CI",
+    "80% HDI"
+  ),
+  `Common name` =
+    c(
+      "Bayes estimate/Expected a posteriori (EAP)",
+      "Posterior median",
+      "Maximum a posteriori (MAP)",
+      "Posterior SD",
+      "MAD",
+      "(Equal-tailed) Credible interval",
+      "HDI/Highest Posterior Density Interval (HPDI)"
+    ),
+  Value = c(
+    round(mean(sim_theta), 3),
+    round(median(sim_theta), 3),
+    round(
+      density(sim_theta, bw = "SJ") %>%
+        {
+          function(dens) dens$x[which.max(dens$y)]
+        }(), 3
+    ),
+    round(sd(sim_theta), 3),
+    round(mad(sim_theta), 3),
+    paste0(
+      "[",
+      paste0(
+        round(
+          quantile(sim_theta, probs = c(.1, .9)), 3
+        ),
+        collapse = ", "
+      ),
+      "]"
+    ),
+    paste0(
+      "[",
+      paste0(
+        round(
+          HDInterval::hdi(sim_theta, credMass = 0.80), 3
+        ),
+        collapse = ", "
+      ),
+      "]"
+    )
+  )
+) %>%
+  knitr::kable()
+```
+
+---
+
+# Use the Full Data
+
+1082 A, 1761 D $\rightarrow$ $N$ = 2843, $z$ = 1761
+
+Posterior: Beta(1763, 1084)
+
+```{r beta-post-full}
+ggplot(tibble(x = c(0, 1)), aes(x = x)) +
+    stat_function(fun = dbeta,
+                  args = list(shape1 = 1763, shape2 = 1084),
+                  n = 501) +
+    labs(title = "Beta(a = 1763, b = 1084)", y = "Density",
+         x = expression(theta~"|"~y))
+```
+
+---
+class: inverse, middle, center
+
+# Posterior Predictive Check
+
+---
+
+# Posterior Predictive Check
+
+$\tilde y$ = new/future data
+
+Posterior predictive: $P(\tilde y \mid y) = \int P(\tilde y \mid \theta, y) P(\theta \mid y) d \theta$
+
+--
+
+Simulate $\theta^*$ from posterior --> for each $\theta^*$, simulate a new data set
+
+--
+
+If the model does not fit the data, any results are basically meaningless at best, and can be very misleading
+
+Requires substantive knowledge and some creativity
+- E.g., are the mortality rates equal across the 4 state categories?
+
+---
+class: clear
+
+```{r graphic-ppc, fig.width = 8.14, fig.asp = 0.75, out.width = '95%'}
+plist <- vector("list", 12L)
+plist[[1]] <- ggplot(
+  Aids2,
+  aes(x = state, y = mean(status == "D"), fill = state)
+) +
+  geom_bar(stat = "identity") +
+  guides(fill = "none") +
+  labs(x = "Observed data", y = "Number of Deaths") +
+  theme(axis.title.x = element_text(color = "red")) +
+  ylim(0, 1200)
+for (i in 1:11) {
+  # Get the a value from posterior samples
+  theta_post <- rbeta(1, 1763, 1084)
+  # For each plausible theta value, generate a status variable
+  status_new <- sample(c("D", "A"), nrow(Aids2),
+    replace = TRUE,
+    prob = c(theta_post, 1 - theta_post)
+  )
+  df_new <- Aids2 %>%
+    mutate(status = factor(status_new))
+  plist[[i + 1]] <- plist[[1]] %+% df_new +
+    labs(x = paste("Simulated data", i)) +
+    theme(axis.title.x = element_text(color = "black"))
+}
+gridExtra::grid.arrange(grobs = plist, nrow = 3)
+```
+
+---
+
+# Posterior Predictive Check
+
+Some common checks:
+
+- Does the model simulate data with similar distributions as the observed data?
+    * e.g., skewness, range
+- Subsets of observed data that are of more interest?
+    * e.g., old age group
+    * If not fit, age should be incorporated in the model
+
+See an example in Gabry et al. (2019)
+
+---
+class: clear
+
+### Using `bayesplot`
+
+.panelset[
+.panel[.panel-name[Plot]
+
+```{r ppc-stat-age, fig.asp = 0.3}
+# Create an age group indicator
+age50 <- factor(Aids2$age > 50, labels = c("<= 50", "> 50"))
+# Draw posterior samples of theta
+post_sample <- rbeta(1e4, 1807, 1116)
+# Initialize an S by N matrix to store the simulated data
+y_tilde <- matrix(NA,
+                  nrow = length(post_sample),
+                  ncol = length(Aids2$status))
+for (s in seq_along(post_sample)) {
+    theta_s <- post_sample[s]
+    status_new <- sample(c("D", "A"), nrow(Aids2),
+        replace = TRUE,
+        prob = c(theta_s, 1 - theta_s)
+    )
+    y_tilde[s,] <- as.numeric(status_new == "D")
+}
+bayesplot::ppc_stat_grouped(
+    as.numeric(Aids2$status == "D"),
+    yrep = y_tilde,
+    group = age50
+)
+```
+
+.font70[
+
+Darker line = observed proportion of "D"; histogram = simulated plausible statistics based on the model and the posterior
+
+The model with one-parameter, which assumes exchangeability, does not fit those age 50+
+
+- May need more than one $\theta$
+
+]
+]
+
+.panel[.panel-name[R code]
+
+.font50[
+
+```{r ref.label = "ppc-stat-age", echo = TRUE, eval = FALSE}
+
+```
+
+]
+
+]
+]
+
+---
+class: inverse, center, middle
+
+# Other One-Parameter Models
+
+---
+
+# Binomial Model
+
+- For count outcome: $y_i \sim \mathrm{Bin}(N_i, \theta)$
+    * $\theta$: rate of occurrence (per trial)
+- Conjugate prior: Beta
+- E.g.,
+    * $y$ minority candidates in $N$ new hires
+    * $y$ out of $N$ symptoms checked
+    * A word appears $y$ times in a tweet of $N$ number of words
+
+---
+
+# Poisson Model
+
+- For count outcome: $y_i \sim \mathrm{Pois}(\theta)$
+    * $\theta$: rate of occurrence
+- Conjugate prior: Gamma
+- E.g., 
+    * Drinking $y$ times in a week
+    * $y$ hate crimes in a year for a county
+    * $y$ people visiting a store in an hour
