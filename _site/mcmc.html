@@ -87,33 +87,31 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
   <!--radix_placeholder_meta_tags-->
-  <title>PSYC 573 Bayesian Data Analysis (2022 Spring): R Basics</title>
+  <title>PSYC 573 Bayesian Data Analysis (2022 Spring): Markov Chain Monte Carlo</title>
 
-  <meta property="description" itemprop="description" content="Review of basic syntax in R"/>
 
   <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"/>
 
   <!--  https://schema.org/Article -->
-  <meta property="article:published" itemprop="datePublished" content="2022-01-06"/>
-  <meta property="article:created" itemprop="dateCreated" content="2022-01-06"/>
+  <meta property="article:published" itemprop="datePublished" content="2022-02-03"/>
+  <meta property="article:created" itemprop="dateCreated" content="2022-02-03"/>
+  <meta name="article:author" content="Mark Lai"/>
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): R Basics"/>
+  <meta property="og:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): Markov Chain Monte Carlo"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="Review of basic syntax in R"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="PSYC 573 Bayesian Data Analysis (2022 Spring)"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): R Basics"/>
-  <meta property="twitter:description" content="Review of basic syntax in R"/>
+  <meta property="twitter:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): Markov Chain Monte Carlo"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","date","description"]}},"value":[{"type":"character","attributes":{},"value":["R Basics"]},{"type":"character","attributes":{},"value":["January 6, 2022"]},{"type":"character","attributes":{},"value":["Review of basic syntax in R"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","author","date"]}},"value":[{"type":"character","attributes":{},"value":["Markov Chain Monte Carlo"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Mark Lai"]}]}]},{"type":"character","attributes":{},"value":["February 3, 2022"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2371,12 +2369,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   }</style>
   <!--/radix_placeholder_distill-->
   <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
-  <script src="site_libs/clipboard-2.0.6/clipboard.min.js"></script>
-  <link href="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
-  <script src="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
-  <script>window.xaringanExtraClipboard(null, {"button":"<i class=\"fa fa-clone fa-sm\" style=\"color: #301e64\"><\/i>","success":"<i class=\"fa fa-check fa-sm\" style=\"color: #90BE6D\"><\/i>","error":"<i class=\"fa fa-times fa-sm\" style=\"color: #F94144\"><\/i>"})</script>
-  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+  <link href="site_libs/panelset-0.2.6/panelset.css" rel="stylesheet" />
+  <script src="site_libs/panelset-0.2.6/panelset.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2421,7 +2415,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"R Basics","description":"Review of basic syntax in R","authors":[],"publishedDate":"2022-01-06T00:00:00.000-08:00"}
+{"title":"Markov Chain Monte Carlo","authors":[{"author":"Mark Lai","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2022-02-03T00:00:00.000-08:00","citationText":"Lai, 2022"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2463,627 +2457,494 @@ Notes
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>R Basics</h1>
+<h1>Markov Chain Monte Carlo</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p><p>Review of basic syntax in R</p></p>
+
 </div>
 
+<div class="d-byline">
+  
+  Mark Lai
+  
+<br/>February 3, 2022
+</div>
 
 <div class="d-article">
 <div class="d-contents d-contents-float">
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#load-packages">Load Packages</a></li>
-<li><a href="#create-an-object-and-get-object-information">Create an Object and Get Object Information</a></li>
-<li><a href="#piping">Piping</a></li>
-<li><a href="#vector-matrix-array-list-and-data-frames">Vector, Matrix, Array, List, and Data Frames</a></li>
-<li><a href="#plotting">Plotting</a>
+<li><a href="#monte-carlo-simulation">Monte Carlo Simulation</a></li>
+<li><a href="#markov-chain-monte-carlo-mcmc-drawing-dependent-samples">Markov Chain Monte Carlo (MCMC): Drawing Dependent Samples</a></li>
+<li><a href="#the-metropolis-algorithm">The Metropolis algorithm</a>
 <ul>
-<li><a href="#scatter-plot">Scatter plot</a></li>
-<li><a href="#changing-labels">Changing labels</a></li>
-<li><a href="#different-geom">Different <code>geom</code></a></li>
-<li><a href="#facet">Facet</a></li>
-</ul></li>
-<li><a href="#for-loop"><code>for</code> Loop</a></li>
-<li><a href="#custom-function">Custom Function</a>
+<li><a href="#shiny-app">Shiny App</a></li>
+<li><a href="#example-1-estimating-the-number-of-people-taking-the-metro">Example 1: Estimating the Number of People Taking the Metro</a></li>
+<li><a href="#mcmc-sampling">MCMC sampling</a></li>
+<li><a href="#more-on-markov-chain">More on Markov Chain</a></li>
+<li><a href="#warm-upburn-in">Warm-up/Burn-in</a></li>
+<li><a href="#autocorrelation">Autocorrelation</a></li>
+<li><a href="#acceptance-rate">Acceptance Rate</a></li>
+<li><a href="#effective-sample-size-ess">Effective sample size (ESS)</a></li>
+<li><a href="#multiple-chains">Multiple Chains</a></li>
+<li><a href="#full-r-code-with-more-iterations">Full R Code With More iterations</a></li>
+<li><a href="#convergence-check">Convergence Check</a>
 <ul>
-<li><a href="#example-1-a2-b">Example 1: <span class="math inline">\(a^2 + b\)</span></a></li>
-<li><a href="#when-to-use-a-function">When to use a function?</a></li>
+<li><a href="#trace-plot">Trace Plot</a></li>
+<li><a href="#rank-histograms">Rank Histograms</a></li>
+<li><a href="#hatr"><span class="math inline">\(\hat{R}\)</span></a></li>
 </ul></li>
-<li><a href="#last-updated">Last updated</a></li>
+</ul></li>
 </ul>
 </nav>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:programming-pic"></span>
-<img src="https://www.phdcomics.com/comics/archive/phd031714s.gif" alt="Figure from https://www.phdcomics.com/comics/archive/phd031714s.gif" width="70%" class=external />
-<p class="caption">
-Figure 1: Figure from <a href="https://www.phdcomics.com/comics/archive/phd031714s.gif" class="uri">https://www.phdcomics.com/comics/archive/phd031714s.gif</a>
-</p>
-</div>
-</div>
-<h2 id="load-packages">Load Packages</h2>
-<div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://here.r-lib.org/'>here</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://haven.tidyverse.org'>haven</a></span><span class='op'>)</span>  <span class='co'># for importing data</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://mc-stan.org/posterior/'>posterior</a></span><span class='op'>)</span>  <span class='co'># for summarizing posterior draws</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://mc-stan.org/bayesplot/'>bayesplot</a></span><span class='op'>)</span>  <span class='co'># for convergence plots</span>
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_classic</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>panel.grid.major.y <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_line</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"grey92"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
-<h2 id="create-an-object-and-get-object-information">Create an Object and Get Object Information</h2>
+<p>Previously, we have seen a few examples with Bayesian inferences where the posterior distribution concerns only one parameter, like the Bernoulli and the Poisson model. We have also discussed the grid approximation and the conjugate prior approaches to obtain/approximate the posterior. In this note, we will discuss the simulation method and explain why we need a special class of methods called <em>Markov Chain Monte Carlo</em>. This note will consider mainly the <strong>Metropolis algorithm</strong>, which subsumes many other commonly used MCMC algorithms. Therefore, it is beneficial to build a solid foundation on what the basic version of the Metropolis algorithm is. You will also write your own Metropolis sampler to understand how it works.</p>
+<p>But first, let’s talk about what the Monte Carlo method is.</p>
+<h1 id="monte-carlo-simulation">Monte Carlo Simulation</h1>
+<p>In a previous example, we see that with a conjugate prior (e.g., Beta), the posterior distribution is from the same distributional family (Beta). Thus, we can easily draw simulation samples from the posterior distribution using R. The more samples we draw, the better we can approximate the posterior distribution based on the simulation samples. It is the same logic to get a large sample to precisely describe our population; here, the posterior distribution, determined using mathematics, is considered the population, and the simulation draws are, well, a sample from that population. With 10,000 or 100,000 samples (draws), we can accurately describe our population (posterior).</p>
+<p>For example, if we know that the posterior is a <span class="math inline">\(\mathrm{Beta}(15, 10)\)</span> distribution, consider drawing 10, 100, 10,00, and 10,000 samples from it using the R function <code>rbeta</code>, and contrast the density estimated from the samples (in the histogram) with that of the actual Beta distribution (in red).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Create an object named `x`, using the assignment operator `&lt;-`</span>
-<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span>
-<span class='co'># Generally, nothing returns after an assignment. Type `x` to print the object</span>
-<span class='va'>x</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] 1 2</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Check the type</span>
-<span class='fu'><a href='https://rdrr.io/r/base/typeof.html'>typeof</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] &quot;double&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Check the length</span>
-<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] 2</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># A quick look of the structure of an object</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt;  num [1:2] 1 2</code></pre>
-</div>
-<p>Another example</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>, to <span class='op'>=</span> <span class='fl'>10</span>, by <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span>, <span class='fl'>99</span>, <span class='fl'>99</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/typeof.html'>typeof</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] &quot;character&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt;  chr [1:21] &quot;1&quot; &quot;1.5&quot; &quot;2&quot; &quot;2.5&quot; &quot;3&quot; &quot;3.5&quot; &quot;4&quot; &quot;4.5&quot; &quot;5&quot; &quot;5.5&quot; &quot;6&quot; ...</code></pre>
-</div>
-<p>To find out what the <code>seq()</code> function does, use</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='op'>?</span><span class='va'>seq</span>
-</code></pre>
-</div>
-</div>
-<h2 id="piping">Piping</h2>
-<p>A pipe operator is an alternative way to do multiple operations on an object. For example, the following code (a) transforms <code>y</code> to numbers, (b) recodes the value 99 to missing, and (c) obtains the mean. The traditional way to do it in R is through nested parentheses:</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 3. Get the mean</span>
-<span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span>
-    <span class='co'># 2. Recode 99 to missing</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/na_if.html'>na_if</a></span><span class='op'>(</span>
-        <span class='co'># 1. transform to numbers</span>
-        <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span>, <span class='fl'>99</span>
-    <span class='op'>)</span>,
-    na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Set the `seed` (initial point) for pseudo-random number generation algorithm</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
+<span class='va'>num_draws</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>100</span>, <span class='fl'>1000</span>, <span class='fl'>10000</span><span class='op'>)</span>
+<span class='va'>beta_draws</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>
+    th <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>rbeta</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>num_draws</span><span class='op'>)</span>, shape1 <span class='op'>=</span> <span class='fl'>15</span>, shape2 <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>,
+    sam <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>num_draws</span>, <span class='st'>"samples"</span><span class='op'>)</span>, <span class='va'>num_draws</span><span class='op'>)</span>
 <span class='op'>)</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>beta_draws</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_histogram.html'>geom_histogram</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>..density..</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_function.html'>stat_function</a></span><span class='op'>(</span>
+        fun <span class='op'>=</span> <span class='va'>dbeta</span>, args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>shape1 <span class='op'>=</span> <span class='fl'>15</span>, shape2 <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>,
+        col <span class='op'>=</span> <span class='st'>"red"</span>
+    <span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span><span class='op'>(</span><span class='op'>~</span><span class='va'>sam</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt; [1] 5.5</code></pre>
+<p><img src="mcmc_files/figure-html5/sim-beta-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
-<p>What’s inconvenient is that the last operation needs to be put first. Also, it’s hard to keep track of the parentheses. Some users, including myself, prefer the alternative way of doing the same as the above code:</p>
+<p>The figure below shows the values when drawing 100 samples in time order:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>y</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
-    <span class='co'># 1. transform to numbers</span>
-    <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
-    <span class='co'># 2. Recode 99 to missing</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/na_if.html'>na_if</a></span><span class='op'>(</span><span class='fl'>99</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
-    <span class='co'># 3. Get the mean</span>
-    <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span>na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>beta_draws</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>sam</span> <span class='op'>==</span> <span class='st'>"100 samples"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://tibble.tidyverse.org/reference/rownames.html'>rowid_to_column</a></span><span class='op'>(</span><span class='st'>"iter"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>th</span>, x <span class='op'>=</span> <span class='va'>iter</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt; [1] 5.5</code></pre>
+<p><img src="mcmc_files/figure-html5/trace-100sam-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>The pipe operator works by taking the object before <code>%&gt;%</code> as the first argument for the function after <code>%&gt;%</code>. So <code>y %&gt;% as.numeric()</code> is the same as <code>as.numeric(y)</code>, and <code>y2 %&gt;% na_if(99)</code> is the same as <code>na_if(y2, 99)</code>.</p>
-<aside>
-The <code>%&gt;%</code> operator requires loading the <code>tidyverse</code> package (specifically <code>magrittr</code> package). Since R 4.1.0, one can use <code>|&gt;</code> for piping without loading any packages. While in the future, <code>|&gt;</code> may be the preferred way, for now, we’ll stick to <code>%&gt;%</code> to make things compatible for older versions of R.
-</aside>
-<h2 id="vector-matrix-array-list-and-data-frames">Vector, Matrix, Array, List, and Data Frames</h2>
+<p>So we can say that, when the number of posterior samples is very large, the sample distribution <em>converges</em> to the population density. The Monte Carlo method will work for many situations. Note, of course, the number of simulation samples, <span class="math inline">\(S\)</span>, is controlled by the analysts; it is different from the sample size of the data, which is fixed and is a property of the observed data.</p>
+<p>In addition, most descriptive statistics (e.g., mean, <em>SD</em>) of the simulation draws will converge to the corresponding values of the true posterior distribution. The graphs below show how the mean, median, <em>SD</em>, and skewness converge to the true values (red dashed lines) when the number of simulation samples increases.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Vector</span>
-<span class='op'>(</span><span class='va'>vector_a</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>beta_draws</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>sam</span> <span class='op'>==</span> <span class='st'>"1000 samples"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://tibble.tidyverse.org/reference/rownames.html'>rowid_to_column</a></span><span class='op'>(</span><span class='st'>"iter"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
+        mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cumsum.html'>cumsum</a></span><span class='op'>(</span><span class='va'>th</span><span class='op'>)</span> <span class='op'>/</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/ranking.html'>row_number</a></span><span class='op'>(</span><span class='op'>)</span>,
+        median <span class='op'>=</span> <span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map_dbl</a></span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/ranking.html'>row_number</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/stats/median.html'>median</a></span><span class='op'>(</span><span class='va'>th</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='va'>.x</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>,
+        SD <span class='op'>=</span> <span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map_dbl</a></span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/ranking.html'>row_number</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='op'>~</span> <span class='fu'><a href='https://mc-stan.org/posterior/reference/rvar-summaries-over-draws.html'>sd</a></span><span class='op'>(</span><span class='va'>th</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='va'>.x</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>,
+        skewness <span class='op'>=</span> <span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map_dbl</a></span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/ranking.html'>row_number</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='op'>~</span> <span class='fu'>e1071</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/e1071/man/skewness.html'>skewness</a></span><span class='op'>(</span><span class='va'>th</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='va'>.x</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+    <span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>ungroup</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://tidyr.tidyverse.org/reference/gather.html'>gather</a></span><span class='op'>(</span><span class='st'>"stat"</span>, <span class='st'>"val"</span>, <span class='va'>mean</span><span class='op'>:</span><span class='va'>skewness</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>iter</span>, y <span class='op'>=</span> <span class='va'>val</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_hline</a></span><span class='op'>(</span>
+        data <span class='op'>=</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>
+            stat <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mean"</span>, <span class='st'>"median"</span>, <span class='st'>"SD"</span>, <span class='st'>"skewness"</span><span class='op'>)</span>,
+            val <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
+                <span class='fl'>15</span> <span class='op'>/</span> <span class='fl'>25</span>,
+                <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>qbeta</a></span><span class='op'>(</span><span class='fl'>.50</span>, <span class='fl'>15</span>, <span class='fl'>10</span><span class='op'>)</span>,
+                <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fl'>15</span> <span class='op'>*</span> <span class='fl'>10</span> <span class='op'>/</span> <span class='op'>(</span><span class='fl'>15</span> <span class='op'>+</span> <span class='fl'>10</span><span class='op'>)</span><span class='op'>^</span><span class='fl'>2</span> <span class='op'>/</span> <span class='op'>(</span><span class='fl'>15</span> <span class='op'>+</span> <span class='fl'>10</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>,
+                <span class='fl'>2</span> <span class='op'>*</span> <span class='op'>(</span><span class='fl'>10</span> <span class='op'>-</span> <span class='fl'>15</span><span class='op'>)</span> <span class='op'>*</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fl'>15</span> <span class='op'>+</span> <span class='fl'>10</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>/</span>
+                    <span class='op'>(</span><span class='fl'>15</span> <span class='op'>+</span> <span class='fl'>10</span> <span class='op'>+</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fl'>15</span> <span class='op'>*</span> <span class='fl'>10</span><span class='op'>)</span>
+            <span class='op'>)</span>
+        <span class='op'>)</span>,
+        <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>yintercept <span class='op'>=</span> <span class='va'>val</span><span class='op'>)</span>, col <span class='op'>=</span> <span class='st'>"red"</span>, linetype <span class='op'>=</span> <span class='st'>"dashed"</span>
+    <span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span><span class='op'>(</span><span class='op'>~</span><span class='va'>stat</span>, scales <span class='op'>=</span> <span class='st'>"free"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='st'>""</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt;  [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/typeof.html'>typeof</a></span><span class='op'>(</span><span class='va'>vector_a</span><span class='op'>)</span>
-</code></pre>
+<p><img src="mcmc_files/figure-html5/sample-stat-converge-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
-<pre><code>#&gt; [1] &quot;integer&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/vector.html'>is.vector</a></span><span class='op'>(</span><span class='va'>vector_a</span><span class='op'>)</span>  <span class='co'># check whether it is a vector</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] TRUE</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>vector_a</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span>  <span class='co'># select the second and the third elements</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] 2 3</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='op'>(</span><span class='va'>vector_b</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"classical"</span>, <span class='st'>"frequentisti"</span>, <span class='st'>"Bayesian"</span><span class='op'>)</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] &quot;classical&quot;    &quot;frequentisti&quot; &quot;Bayesian&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/typeof.html'>typeof</a></span><span class='op'>(</span><span class='va'>vector_b</span><span class='op'>)</span>  <span class='co'># character vector</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] &quot;character&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>logical_b</span> <span class='op'>&lt;-</span> <span class='va'>vector_b</span> <span class='op'>==</span> <span class='st'>"Bayesian"</span>
-<span class='fu'><a href='https://rdrr.io/r/base/typeof.html'>typeof</a></span><span class='op'>(</span><span class='va'>logical_b</span><span class='op'>)</span>  <span class='co'># logical vector</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] &quot;logical&quot;</code></pre>
-</div>
+<h1 id="markov-chain-monte-carlo-mcmc-drawing-dependent-samples">Markov Chain Monte Carlo (MCMC): Drawing Dependent Samples</h1>
+<p>The above Monte Carlo simulation requires that (a) we know that the posterior distribution is exactly a beta distribution, and (b) R knows how to draw simulation samples from a beta distribution (with <code>rbeta</code>). As we progress through the class, it is more of an exception that we can use conjugate prior distribution, so in general, neither (a) nor (b) would hold. For example, if we instead use a normal distribution for the prior of <span class="math inline">\(\theta\)</span>, we may get something like <span class="math display">\[P(\theta \mid y) = \frac{\mathrm{e}^{-(\theta - 1 / 2)^2} 
+                                     \theta^y (1 - \theta)^{n - y}}
+                       {\int_0^1 \mathrm{e}^{-(\theta^* - 1 / 2)^2} 
+                        {\theta^*}^y (1 - {\theta^*})^{n - y} d\theta^*}\]</span> and it would be very hard, if possible at all, to directly draw simulation samples from the posterior. Luckily, MCMC provides a way to draw samples from the posterior distribution without the need to know everything about the posterior distribution. For example, the basic version of the Metropolis algorithm only requires that we know the <em>density ratio</em> of every two possible values <span class="math inline">\(\theta_1\)</span> and <span class="math inline">\(\theta_2\)</span>. Thus, we don’t need to deal with the integral in the denominator, as the integral does not depend on <span class="math inline">\(\theta\)</span> and will get canceled out when taking the ratio.</p>
+<h1 id="the-metropolis-algorithm">The Metropolis algorithm</h1>
+<p>The Metropolis algorithm can generally be used to draw samples from a distribution as long as the density ratio of any two points can be computed. Remember in Bayesian inference, for two values in the posterior distribution, the ratio of the posterior densities at <span class="math inline">\(\theta_1\)</span> and <span class="math inline">\(\theta_2\)</span> is <span class="math display">\[\begin{align*}
+  \frac{P(\theta = \theta_2 \mid y)}{P(\theta = \theta_1 \mid y)} 
+  &amp; = \frac{P(y \mid \theta = \theta_2) P(\theta = \theta_2) / P(y)}
+         {P(y \mid \theta = \theta_1) P(\theta = \theta_1) / P(y)} \\
+  &amp; = \frac{P(y \mid \theta = \theta_2) P(\theta = \theta_2)}
+         {P(y \mid \theta = \theta_1) P(\theta = \theta_1)}.
+\end{align*}\]</span> Therefore, even though we may not know <span class="math inline">\(P(\theta = \theta_1 \mid y)\)</span> as it involves <span class="math inline">\(P(y)\)</span> as the denominator, we can still compute the density ratio.</p>
+<p>In addition, the Metropolis algorithm requires the use of a <strong>proposal distribution</strong>, which can be any symmetric distribution. Common choices are normal distribution or uniform distribution. For example, let’s assume we will be using a <span class="math inline">\(N(0, 0.1)\)</span> proposal distribution, with 0.1 being the standard deviation.</p>
+<p>The steps of a Metropolis algorithm are:</p>
+<ol type="1">
+<li>Randomly start from a certain point in the parameter space, and call that point <span class="math inline">\(\theta_0\)</span></li>
+<li>Randomly generate a sampled value from a <span class="math inline">\(N(\theta_0, 0.11)\)</span> distribution. Call this proposed value <span class="math inline">\(\theta^\text{prop}\)</span></li>
+<li>Compute the density ratio <span class="math inline">\([P(\theta = \theta^\text{prop} \mid y)] / [P(\theta = \theta_0 \mid y)]\)</span></li>
+<li>If the ratio is larger than 1, accept <span class="math inline">\(\theta^\text{prop}\)</span> and include this value in the sample</li>
+<li>If the ratio is smaller than 1, accept <span class="math inline">\(\theta^\text{prop}\)</span> with probability equal to the density ratio. For example, if the ratio is 0.7, one first generated a simulated value, <span class="math inline">\(u\)</span>, from a uniform distribution between 0 and 1 (i.e., <span class="math inline">\(U(0, 1)\)</span>). If <span class="math inline">\(u\)</span> is smaller than the ratio, accept <span class="math inline">\(\theta^\text{prop}\)</span> and include it in the sample. Otherwise, reject the proposed value, and include <span class="math inline">\(\theta_0\)</span> (again) in the sample</li>
+<li>After accepting <span class="math inline">\(\theta^\text{prop}\)</span> or <span class="math inline">\(\theta_0\)</span> in the sample, denote the accepted value as <span class="math inline">\(\theta_0\)</span>, and repeat steps 2 to 6.</li>
+</ol>
+<p>Compared to the Monte Carlo method, which directly samples from a Beta distribution, the Metropolis algorithm does not require an R function to draw samples from the target distribution. The cost, however, is that the sampling process is not as <em>efficient</em> because the sampled values are dependent. We’ll discuss this point later after seeing an example of the algorithm.</p>
+<hr />
+<h2 id="shiny-app">Shiny App</h2>
+<p>To see a visual demonstration, you may run the shiny app I created by typing in R</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Matrix</span>
-<span class='va'>matrix_c</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>, nrow <span class='op'>=</span> <span class='fl'>5</span>, ncol <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
-<span class='fu'><a href='https://tibble.tidyverse.org/reference/rownames.html'>rownames</a></span><span class='op'>(</span><span class='va'>matrix_c</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"row"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>matrix_c</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"var1"</span>, <span class='st'>"var2"</span><span class='op'>)</span>
-<span class='va'>matrix_c</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/runUrl.html'>runGitHub</a></span><span class='op'>(</span><span class='st'>"metropolis_demo"</span>, <span class='st'>"marklhc"</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt;      var1 var2
-#&gt; row1    1    6
-#&gt; row2    2    7
-#&gt; row3    3    8
-#&gt; row4    4    9
-#&gt; row5    5   10</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/typeof.html'>typeof</a></span><span class='op'>(</span><span class='va'>matrix_c</span><span class='op'>)</span>
-</code></pre>
 </div>
-<pre><code>#&gt; [1] &quot;integer&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>matrix_c</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>matrix_c</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt;  int [1:5, 1:2] 1 2 3 4 5 6 7 8 9 10
-#&gt;  - attr(*, &quot;dimnames&quot;)=List of 2
-#&gt;   ..$ : chr [1:5] &quot;row1&quot; &quot;row2&quot; &quot;row3&quot; &quot;row4&quot; ...
-#&gt;   ..$ : chr [1:2] &quot;var1&quot; &quot;var2&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/vector.html'>is.vector</a></span><span class='op'>(</span><span class='va'>matrix_c</span><span class='op'>)</span>  <span class='co'># check whether it is a vector</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] FALSE</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>is.matrix</a></span><span class='op'>(</span><span class='va'>matrix_c</span><span class='op'>)</span>  <span class='co'># check whether it is a matrix</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] TRUE</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>matrix_c</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"row1"</span>, <span class='st'>"row5"</span><span class='op'>)</span>, <span class='op'>]</span>  <span class='co'># select rows 1 and 5</span>
-</code></pre>
-</div>
-<pre><code>#&gt;      var1 var2
-#&gt; row1    1    6
-#&gt; row5    5   10</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>matrix_c</span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>]</span>  <span class='co'># select first column (converted to a vector)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; row1 row2 row3 row4 row5 
-#&gt;    1    2    3    4    5</code></pre>
-</div>
+<hr />
+<h2 id="example-1-estimating-the-number-of-people-taking-the-metro">Example 1: Estimating the Number of People Taking the Metro</h2>
+<p>This example uses data from the <a href="https://cesr.usc.edu/labarometer/overview">LA Barometer</a> survey conducted by the USC Dornsife Center for Economic and Social Research. Specifically, I’m interested in the proportion they took the Metro in the previous year among participants who are first-generation immigrants in LA county. You can see a press release on the data at <a href="https://dornsife.usc.edu/news/stories/3164/labarometer-mobility-in-los-angeles-survey/" class="uri">https://dornsife.usc.edu/news/stories/3164/labarometer-mobility-in-los-angeles-survey/</a></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>123</span><span class='op'>)</span>  <span class='co'># for reproducibility</span>
-<span class='co'># Array: An array can have one, two, or more dimensions. </span>
-<span class='co'># A matrix is also an array.</span>
-<span class='va'>array_d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/array.html'>array</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>8</span><span class='op'>)</span>, dim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>array_d</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>uas_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://haven.tidyverse.org/reference/read_dta.html'>read_dta</a></span><span class='op'>(</span><span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"data_files"</span>, <span class='st'>"uas219_psyc573.dta"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>uas_dat</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>immigrant_status</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/count.html'>count</a></span><span class='op'>(</span><span class='va'>tr002s2</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt; , , 1
-#&gt; 
-#&gt;            [,1]       [,2]
-#&gt; [1,] -0.5604756 1.55870831
-#&gt; [2,] -0.2301775 0.07050839
-#&gt; 
-#&gt; , , 2
-#&gt; 
-#&gt;           [,1]       [,2]
-#&gt; [1,] 0.1292877  0.4609162
-#&gt; [2,] 1.7150650 -1.2650612</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>array_d</span><span class='op'>)</span>
-</code></pre>
+<pre><code>#&gt; # A tibble: 3 × 2
+#&gt;         tr002s2     n
+#&gt;       &lt;dbl+lbl&gt; &lt;int&gt;
+#&gt; 1     0 [0 No]     26
+#&gt; 2     1 [1 Yes]   111
+#&gt; 3 NA(a)           192</code></pre>
 </div>
-<pre><code>#&gt;  num [1:2, 1:2, 1:2] -0.5605 -0.2302 1.5587 0.0705 0.1293 ...</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/typeof.html'>typeof</a></span><span class='op'>(</span><span class='va'>array_d</span><span class='op'>)</span>  <span class='co'># numeric type</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] &quot;double&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>array_d</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] &quot;array&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>is.matrix</a></span><span class='op'>(</span><span class='va'>array_d</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] FALSE</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/array.html'>is.array</a></span><span class='op'>(</span><span class='va'>array_d</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] TRUE</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>array_d</span><span class='op'>[</span><span class='fl'>1</span>, <span class='fl'>1</span>,<span class='op'>]</span>  <span class='co'># use 3 indices for a 3-D array</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] -0.5604756  0.1292877</code></pre>
-</div>
+<p>So in 338 participants who are first-generation immigrants, 86 said they had used the Metro.</p>
+<p>Let’s use a weakly informative prior of Beta(1.5, 2), which has a weight of 1.5 prior data points, with a weak belief that less than half of the people had used the Metro.</p>
+<p>Model: <span class="math display">\[\text{usemetro}_i \sim \mathrm{Bern}(\theta)\]</span> Prior: <span class="math display">\[\theta \sim \mathrm{Beta}(1.5, 2)\]</span></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># List</span>
-<span class='co'># An array is a vector where each component can have a different type</span>
-<span class='va'>list_e</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"abc"</span>, <span class='fl'>5</span>, <span class='fl'>2.57</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/typeof.html'>typeof</a></span><span class='op'>(</span><span class='va'>list_e</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>prior_a</span> <span class='op'>&lt;-</span> <span class='fl'>1.5</span>
+<span class='va'>prior_b</span> <span class='op'>&lt;-</span> <span class='fl'>2</span>
 </code></pre>
 </div>
-<pre><code>#&gt; [1] &quot;list&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>list_e</span><span class='op'>)</span>  <span class='co'># `list` for both type of class</span>
-</code></pre>
 </div>
-<pre><code>#&gt; [1] &quot;list&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>list_e</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; List of 4
-#&gt;  $ : chr &quot;abc&quot;
-#&gt;  $ : num 5
-#&gt;  $ : num 2.57
-#&gt;  $ : logi TRUE</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>list_e</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>  <span class='co'># extract first element, and put it in a list</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [[1]]
-#&gt; [1] &quot;abc&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>list_e</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>  <span class='co'># extract first element</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] &quot;abc&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>list_f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>"abc"</span>, age <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>  <span class='co'># named list</span>
-<span class='co'># Can also extract element by name (as opposed to by position)</span>
-<span class='va'>list_f</span><span class='op'>$</span><span class='va'>name</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] &quot;abc&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/vector.html'>is.vector</a></span><span class='op'>(</span><span class='va'>list_f</span><span class='op'>)</span>  <span class='co'># a one-dimension list is a special type of vector</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] TRUE</code></pre>
-</div>
+<p>Based on conjugacy, we know the posterior is Beta(87.5, 254). For pedagogical purposes, we will instead use a Metropolis sampler, which only the ratio of prior <span class="math inline">\(\times\)</span> likelihood for any two <span class="math inline">\(\theta\)</span> values.</p>
+<h2 id="mcmc-sampling">MCMC sampling</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Data Frame</span>
-<span class='co'># A data frame is a special type of list with two dimensions.</span>
-<span class='co'># It is a list of multiple column vectors</span>
-<span class='op'>(</span><span class='va'>dataframe_c</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>matrix_c</span><span class='op'>)</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>num_yes</span> <span class='op'>&lt;-</span> <span class='fl'>86</span>
+<span class='va'>num_obs</span> <span class='op'>&lt;-</span> <span class='fl'>86</span> <span class='op'>+</span> <span class='fl'>252</span>
+<span class='co'># Define a function to compute values proportional to p(y | th) * p(th)</span>
+<span class='va'>prior_times_lik</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>th</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='co'># Return 0 if th is out of range</span>
+    <span class='kw'>if</span> <span class='op'>(</span><span class='va'>th</span> <span class='op'>&lt;</span> <span class='fl'>0</span> <span class='op'>||</span> <span class='va'>th</span> <span class='op'>&gt;</span> <span class='fl'>1</span><span class='op'>)</span> <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>
+    <span class='va'>pth</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>dbeta</a></span><span class='op'>(</span><span class='va'>th</span>, shape1 <span class='op'>=</span> <span class='va'>prior_a</span>, shape2 <span class='op'>=</span> <span class='va'>prior_b</span><span class='op'>)</span>
+    <span class='va'>py_given_th</span> <span class='op'>&lt;-</span> <span class='va'>th</span> <span class='op'>^</span> <span class='va'>num_yes</span> <span class='op'>*</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>th</span><span class='op'>)</span> <span class='op'>^</span> <span class='op'>(</span><span class='va'>num_obs</span> <span class='op'>-</span> <span class='va'>num_yes</span><span class='op'>)</span>
+    <span class='va'>pth</span> <span class='op'>*</span> <span class='va'>py_given_th</span>
+<span class='op'>}</span>
+<span class='co'># Define a function for generating data from the proposal distribution</span>
+<span class='va'>generate_proposal</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>th</span>, <span class='va'>sd</span> <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1</span>, mean <span class='op'>=</span> <span class='va'>th</span>, sd <span class='op'>=</span> <span class='va'>sd</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='co'># Initialize the Metropolis algorithm</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2037</span><span class='op'>)</span>  <span class='co'># set the seed for reproducibility</span>
+<span class='va'>num_draws</span> <span class='op'>&lt;-</span> <span class='fl'>1000</span>
+<span class='va'>num_warmup</span> <span class='op'>&lt;-</span> <span class='va'>num_draws</span> <span class='op'>/</span> <span class='fl'>2</span>
+<span class='va'>th_all_draws</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='va'>num_draws</span><span class='op'>)</span>
+<span class='co'># Step 1: starting value</span>
+<span class='va'>th_all_draws</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fl'>0.1</span>
+<span class='co'># counter for tracking acceptance rate</span>
+<span class='va'>num_accepted</span> <span class='op'>&lt;-</span> <span class='fl'>0</span>
+<span class='kw'>for</span> <span class='op'>(</span><span class='va'>s</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_len</a></span><span class='op'>(</span><span class='va'>num_draws</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='va'>current_th</span> <span class='op'>&lt;-</span> <span class='va'>th_all_draws</span><span class='op'>[</span><span class='va'>s</span><span class='op'>]</span>
+    <span class='co'># Step 2: Generate proposal</span>
+    <span class='va'>proposed_th</span> <span class='op'>&lt;-</span> <span class='fu'>generate_proposal</span><span class='op'>(</span><span class='va'>current_th</span><span class='op'>)</span>
+    <span class='co'># Step 3: Compute acceptance probability</span>
+    <span class='va'>prob_accept</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span>
+        <span class='fl'>1</span>,
+        <span class='fu'>prior_times_lik</span><span class='op'>(</span><span class='va'>proposed_th</span><span class='op'>)</span> <span class='op'>/</span>
+            <span class='fu'>prior_times_lik</span><span class='op'>(</span><span class='va'>current_th</span><span class='op'>)</span>
+    <span class='op'>)</span>
+    <span class='co'># Steps 4 &amp; 5: etermine whether to make the jump</span>
+    <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>prob_accept</span><span class='op'>)</span> <span class='op'>{</span>
+        <span class='va'>th_all_draws</span><span class='op'>[</span><span class='va'>s</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>proposed_th</span>
+        <span class='kw'>if</span> <span class='op'>(</span><span class='va'>s</span> <span class='op'>+</span> <span class='fl'>1</span> <span class='op'>&gt;=</span> <span class='va'>num_warmup</span><span class='op'>)</span> <span class='op'>{</span>
+            <span class='va'>num_accepted</span> <span class='op'>&lt;-</span> <span class='va'>num_accepted</span> <span class='op'>+</span> <span class='fl'>1</span>
+        <span class='op'>}</span>
+    <span class='op'>}</span> <span class='kw'>else</span> <span class='op'>{</span>
+        <span class='va'>th_all_draws</span><span class='op'>[</span><span class='va'>s</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>current_th</span>
+    <span class='op'>}</span>
+<span class='op'>}</span>
 </code></pre>
 </div>
-<pre><code>#&gt;      var1 var2
-#&gt; row1    1    6
-#&gt; row2    2    7
-#&gt; row3    3    8
-#&gt; row4    4    9
-#&gt; row5    5   10</code></pre>
+</div>
+<p>We can visualize the MCMC chain by plotting the iteration index on the x-axis and the sampled value on the y-axis:</p>
+<div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/typeof.html'>typeof</a></span><span class='op'>(</span><span class='va'>dataframe_c</span><span class='op'>)</span>  <span class='co'># type is list</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>
+    <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>th <span class='op'>=</span> <span class='va'>th_all_draws</span>, iter <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span><span class='op'>(</span><span class='va'>th_all_draws</span><span class='op'>)</span><span class='op'>)</span>,
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>iter</span>, y <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span>
+<span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt; [1] &quot;list&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>dataframe_c</span><span class='op'>)</span>  <span class='co'># data.frame</span>
-</code></pre>
+<p><img src="mcmc_files/figure-html5/trace-mcmc1-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<pre><code>#&gt; [1] &quot;data.frame&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dataframe_c</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span>,<span class='op'>]</span>  <span class='co'># subset using matrix method</span>
-</code></pre>
-</div>
-<pre><code>#&gt;      var1 var2
-#&gt; row1    1    6
-#&gt; row2    2    7</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dataframe_c</span><span class='op'>$</span><span class='va'>var1</span>  <span class='co'># extract columns using list method</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] 1 2 3 4 5</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dataframe_c</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>  <span class='co'># same as above</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] 1 2 3 4 5</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># select first column, and put it as a data.frame(list)</span>
-<span class='va'>dataframe_c</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>
-</code></pre>
-</div>
-<pre><code>#&gt;      var1
-#&gt; row1    1
-#&gt; row2    2
-#&gt; row3    3
-#&gt; row4    4
-#&gt; row5    5</code></pre>
-</div>
-<h2 id="plotting">Plotting</h2>
-<p>The popular <code>ggplot2</code> package uses the “grammar of graphics” approach to plotting. It is an elegant and comprehensive system for graphics but requires mastering some vocabulary. As a quick start, each plot requires specifying</p>
+<p>Each step in MCMC is called an <em>iteration</em>. The sampled values are <em>dependent</em>, meaning that the value at iteration <span class="math inline">\(s\)</span> depends on the value at iteration <span class="math inline">\(s - 1\)</span>. This is a major difference from functions that simulate independent random samples, like <code>rbeta()</code> or <code>rnorm()</code>. The resulting sampled values will form a <em>Markov chain</em>, meaning that each sampled value is correlated with the previous value (e.g., if <span class="math inline">\(\theta^{(s)}\)</span> is large, <span class="math inline">\(\theta^{(s + 1)}\)</span> is also large).</p>
+<p>As shown above, the chain starts at 0.10 then quickly moves to the region around 0.25, the area with high posterior density. It then oscillates around that for the remaining iterations.</p>
+<h2 id="more-on-markov-chain">More on Markov Chain</h2>
+<p>A Markov chain describes how a variable transitions from one “state” to another. The current state depends on the previous state. A well-behaved Markov Chain is said to be <em>ergodic</em>, which means that it is (see <a href="https://pdhoff.github.io/book/">Hoff, 2009</a>, chapter 10):</p>
 <ul>
-<li>Some layer(s) of <strong>geometric</strong> elements (e.g., points, lines, boxplots, etc)</li>
-<li>Mapping of some data/variables to some <strong>aesthetic</strong> attributes (e.g., axis, color, point shape)</li>
+<li><em>irreducible</em>: at any state <span class="math inline">\(\theta^{(s)}\)</span>, it can go to any value <span class="math inline">\(\theta^*\)</span> eventually. A reducible chain is one where some states cannot get to some other states; an example is when, at some point, the chain stays as a positive value forever and never get back to the negative side.</li>
+<li><em>aperiodic</em>: the chain does not have any periodic states. If it is a periodic chain, some values can only be visited every <span class="math inline">\(k\)</span>th iteration.</li>
+<li><em>recurrent</em>: after the chain visits a certain state <span class="math inline">\(\theta^*\)</span>, if the chain runs long enough, it eventually gets back to the same state <span class="math inline">\(\theta^*\)</span>.</li>
 </ul>
-<aside>
-To learn more, please take a look at the cheatsheet: <a href="https://www.rstudio.com/resources/cheatsheets/" class="uri">https://www.rstudio.com/resources/cheatsheets/</a>
-</aside>
-<p>For example, consider the <code>airquality</code> data set:</p>
+<p>Under the above conditions, a Markov chain will converge to a <em>stationary distribution</em>. Thus, after a certain large amount of iterations, the draws from the chain can be considered a random (but correlated) sample of the stationary distribution. Moreover, one can prove that, with the Metropolis algorithm, the converging stationary distribution is the posterior distribution (see the discussion in Kruschke, 2015, chapter 7).</p>
+<h2 id="warm-upburn-in">Warm-up/Burn-in</h2>
+<p>A Markov chain needs some iterations to get to the stationary distribution. Those iterations are usually called <em>warm-up</em> or <em>burn-in</em> (depending on the algorithm and the software) iterations and are usually discarded. In many software programs, the first half of the iterations are considered warm-ups, so even though we got 1,000 iterations, only 500 will be used:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>airquality</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>num_warmup</span> <span class='op'>&lt;-</span> <span class='va'>num_draws</span> <span class='op'>/</span> <span class='fl'>2</span>
+<span class='va'>th_draws</span> <span class='op'>&lt;-</span> <span class='va'>th_all_draws</span><span class='op'>[</span><span class='op'>-</span> <span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='va'>num_warmup</span><span class='op'>)</span><span class='op'>]</span>
 </code></pre>
 </div>
-<pre><code>#&gt;   Ozone Solar.R Wind Temp Month Day
-#&gt; 1    41     190  7.4   67     5   1
-#&gt; 2    36     118  8.0   72     5   2
-#&gt; 3    12     149 12.6   74     5   3
-#&gt; 4    18     313 11.5   62     5   4
-#&gt; 5    NA      NA 14.3   56     5   5
-#&gt; 6    28      NA 14.9   66     5   6</code></pre>
 </div>
-<p>One can show the distribution of <code>Ozone</code>. On a 2-D Cartesian coordinate system, if we want to show the data in points, each point needs the x- and the y-coordinates. Therefore, the following gives an error as it only maps <code>Ozone</code> to the x-axis:</p>
+<h2 id="autocorrelation">Autocorrelation</h2>
+<p>The degree to which the value at iteration <span class="math inline">\(s\)</span> is correlated with the value at <span class="math inline">\(s - 1\)</span> (and at <span class="math inline">\(s - 2\)</span>, etc) can be measured by the autocorrelation. For example, below shows the lag-1 correlation:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='co'># Add a layer of points</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Ozone</span><span class='op'>)</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; Error in `check_required_aesthetics()`:
-#&gt; ! geom_point requires the following missing aesthetics: y</code></pre>
-<p><img src="r_basics_files/figure-html5/plot-error-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<p>While not very interesting, we can instead specify every point to have a y-coordinate of 0:</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='co'># Add a layer of points</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Ozone</span>, y <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
-</code></pre>
-</div>
-<p><img src="r_basics_files/figure-html5/plot-y-eq-1-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<p>Some geometric objects (<code>geom</code>) assign the y-coordinate automatically. For example, <code>geom_histogram</code> uses bars, with the x-coordinate based on the variable and the y-coordinate based on the counts of each bin.</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='co'># Add a layer of a histogram (a set of bars)</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_histogram.html'>geom_histogram</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Ozone</span><span class='op'>)</span><span class='op'>)</span>
-</code></pre>
-</div>
-<p><img src="r_basics_files/figure-html5/plot-hist-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<h3 id="scatter-plot">Scatter plot</h3>
-<p>A scatter plot maps the x- and the y-axes to two variables</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='co'># Add a layer of a points</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Wind</span>, y <span class='op'>=</span> <span class='va'>Ozone</span><span class='op'>)</span>,
-               <span class='co'># alpha = 0.3 makes points transparent</span>
-               alpha <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span>
-</code></pre>
-</div>
-<p><img src="r_basics_files/figure-html5/plot-scatter-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<p>The x- and y-coordinates are not the only attributes for the <code>points</code> geometric object. For example, we can map the sizes of the points to another variable:</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='co'># Add a layer of a points</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Wind</span>, y <span class='op'>=</span> <span class='va'>Ozone</span>, size <span class='op'>=</span> <span class='va'>Temp</span><span class='op'>)</span>,
-               alpha <span class='op'>=</span> <span class='fl'>0.3</span><span class='op'>)</span>
-</code></pre>
-</div>
-<p><img src="r_basics_files/figure-html5/plot-scatter-2-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<h3 id="changing-labels">Changing labels</h3>
-<p>To change the labels of axis and legend, use <code>labs</code>:</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='co'># Add a layer of a points</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Wind</span>, y <span class='op'>=</span> <span class='va'>Ozone</span>, size <span class='op'>=</span> <span class='va'>Temp</span><span class='op'>)</span>,
-               alpha <span class='op'>=</span> <span class='fl'>0.3</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Wind (mph)"</span>, y <span class='op'>=</span> <span class='st'>"Ozone (ppb)"</span>, size <span class='op'>=</span> <span class='st'>"Temperature (degree F)"</span><span class='op'>)</span>
-</code></pre>
-</div>
-<p><img src="r_basics_files/figure-html5/plot-scatter-2-labs-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<h3 id="different-geom">Different <code>geom</code></h3>
-<p>We can use other geometric objects. For example, <code>geom_smooth</code> adds a smoothing trend</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># By putting `aes()` in the first line, all subsequent layers use the same</span>
-<span class='co'># mapping</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Wind</span>, y <span class='op'>=</span> <span class='va'>Ozone</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='co'># Add a layer of points</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>current <span class='op'>=</span> <span class='va'>th_draws</span>,
+              previous <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/lead-lag.html'>lag</a></span><span class='op'>(</span><span class='va'>th_draws</span><span class='op'>)</span><span class='op'>)</span>,
+       <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>previous</span>, y <span class='op'>=</span> <span class='va'>current</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='co'># Add a layer of lines</span>
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="r_basics_files/figure-html5/plot-line-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="mcmc_files/figure-html5/lag-1-scatter-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<h3 id="facet">Facet</h3>
-<p>In many situations, we want to split the data into multiple plots through <code>facet</code>.</p>
+<p>Compared to samples from <code>rbeta()</code></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Wind</span>, y <span class='op'>=</span> <span class='va'>Ozone</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='co'># Add a layer of a points</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>alpha <span class='op'>=</span> <span class='fl'>0.3</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='co'># Split by `Month`</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span><span class='op'>(</span><span class='op'>~</span> <span class='va'>Month</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>rbeta_draws</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>rbeta</a></span><span class='op'>(</span><span class='va'>num_draws</span>, shape1 <span class='op'>=</span> <span class='fl'>87.5</span>, shape2 <span class='op'>=</span> <span class='fl'>254</span><span class='op'>)</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>current <span class='op'>=</span> <span class='va'>rbeta_draws</span>,
+              previous <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/lead-lag.html'>lag</a></span><span class='op'>(</span><span class='va'>rbeta_draws</span><span class='op'>)</span><span class='op'>)</span>,
+       <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>previous</span>, y <span class='op'>=</span> <span class='va'>current</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="r_basics_files/figure-html5/plot-facet-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="mcmc_files/figure-html5/lag-1-scatter-rbeta-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<h2 id="for-loop"><code>for</code> Loop</h2>
-<p>Using a loop allows one to perform some actions multiple times. See <a href="https://r4ds.had.co.nz/iteration.html#introduction-14" class="uri">https://r4ds.had.co.nz/iteration.html#introduction-14</a></p>
-<p>The following example shows an example of drawing a random variable from a normal distribution with <em>SD</em> = 1, mean = the previously generated number.</p>
+<p>You can get the autocorrelation function plot (autocorrelation plot on the right):</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2208</span><span class='op'>)</span>  <span class='co'># for reproducibility</span>
-<span class='co'># Simulate data</span>
-<span class='va'>random_numbers</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='fl'>100</span><span class='op'>)</span>  <span class='co'># initialize an empty vector</span>
-<span class='va'>random_numbers</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fl'>10</span>  <span class='co'># set the first value to 10</span>
-<span class='co'># i = 2 in the first iteration, then 3, then 4, until i = 100</span>
-<span class='kw'>for</span> <span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>2</span><span class='op'>:</span><span class='fl'>100</span><span class='op'>)</span> <span class='op'>{</span>
-    <span class='co'># `rnorm(1)` simulate one value from a normal distribution;</span>
-    <span class='co'># `mean = random_numbers[i - 1]` says the mean of the distribution is</span>
-    <span class='co'># from the previously simulated value.</span>
-    <span class='va'>random_numbers</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1</span>, mean <span class='op'>=</span> <span class='va'>random_numbers</span><span class='op'>[</span><span class='va'>i</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='co'># Show the simulated values using ggplot</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>
-    <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>iter <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>, <span class='va'>random_numbers</span><span class='op'>)</span>,
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>iter</span>, y <span class='op'>=</span> <span class='va'>random_numbers</span><span class='op'>)</span>
-<span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://mc-stan.org/bayesplot/reference/MCMC-combos.html'>mcmc_combo</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>theta <span class='op'>=</span> <span class='va'>th_draws</span><span class='op'>)</span>,
+    combo <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"trace"</span>, <span class='st'>"acf"</span><span class='op'>)</span>
+<span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="r_basics_files/figure-html5/simulate-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="mcmc_files/figure-html5/combo-plot-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<h2 id="custom-function">Custom Function</h2>
-<p>A function in R is a named object that takes in some inputs, performs some operations, and gives some outputs.</p>
-<h3 id="example-1-a2-b">Example 1: <span class="math inline">\(a^2 + b\)</span></h3>
-<p>Here is an example of how you can define your own function, from p. 64 of the text</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>asqplusb</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>a</span>, <span class='va'>b</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>{</span>
-    <span class='va'>c</span> <span class='op'>&lt;-</span> <span class='va'>a</span> <span class='op'>^</span> <span class='fl'>2</span> <span class='op'>+</span> <span class='va'>b</span>  <span class='co'># c = a^2 + b</span>
-    <span class='va'>c</span>  <span class='co'># the last line is usually the output</span>
-<span class='op'>}</span>
-</code></pre>
-</div>
-</div>
-<p>The above function <code>asqplusb()</code> takes two inputs: <code>a</code> and <code>b</code>. The names of these two are called <em>arguments</em>. So we say <code>a</code> and <code>b</code> are the arguments of <code>asqplusb()</code>. We can invoke the function like</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>asqplusb</span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>3</span><span class='op'>)</span>  <span class='co'># a = 2, b = 3, 2^2 + 3 = 7</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] 7</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># This is equivalent to</span>
-<span class='fu'>asqplusb</span><span class='op'>(</span>a <span class='op'>=</span> <span class='fl'>2</span>, b <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] 7</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># But not the same as</span>
-<span class='fu'>asqplusb</span><span class='op'>(</span>b <span class='op'>=</span> <span class='fl'>2</span>, a <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; [1] 11</code></pre>
-</div>
+<p>which shows substantial autocorrelations until about 9 iterations apart.</p>
+<h2 id="acceptance-rate">Acceptance Rate</h2>
+<p>When using the Metropolis algorithm, you want to monitor the acceptance rate and make sure it is within the optimal range. If you accept almost every time, it likely means that, in each iteration, the chain only jumps a tiny step (so that the acceptance ratio is close to 1 every time). As such, the chain will take many iterations to reach other regions of the stationary distribution, and consecutive draws are very strongly correlated. On the other hand, if the acceptance rate is very low, the chain gets stuck in the same location for many iterations before moving to a different state. For the basic Metropolis algorithm with one parameter, an optimal acceptance rate would be something between 40% to 50%.</p>
 <aside>
-In the function call, 2 and 3 are the <em>values</em> of the arguments, not the arguments themselves.
+For Hamiltonian Monte Carlo to be discussed later, the optimal acceptance rate would be much higher, from 80% to 99%, or even higher.
 </aside>
-<p>Also, when we define the function, we define the first argument as <code>a</code>, and the second argument as <code>b = 1</code>. The latter means the default value of <code>b</code> is 1. So when one calls the function without specifying <code>b</code>, like</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>asqplusb</span><span class='op'>(</span><span class='fl'>4</span><span class='op'>)</span>  <span class='co'># a = 4, b = 1, 4^2 + 1 = 17</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Acceptance rate</span>
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>num_accepted</span><span class='op'>)</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>th_draws</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt; [1] 17</code></pre>
+<pre><code>#&gt; [1] 0.306</code></pre>
 </div>
-<p>It is equivalent to</p>
+<h2 id="effective-sample-size-ess">Effective sample size (ESS)</h2>
+<p>When iterations are dependent, each iteration contains overlapping information with the previous iterations. In other words, when one gets 500 dependent draws from the posterior, it only contains information equivalent to &lt; 500 independent draws. The ESS quantifies the actual amount of information, so a chain with ESS = <span class="math inline">\(n\)</span> will contain roughly the same information as in <span class="math inline">\(n\)</span> independent draws. In general, we want ESS to be at least 400 for the general purpose of summarizing the posterior. You can obtain ESS using the <code>posterior::ess_basic</code> function:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>asqplusb</span><span class='op'>(</span><span class='fl'>4</span>, b <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>  <span class='co'># a = 4, b = 1, 4^2 + 1 = 17</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://mc-stan.org/posterior/reference/ess_basic.html'>ess_basic</a></span><span class='op'>(</span><span class='va'>th_draws</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt; [1] 17</code></pre>
+<pre><code>#&gt; [1] 84.42518</code></pre>
 </div>
-<h3 id="when-to-use-a-function">When to use a function?</h3>
-<p>Writing one’s own function is very common in R programming, especially with Bayesian analysis, because often one needs to perform some procedures more than once, and it is tedious to write similar code every time. A rule of thumb is that if you have a few lines of code that you find yourself typing more than two times, you should write a function for it. As an example, we can wrap the simulation code above into a function that you can try out with different numbers of iterations:</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>my_simulate</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>nsim</span> <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span> <span class='op'>{</span>
-    <span class='co'># Simulate data</span>
-    <span class='va'>random_numbers</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='va'>nsim</span><span class='op'>)</span> <span class='co'># initialize an empty vector</span>
-    <span class='va'>random_numbers</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fl'>10</span> <span class='co'># set the first value to 10</span>
-    <span class='co'># i = 2 in the first iteration, then 3, then 4, until i = 100</span>
-    <span class='kw'>for</span> <span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>2</span><span class='op'>:</span><span class='va'>nsim</span><span class='op'>)</span> <span class='op'>{</span>
-        <span class='co'># `rnorm(1)` simulate one value from a normal distribution;</span>
-        <span class='co'># `mean = random_numbers[i - 1]` says the mean of the distribution is</span>
-        <span class='co'># from the previously simulated value.</span>
-        <span class='va'>random_numbers</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1</span>, mean <span class='op'>=</span> <span class='va'>random_numbers</span><span class='op'>[</span><span class='va'>i</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>
-    <span class='op'>}</span>
-    <span class='co'># Show the simulated values using ggplot</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>
-        <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>iter <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='va'>nsim</span>, <span class='va'>random_numbers</span><span class='op'>)</span>,
-        <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>iter</span>, y <span class='op'>=</span> <span class='va'>random_numbers</span><span class='op'>)</span>
-    <span class='op'>)</span> <span class='op'>+</span>
-        <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-        <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-</code></pre>
-</div>
-</div>
-<p>Try to call the above function.</p>
-<!-- The following chunk is only used in the website -->
-<section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
-<h2 class="appendix">Last updated</h2>
-<div class="layout-chunk" data-layout="l-body">
-<pre><code>#&gt; [1] &quot;January 13, 2022&quot;</code></pre>
-</div>
+<p>which is not sufficient for summarizing the posterior.</p>
+<h2 id="multiple-chains">Multiple Chains</h2>
+<p>Because each state in a Markov chain depends on the previous states, the starting value(s) can influence the sampled values. Remember, in complex problems, one does not know how the posterior distributions would look. One solution to check the sensitivity to the starting value(s) is to use multiple chains, each with different starting values.</p>
+<blockquote>
+<p>If multiple chains sample the same target distribution, they should be <em>mixing</em> well, meaning they cross each other in a trace plot.</p>
+</blockquote>
+<p>Below are examples of two chains with good/poor mixing.</p>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="panelset">
+<section id="poor-mixing" class="panel">
+<h3>Poor Mixing</h3>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="mcmc_files/figure-html5/trace-poor-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
 </section>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<section id="better-mixing" class="panel">
+<h3>Better Mixing</h3>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="mcmc_files/figure-html5/trace-good-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+</section>
+</div>
+<h2 id="full-r-code-with-more-iterations">Full R Code With More iterations</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>num_yes</span> <span class='op'>&lt;-</span> <span class='fl'>86</span>
+<span class='va'>num_obs</span> <span class='op'>&lt;-</span> <span class='fl'>86</span> <span class='op'>+</span> <span class='fl'>252</span>
+<span class='co'># Define a function to compute values proportional to p(y | th) * p(th)</span>
+<span class='va'>prior_times_lik</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>th</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='co'># Return 0 if th is out of range</span>
+    <span class='kw'>if</span> <span class='op'>(</span><span class='va'>th</span> <span class='op'>&lt;</span> <span class='fl'>0</span> <span class='op'>||</span> <span class='va'>th</span> <span class='op'>&gt;</span> <span class='fl'>1</span><span class='op'>)</span> <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>
+    <span class='va'>pth</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>dbeta</a></span><span class='op'>(</span><span class='va'>th</span>, shape1 <span class='op'>=</span> <span class='va'>prior_a</span>, shape2 <span class='op'>=</span> <span class='va'>prior_b</span><span class='op'>)</span>
+    <span class='va'>py_given_th</span> <span class='op'>&lt;-</span> <span class='va'>th</span> <span class='op'>^</span> <span class='va'>num_yes</span> <span class='op'>*</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>th</span><span class='op'>)</span> <span class='op'>^</span> <span class='op'>(</span><span class='va'>num_obs</span> <span class='op'>-</span> <span class='va'>num_yes</span><span class='op'>)</span>
+    <span class='va'>pth</span> <span class='op'>*</span> <span class='va'>py_given_th</span>
+<span class='op'>}</span>
+<span class='co'># Define a function for generating data from the proposal distribution</span>
+<span class='va'>generate_proposal</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>th</span>, <span class='va'>sd</span> <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1</span>, mean <span class='op'>=</span> <span class='va'>th</span>, sd <span class='op'>=</span> <span class='va'>sd</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='co'># Initialize the Metropolis algorithm</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2037</span><span class='op'>)</span>  <span class='co'># set the seed for reproducibility</span>
+<span class='va'>num_chains</span> <span class='op'>&lt;-</span> <span class='fl'>2</span>
+<span class='va'>num_draws</span> <span class='op'>&lt;-</span> <span class='fl'>10000</span>
+<span class='va'>num_warmup</span> <span class='op'>&lt;-</span> <span class='va'>num_draws</span> <span class='op'>/</span> <span class='fl'>2</span>
+<span class='va'>th_all_draws</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='cn'>NA</span>, nrow <span class='op'>=</span> <span class='va'>num_draws</span>, ncol <span class='op'>=</span> <span class='va'>num_chains</span><span class='op'>)</span>
+<span class='va'>th_all_draws</span><span class='op'>[</span><span class='fl'>1</span>, <span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.1</span>, <span class='fl'>0.9</span><span class='op'>)</span>  <span class='co'># starting value</span>
+<span class='co'># counter for tracking acceptance rate</span>
+<span class='va'>num_accepted</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='va'>num_chains</span><span class='op'>)</span>
+<span class='kw'>for</span> <span class='op'>(</span><span class='va'>s</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_len</a></span><span class='op'>(</span><span class='va'>num_draws</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='kw'>for</span> <span class='op'>(</span><span class='va'>j</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_len</a></span><span class='op'>(</span><span class='va'>num_chains</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+        <span class='va'>current_th</span> <span class='op'>&lt;-</span> <span class='va'>th_all_draws</span><span class='op'>[</span><span class='va'>s</span>, <span class='va'>j</span><span class='op'>]</span>
+        <span class='co'># Generate proposal</span>
+        <span class='va'>proposed_th</span> <span class='op'>&lt;-</span> <span class='fu'>generate_proposal</span><span class='op'>(</span><span class='va'>current_th</span>, sd <span class='op'>=</span> <span class='fl'>0.05</span><span class='op'>)</span>
+        <span class='co'># Compute acceptance probability</span>
+        <span class='va'>prob_accept</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span>
+            <span class='fl'>1</span>,
+            <span class='fu'>prior_times_lik</span><span class='op'>(</span><span class='va'>proposed_th</span><span class='op'>)</span> <span class='op'>/</span>
+                <span class='fu'>prior_times_lik</span><span class='op'>(</span><span class='va'>current_th</span><span class='op'>)</span>
+        <span class='op'>)</span>
+        <span class='co'># Determine whether to make the jump</span>
+        <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>prob_accept</span><span class='op'>)</span> <span class='op'>{</span>
+            <span class='va'>th_all_draws</span><span class='op'>[</span><span class='va'>s</span> <span class='op'>+</span> <span class='fl'>1</span>, <span class='va'>j</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>proposed_th</span>
+            <span class='kw'>if</span> <span class='op'>(</span><span class='va'>s</span> <span class='op'>+</span> <span class='fl'>1</span> <span class='op'>&gt;=</span> <span class='va'>num_warmup</span><span class='op'>)</span> <span class='op'>{</span>
+                <span class='va'>num_accepted</span><span class='op'>[</span><span class='va'>j</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>num_accepted</span><span class='op'>[</span><span class='va'>j</span><span class='op'>]</span> <span class='op'>+</span> <span class='fl'>1</span>
+            <span class='op'>}</span>
+        <span class='op'>}</span> <span class='kw'>else</span> <span class='op'>{</span>
+            <span class='va'>th_all_draws</span><span class='op'>[</span><span class='va'>s</span> <span class='op'>+</span> <span class='fl'>1</span>, <span class='va'>j</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>current_th</span>
+        <span class='op'>}</span>
+    <span class='op'>}</span>
+<span class='op'>}</span>
+<span class='co'># Save the draws after warm-up</span>
+<span class='va'>th_draws</span> <span class='op'>&lt;-</span> <span class='va'>th_all_draws</span><span class='op'>[</span><span class='op'>-</span> <span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='va'>num_warmup</span><span class='op'>)</span>, <span class='op'>]</span>
+</code></pre>
+</div>
+</div>
+<p>As shown below, the MCMC draws approximate the posterior distribution reasonably well.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>th <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>th_draws</span><span class='op'>)</span><span class='op'>)</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='co'># Plot histogram, with density on y axis</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_histogram.html'>geom_histogram</a></span><span class='op'>(</span>binwidth <span class='op'>=</span> <span class='fl'>0.0025</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>..density..</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='co'># Overlay the theoretical Beta distribution</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_function.html'>stat_function</a></span><span class='op'>(</span>
+        fun <span class='op'>=</span> <span class='va'>dbeta</span>,
+        args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+            shape1 <span class='op'>=</span> <span class='fl'>86</span> <span class='op'>+</span> <span class='va'>prior_a</span>,
+            shape2 <span class='op'>=</span> <span class='fl'>252</span> <span class='op'>+</span> <span class='va'>prior_b</span>
+        <span class='op'>)</span>,
+        col <span class='op'>=</span> <span class='st'>"red"</span>
+    <span class='op'>)</span>
+<span class='co'># Acceptance rate</span>
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>num_accepted</span><span class='op'>)</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>th_draws</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>#&gt; [1] 0.4889</code></pre>
+<p><img src="mcmc_files/figure-html5/metropolis-hist-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<h2 id="convergence-check">Convergence Check</h2>
+<p>The goal of checking for convergence of MCMC samples is to ensure that the draws are <em>representative</em> samples of the posterior distribution, and that they contain <em>sufficient information</em> to describe it. Convergence can be considered in two aspects:</p>
+<ul>
+<li><em>Mixing</em></li>
+<li><em>Stationarity</em></li>
+</ul>
+<p>We’ll see some tools in R for diagnosing convergence.</p>
+<h3 id="trace-plot">Trace Plot</h3>
+<p>Multiple chains have good <em>mixing</em> if they frequently cross each other. If two chains iterate in different regions of the posterior distribution and never cross each other, they don’t mix well. You can check mixing using the trace plot. The below graph shows the two chains mixing well.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Convert to `draws_array` object to use the following functions</span>
+<span class='va'>th_draws_array</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/posterior/reference/draws_array.html'>draws_array</a></span><span class='op'>(</span>
+    theta <span class='op'>=</span> <span class='va'>th_draws</span>,
+    .nchains <span class='op'>=</span> <span class='va'>num_chains</span>
+<span class='op'>)</span>
+<span class='co'># Trace plot</span>
+<span class='fu'><a href='https://mc-stan.org/bayesplot/reference/MCMC-traces.html'>mcmc_trace</a></span><span class='op'>(</span><span class='va'>th_draws_array</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="mcmc_files/figure-html5/trace-th-draws-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<h3 id="rank-histograms">Rank Histograms</h3>
+<p>Another useful tool is the rank histogram, recently proposed by <a href="https://projecteuclid.org/journals/bayesian-analysis/volume-16/issue-2/Rank-Normalization-Folding-and-Localization--An-Improved-R%cb%86-for/10.1214/20-BA1221.full">Vehtari et al. (2021)</a>. The idea is first to convert the posterior values into ranks and then look at the distributions of the ranks across iterations. If the chains mix well and all explore the same target distribution, the average rank in an interval of iterations should be similar for every chain. Therefore, the rank histogram should show something close to a uniform distribution, as shown below:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Rank plot</span>
+<span class='fu'><a href='https://mc-stan.org/bayesplot/reference/MCMC-traces.html'>mcmc_rank_hist</a></span><span class='op'>(</span><span class='va'>th_draws_array</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="mcmc_files/figure-html5/rank-th-draws-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<h3 id="hatr"><span class="math inline">\(\hat{R}\)</span></h3>
+<p>A commonly used index in diagnosing convergence is <span class="math inline">\(\hat{R}\)</span>, also called the potential scale reduction factor, proposed by Gelman and Rubin (1992) and later extended for multivariate distributions by Brooks and Gelman (1997). Vehtari et al. (2021) further improved it to account for unequal variances across chains using rank normalization and folding. <span class="math inline">\(\hat R\)</span> measures the ratio of the total variability combining multiple chains to the within-chain variability. When the Markov chains converge, each chain is based on the same posterior distribution, and they should have the same variance. Therefore, if the chains converge, there should be no between-chain variability, so <span class="math inline">\(\hat R\)</span> should be very close to 1.0.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>While in older literature, the cutoff of <span class="math inline">\(\hat R\)</span> &lt; 1.1 was usually used, <strong>Vehtari et al. (2021) recommended a safer criterion of <span class="math inline">\(\hat R\)</span> &lt; 1.01.</strong></p>
+<p>You can use the <code>summarize_draws()</code> function from the <code>posterior</code> package, which provides summary statistics of the posterior and some convergence diagnostics.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://mc-stan.org/posterior/reference/draws_summary.html'>summarize_draws</a></span><span class='op'>(</span><span class='va'>th_draws_array</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>#&gt; # A tibble: 1 × 10
+#&gt;   variable  mean median     sd    mad    q5   q95  rhat ess_bulk
+#&gt;   &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+#&gt; 1 theta    0.256  0.255 0.0233 0.0236 0.218 0.295  1.00    2368.
+#&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
+</div>
+<p>The numbers <code>ess_bulk</code> and <code>ess_tail</code> are two ways to compute ESS. <code>ess_bulk</code> says more about the center region of the posterior and is useful when assessing how accurate the mean of the posterior draws approximates the true posterior mean (or the posterior median). <code>ess_tail</code> is most useful for assessing how accurate the sample quantiles in the tail areas (e.g., 1st, 95th) approximate the true posterior quantiles. For example, the accuracy of the credible intervals would require a large <code>ess_tail</code>.</p>
+<p>As recommended by Vehtari et al. (2021),</p>
+<blockquote>
+<p>ESS should be at least 400 for <span class="math inline">\(\hat R\)</span> to be useful in diagnosing convergence.</p>
+</blockquote>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Note that in Stan, <span class="math inline">\(\hat{R}\)</span> is computed by splitting each chain into half. So if you have two chains, <span class="math inline">\(\hat{R}\)</span> will be based on four groups.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

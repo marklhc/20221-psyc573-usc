@@ -186,6 +186,32 @@ embed_xaringan("slides/one_parameter_models.html", ratio = "4:3")
 
 :::
 
+::: {.panel}
+
+# Week 5
+
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Explain *what* is unique for samples using **Markov Chain Monte Carlo (MCMC)**
+- Explain *why* we need MCMC to **approximate the posterior**
+- Describe *when* MCMC samples are **representative** and **accurate** for approximating the posterior
+- Use R to perform **convergence diagnostics** for MCMC samples
+
+## Task Lists
+
+1. Complete the assigned readings
+    * Kruschke ch. 7
+2. Review the resources (slides, [note 1][14], and [note 2][15])
+3. Attend the Tuesday and Thursday class meetings
+4. Complete Homework 4 (see instruction on Blackboard)
+
+[14]: mcmc.html
+[15]: gibbs.html
+
+:::
+
 :::
 
 ## Last updated {.appendix}

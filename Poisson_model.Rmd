@@ -79,6 +79,7 @@ ggplot(tibble(th = c(0, 2000)), aes(x = th)) +
 ### Prior predictive check
 
 ```{r prior-check}
+set.seed(2200)
 num_draws <- 100
 sim_theta <- rgamma(num_draws, shape = 3, rate = 1 / 200)
 # Initialize a time-series plot
@@ -95,7 +96,7 @@ for (s in seq_along(sim_theta)) {
 }
 # Convert to a data frame
 y_tilde_df <- as_tibble(y_tilde) %>%
-    add_rownames(var = "id") %>%
+    rownames_to_column(var = "id") %>%
     pivot_longer(
         cols = -id,
         names_to = "year",

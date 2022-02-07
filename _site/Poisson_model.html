@@ -2440,6 +2440,7 @@ Notes
 <a href="bayes_rule.html">Bayes' Rule</a>
 <a href="beta_Bernoulli_model.html">Beta-Bernoulli Model</a>
 <a href="Poisson_model.html">(Bonus) Poisson Model</a>
+<a href="mcmc.html">MCMC: Metropolis</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2539,7 +2540,7 @@ Notes
 #&gt; 4 2018    990
 #&gt; 5 2019    999
 #&gt; 6 2020   1021
-#&gt; 7 2021    962</code></pre>
+#&gt; 7 2021   1014</code></pre>
 </div>
 <h1 id="poisson-model">Poisson Model</h1>
 <p>Our interest is the rate of occurrence of fatal police shootings per year. Denote this as <span class="math inline">\(\theta\)</span>. The <em>support</em> of <span class="math inline">\(\theta\)</span> is <span class="math inline">\([0, \infty)\)</span>.</p>
@@ -2560,7 +2561,8 @@ Notes
 <h3 id="prior-predictive-check">Prior predictive check</h3>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>num_draws</span> <span class='op'>&lt;-</span> <span class='fl'>100</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2200</span><span class='op'>)</span>
+<span class='va'>num_draws</span> <span class='op'>&lt;-</span> <span class='fl'>100</span>
 <span class='va'>sim_theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/GammaDist.html'>rgamma</a></span><span class='op'>(</span><span class='va'>num_draws</span>, shape <span class='op'>=</span> <span class='fl'>3</span>, rate <span class='op'>=</span> <span class='fl'>1</span> <span class='op'>/</span> <span class='fl'>200</span><span class='op'>)</span>
 <span class='co'># Initialize a time-series plot</span>
 <span class='va'>ts_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/count.html'>count</a></span><span class='op'>(</span><span class='va'>fps_1521</span>, <span class='va'>year</span><span class='op'>)</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>year</span>, y <span class='op'>=</span> <span class='va'>n</span><span class='op'>)</span><span class='op'>)</span>
@@ -2576,7 +2578,7 @@ Notes
 <span class='op'>}</span>
 <span class='co'># Convert to a data frame</span>
 <span class='va'>y_tilde_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/as_tibble.html'>as_tibble</a></span><span class='op'>(</span><span class='va'>y_tilde</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/add_rownames.html'>add_rownames</a></span><span class='op'>(</span>var <span class='op'>=</span> <span class='st'>"id"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://tibble.tidyverse.org/reference/rownames.html'>rownames_to_column</a></span><span class='op'>(</span>var <span class='op'>=</span> <span class='st'>"id"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
     <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_longer.html'>pivot_longer</a></span><span class='op'>(</span>
         cols <span class='op'>=</span> <span class='op'>-</span><span class='va'>id</span>,
         names_to <span class='op'>=</span> <span class='st'>"year"</span>,
@@ -2624,7 +2626,7 @@ Notes
 <pre><code>#&gt; # A tibble: 1 × 10
 #&gt;   variable  mean median    sd   mad    q5   q95  rhat ess_bulk
 #&gt;   &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 theta     987.   986.  12.1  11.3  966. 1006. 0.999     933.
+#&gt; 1 theta     994.   994.  11.6  11.4  975. 1012.  1.00    1075.
 #&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 <p>So the estimated rate is 987 per year, with a 90% CI [967, 1006].</p>
@@ -2645,7 +2647,7 @@ Notes
 <span class='op'>}</span>
 <span class='co'># Convert to a data frame</span>
 <span class='va'>y_tilde_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/as_tibble.html'>as_tibble</a></span><span class='op'>(</span><span class='va'>y_tilde</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/add_rownames.html'>add_rownames</a></span><span class='op'>(</span>var <span class='op'>=</span> <span class='st'>"id"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://tibble.tidyverse.org/reference/rownames.html'>rownames_to_column</a></span><span class='op'>(</span>var <span class='op'>=</span> <span class='st'>"id"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
     <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_longer.html'>pivot_longer</a></span><span class='op'>(</span>
         cols <span class='op'>=</span> <span class='op'>-</span><span class='va'>id</span>,
         names_to <span class='op'>=</span> <span class='st'>"year"</span>,

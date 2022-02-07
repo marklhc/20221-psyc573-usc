@@ -2446,6 +2446,7 @@ Notes
 <a href="bayes_rule.html">Bayes' Rule</a>
 <a href="beta_Bernoulli_model.html">Beta-Bernoulli Model</a>
 <a href="Poisson_model.html">(Bonus) Poisson Model</a>
+<a href="mcmc.html">MCMC: Metropolis</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2828,7 +2829,7 @@ When the data consist of observations that are binary, the variable is called a 
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>num_draws</span> <span class='op'>&lt;-</span> <span class='fl'>1000</span>
-<span class='va'>sim_theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>rbeta</a></span><span class='op'>(</span><span class='fl'>1000</span>, shape1 <span class='op'>=</span> <span class='fl'>8</span>, shape2 <span class='op'>=</span> <span class='fl'>6</span><span class='op'>)</span>
+<span class='va'>sim_theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>rbeta</a></span><span class='op'>(</span><span class='va'>num_draws</span>, shape1 <span class='op'>=</span> <span class='fl'>8</span>, shape2 <span class='op'>=</span> <span class='fl'>6</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>`Bayes estimate` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>sim_theta</span><span class='op'>)</span>,
   `Posterior median` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/median.html'>median</a></span><span class='op'>(</span><span class='va'>sim_theta</span><span class='op'>)</span>,
   `Posterior SD` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>sim_theta</span><span class='op'>)</span>,
