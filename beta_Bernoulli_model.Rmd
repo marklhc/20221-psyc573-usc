@@ -229,6 +229,7 @@ which is a distribution for $a + z - 1$ successes and $b + N - z$ failures. This
 ### Summarize the posterior
 
 ```{r sim-theta, echo = TRUE}
+set.seed(2119)
 num_draws <- 1000
 sim_theta <- rbeta(num_draws, shape1 = 1807, shape2 = 1116)
 c(`Bayes estimate` = mean(sim_theta),

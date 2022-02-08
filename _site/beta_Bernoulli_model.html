@@ -2828,8 +2828,9 @@ When the data consist of observations that are binary, the variable is called a 
 <h3 id="summarize-the-posterior">Summarize the posterior</h3>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>num_draws</span> <span class='op'>&lt;-</span> <span class='fl'>1000</span>
-<span class='va'>sim_theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>rbeta</a></span><span class='op'>(</span><span class='va'>num_draws</span>, shape1 <span class='op'>=</span> <span class='fl'>8</span>, shape2 <span class='op'>=</span> <span class='fl'>6</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2119</span><span class='op'>)</span>
+<span class='va'>num_draws</span> <span class='op'>&lt;-</span> <span class='fl'>1000</span>
+<span class='va'>sim_theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>rbeta</a></span><span class='op'>(</span><span class='va'>num_draws</span>, shape1 <span class='op'>=</span> <span class='fl'>1807</span>, shape2 <span class='op'>=</span> <span class='fl'>1116</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>`Bayes estimate` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>sim_theta</span><span class='op'>)</span>,
   `Posterior median` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/median.html'>median</a></span><span class='op'>(</span><span class='va'>sim_theta</span><span class='op'>)</span>,
   `Posterior SD` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>sim_theta</span><span class='op'>)</span>,
@@ -2839,21 +2840,21 @@ When the data consist of observations that are binary, the variable is called a 
 </code></pre>
 </div>
 <pre><code>#&gt;                           Bayes estimate 
-#&gt;                                0.5683993 
+#&gt;                              0.618209694 
 #&gt;                         Posterior median 
-#&gt;                                0.5655762 
+#&gt;                              0.618382945 
 #&gt;                             Posterior SD 
-#&gt;                                0.1297508 
+#&gt;                              0.008829290 
 #&gt;                                      MAD 
-#&gt;                                0.1324126 
+#&gt;                              0.009254166 
 #&gt; 90% Credible interval (equal-tailed).10% 
-#&gt;                                0.3971719 
+#&gt;                              0.606862338 
 #&gt; 90% Credible interval (equal-tailed).90% 
-#&gt;                                0.7353907 
+#&gt;                              0.628990588 
 #&gt;                            90% HDI.lower 
-#&gt;                                0.3765909 
+#&gt;                              0.604051851 
 #&gt;                            90% HDI.upper 
-#&gt;                                0.8014843</code></pre>
+#&gt;                              0.632766654</code></pre>
 </div>
 <h3 id="posterior-predictive-check">Posterior Predictive Check</h3>
 <p>Now, we need to know whether the model fits the data well. We don’t have much to check for a Bernoulli model if we only have the <code>status</code> variable. However, as there is information for other variables, we can use them to check the exchangeability assumption. For example, we can ask whether the data from different state categories are exchangeable. The death rate across the 4 state categories are</p>
@@ -2970,7 +2971,7 @@ When the data consist of observations that are binary, the variable is called a 
 <section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code>#&gt; [1] &quot;January 30, 2022&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;February 07, 2022&quot;</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 
