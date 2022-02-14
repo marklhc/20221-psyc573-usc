@@ -547,3 +547,14 @@ The numbers `ess_bulk` and `ess_tail` are two ways to compute ESS. `ess_bulk` sa
 As recommended by Vehtari et al. (2021), 
 
 > ESS should be at least 400 for $\hat R$ to be useful in diagnosing convergence.
+
+<!-- The following chunk is only used in the website -->
+
+```{r, echo = FALSE, results = 'asis', eval = file.exists("distill-hack.RMarkdown")}
+knitrenv <- knitr::knit_global()
+assign("knit_input", knitr::current_input(), knitrenv)
+append_res <- knitr::knit_child("distill-hack.RMarkdown",
+    envir = knitrenv, quiet = TRUE
+)
+cat(append_res)
+```

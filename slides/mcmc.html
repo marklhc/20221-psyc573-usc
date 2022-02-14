@@ -187,18 +187,6 @@ shiny::runGitHub("metropolis_demo", "marklhc")
 ```
 
 ---
-exclude: true
-class: clear
-
-Exercise:
-
-1. Try using different proposal SD: 0.02, 0.1, 0.3, 1
-2. For each, draw 1,000 samples
-3. Does the sample distribution look like the target posterior?
-4. What is the relationship between proposal SD, acceptance rate, and autocorrelation?
-5. Which proposal SD seems to give the best effective sample size?
-
----
 class: inverse, middle, center
 
 # Example 1: Estimating the Number of People Taking the Metro
@@ -281,6 +269,18 @@ Markov chain: a sequence of iterations, `\(\{\theta^{(1)}, \theta^{(2)}, \ldots,
 Based on *ergodic* theorems, a well-behaved chain will reach a *stationary distribution*
 
 - after which, every draw is a sample from the stationary distribution
+
+---
+exclude: TRUE
+class: clear
+
+Exercise:
+
+1. Try using different proposal SD: 0.02, 0.1, 0.3, 1
+2. For each, draw 1,000 samples
+3. Does the sample distribution look like the target posterior?
+4. What is the relationship between proposal SD, acceptance rate, and autocorrelation?
+5. Which proposal SD seems to give the best effective sample size?
 
 ---
 

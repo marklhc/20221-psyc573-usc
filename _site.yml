@@ -5,7 +5,7 @@ description: |
 output_dir: "_site"
 theme: theme.css
 include: ["slides"]
-exclude: ["distill-hack.RMarkdown"]
+exclude: ["distill-hack.RMarkdown", "hmc_and_stan.Rmd"]
 base_url: https://psyc573-2022spring.netlify.app
 repository_url: https://github.com/marklhc/20221-psyc573-usc
 creative_commons: CC BY-NC-SA
@@ -33,6 +33,8 @@ navbar:
           href: Poisson_model.html
         - text: "MCMC: Metropolis"
           href: mcmc.html
+        - text: "MCMC: Gibbs"
+          href: gibbs.html
   source_url: https://github.com/marklhc/20221-psyc573-usc
 output:
   distill::distill_article:

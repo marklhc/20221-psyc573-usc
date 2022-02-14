@@ -2369,6 +2369,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   }</style>
   <!--/radix_placeholder_distill-->
   <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/clipboard-2.0.6/clipboard.min.js"></script>
+  <link href="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
+  <script src="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
+  <script>window.xaringanExtraClipboard(null, {"button":"<i class=\"fa fa-clone fa-sm\" style=\"color: #301e64\"><\/i>","success":"<i class=\"fa fa-check fa-sm\" style=\"color: #90BE6D\"><\/i>","error":"<i class=\"fa fa-times fa-sm\" style=\"color: #F94144\"><\/i>"})</script>
+  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2441,6 +2447,7 @@ Notes
 <a href="beta_Bernoulli_model.html">Beta-Bernoulli Model</a>
 <a href="Poisson_model.html">(Bonus) Poisson Model</a>
 <a href="mcmc.html">MCMC: Metropolis</a>
+<a href="gibbs.html">MCMC: Gibbs</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2486,6 +2493,7 @@ Notes
 <li><a href="#summary">Summary</a></li>
 <li><a href="#posterior-predictive-check">Posterior Predictive Check</a></li>
 </ul></li>
+<li><a href="#last-updated">Last updated</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -2535,12 +2543,12 @@ Notes
 #&gt;   year      n
 #&gt;   &lt;chr&gt; &lt;int&gt;
 #&gt; 1 2015    994
-#&gt; 2 2016    957
+#&gt; 2 2016    958
 #&gt; 3 2017    984
 #&gt; 4 2018    990
 #&gt; 5 2019    999
 #&gt; 6 2020   1021
-#&gt; 7 2021   1052</code></pre>
+#&gt; 7 2021   1055</code></pre>
 </div>
 <h1 id="poisson-model">Poisson Model</h1>
 <p>Our interest is the rate of occurrence of fatal police shootings per year. Denote this as <span class="math inline">\(\theta\)</span>. The <em>support</em> of <span class="math inline">\(\theta\)</span> is <span class="math inline">\([0, \infty)\)</span>.</p>
@@ -2626,7 +2634,7 @@ Notes
 <pre><code>#&gt; # A tibble: 1 × 10
 #&gt;   variable  mean median    sd   mad    q5   q95  rhat ess_bulk
 #&gt;   &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 theta     999.   999.  11.6  11.4  980. 1018.  1.00    1075.
+#&gt; 1 theta    1000.  1000.  11.6  11.5  981. 1018.  1.00    1075.
 #&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 <p>So the estimated rate is 987 per year, with a 90% CI [967, 1006].</p>
@@ -2667,7 +2675,18 @@ Notes
 </div>
 <p><img src="Poisson_model_files/figure-html5/ppc-time-series-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<!-- The following chunk is only used in the website -->
+<section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
+<h2 class="appendix">Last updated</h2>
+<div class="layout-chunk" data-layout="l-body">
+<pre><code>#&gt; [1] &quot;February 11, 2022&quot;</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+</section>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
