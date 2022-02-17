@@ -208,7 +208,6 @@ By the end of this module, you will be able to
 4. Complete Homework 4 (see instruction on Blackboard)
 
 [14]: mcmc.html
-[15]: gibbs.html
 
 ## Slides
 
@@ -216,6 +215,41 @@ By the end of this module, you will be able to
 
 ```{r embed-5, echo = FALSE}
 embed_xaringan("slides/mcmc.html", ratio = "4:3")
+```
+
+:::
+
+::: {.panel}
+
+# Week 6
+
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Apply **Gibbs sampling** to summarize parameters of a **normal model**
+<!--
+- Describe, conceptually, how the **Hamiltonian Monte Carlo (HMC)** algorithm achieves a better efficiency with the use of the gradients
+- Explain how tuning the **step size** and the **tree depth** affects HMC
+- Program a simple Bayesian model in **STAN**
+-->
+
+## Task Lists
+
+1. Complete the assigned readings
+    * Kruschke ch. 7
+2. Review the resources (slides and [note][15])
+3. Attend the Tuesday and Thursday class meetings
+4. Complete Homework 5 (see instruction on Blackboard)
+
+[15]: gibbs.html
+
+## Slides
+
+[PDF version](slides/gibbs.pdf){target="_blank"}
+
+```{r embed-6, echo = FALSE}
+embed_xaringan("slides/gibbs.html", ratio = "4:3")
 ```
 
 :::
