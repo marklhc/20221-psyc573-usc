@@ -2442,6 +2442,7 @@ Notes
 <a href="Poisson_model.html">(Bonus) Poisson Model</a>
 <a href="mcmc.html">MCMC: Metropolis</a>
 <a href="gibbs.html">MCMC: Gibbs</a>
+<a href="hmc_stan.html"></a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2730,7 +2731,7 @@ The Gamma distribution used here is also called a scaled <span class="math inlin
 <p>The Gibbs sampler has been popular due to its computational efficiency for many problems. However, there are situations that it works less well, such as when some parameters are highly correlated in the posterior, in which case a Gibbs sampler may get stuck. Another limitation is that Gibbs samplers require the use of conjugate priors. On the one hand, sometimes researcher beliefs may be better expressed in distributions other than the conjugate family. On the other hand, some conjugate families, such as the inverse Gamma distribution, are hard to work with and may yield suboptimal results in small sample situations.</p>
 <h1 id="the-metropolis-hastings-algorithm">The Metropolis-Hastings Algorithm</h1>
 <p>The Metropolis-Hastings (MH) algorithm is a generalization of the Metropolis algorithm, where it allows for more than one parameter and can use a proposal distribution that is not symmetric. It is not as efficient as the Gibbs sampler but can accommodate non-conjugate prior distributions. Note that the proposal distribution needs to have the same dimension as the posterior so that the proposal is a vector in the parameter space. For example, we need a bivariate proposal density with <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span>.</p>
-<p>Below is an example using a bivariate normal distribution. While we can choose how correlated the variables are in the proposal, for simplicity, I just consider zero correlation and equal <em>SD</em> for both dimensions. I also parameterize the normal distribution by the mean, <span class="math inline">\(\mu\)</span>, and the standard deviation (instead of the variance), <span class="math inline">\(\sigma\)</span>. The priors are: <span class="math display">\[
+<p>Below is an example using a bivariate normal distribution for the proposal. While we can choose how correlated the variables are in the proposal, for simplicity, I just consider zero correlation and equal <em>SD</em> for both dimensions. I also parameterize the normal distribution by the mean, <span class="math inline">\(\mu\)</span>, and the standard deviation (instead of the variance), <span class="math inline">\(\sigma\)</span>. The priors are: <span class="math display">\[
   \begin{aligned}
     \mu &amp; \sim N(5, 10^2) \\
     \sigma &amp; \sim N^+(0, 3)

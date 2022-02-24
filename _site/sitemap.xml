@@ -10,11 +10,15 @@
   </url>
   <url>
     <loc>https://psyc573-2022spring.netlify.app/gibbs.html</loc>
-    <lastmod>2022-02-13T21:21:24-08:00</lastmod>
+    <lastmod>2022-02-17T17:24:29-08:00</lastmod>
   </url>
   <url>
-    <loc>https://psyc573-2022spring.netlify.app/hmc_and_stan.html</loc>
-    <lastmod>2022-02-14T21:28:02-08:00</lastmod>
+    <loc>https://psyc573-2022spring.netlify.app/hierarchical_models.html</loc>
+    <lastmod>2022-02-18T20:44:57-08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://psyc573-2022spring.netlify.app/hmc_stan.html</loc>
+    <lastmod>2022-02-23T20:24:17-08:00</lastmod>
   </url>
   <url>
     <loc>https://psyc573-2022spring.netlify.app/</loc>
@@ -26,7 +30,7 @@
   </url>
   <url>
     <loc>https://psyc573-2022spring.netlify.app/modules.html</loc>
-    <lastmod>2022-02-16T23:37:49-08:00</lastmod>
+    <lastmod>2022-02-23T21:12:03-08:00</lastmod>
   </url>
   <url>
     <loc>https://psyc573-2022spring.netlify.app/Poisson_model.html</loc>

@@ -272,7 +272,7 @@ The Gibbs sampler has been popular due to its computational efficiency for many 
 
 The Metropolis-Hastings (MH) algorithm is a generalization of the Metropolis algorithm, where it allows for more than one parameter and can use a proposal distribution that is not symmetric. It is not as efficient as the Gibbs sampler but can accommodate non-conjugate prior distributions. Note that the proposal distribution needs to have the same dimension as the posterior so that the proposal is a vector in the parameter space. For example, we need a bivariate proposal density with $\mu$ and $\sigma$. 
 
-Below is an example using a bivariate normal distribution. While we can choose how correlated the variables are in the proposal, for simplicity, I just consider zero correlation and equal *SD* for both dimensions. I also parameterize the normal distribution by the mean, $\mu$, and the standard deviation (instead of the variance), $\sigma$. The priors are:
+Below is an example using a bivariate normal distribution for the proposal. While we can choose how correlated the variables are in the proposal, for simplicity, I just consider zero correlation and equal *SD* for both dimensions. I also parameterize the normal distribution by the mean, $\mu$, and the standard deviation (instead of the variance), $\sigma$. The priors are:
 $$
   \begin{aligned}
     \mu & \sim N(5, 10^2) \\

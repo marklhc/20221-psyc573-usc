@@ -12,6 +12,43 @@ output:
 params:
   for_class: false
 ---
+exclude: `r !params$for_class`
+
+# Mid-Semester Feedback
+
+Thanks for sharing your thoughts!
+- $n$ = 10
+
+--
+
+What has been useful?
+- R command, exercises
+
+--
+
+Struggles/Suggestion?
+- Download Rmd from website
+- Math concepts
+- More R code (especially related to the homework)
+
+---
+exclude: `r !params$for_class`
+class: clear
+
+Questions?
+- Psychology examples
+- Posterior predictive check
+- Beta likelihood; law of total probability (from conditional to marginal)
+- HW 3 ...
+
+--
+
+Changes
+- Speed up a bit
+- Zoom
+- More time in R
+
+---
 class: clear
 
 ```{r, child = "slide_settings.RMarkdown"}
@@ -71,7 +108,7 @@ nt_dat %>%
 ]
 ]
 
-.panel[.panel-name[Data]
+.panel[.panel-name[Histograms]
 
 ```{r hist-wordcount}
 ggplot(nt_dat, aes(x = wordcount / 100)) +
@@ -238,7 +275,7 @@ class: clear
 
 \begin{align}
     \mu \mid \sigma^2, y & \sim N(\mu_n, \tau_n^2) \\
-    \sigma^2 \mid \mu^2 & \sim \text{Inv-Gamma}(\nu_n / 2, \nu_n \sigma^2_n [\mu] / 2)
+    \sigma^2 \mid \mu & \sim \text{Inv-Gamma}(\nu_n / 2, \nu_n \sigma^2_n [\mu] / 2)
 \end{align}
 
 - $\tau_n^2 = \left(\frac{1}{\tau_0^2} + \frac{n}{\sigma^2}\right)^{-1}$; $\mu_n = \tau_n^2 \left(\frac{\mu_0}{\tau_0^2} + \frac{n \bar y}{\sigma^2}\right)$

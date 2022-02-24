@@ -254,6 +254,37 @@ embed_xaringan("slides/gibbs.html", ratio = "4:3")
 
 :::
 
+::: {.panel}
+
+# Week 7
+
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Describe, conceptually, how the **Hamiltonian Monte Carlo (HMC)** algorithm achieves a better efficiency with the use of the gradients
+- Explain how tuning the **step size** and the **tree depth** affects HMC
+- Program a simple Bayesian model in **STAN**
+
+## Task Lists
+
+1. Complete the assigned readings
+    * Kruschke ch. 14
+2. Review the resources (slides and [note][16])
+3. Attend the Tuesday and Thursday class meetings
+
+[16]: hmc_stan.html
+
+## Slides
+
+[PDF version](slides/hmc_stan.pdf){target="_blank"}
+
+```{r embed-7, echo = FALSE}
+embed_xaringan("slides/hmc_stan.html", ratio = "4:3")
+```
+
+:::
+
 :::
 
 ## Last updated {.appendix}

@@ -2367,18 +2367,18 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
-  <link href="site_libs/panelset-0.2.6/panelset.css" rel="stylesheet" />
-  <script src="site_libs/panelset-0.2.6/panelset.js"></script>
-  <script src="site_libs/fitvids-2.1.1/fitvids.min.js"></script>
-  <script src="site_libs/popper-2.6.0/popper.min.js"></script>
-  <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
-  <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
-  <script src="site_libs/tippy-6.2.7/tippy.umd.min.js"></script>
-  <script src="site_libs/anchor-4.2.2/anchor.min.js"></script>
-  <script src="site_libs/bowser-1.9.3/bowser.min.js"></script>
-  <script src="site_libs/webcomponents-2.0.0/webcomponents.js"></script>
-  <script src="site_libs/distill-2.2.21/template.v2.js"></script>
+  <script src="site_libs/header-attrs/header-attrs.js"></script>
+  <link href="site_libs/panelset/panelset.css" rel="stylesheet" />
+  <script src="site_libs/panelset/panelset.js"></script>
+  <script src="site_libs/fitvids/fitvids.min.js"></script>
+  <script src="site_libs/popper/popper.min.js"></script>
+  <link href="site_libs/tippy/tippy.css" rel="stylesheet" />
+  <link href="site_libs/tippy/tippy-light-border.css" rel="stylesheet" />
+  <script src="site_libs/tippy/tippy.umd.min.js"></script>
+  <script src="site_libs/anchor/anchor.min.js"></script>
+  <script src="site_libs/bowser/bowser.min.js"></script>
+  <script src="site_libs/webcomponents/webcomponents.js"></script>
+  <script src="site_libs/distill/template.v2.js"></script>
   <!--radix_placeholder_site_in_header-->
   <style type="text/css">
   html {
@@ -2444,6 +2444,7 @@ Notes
 <a href="Poisson_model.html">(Bonus) Poisson Model</a>
 <a href="mcmc.html">MCMC: Metropolis</a>
 <a href="gibbs.html">MCMC: Gibbs</a>
+<a href="hmc_stan.html">HMC and Stan</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2662,10 +2663,37 @@ Notes
 </div>
 </div>
 </section>
+<section id="week-7" class="panel">
+<h1>Week 7</h1>
+<h2 id="week-learning-objectives-6">Week Learning Objectives</h2>
+<p>By the end of this module, you will be able to</p>
+<ul>
+<li>Describe, conceptually, how the <strong>Hamiltonian Monte Carlo (HMC)</strong> algorithm achieves a better efficiency with the use of the gradients</li>
+<li>Explain how tuning the <strong>step size</strong> and the <strong>tree depth</strong> affects HMC</li>
+<li>Program a simple Bayesian model in <strong>STAN</strong></li>
+</ul>
+<h2 id="task-lists-6">Task Lists</h2>
+<ol type="1">
+<li>Complete the assigned readings
+<ul>
+<li>Kruschke ch. 14</li>
+</ul></li>
+<li>Review the resources (slides and <a href="hmc_stan.html">note</a>)</li>
+<li>Attend the Tuesday and Thursday class meetings</li>
+</ol>
+<h2 id="slides-6">Slides</h2>
+<p><a href="slides/hmc_stan.pdf" target="_blank">PDF version</a></p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="shareagain" style="min-width:300px;margin:1em auto;">
+<iframe src="slides/hmc_stan.html" width="400" height="300" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
+<script>fitvids('.shareagain', {players: 'iframe'});</script>
+</div>
+</div>
+</section>
 </div>
 <h2 class="appendix" id="last-updated">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code>[1] &quot;February 16, 2022&quot;</code></pre>
+<pre><code>[1] &quot;February 23, 2022&quot;</code></pre>
 </div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
