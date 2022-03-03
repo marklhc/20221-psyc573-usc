@@ -132,6 +132,7 @@ $$
 The priors are very weak. We also assume that the priors are independent, which is commonly the case. Here are some simulated data from these priors:
 
 ```{r prior-predictive}
+set.seed(2259)
 num_draws <- 100
 mu <- rnorm(num_draws, mean = 5, sd = 10)
 inv_sigma2 <- rgamma(num_draws,

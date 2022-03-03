@@ -87,31 +87,31 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
   <!--radix_placeholder_meta_tags-->
-  <title>PSYC 573 Bayesian Data Analysis (2022 Spring): Bayes' Theorem</title>
+  <title>PSYC 573 Bayesian Data Analysis (2022 Spring): Hierarchical Models</title>
 
 
   <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"/>
 
   <!--  https://schema.org/Article -->
-  <meta property="article:published" itemprop="datePublished" content="2022-01-07"/>
-  <meta property="article:created" itemprop="dateCreated" content="2022-01-07"/>
+  <meta property="article:published" itemprop="datePublished" content="2022-02-17"/>
+  <meta property="article:created" itemprop="dateCreated" content="2022-02-17"/>
   <meta name="article:author" content="Mark Lai"/>
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): Bayes&#39; Theorem"/>
+  <meta property="og:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): Hierarchical Models"/>
   <meta property="og:type" content="article"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="PSYC 573 Bayesian Data Analysis (2022 Spring)"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): Bayes&#39; Theorem"/>
+  <meta property="twitter:title" content="PSYC 573 Bayesian Data Analysis (2022 Spring): Hierarchical Models"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","author","date"]}},"value":[{"type":"character","attributes":{},"value":["Bayes' Theorem"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Mark Lai"]}]}]},{"type":"character","attributes":{},"value":["January 7, 2022"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","author","date"]}},"value":[{"type":"character","attributes":{},"value":["Hierarchical Models"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Mark Lai"]}]}]},{"type":"character","attributes":{},"value":["February 17, 2022"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2419,7 +2419,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Bayes' Theorem","authors":[{"author":"Mark Lai","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2022-01-07T00:00:00.000-08:00","citationText":"Lai, 2022"}
+{"title":"Hierarchical Models","authors":[{"author":"Mark Lai","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2022-02-17T00:00:00.000-08:00","citationText":"Lai, 2022"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2464,7 +2464,7 @@ Notes
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>Bayes’ Theorem</h1>
+<h1>Hierarchical Models</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 
@@ -2474,7 +2474,7 @@ Notes
   
   Mark Lai
   
-<br/>January 7, 2022
+<br/>February 17, 2022
 </div>
 
 <div class="d-article">
@@ -2482,35 +2482,33 @@ Notes
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#bayess-theorem">Bayes’s Theorem</a>
+<li><a href="#hierarchical-bernoullibinomial">Hierarchical Bernoulli/Binomial</a>
 <ul>
-<li><a href="#example-1-base-rate-fallacy-from-wikipedia">Example 1: Base rate fallacy (From Wikipedia)</a></li>
+<li><a href="#alternative-parameterization-of-beta">Alternative Parameterization of Beta</a></li>
+<li><a href="#multiple-bernoulli-binomial">Multiple Bernoulli = Binomial</a></li>
+<li><a href="#multiple-binomial-observations">Multiple Binomial Observations</a></li>
+<li><a href="#therapeutic-touch-example">Therapeutic Touch Example</a>
+<ul>
+<li><a href="#stan-code">STAN Code</a></li>
+<li><a href="#prior-predictive">Prior predictive</a></li>
+<li><a href="#calling-rstan">Calling <code>rstan</code></a></li>
+<li><a href="#table-of-coefficients">Table of coefficients</a></li>
+<li><a href="#derived-coefficients">Derived coefficients</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
 </ul></li>
-<li><a href="#bayesian-statistics">Bayesian Statistics</a>
+<li><a href="#shrinkage">Shrinkage</a>
 <ul>
-<li><a href="#example-2-locating-a-plane">Example 2: Locating a Plane</a>
-<ul>
-<li><a href="#influence-of-prior">Influence of Prior</a></li>
-<li><a href="#influence-of-more-data">Influence of More Data</a></li>
+<li><a href="#multiple-comparisons">Multiple Comparisons?</a></li>
 </ul></li>
-<li><a href="#data-order-invariance">Data-Order Invariance</a>
-<ul>
-<li><a href="#exchangeability">Exchangeability*</a></li>
 </ul></li>
-<li><a href="#bernoulli-likelihood">Bernoulli Likelihood</a>
+<li><a href="#hierarchical-normal-model">Hierarchical Normal Model</a>
 <ul>
-<li><a href="#multiple-observations">Multiple Observations</a></li>
-</ul></li>
-<li><a href="#setting-priors">Setting Priors</a>
+<li><a href="#eight-schools-example">Eight Schools Example</a></li>
+<li><a href="#model">Model</a></li>
+<li><a href="#non-centered-parameterization">Non-Centered Parameterization</a>
 <ul>
-<li><a href="#prior-predictive-distribution">Prior Predictive Distribution</a></li>
+<li><a href="#prediction-interval">Prediction Interval</a></li>
 </ul></li>
-<li><a href="#summarizing-the-posterior">Summarizing the Posterior</a>
-<ul>
-<li><a href="#influence-of-sample-size">Influence of Sample Size</a></li>
-<li><a href="#influence-of-prior-1">Influence of Prior</a></li>
-</ul></li>
-<li><a href="#remark-on-grid-approximation">Remark on Grid Approximation</a></li>
 <li><a href="#last-updated">Last updated</a></li>
 </ul></li>
 </ul>
@@ -2519,595 +2517,741 @@ Notes
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://mc-stan.org/rstan/'>rstan</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://mc-stan.org/rstan/reference/rstan_options.html'>rstan_options</a></span><span class='op'>(</span>auto_write <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>  <span class='co'># save compiled STAN object</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://mc-stan.org/shinystan/'>shinystan</a></span><span class='op'>)</span>  <span class='co'># graphical exploration</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://mc-stan.org/posterior/'>posterior</a></span><span class='op'>)</span>  <span class='co'># for summarizing draws</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://mc-stan.org/bayesplot/'>bayesplot</a></span><span class='op'>)</span>  <span class='co'># for plotting</span>
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_classic</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>panel.grid.major.y <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_line</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"grey92"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
-<h1 id="bayess-theorem">Bayes’s Theorem</h1>
-<p>The Bayes’s theorem is, surprisingly (or unsurprisingly), very simple:</p>
-<blockquote>
-<p><span class="math display">\[P(B \mid A) = \frac{P(A \mid B) P(B)}{P(A)}\]</span></p>
-</blockquote>
-<p>More generally, we can expand it to incorporate the law of total probability to make it more applicable to data analysis. Consider <span class="math inline">\(B_i\)</span> as one of the <span class="math inline">\(n\)</span> many possible mutually exclusive events, then <span class="math display">\[\begin{align}
-  P(B_i \mid A) &amp; = \frac{P(A \mid B_i) P(B_i)}{P(A)}  \\
-             &amp; = \frac{P(A \mid B_i) P(B_i)}
-                      {P(A \mid B_1)P(B_1) + P(A \mid B_2)P(B_2) + \cdots + 
-                       P(A \mid B_n)P(B_n)} \\
-             &amp; = \frac{P(A \mid B_i) P(B_i)}{\sum_{k = 1}^n P(A \mid B_k)P(B_k)}
-\end{align}\]</span></p>
-<p>If <span class="math inline">\(B_i\)</span> is a continuous variable, we will replace the sum by an integral, <span class="math display">\[P(B_i \mid A) = \frac{P(A \mid B_i) P(B_i)}{\int_k P(A \mid B_k)P(B_k)}\]</span> The denominator is not important for practical Bayesian analysis, therefore, it is sufficient to write the above equality as</p>
-<blockquote>
-<p><span class="math display">\[P(B_i \mid A) \propto P(A \mid B_i) P(B_i)\]</span></p>
-</blockquote>
-<hr />
-<h2 id="example-1-base-rate-fallacy-from-wikipedia">Example 1: Base rate fallacy (From Wikipedia)</h2>
-<p>A police officer stops a driver <em>at random</em> and does a breathalyzer test for the driver. The breathalyzer is known to detect true drunkenness 100% of the time, but in 1% of the cases, it gives a false positive when the driver is sober. We also know that in general, for every 1,000 drivers passing through that spot, one is driving drunk. Suppose that the breathalyzer shows positive for the driver. What is the probability that the driver is truly drunk?</p>
-<p><span class="math inline">\(P(\text{positive} | \text{drunk}) = 1\)</span><br />
-<span class="math inline">\(P(\text{positive} | \text{sober}) = 0.01\)</span><br />
-<span class="math inline">\(P(\text{drunk}) = 1 / 1000\)</span><br />
-<span class="math inline">\(P(\text{sober}) = 999 / 1000\)</span></p>
-<p>Using Bayes’ Theorem,</p>
-<p><span class="math display">\[\begin{align}
-  P(\text{drunk} | \text{positive}) 
-  &amp; = \frac{P(\text{positive} | \text{drunk}) P(\text{drunk})}
-           {P(\text{positive} | \text{drunk}) P(\text{drunk}) + 
-            P(\text{positive} | \text{sober}) P(\text{sober})}  \\
-  &amp; = \frac{1 \times 0.001}{1 \times 0.001 + 0.01 \times 0.999} \\
-  &amp; = 100 / 1099 \approx 0.091
-\end{align}\]</span></p>
-<p>So there is less than a 10% chance that the driver is drunk even when the breathalyzer shows positive.</p>
-<p>You can verify that with a simulation using R:</p>
+<p>Although many statistical models can be fitted using Bayesian or frequentist methods, some models are more naturally used in the Bayesian framework. One class of such models is the family of <strong>hierarchical models.</strong> Consider situations when the data contain some <em>clusters</em>, such as multiple data points in each of many participants, multiple participants in each of several treatment conditions, etc. While it is possible to run <span class="math inline">\(J\)</span> Bayesian analyses for the <span class="math inline">\(J\)</span> subsets of the data, it is usually more efficient to <em>pool</em> the data together, such that cluster <span class="math inline">\(j\)</span> has some parameters <span class="math inline">\(\theta_j\)</span>, and these <span class="math inline">\(J\)</span> <span class="math inline">\(\theta\)</span> values themselves come from a common distribution. This is the same idea as <em>multilevel modeling</em>.</p>
+<p>In this note, you will see two examples, one from the textbook with a hierarchical Bernoulli/binomial model, and another from a classic data set with eight schools, modelled by a hierarchical normal model.</p>
+<h1 id="hierarchical-bernoullibinomial">Hierarchical Bernoulli/Binomial</h1>
+<p>Previously, we have seen the Bernoulli model for <span class="math inline">\(N\)</span> outcomes, such as multiple coin flips from the same coin: <span class="math display">\[y_i \sim \text{Bern}(\theta_i), \text{for }i = 1, \ldots, N\]</span> We assumed exchangeability as the flips are from the same coin.</p>
+<h2 id="alternative-parameterization-of-beta">Alternative Parameterization of Beta</h2>
+<p>Previously we have used the Beta(a, b) prior for a Bernoulli outcome, such that <span class="math display">\[P(\theta \mid a, b) \propto \theta^{a - 1} (1 - \theta)^{b - 1}.\]</span> However, in hierarchical models to be discussed later, it is beneficial to consider another way to express the Beta distribution, in terms of the <em>prior mean</em>, <span class="math inline">\(\mu = a / (a + b)\)</span>, <span class="math inline">\(\mu \in [0, 1]\)</span>, and the concentration, <span class="math inline">\(\kappa = a + b\)</span>, <span class="math inline">\(\kappa \in [0, \infty)\)</span>. So instead of the above formula, we can write <span class="math display">\[P(\theta \mid \mu, \kappa) \propto \theta^{\mu \kappa - 1} (1 - \theta)^{(1 - \mu) \kappa - 1}.\]</span> The two expressions represent exactly the same distribution, but just in terms of parameters of different meanings. Therefore, they are referred to as <strong>different parameterization</strong> of the Beta distribution.</p>
+<aside>
+Note your textbook used <span class="math inline">\(\omega\)</span> = <span class="math inline">\((a - 1) / (a + b - 2)\)</span> for the mode, instead of the mean. This is yet another parameterization in terms of <span class="math inline">\(\omega\)</span> and <span class="math inline">\(\kappa\)</span>, but I found the mean parameterization more natural and common in the literature.
+</aside>
+<h2 id="multiple-bernoulli-binomial">Multiple Bernoulli = Binomial</h2>
+<p>With <span class="math inline">\(N\)</span> exchangeable Bernoulli observations, an equivalent but more efficient way to code the model is to use the <em>binomial</em> distribution. Let <span class="math inline">\(z = \sum_{i = 1}^N y_i\)</span>, then <span class="math display">\[z \sim \mathrm{Bin}(N, \theta)\]</span></p>
+<h2 id="multiple-binomial-observations">Multiple Binomial Observations</h2>
+<p>Now, consider the situation with multiple coins, perhaps each coin with some noticeable differences, as discussed in chapter 9.2 of the textbook. If we have <span class="math inline">\(J\)</span> = 3 coins, and <span class="math inline">\(N_j\)</span> flips for the <span class="math inline">\(j\)</span>th coin. If we believe that the coins all have the same bias, then we could consider the model <span class="math display">\[z_j \sim \mathrm{Bin}(N_j, \theta),\]</span> which still contains only one parameter, <span class="math inline">\(\theta\)</span>. However, if we have reason to believe that the coins have different biases, then we should have <span class="math display">\[z_j \sim \mathrm{Bin}(N_j, \theta_{\color{red}{j}}),\]</span> with parameters <span class="math inline">\(\theta_1, \ldots, \theta_j\)</span>.</p>
+<p>We can assign priors to each individual <span class="math inline">\(\theta_j\)</span>. However, if our prior belief is such that there’s something common among the different coins, say they’re from the same factory, so that they come from the same distribution, we can have common parameters for the prior distributions of the <span class="math inline">\(\theta\)</span>s: <span class="math display">\[\theta_j \sim \mathrm{Beta2}(\mu, \kappa),\]</span> note I use Beta2 to denote the mean parameterization. Here, we express the prior belief that the <strong>mean bias</strong> of the different coins is <span class="math inline">\(\mu\)</span>, and how each coin is different from the mean depends on <span class="math inline">\(\kappa\)</span>. Now, <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\kappa\)</span> are hyperparameters. We can assign some fixed values to <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\kappa\)</span>, as if we know what the average bias is. However, the power of the hierarchical model is that we can put priors (or hyper priors) on <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\kappa\)</span>, and obtain posterior distributions of them, based on what the data say.</p>
+<p>What priors to use for <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\kappa\)</span>? <span class="math inline">\(\mu\)</span> is relatively easy because it is the mean bias; if we put a Beta prior for bias, we can again use a Beta prior for the mean bias. <span class="math inline">\(\kappa\)</span> is more challenging. A larger <span class="math inline">\(\kappa\)</span> means that the biases of the coins are more similar to each other. We can perform a prior predictive check to see what the data look like. As a starting point, chapter 9 of the textbook suggested using Gamma(0.01, 0.01). So the full model in our case, with a weak Beta(1.5, 1.5) prior on <span class="math inline">\(\mu\)</span>, is</p>
+<p>Model: <span class="math display">\[
+  \begin{aligned}
+    z_j &amp; \sim \mathrm{Bin}(N_j, \theta_j) \\
+    \theta_j &amp; \sim \mathrm{Beta2}(\mu, \kappa)
+  \end{aligned}
+\]</span> Prior: <span class="math display">\[
+  \begin{aligned}
+    \mu &amp; \sim \mathrm{Beta}(1.5, 1.5) \\
+    \kappa &amp; \sim \mathrm{Gamma}(0.01, 0.01)
+  \end{aligned}
+\]</span></p>
+<h2 id="therapeutic-touch-example">Therapeutic Touch Example</h2>
+<p>See the description of the research problem from chapter 9.2.4 of the textbook.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>4</span><span class='op'>)</span>
-<span class='va'>truly_drunk</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='st'>"drunk"</span>, <span class='fl'>100</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='st'>"sober"</span>, <span class='fl'>100</span> <span class='op'>*</span> <span class='fl'>999</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>truly_drunk</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Data file from https://github.com/boboppie/kruschke-doing_bayesian_data_analysis/blob/master/2e/TherapeuticTouchData.csv</span>
+<span class='va'>tt_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"data_files/TherapeuticTouchData.csv"</span><span class='op'>)</span>
+<span class='co'># Get aggregated data by summing the counts</span>
+<span class='va'>tt_agg</span> <span class='op'>&lt;-</span> <span class='va'>tt_dat</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>s</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span>,  <span class='co'># total number of correct</span>
+              n <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/context.html'>n</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='co'># Plot proportion correct distribution</span>
+<span class='va'>p1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>tt_agg</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>y</span> <span class='op'>/</span> <span class='va'>n</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_histogram.html'>geom_histogram</a></span><span class='op'>(</span>binwidth <span class='op'>=</span> <span class='fl'>.1</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Proportion Correct"</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt; truly_drunk
-#&gt; drunk sober 
-#&gt;   100 99900</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="hierarchical_models_files/figure-html5/p1-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<h3 id="stan-code">STAN Code</h3>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="stan"><code>data {
+  int&lt;lower=0&gt; J;         // number of clusters (e.g., studies, persons)
+  int y[J];               // number of &quot;1&quot;s in each cluster
+  int N[J];               // sample size for each cluster
+}
+parameters {
+  vector&lt;lower=0, upper=1&gt;[J] theta;   // cluster-specific probabilities
+  real&lt;lower=0, upper=1&gt; mu;     // overall mean probability
+  real&lt;lower=0&gt; kappa;           // overall concentration
+}
+model {
+  y ~ binomial(N, theta);              // each observation is binomial
+  theta ~ beta_proportion(mu, kappa);  // prior; Beta2 dist
+  mu ~ beta(1.5, 1.5);           // weak prior
+  kappa ~ gamma(.01, .01);       // prior recommended by Kruschke
+}</code></pre>
+</div>
+<h3 id="prior-predictive">Prior predictive</h3>
+<p>You can use Stan to sample the prior by commenting out the model line; here I show how to do it in R:</p>
+<div class="layout-chunk" data-layout="l-body-outset">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>breathalyzer_test</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>truly_drunk</span> <span class='op'>==</span> <span class='st'>"drunk"</span>,
-    <span class='co'># If drunk, 100% chance of showing positive</span>
-    <span class='st'>"positive"</span>,
-    <span class='co'># If not drunk, 1% chance of showing positive</span>
-    <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"positive"</span>, <span class='st'>"negative"</span><span class='op'>)</span>, <span class='fl'>999000</span>,
-        replace <span class='op'>=</span> <span class='cn'>TRUE</span>, prob <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.01</span>, <span class='fl'>.99</span><span class='op'>)</span>
-    <span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1706</span><span class='op'>)</span>
+<span class='va'>plist</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/vector.html'>vector</a></span><span class='op'>(</span><span class='st'>"list"</span>, <span class='fl'>12L</span><span class='op'>)</span>
+<span class='va'>plist</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>p1</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Observed data"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>axis.title.x <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"red"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>num_subjects</span> <span class='op'>&lt;-</span> <span class='fl'>28</span>
+<span class='kw'>for</span> <span class='op'>(</span><span class='va'>s</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>11</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='co'># Get prior values of mu and kappa</span>
+    <span class='va'>mu_s</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>rbeta</a></span><span class='op'>(</span><span class='fl'>1</span>, shape1 <span class='op'>=</span> <span class='fl'>1.5</span>, shape2 <span class='op'>=</span> <span class='fl'>1.5</span><span class='op'>)</span>
+    <span class='va'>kappa_s</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/GammaDist.html'>rgamma</a></span><span class='op'>(</span><span class='fl'>1</span>, shape <span class='op'>=</span> <span class='fl'>0.01</span>, rate <span class='op'>=</span> <span class='fl'>0.01</span><span class='op'>)</span>
+    <span class='co'># Generate theta</span>
+    <span class='va'>theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Beta.html'>rbeta</a></span><span class='op'>(</span><span class='va'>num_subjects</span>,
+                   shape1 <span class='op'>=</span> <span class='va'>mu_s</span> <span class='op'>*</span> <span class='va'>kappa_s</span>, shape2 <span class='op'>=</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>mu_s</span><span class='op'>)</span> <span class='op'>*</span> <span class='va'>kappa_s</span><span class='op'>)</span>
+    <span class='co'># Generate data</span>
+    <span class='va'>new_y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>rbinom</a></span><span class='op'>(</span><span class='va'>num_subjects</span>, size <span class='op'>=</span> <span class='va'>tt_agg</span><span class='op'>$</span><span class='va'>n</span>, prob <span class='op'>=</span> <span class='va'>theta</span><span class='op'>)</span>
+    <span class='va'>plist</span><span class='op'>[[</span><span class='va'>s</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span>
+        <span class='va'>p1</span> <span class='op'><a href='https://ggplot2.tidyverse.org/reference/gg-add.html'>%+%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span><span class='va'>tt_agg</span>, y <span class='op'>=</span> <span class='va'>new_y</span><span class='op'>)</span> <span class='op'>+</span>
+        <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"Simulated data"</span>, <span class='va'>s</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+        <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>axis.title.x <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"black"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='fu'>gridExtra</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html'>grid.arrange</a></span><span class='op'>(</span>grobs <span class='op'>=</span> <span class='va'>plist</span>, nrow <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="hierarchical_models_files/figure-html5/ppc-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<p>The prior on <span class="math inline">\(\kappa\)</span> is actually not very realistic because it tends to push the bias to either 0 or 1. Using something like Gamma(0.1, 0.1) or Gamma(2, 0.01) may be a bit more reasonable (you can try it out yourself).</p>
+<h3 id="calling-rstan">Calling <code>rstan</code></h3>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>tt_fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
+    file <span class='op'>=</span> <span class='st'>"slides/stan/hierarchical_bin.stan"</span>,
+    data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>J <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>tt_agg</span><span class='op'>)</span>,
+                y <span class='op'>=</span> <span class='va'>tt_agg</span><span class='op'>$</span><span class='va'>y</span>,
+                N <span class='op'>=</span> <span class='va'>tt_agg</span><span class='op'>$</span><span class='va'>n</span><span class='op'>)</span>,
+    seed <span class='op'>=</span> <span class='fl'>1716</span>,  <span class='co'># for reproducibility</span>
+    chains <span class='op'>=</span> <span class='fl'>4</span>,
+    iter <span class='op'>=</span> <span class='fl'>4000</span>,  <span class='co'># default gives warning saying iter needs to be higher</span>
+    <span class='co'># may need higher adapt_delta (default = .8) for hierarchical models</span>
+    control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>adapt_delta <span class='op'>=</span> <span class='fl'>0.8</span><span class='op'>)</span>
 <span class='op'>)</span>
-<span class='co'># Check the probability p(positive | sober)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>breathalyzer_test</span><span class='op'>[</span><span class='va'>truly_drunk</span> <span class='op'>==</span> <span class='st'>"sober"</span><span class='op'>]</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; 
-#&gt; negative positive 
-#&gt;    98903      997</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 997 / 99900 = 0.00997998, so the error rate is less than 1%</span>
-<span class='co'># Now, Check the probability p(drunk | positive)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>truly_drunk</span><span class='op'>[</span><span class='va'>breathalyzer_test</span> <span class='op'>==</span> <span class='st'>"positive"</span><span class='op'>]</span><span class='op'>)</span>
-</code></pre>
-</div>
-<pre><code>#&gt; 
-#&gt; drunk sober 
-#&gt;   100   997</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 100 / (100 + 997) = 0.0911577, which is only 9.1%!</span>
 </code></pre>
 </div>
 </div>
-<hr />
-<h1 id="bayesian-statistics">Bayesian Statistics</h1>
-<p><code>Bayesian statistics</code> is a way to estimate some parameter <span class="math inline">\(\theta\)</span> (i.e., some quantities of interest, such as the population mean, regression coefficient, etc) by applying the Bayes’ Theorem. &gt; <span class="math display">\[P(\theta | D) \propto P(D | \theta) P(\theta)\]</span></p>
-<p>There are three components in the above equality:</p>
-<ul>
-<li><span class="math inline">\(P(D | \theta)\)</span>, the probability that you observe data <span class="math inline">\(D\)</span>, given the parameter <span class="math inline">\(\theta\)</span>; this is called the <code>likelihood</code> (Note: It is the likelihood of <span class="math inline">\(\theta\)</span>, but probability about <span class="math inline">\(y\)</span>)</li>
-<li><span class="math inline">\(P(\theta)\)</span>, the probability distribution <span class="math inline">\(\theta\)</span>, without referring to the data <span class="math inline">\(D\)</span>. This usually requires appeals to one’s degree of belief, and so is called the <code>prior</code></li>
-<li><span class="math inline">\(P(\theta | y)\)</span>, the updated probability distribution of <span class="math inline">\(\theta\)</span>, after observing the data <span class="math inline">\(D\)</span>; this is called the <code>posterior</code></li>
-</ul>
-<p>On the other hand, classical/frequentist statistics focuses solely on the likelihood function.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> In Bayesian statistics, the goal is to update one’s belief about <span class="math inline">\(\theta\)</span> based on the observed data <span class="math inline">\(D\)</span>.</p>
-<hr />
-<h2 id="example-2-locating-a-plane">Example 2: Locating a Plane</h2>
-<p>Consider a highly simplified scenario of locating a missing plane in the sea. Assume that we know the plane, before missing, happened to be flying on the same latitude, heading west across the Pacific, so we only need to find the longitude of it. We want to go out to collect debris (data) so that we can narrow the location (<span class="math inline">\(\theta\)</span>) of the plane down.</p>
-<p>We start with our prior. Assume that we have some rough idea that the plane should be, so we express our belief in a probability distribution like the following:</p>
-<div class="layout-chunk" data-layout="l-body">
-<p><img src="bayes_rule_files/figure-html5/unnamed-chunk-1-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<p>which says that our belief is that the plane is about twice more likely to be towards the east than towards the west. Below are two other options for priors (out of infinitely many), one providing virtually no information and the other encoding stronger information:</p>
-<div class="layout-chunk" data-layout="l-body">
-<p><img src="bayes_rule_files/figure-html5/unnamed-chunk-2-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<p>The prior is chosen to reflect the researcher’s belief, so it is likely that different researchers will formulate a different prior for the same problem, and that’s okay as long as the prior is reasonable and justified. Later we will learn that in regular Bayesian analyses, with moderate sample size, different priors generally make only negligible differences.</p>
-<p>Now, assume that we have collected debris in the locations shown in the graph,</p>
-<div class="layout-chunk" data-layout="l-body">
-<p><img src="bayes_rule_files/figure-html5/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<p>Now, from Bayes’s Theorem,</p>
-<p><span class="math display">\[\text{Posterior Probability} \propto \text{Prior Probability} \times
-                                       \text{Likelihood}\]</span></p>
-<p>So we can simply multiply the prior probabilities and the likelihood to get the posterior probability for every location. A rescaling step is needed to ensure that the area under the curve will be 1, which is usually performed by the software.</p>
-<div class="layout-chunk" data-layout="l-body">
-<p><img src="bayes_rule_files/figure-html5/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<h3 id="influence-of-prior">Influence of Prior</h3>
-<p>The following shows what happen with a stronger prior:</p>
-<div class="layout-chunk" data-layout="l-body">
-<p><img src="bayes_rule_files/figure-html5/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<h3 id="influence-of-more-data">Influence of More Data</h3>
-<p>The following shows what happen with 20 more data points:</p>
-<div class="layout-chunk" data-layout="l-body">
-<p><img src="bayes_rule_files/figure-html5/unnamed-chunk-6-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<hr />
-<h2 id="data-order-invariance">Data-Order Invariance</h2>
-<p>In many data analysis applications, researchers collect some data <span class="math inline">\(D_1\)</span>, and then collect some more data <span class="math inline">\(D_2\)</span>. An example would be researchers conducting two separate experiments to study the same research question. In Bayesian statistics, one can consider three ways to obtain the posterior:</p>
-<ol type="1">
-<li>Update the belief with <span class="math inline">\(D_1\)</span>, and then with <span class="math inline">\(D_2\)</span></li>
-<li>Update the belief with <span class="math inline">\(D_2\)</span>, and then with <span class="math inline">\(D_1\)</span></li>
-<li>Update the belief with both <span class="math inline">\(D_1\)</span> and <span class="math inline">\(D_2\)</span> simultaneously</li>
-</ol>
-<p>Whether these three ways give the same posterior depends on whether <strong>data-order invariance</strong> holds. If the inference of <span class="math inline">\(D_1\)</span> does not depend on <span class="math inline">\(D_2\)</span>, or vice versa, then all three ways lead to the same posterior. Specifically, if we have <strong>conditional independence</strong> such that <span class="math display">\[P(D_1, D_2 \mid \theta) = P(D_1 \mid \theta) P(D_2 \mid \theta),\]</span> then one can show all three ways give the same posterior (see p. 108 of Kruschke, 2015).</p>
-<h3 id="exchangeability">Exchangeability*</h3>
-<p>Exchangeability is an important concept in Bayesian statistics. Data are exchangeable when the joint distribution, <span class="math inline">\(P(D_1, \ldots, D_N)\)</span>, does not depend on the ordering of the data. A simple way to think about it is if you scramble the order of your outcome variable in your data set and still can obtain the same statistical results, then the data are exchangeable. An example situation where data are not exchangeable is</p>
-<ul>
-<li><span class="math inline">\(D_1\)</span> is from year 1990, <span class="math inline">\(D_2\)</span> is from year 2020, and the parameter <span class="math inline">\(\theta\)</span> changes from 1990 to 2020</li>
-</ul>
-<p>When data are exchangeable, the previously discussed conditional independence condition would generally hold.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<h2 id="bernoulli-likelihood">Bernoulli Likelihood</h2>
-<p>For binary data <span class="math inline">\(y\)</span> (e.g., coin flip, pass/fail, diagnosed/not), an intuitive way to analyze is to use a Bernoulli model: <span class="math display">\[
-  \begin{aligned}
-    P(y = 1 \mid \theta) = \theta \\
-    P(y = 0 \mid \theta) = 1 - \theta
-  \end{aligned},
-\]</span> which is more compactly written as <span class="math display">\[P(y \mid \theta) = \theta^y (1 - \theta)^{(1 - y)},\]</span> where <span class="math inline">\(\theta \in [0, 1]\)</span> is the probability of a “1”. You can verify that the compact form is the same as the longer form.</p>
-<h3 id="multiple-observations">Multiple Observations</h3>
-<p>When there are more than one <span class="math inline">\(y\)</span>, say <span class="math inline">\(y_1, \ldots, y_N\)</span>, that are conditionally independent, we have <span class="math display">\[
-  \begin{aligned}
-    P(y_1, \ldots, y_N \mid \theta) &amp; = \prod_{i = 1}^N P(y_i \mid \theta) \\
-    &amp; = \theta^{\sum_{i = 1}^N y_i} (1 - \theta)^{\sum_{i = 1}^N (1 - y_i)} \\
-    &amp; = \theta^z (1 - \theta)^{N - z}
-  \end{aligned},
-\]</span> where <span class="math inline">\(z\)</span> is the number of “1”s (e.g., number of heads in coin flips). Note that the likelihood only depends on <span class="math inline">\(z\)</span>, not the individual <span class="math inline">\(y\)</span>s. In other words, the likelihood is the same as long as there are <span class="math inline">\(z\)</span> heads, regardless of when those heads occur.</p>
-<p>Let’s say <span class="math inline">\(N\)</span> = 4 and <span class="math inline">\(z\)</span> = 1. We can plot the likelihood in R:</p>
+<p>You can explore the convergence and posterior distributions using the <code>shinystan</code> package</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Write the likelihood as a function of theta</span>
-<span class='va'>lik</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>th</span>, <span class='va'>num_flips</span> <span class='op'>=</span> <span class='fl'>4</span>, <span class='va'>num_heads</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>{</span>
-    <span class='va'>th</span> <span class='op'>^</span> <span class='va'>num_heads</span> <span class='op'>*</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>th</span><span class='op'>)</span> <span class='op'>^</span> <span class='op'>(</span><span class='va'>num_flips</span> <span class='op'>-</span> <span class='va'>num_heads</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='co'># Likelihood of theta = 0.5</span>
-<span class='fu'>lik</span><span class='op'>(</span><span class='fl'>0.5</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://mc-stan.org/shinystan/reference/launch_shinystan.html'>launch_shinystan</a></span><span class='op'>(</span><span class='va'>tt_fit</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt; [1] 0.0625</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Plot the likelihood</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>th <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='co'># `stat_function` for plotting a function</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_function.html'>stat_function</a></span><span class='op'>(</span>fun <span class='op'>=</span> <span class='va'>lik</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='co'># use `expression()` to get greek letters</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span>,
-    y <span class='op'>=</span> <span class='st'>"Likelihood with N = 4 and z = 1"</span><span class='op'>)</span>
-</code></pre>
 </div>
-<p><img src="bayes_rule_files/figure-html5/lik-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<h2 id="setting-priors">Setting Priors</h2>
-<p>Remember again the relationship between the prior and the posterior: <span class="math display">\[P(\theta | y) \propto P(y | \theta) P(\theta)\]</span> The posterior distributions are mathematically determined once the priors and the likelihood are set. However, the mathematical form of the posterior is sometimes very difficult to deal with.</p>
-<p>One straight forward, brute-force method is to discretize the parameter space into a number of points. For example, by taking <span class="math inline">\(\theta\)</span> = 0, 0.05, 0.10, . . . , 0.90, 0.95, 1.00, one can evaluate the posterior at these 21 <strong>grid points</strong>.</p>
-<p>Let’s use a prior that peaks at 0.5 and linearly decreases to both sides. I assume that <span class="math inline">\(\theta\)</span> = 0.5 is twice as likely as <span class="math inline">\(\theta = 0.25\)</span> or <span class="math inline">\(\theta = 0.75\)</span> to reflect my belief that the coin is more likely to be fair.</p>
+<h3 id="table-of-coefficients">Table of coefficients</h3>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Define a grid for the parameter</span>
-<span class='va'>grid_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>th <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span>, by <span class='op'>=</span> <span class='fl'>0.05</span><span class='op'>)</span><span class='op'>)</span>
-<span class='co'># Set the prior mass for each value on the grid</span>
-<span class='va'>grid_df</span><span class='op'>$</span><span class='va'>pth</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>10</span>, <span class='fl'>9</span><span class='op'>:</span><span class='fl'>0</span><span class='op'>)</span>  <span class='co'># linearly increasing, then decreasing</span>
-<span class='co'># Convert pth to a proper distribution such that the value</span>
-<span class='co'># sum to one</span>
-<span class='va'>grid_df</span><span class='op'>$</span><span class='va'>pth</span> <span class='op'>&lt;-</span> <span class='va'>grid_df</span><span class='op'>$</span><span class='va'>pth</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>grid_df</span><span class='op'>$</span><span class='va'>pth</span><span class='op'>)</span>
-<span class='co'># Plot the prior</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>grid_df</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span>, y <span class='op'>=</span> <span class='va'>pth</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span>, y <span class='op'>=</span> <span class='va'>pth</span><span class='op'>)</span>,
-        width <span class='op'>=</span> <span class='fl'>0.01</span>,
-    <span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='fu'>P</span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span><span class='op'>)</span>, x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span><span class='op'>)</span>
-</code></pre>
-</div>
-<p><img src="bayes_rule_files/figure-html5/grid_df-prior-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<p>Note the line <code>grid_df$pth &lt;- grid_df$pth / sum(grid_df$pth)</code>, which ensures that the probability values sum to one. This is a trick we will use to obtain the posterior probability.</p>
-<h3 id="prior-predictive-distribution">Prior Predictive Distribution</h3>
-<p>One way to check whether the prior is appropriate is to use the <strong>prior predictive distribution</strong>. Bayesian models are <strong>generative</strong> in the sense that they can be used to simulate data. The prior predictive distribution can be obtained by first simulating some <span class="math inline">\(\theta\)</span> values from the prior distribution and then simulating a data set for each <span class="math inline">\(\theta\)</span>.</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Draw one theta</span>
-<span class='va'>num_trials</span> <span class='op'>&lt;-</span> <span class='fl'>4</span>  <span class='co'># number of draws</span>
-<span class='va'>sim_th1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='va'>grid_df</span><span class='op'>$</span><span class='va'>th</span>, size <span class='op'>=</span> <span class='fl'>1</span>,
-                  <span class='co'># based on prior probability</span>
-                  prob <span class='op'>=</span> <span class='va'>grid_df</span><span class='op'>$</span><span class='va'>pth</span><span class='op'>)</span>
-<span class='co'># Simulate new data of four flips based on model</span>
-<span class='va'>sim_y1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>rbinom</a></span><span class='op'>(</span><span class='va'>num_trials</span>, size <span class='op'>=</span> <span class='fl'>1</span>, prob <span class='op'>=</span> <span class='va'>sim_th1</span><span class='op'>)</span>
-
-<span class='co'># Repeat many times</span>
-<span class='co'># Set number of simulation draws</span>
-<span class='va'>num_draws</span> <span class='op'>&lt;-</span> <span class='fl'>1000</span>
-<span class='va'>sim_th</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='va'>grid_df</span><span class='op'>$</span><span class='va'>th</span>, size <span class='op'>=</span> <span class='va'>num_draws</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                 <span class='co'># based on prior probability</span>
-                 prob <span class='op'>=</span> <span class='va'>grid_df</span><span class='op'>$</span><span class='va'>pth</span><span class='op'>)</span>
-<span class='co'># Use a for loop</span>
-<span class='co'># Initialize output</span>
-<span class='va'>sim_y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='cn'>NA</span>, nrow <span class='op'>=</span> <span class='va'>num_trials</span>, ncol <span class='op'>=</span> <span class='va'>num_draws</span><span class='op'>)</span>
-<span class='kw'>for</span> <span class='op'>(</span><span class='va'>s</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_len</a></span><span class='op'>(</span><span class='va'>num_draws</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
-    <span class='co'># Store simulated data in the sth column</span>
-    <span class='va'>sim_y</span><span class='op'>[</span>, <span class='va'>s</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>rbinom</a></span><span class='op'>(</span><span class='va'>num_trials</span>, size <span class='op'>=</span> <span class='fl'>1</span>, prob <span class='op'>=</span> <span class='va'>sim_th</span><span class='op'>[</span><span class='va'>s</span><span class='op'>]</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='co'># Show the first 10 simulated data sets based on prior:</span>
-<span class='va'>sim_y</span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>
-</code></pre>
-</div>
-<pre><code>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-#&gt; [1,]    1    0    0    1    0    1    0    0    0     1
-#&gt; [2,]    0    0    0    1    1    0    1    0    1     1
-#&gt; [3,]    1    0    0    1    0    0    0    1    1     1
-#&gt; [4,]    1    0    1    1    1    0    0    1    1     0</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Show the distribution of number of heads</span>
-<span class='va'>sim_heads</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>colSums</a></span><span class='op'>(</span><span class='va'>sim_y</span><span class='op'>)</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>z <span class='op'>=</span> <span class='va'>sim_heads</span><span class='op'>)</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>z</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_bar</a></span><span class='op'>(</span><span class='op'>)</span>
-</code></pre>
-</div>
-<p><img src="bayes_rule_files/figure-html5/prior-predictive-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<p>The outcome seems to fit our intuition that it’s more likely to be half heads and half tails, but there is a lot of uncertainty.</p>
-<h2 id="summarizing-the-posterior">Summarizing the Posterior</h2>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>grid_df</span> <span class='op'>&lt;-</span> <span class='va'>grid_df</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
-        <span class='co'># Use our previously defined lik() function</span>
-        py_th <span class='op'>=</span> <span class='fu'>lik</span><span class='op'>(</span><span class='va'>th</span>, num_flips <span class='op'>=</span> <span class='fl'>4</span>, num_heads <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>,
-        <span class='co'># Product of prior and likelihood</span>
-        `prior x lik` <span class='op'>=</span> <span class='va'>pth</span> <span class='op'>*</span> <span class='va'>py_th</span>,
-        <span class='co'># Scaled the posterior</span>
-        pth_y <span class='op'>=</span> <span class='va'>`prior x lik`</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>`prior x lik`</span><span class='op'>)</span>
-    <span class='op'>)</span>
-<span class='co'># Print a table</span>
-<span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>grid_df</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>tt_fit</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Convert to `draws` object to work with the `posterior` package</span>
+    <span class='fu'><a href='https://mc-stan.org/posterior/reference/draws.html'>as_draws</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Get summary</span>
+    <span class='fu'><a href='https://mc-stan.org/posterior/reference/draws_summary.html'>summarize_draws</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Use `knitr::kable()` for tabulation</span>
+    <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span>digits <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
 </code></pre>
 </div>
 <table>
 <thead>
 <tr class="header">
-<th style="text-align: right;">th</th>
-<th style="text-align: right;">pth</th>
-<th style="text-align: right;">py_th</th>
-<th style="text-align: right;">prior x lik</th>
-<th style="text-align: right;">pth_y</th>
+<th style="text-align: left;">variable</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">median</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">mad</th>
+<th style="text-align: right;">q5</th>
+<th style="text-align: right;">q95</th>
+<th style="text-align: right;">rhat</th>
+<th style="text-align: right;">ess_bulk</th>
+<th style="text-align: right;">ess_tail</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
+<td style="text-align: left;">theta[1]</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.22</td>
+<td style="text-align: right;">0.49</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">2053.33</td>
+<td style="text-align: right;">3524.75</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">0.05</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">0.0428687</td>
-<td style="text-align: right;">0.0004287</td>
-<td style="text-align: right;">0.0073359</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.10</td>
-<td style="text-align: right;">0.02</td>
-<td style="text-align: right;">0.0729000</td>
-<td style="text-align: right;">0.0014580</td>
-<td style="text-align: right;">0.0249500</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.15</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">0.0921188</td>
-<td style="text-align: right;">0.0027636</td>
-<td style="text-align: right;">0.0472914</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.20</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">0.1024000</td>
-<td style="text-align: right;">0.0040960</td>
-<td style="text-align: right;">0.0700927</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.05</td>
-<td style="text-align: right;">0.1054688</td>
-<td style="text-align: right;">0.0052734</td>
-<td style="text-align: right;">0.0902416</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.30</td>
-<td style="text-align: right;">0.06</td>
-<td style="text-align: right;">0.1029000</td>
-<td style="text-align: right;">0.0061740</td>
-<td style="text-align: right;">0.1056525</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.35</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.0961187</td>
-<td style="text-align: right;">0.0067283</td>
-<td style="text-align: right;">0.1151381</td>
-</tr>
-<tr class="odd">
+<td style="text-align: left;">theta[2]</td>
+<td style="text-align: right;">0.39</td>
 <td style="text-align: right;">0.40</td>
 <td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.0864000</td>
-<td style="text-align: right;">0.0069120</td>
-<td style="text-align: right;">0.1182815</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.09</td>
-<td style="text-align: right;">0.0748688</td>
-<td style="text-align: right;">0.0067382</td>
-<td style="text-align: right;">0.1153071</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.50</td>
-<td style="text-align: right;">0.10</td>
-<td style="text-align: right;">0.0625000</td>
-<td style="text-align: right;">0.0062500</td>
-<td style="text-align: right;">0.1069530</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.55</td>
-<td style="text-align: right;">0.09</td>
-<td style="text-align: right;">0.0501187</td>
-<td style="text-align: right;">0.0045107</td>
-<td style="text-align: right;">0.0771891</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.60</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.0384000</td>
-<td style="text-align: right;">0.0030720</td>
-<td style="text-align: right;">0.0525695</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.65</td>
 <td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.0278687</td>
-<td style="text-align: right;">0.0019508</td>
-<td style="text-align: right;">0.0333832</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.70</td>
-<td style="text-align: right;">0.06</td>
-<td style="text-align: right;">0.0189000</td>
-<td style="text-align: right;">0.0011340</td>
-<td style="text-align: right;">0.0194056</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.75</td>
-<td style="text-align: right;">0.05</td>
-<td style="text-align: right;">0.0117188</td>
-<td style="text-align: right;">0.0005859</td>
-<td style="text-align: right;">0.0100268</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.80</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">0.0064000</td>
-<td style="text-align: right;">0.0002560</td>
-<td style="text-align: right;">0.0043808</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.85</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">0.0028687</td>
-<td style="text-align: right;">0.0000861</td>
-<td style="text-align: right;">0.0014727</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.90</td>
-<td style="text-align: right;">0.02</td>
-<td style="text-align: right;">0.0009000</td>
-<td style="text-align: right;">0.0000180</td>
-<td style="text-align: right;">0.0003080</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">0.0001187</td>
-<td style="text-align: right;">0.0000012</td>
-<td style="text-align: right;">0.0000203</td>
-</tr>
-<tr class="odd">
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.51</td>
 <td style="text-align: right;">1.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">2511.75</td>
+<td style="text-align: right;">3398.59</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[3]</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">4815.11</td>
+<td style="text-align: right;">4070.49</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[4]</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.42</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">4101.83</td>
+<td style="text-align: right;">4049.36</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[5]</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.54</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">4772.51</td>
+<td style="text-align: right;">3885.97</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[6]</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">4047.04</td>
+<td style="text-align: right;">3824.50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[7]</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">4640.84</td>
+<td style="text-align: right;">4110.38</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[8]</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.42</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">5153.56</td>
+<td style="text-align: right;">3501.47</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[9]</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.42</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">4419.30</td>
+<td style="text-align: right;">3629.47</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[10]</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.42</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">4456.35</td>
+<td style="text-align: right;">4172.13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[11]</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">5807.17</td>
+<td style="text-align: right;">4867.03</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[12]</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">6574.03</td>
+<td style="text-align: right;">4769.95</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[13]</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0.55</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">5961.52</td>
+<td style="text-align: right;">5136.70</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[14]</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">6730.63</td>
+<td style="text-align: right;">4665.01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[15]</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">6650.31</td>
+<td style="text-align: right;">4776.49</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[16]</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">5540.38</td>
+<td style="text-align: right;">4309.31</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[17]</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">5923.26</td>
+<td style="text-align: right;">4321.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[18]</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.59</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">5847.91</td>
+<td style="text-align: right;">4571.55</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[19]</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">6091.28</td>
+<td style="text-align: right;">4497.21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[20]</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.34</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">5986.57</td>
+<td style="text-align: right;">5008.05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[21]</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.34</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">5802.48</td>
+<td style="text-align: right;">4252.67</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[22]</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">6348.07</td>
+<td style="text-align: right;">4875.46</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[23]</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">0.62</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">4740.90</td>
+<td style="text-align: right;">3684.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[24]</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">0.61</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">4619.95</td>
+<td style="text-align: right;">3751.58</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[25]</td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">0.49</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">3260.56</td>
+<td style="text-align: right;">4164.74</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[26]</td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">0.49</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">3150.89</td>
+<td style="text-align: right;">3983.83</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">theta[27]</td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">0.49</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">3107.08</td>
+<td style="text-align: right;">4280.18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theta[28]</td>
+<td style="text-align: right;">0.52</td>
+<td style="text-align: right;">0.51</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">2300.07</td>
+<td style="text-align: right;">3538.60</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mu</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1982.77</td>
+<td style="text-align: right;">3741.91</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">kappa</td>
+<td style="text-align: right;">64.85</td>
+<td style="text-align: right;">42.77</td>
+<td style="text-align: right;">65.48</td>
+<td style="text-align: right;">33.83</td>
+<td style="text-align: right;">12.37</td>
+<td style="text-align: right;">189.87</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">614.23</td>
+<td style="text-align: right;">1036.57</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lp__</td>
+<td style="text-align: right;">-198.32</td>
+<td style="text-align: right;">-198.72</td>
+<td style="text-align: right;">10.33</td>
+<td style="text-align: right;">10.87</td>
+<td style="text-align: right;">-214.29</td>
+<td style="text-align: right;">-180.15</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">550.59</td>
+<td style="text-align: right;">935.98</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Plot the prior/likelihood and the posterior</span>
-<span class='va'>p1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>grid_df</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span> <span class='op'>-</span> <span class='fl'>0.005</span>, y <span class='op'>=</span> <span class='va'>pth</span>, fill <span class='op'>=</span> <span class='st'>"prior"</span><span class='op'>)</span>,
-        width <span class='op'>=</span> <span class='fl'>0.01</span>,
-    <span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span> <span class='op'>+</span> <span class='fl'>0.005</span>, y <span class='op'>=</span> <span class='va'>py_th</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>py_th</span><span class='op'>)</span>,
-        fill <span class='op'>=</span> <span class='st'>"scaled likelihood"</span><span class='op'>)</span>, width <span class='op'>=</span> <span class='fl'>0.01</span>,
-    <span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>fill <span class='op'>=</span> <span class='cn'>NULL</span>, y <span class='op'>=</span> <span class='cn'>NULL</span>, x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position <span class='op'>=</span> <span class='st'>"top"</span><span class='op'>)</span>
-<span class='va'>p2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>grid_df</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span>, y <span class='op'>=</span> <span class='va'>pth_y</span><span class='op'>)</span>, width <span class='op'>=</span> <span class='fl'>0.01</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>
-        fill <span class='op'>=</span> <span class='cn'>NULL</span>, y <span class='op'>=</span> <span class='cn'>NULL</span>, title <span class='op'>=</span> <span class='st'>"Posterior"</span>,
-        x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span>
-    <span class='op'>)</span>
-<span class='fu'>gridExtra</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html'>grid.arrange</a></span><span class='op'>(</span><span class='va'>p1</span>, <span class='va'>p2</span><span class='op'>)</span>
-</code></pre>
 </div>
-<p><img src="bayes_rule_files/figure-html5/grid_df-post-1.png" width="70%" style="display: block; margin: auto;" /></p>
-</div>
-<p>The second graph above shows the posterior distribution, which represents our updated belief about <span class="math inline">\(\theta\)</span>. We can summarize it by simulating <span class="math inline">\(\theta\)</span> values from it and compute summary statistics:</p>
+<h3 id="derived-coefficients">Derived coefficients</h3>
+<p>One nice thing about MCMC is that it is straightforward to obtain posterior distributions that are functions of the parameters. For example, even though we only sampled from the posteriors of the <span class="math inline">\(\theta\)</span>s, we can ask questions like whether there is evidence for a nonzero <em>difference</em> in <span class="math inline">\(\theta\)</span> between person 1 and person 28.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Define a function for computing posterior summary</span>
-<span class='va'>summ_draw</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>{</span>
-    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
-        mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
-        median <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/median.html'>median</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
-        sd <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
-        mad <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/mad.html'>mad</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
-        `ci.1` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/quantile.html'>quantile</a></span><span class='op'>(</span><span class='va'>x</span>, prob <span class='op'>=</span> <span class='fl'>.1</span>, names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>,
-        `ci.9` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/quantile.html'>quantile</a></span><span class='op'>(</span><span class='va'>x</span>, prob <span class='op'>=</span> <span class='fl'>.9</span>, names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-    <span class='op'>)</span>
-<span class='op'>}</span>
-<span class='co'># Sample from the posterior</span>
-<span class='va'>post_samples</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span>
-    <span class='va'>grid_df</span><span class='op'>$</span><span class='va'>th</span>,
-    size <span class='op'>=</span> <span class='fl'>1000</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span>,
-    prob <span class='op'>=</span> <span class='va'>grid_df</span><span class='op'>$</span><span class='va'>pth_y</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://mc-stan.org/posterior/reference/draws_df.html'>as_draws_df</a></span><span class='op'>(</span><span class='va'>tt_fit</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://mc-stan.org/posterior/reference/mutate_variables.html'>mutate_variables</a></span><span class='op'>(</span>
+        theta1_minus14 <span class='op'>=</span> <span class='va'>`theta[1]`</span> <span class='op'>-</span> <span class='va'>`theta[14]`</span>,
+        theta1_minus28 <span class='op'>=</span> <span class='va'>`theta[1]`</span> <span class='op'>-</span> <span class='va'>`theta[28]`</span>,
+        theta14_minus28 <span class='op'>=</span> <span class='va'>`theta[14]`</span> <span class='op'>-</span> <span class='va'>`theta[28]`</span>
+    <span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span>variable <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"theta1_minus14"</span>, <span class='st'>"theta1_minus28"</span>,
+                        <span class='st'>"theta14_minus28"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://mc-stan.org/posterior/reference/draws_summary.html'>summarise_draws</a></span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>#&gt; # A tibble: 3 × 10
+#&gt;   variable      mean  median    sd    mad     q5    q95  rhat ess_bulk
+#&gt;   &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+#&gt; 1 theta1_mi… -0.0646 -0.0550 0.105 0.0963 -0.251 0.0883  1.00    4669.
+#&gt; 2 theta1_mi… -0.148  -0.126  0.133 0.123  -0.398 0.0280  1.00    1532.
+#&gt; 3 theta14_m… -0.0836 -0.0697 0.112 0.103  -0.289 0.0760  1.00    3427.
+#&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
+</div>
+<h3 id="conclusion">Conclusion</h3>
+<p>As 0.5 is included in the 95% CI of <span class="math inline">\(\theta\)</span> for all participants, there is insufficient evidence that people can sense “therapeutic touch.”</p>
+<h2 id="shrinkage">Shrinkage</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://mc-stan.org/bayesplot/reference/MCMC-intervals.html'>mcmc_intervals</a></span><span class='op'>(</span><span class='va'>tt_fit</span>,
+               <span class='co'># plot only parameters matching "theta"</span>
+               regex_pars <span class='op'>=</span> <span class='st'>"theta"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>
+        data <span class='op'>=</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>
+            parameter <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"theta["</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>28</span>, <span class='st'>"]"</span><span class='op'>)</span>,
+            x <span class='op'>=</span> <span class='va'>tt_agg</span><span class='op'>$</span><span class='va'>y</span> <span class='op'>/</span> <span class='va'>tt_agg</span><span class='op'>$</span><span class='va'>n</span>
+        <span class='op'>)</span>,
+        <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>parameter</span><span class='op'>)</span>,
+        col <span class='op'>=</span> <span class='st'>"red"</span>
+    <span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/lims.html'>xlim</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="hierarchical_models_files/figure-html5/shrinkage-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<p>As can be seen, the posterior distributions are closer to the center than the data (in red). This <strong>pooling</strong> is a result of the belief that the participants have something in common.</p>
+<h3 id="multiple-comparisons">Multiple Comparisons?</h3>
+<p>Another benefit of a Bayesian hierarchical model is that <em>you don’t need to worry about multiple comparisons</em>. There are multiple angles on why this is the case, but the basic answer is that the use of common prior distributions builds in the prior belief that the clusters/groups are likely to be equal. See discussion <a href="https://statmodeling.stat.columbia.edu/2016/08/22/bayesian-inference-completely-solves-the-multiple-comparisons-problem/">here</a> and <a href="https://stats.stackexchange.com/questions/203378/why-dont-bayesian-methods-require-multiple-testing-corrections">here</a>.</p>
+<h1 id="hierarchical-normal-model">Hierarchical Normal Model</h1>
+<h2 id="eight-schools-example">Eight Schools Example</h2>
+<p>This is a classic data set first analyzed by <a href="https://journals.sagepub.com/doi/abs/10.3102/10769986006004377">Rubin (1981)</a>. It is also the example used in the <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">RStan Getting Started</a> page. The data contains the effect of coaching from randomized experiments in eight schools. The numbers shown (labelled as <code>y</code>) are the mean difference (i.e., effect size) in performance between the treatment group and the control group on SAT-V scores.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>schools_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>J <span class='op'>=</span> <span class='fl'>8</span>,
+                    y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>28</span>, <span class='fl'>8</span>, <span class='op'>-</span><span class='fl'>3</span>,  <span class='fl'>7</span>, <span class='op'>-</span><span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>18</span>, <span class='fl'>12</span><span class='op'>)</span>,
+                    sigma <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>15</span>, <span class='fl'>10</span>, <span class='fl'>16</span>, <span class='fl'>11</span>, <span class='fl'>9</span>, <span class='fl'>11</span>, <span class='fl'>10</span>, <span class='fl'>18</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+</div>
+<p>In the above data, some numbers are positive, and some are negative. Because the sample sizes are different, the data also contained the standard errors (labelled as <code>sigma</code>) of the effect sizes. Generally speaking, a larger sample size corresponds to a smaller standard error. The research question is</p>
+<blockquote>
+<ol type="1">
+<li>What is the average treatment effect of coaching?</li>
+<li>Are the treatment effects similar across schools?</li>
+</ol>
+</blockquote>
+<h2 id="model">Model</h2>
+<p>Model: <span class="math display">\[
+  \begin{aligned}
+    d_j &amp; \sim N(\theta_j, s_j) \\
+    \theta_j &amp; \sim N(\mu, \tau)
+  \end{aligned}
+\]</span> Prior: <span class="math display">\[
+  \begin{aligned}
+    \mu &amp; \sim N(0, 100) \\
+    \tau &amp; \sim t^+_4(0, 100)
+  \end{aligned}
+\]</span></p>
+<p>Given the SAT score range, it is unlikely that a coaching program will improve scores by 100 or so, so we use a prior of <span class="math inline">\(\mu \sim N(0, 100)\)</span> and <span class="math inline">\(\tau \sim t^+_4(0, 100)\)</span>.</p>
+<p>Note: The model above is the same as one used in a <em>random-effect meta-analysis</em>. See <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/jrsm.12">this paper</a> for an introduction.</p>
+<h2 id="non-centered-parameterization">Non-Centered Parameterization</h2>
+<p>The hierarchical model is known to create issues in MCMC sampling, such that the posterior draws tend to be highly correlated even with more advanced techniques like HMC. One way to alleviate that is to reparameterize the model using what is called the <strong>non-centered parameterization</strong>. The basic idea is that, instead of treating the <span class="math inline">\(\theta\)</span>s as parameters, one uses the <strong>standardized deviation</strong> from the mean to be parameters. You can think about it as converting the <span class="math inline">\(\theta\)</span>s into <span class="math inline">\(z\)</span> scores, and then sample the <span class="math inline">\(z\)</span> scores instead of the original <span class="math inline">\(\theta\)</span>s.</p>
+<p>Model: <span class="math display">\[
+  \begin{aligned}
+    d_j &amp; \sim N(\theta_j, s_j) \\
+    \theta_j &amp; = \mu + \tau \eta_j \\
+    \eta_j &amp; \sim N(0, 1)
+  \end{aligned}
+\]</span></p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="stan"><code>data {
+  int&lt;lower=0&gt; J;          // number of schools 
+  real y[J];               // estimated treatment effects
+  real&lt;lower=0&gt; sigma[J];  // s.e. of effect estimates 
+}
+parameters {
+  real mu;                 // overall mean
+  real&lt;lower=0&gt; tau;       // between-school SD
+  vector[J] eta;           // standardized deviation (z score)
+}
+transformed parameters {
+  vector[J] theta;
+  theta = mu + tau * eta;   // non-centered parameterization
+}
+model {
+  eta ~ std_normal();       // same as eta ~ normal(0, 1);
+  y ~ normal(theta, sigma);
+  // priors
+  mu ~ normal(0, 100);
+  tau ~ student_t(4, 0, 100);
+}</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
+    file <span class='op'>=</span> <span class='st'>"slides/stan/hierarchical_norm.stan"</span>,
+    data <span class='op'>=</span> <span class='va'>schools_dat</span>,
+    seed <span class='op'>=</span> <span class='fl'>1804</span>,  <span class='co'># for reproducibility</span>
+    <span class='co'># higher adapt_delta due to divergent transitions</span>
+    pars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mu"</span>, <span class='st'>"tau"</span>, <span class='st'>"theta"</span><span class='op'>)</span>,  <span class='co'># skip the etas</span>
+    control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>adapt_delta <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
 <span class='op'>)</span>
-<span class='fu'>summ_draw</span><span class='op'>(</span><span class='va'>post_samples</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt;      mean    median        sd       mad      ci.1      ci.9 
-#&gt; 0.3848000 0.4000000 0.1538429 0.1482600 0.2000000 0.6000000</code></pre>
 </div>
-<h3 id="influence-of-sample-size">Influence of Sample Size</h3>
-<p>If, instead, we have <span class="math inline">\(N\)</span> = 40 and <span class="math inline">\(z\)</span> = 10, the posterior will be more similar to the likelihood.</p>
+<p>Treatment effect estimates of individual schools (<span class="math inline">\(\theta\)</span>), average treatment effect (<span class="math inline">\(\mu\)</span>), and treatment effect heterogeneity (<span class="math inline">\(\tau\)</span>).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>grid_df2</span> <span class='op'>&lt;-</span> <span class='va'>grid_df</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
-        <span class='co'># Use our previously defined lik() function</span>
-        py_th <span class='op'>=</span> <span class='fu'>lik</span><span class='op'>(</span><span class='va'>th</span>, num_flips <span class='op'>=</span> <span class='fl'>40</span>, num_heads <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>,
-        <span class='co'># Product of prior and likelihood</span>
-        `prior x lik` <span class='op'>=</span> <span class='va'>pth</span> <span class='op'>*</span> <span class='va'>py_th</span>,
-        <span class='co'># Scaled the posterior</span>
-        pth_y <span class='op'>=</span> <span class='va'>`prior x lik`</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>`prior x lik`</span><span class='op'>)</span>
-    <span class='op'>)</span>
-<span class='co'># Plot the prior/likelihood and the posterior</span>
-<span class='va'>p1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>grid_df2</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span> <span class='op'>-</span> <span class='fl'>0.005</span>, y <span class='op'>=</span> <span class='va'>pth</span>, fill <span class='op'>=</span> <span class='st'>"prior"</span><span class='op'>)</span>,
-        width <span class='op'>=</span> <span class='fl'>0.01</span>,
-    <span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span> <span class='op'>+</span> <span class='fl'>0.005</span>, y <span class='op'>=</span> <span class='va'>py_th</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>py_th</span><span class='op'>)</span>,
-        fill <span class='op'>=</span> <span class='st'>"scaled likelihood"</span><span class='op'>)</span>, width <span class='op'>=</span> <span class='fl'>0.01</span>,
-    <span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>fill <span class='op'>=</span> <span class='cn'>NULL</span>, y <span class='op'>=</span> <span class='cn'>NULL</span>, x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position <span class='op'>=</span> <span class='st'>"top"</span><span class='op'>)</span>
-<span class='va'>p2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>grid_df2</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span>, y <span class='op'>=</span> <span class='va'>pth_y</span><span class='op'>)</span>, width <span class='op'>=</span> <span class='fl'>0.01</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>
-        fill <span class='op'>=</span> <span class='cn'>NULL</span>, y <span class='op'>=</span> <span class='cn'>NULL</span>, title <span class='op'>=</span> <span class='st'>"Posterior"</span>,
-        x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span>
-    <span class='op'>)</span>
-<span class='fu'>gridExtra</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html'>grid.arrange</a></span><span class='op'>(</span><span class='va'>p1</span>, <span class='va'>p2</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>fit</span>, pars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"theta"</span>, <span class='st'>"mu"</span>, <span class='st'>"tau"</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="bayes_rule_files/figure-html5/grid_df-2-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<pre><code>#&gt; Inference for Stan model: hierarchical_norm.
+#&gt; 4 chains, each with iter=2000; warmup=1000; thin=1; 
+#&gt; post-warmup draws per chain=1000, total post-warmup draws=4000.
+#&gt; 
+#&gt;           mean se_mean   sd   2.5%  25%   50%   75% 97.5% n_eff Rhat
+#&gt; theta[1] 11.40    0.14 8.23  -1.77 5.94 10.22 15.41 31.58  3572    1
+#&gt; theta[2]  7.96    0.09 6.31  -4.29 3.97  7.97 11.87 20.68  5296    1
+#&gt; theta[3]  6.18    0.12 7.75 -11.16 2.14  6.57 10.94 20.45  4147    1
+#&gt; theta[4]  7.69    0.09 6.43  -4.91 3.69  7.66 11.66 20.83  5536    1
+#&gt; theta[5]  5.15    0.10 6.27  -8.74 1.38  5.65  9.44 16.10  3929    1
+#&gt; theta[6]  6.04    0.10 6.73  -9.24 2.29  6.37 10.33 18.24  4413    1
+#&gt; theta[7] 10.36    0.10 6.63  -1.44 5.89  9.81 14.15 25.47  4439    1
+#&gt; theta[8]  8.32    0.12 7.47  -6.83 4.05  8.08 12.53 24.24  3823    1
+#&gt; mu        7.79    0.13 5.11  -2.20 4.69  7.89 11.01 17.54  1605    1
+#&gt; tau       6.28    0.14 5.32   0.23 2.38  5.00  8.75 19.55  1436    1
+#&gt; 
+#&gt; Samples were drawn using NUTS(diag_e) at Wed Mar  2 23:00:40 2022.
+#&gt; For each parameter, n_eff is a crude measure of effective sample size,
+#&gt; and Rhat is the potential scale reduction factor on split chains (at 
+#&gt; convergence, Rhat=1).</code></pre>
 </div>
+<p>On average, based on the 95% CI, coaching seemed to improve SAT-V by -2.2 to 17.54 points. There was substantial heterogeneity across schools.</p>
+<p>We can also get the probability that the treatment effect was &gt; 0:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Sample from the posterior</span>
-<span class='va'>post_samples</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span>
-    <span class='va'>grid_df2</span><span class='op'>$</span><span class='va'>th</span>,
-    size <span class='op'>=</span> <span class='fl'>1000</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span>,
-    prob <span class='op'>=</span> <span class='va'>grid_df2</span><span class='op'>$</span><span class='va'>pth_y</span>
-<span class='op'>)</span>
-<span class='fu'>summ_draw</span><span class='op'>(</span><span class='va'>post_samples</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Obtain draws</span>
+<span class='va'>mu_draws</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>fit</span>, pars <span class='op'>=</span> <span class='st'>"mu"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>mu_draws</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt;       mean     median         sd        mad       ci.1       ci.9 
-#&gt; 0.28085000 0.30000000 0.06542215 0.07413000 0.20000000 0.35000000</code></pre>
+<pre><code>#&gt; [1] 0.94025</code></pre>
 </div>
-<h3 id="influence-of-prior-1">Influence of Prior</h3>
-<p>If we have a very strong prior concentrated at <span class="math inline">\(\theta\)</span> = .5, but still with <span class="math inline">\(N\)</span> = 40 and <span class="math inline">\(z\)</span> = 10, the posterior will be more similar to the prior.</p>
+<p>Here are the individual-school treatment effects:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>grid_df3</span> <span class='op'>&lt;-</span> <span class='va'>grid_df</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
-        <span class='co'># stronger prior</span>
-        pth <span class='op'>=</span> <span class='va'>pth</span> <span class='op'>^</span> <span class='fl'>3</span>,
-        <span class='co'># scale the prior to sume to 1</span>
-        pth <span class='op'>=</span> <span class='va'>pth</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>pth</span><span class='op'>)</span>,
-        <span class='co'># Use our previously defined lik() function</span>
-        py_th <span class='op'>=</span> <span class='fu'>lik</span><span class='op'>(</span><span class='va'>th</span>, num_flips <span class='op'>=</span> <span class='fl'>4</span>, num_heads <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>,
-        <span class='co'># Product of prior and likelihood</span>
-        `prior x lik` <span class='op'>=</span> <span class='va'>pth</span> <span class='op'>*</span> <span class='va'>py_th</span>,
-        <span class='co'># Scaled the posterior</span>
-        pth_y <span class='op'>=</span> <span class='va'>`prior x lik`</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>`prior x lik`</span><span class='op'>)</span>
-    <span class='op'>)</span>
-<span class='co'># Plot the prior/likelihood and the posterior</span>
-<span class='va'>p1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>grid_df3</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span> <span class='op'>-</span> <span class='fl'>0.005</span>, y <span class='op'>=</span> <span class='va'>pth</span>, fill <span class='op'>=</span> <span class='st'>"prior"</span><span class='op'>)</span>,
-        width <span class='op'>=</span> <span class='fl'>0.01</span>,
-    <span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span> <span class='op'>+</span> <span class='fl'>0.005</span>, y <span class='op'>=</span> <span class='va'>py_th</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>py_th</span><span class='op'>)</span>,
-        fill <span class='op'>=</span> <span class='st'>"scaled likelihood"</span><span class='op'>)</span>, width <span class='op'>=</span> <span class='fl'>0.01</span>,
-    <span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>fill <span class='op'>=</span> <span class='cn'>NULL</span>, y <span class='op'>=</span> <span class='cn'>NULL</span>, x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position <span class='op'>=</span> <span class='st'>"top"</span><span class='op'>)</span>
-<span class='va'>p2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>grid_df3</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span>, y <span class='op'>=</span> <span class='va'>pth_y</span><span class='op'>)</span>, width <span class='op'>=</span> <span class='fl'>0.01</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>
-        fill <span class='op'>=</span> <span class='cn'>NULL</span>, y <span class='op'>=</span> <span class='cn'>NULL</span>, title <span class='op'>=</span> <span class='st'>"Posterior"</span>,
-        x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span>
-    <span class='op'>)</span>
-<span class='fu'>gridExtra</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html'>grid.arrange</a></span><span class='op'>(</span><span class='va'>p1</span>, <span class='va'>p2</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://mc-stan.org/bayesplot/reference/MCMC-intervals.html'>mcmc_areas</a></span><span class='op'>(</span><span class='va'>fit</span>, regex_pars <span class='op'>=</span> <span class='st'>"theta"</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="bayes_rule_files/figure-html5/grid_df-3-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="hierarchical_models_files/figure-html5/areas-fit-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
+<h3 id="prediction-interval">Prediction Interval</h3>
+<p>Posterior distribution of the true effect size of a new study, <span class="math inline">\(\tilde \theta\)</span></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Sample from the posterior</span>
-<span class='va'>post_samples</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span>
-    <span class='va'>grid_df3</span><span class='op'>$</span><span class='va'>th</span>,
-    size <span class='op'>=</span> <span class='fl'>1000</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span>,
-    prob <span class='op'>=</span> <span class='va'>grid_df3</span><span class='op'>$</span><span class='va'>pth_y</span>
-<span class='op'>)</span>
-<span class='fu'>summ_draw</span><span class='op'>(</span><span class='va'>post_samples</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Prediction Interval (can also be done in Stan)</span>
+<span class='fu'><a href='https://mc-stan.org/rstan/reference/stanfit-method-extract.html'>extract</a></span><span class='op'>(</span><span class='va'>fit</span>, pars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mu"</span>, <span class='st'>"tau"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://mc-stan.org/posterior/reference/draws_array.html'>as_draws_array</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://mc-stan.org/posterior/reference/mutate_variables.html'>mutate_variables</a></span><span class='op'>(</span>theta_tilde <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>4000</span>, mean <span class='op'>=</span> <span class='va'>mu</span>, sd <span class='op'>=</span> <span class='va'>tau</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://mc-stan.org/posterior/reference/draws_summary.html'>summarise_draws</a></span><span class='op'>(</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt;      mean    median        sd       mad      ci.1      ci.9 
-#&gt; 0.4493000 0.4500000 0.1096656 0.0741300 0.3000000 0.6000000</code></pre>
+<pre><code>#&gt; # A tibble: 3 × 10
+#&gt;   variable     mean median    sd   mad     q5   q95  rhat ess_bulk
+#&gt;   &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+#&gt; 1 mu           7.79   7.89  5.11  4.68 -0.356  15.9  1.00    4075.
+#&gt; 2 tau          6.28   5.00  5.32  4.45  0.463  16.5  1.00    4033.
+#&gt; 3 theta_tilde  7.87   7.84  9.79  7.13 -6.44   22.8  1.00    3816.
+#&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
-<h2 id="remark-on-grid-approximation">Remark on Grid Approximation</h2>
-<p>In this note, we discretized <span class="math inline">\(\theta\)</span> into a finite number of grid points to compute the posterior, mainly for pedagogical purposes. A big limitation is that our posterior will have no density for values other than the chosen grid points. While increasing the number of grid points (e.g., 1,000) can give more precision, the result is still not truly continuous. A bigger issue is that the computation breaks down when there is more than one parameter; if there are <span class="math inline">\(p\)</span> parameters, with 1,000 grid points per parameter, one needs to evaluate the posterior probability for <span class="math inline">\(1,000^p\)</span> grid points, which is not feasible even with modern computers. So more efficient algorithms, namely Markov chain Monte Carlo (MCMC) methods, will be introduced as we progress in the course.</p>
+<p>The posterior interval for <span class="math inline">\(\tilde \theta\)</span> indicates a range that the treatment effect for a new study can be</p>
 <!-- The following chunk is only used in the website -->
 <section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code>#&gt; [1] &quot;January 22, 2022&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;March 02, 2022&quot;</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 </section>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
-<section class="footnotes" role="doc-endnotes">
-<hr />
-<ol>
-<li id="fn1" role="doc-endnote"><p>The likelihood function in classical/frequentist statistics is usually written as <span class="math inline">\(P(y; \theta)\)</span>. You will notice that here I write the likelihood for classical/frequentist statistics to be different from the one used in Bayesian statistics. This is intentional: In frequentist conceptualization, <span class="math inline">\(\theta\)</span> is fixed, and it does not make sense to talk about the probability of <span class="math inline">\(\theta\)</span>. This implies that we cannot condition on <span class="math inline">\(\theta\)</span>, because conditional probability is defined only when <span class="math inline">\(P(\theta)\)</span> is defined.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>The <a href="https://en.wikipedia.org/wiki/De_Finetti%27s_theorem">de Finetti’s theorem</a> shows that when the data are exchangeable and can be considered an infinite sequence (i.e., not from a tiny finite population), then the data are conditionally independent given some <span class="math inline">\(\theta\)</span>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

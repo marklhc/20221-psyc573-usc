@@ -2443,6 +2443,7 @@ Notes
 <a href="mcmc.html">MCMC: Metropolis</a>
 <a href="gibbs.html">MCMC: Gibbs</a>
 <a href="hmc_stan.html">HMC and Stan</a>
+<a href="hierarchical_models.html">Hierarchical Models</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2595,7 +2596,8 @@ The Gamma distribution used here is also called a scaled <span class="math inlin
 <p>The priors are very weak. We also assume that the priors are independent, which is commonly the case. Here are some simulated data from these priors:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>num_draws</span> <span class='op'>&lt;-</span> <span class='fl'>100</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2259</span><span class='op'>)</span>
+<span class='va'>num_draws</span> <span class='op'>&lt;-</span> <span class='fl'>100</span>
 <span class='va'>mu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>num_draws</span>, mean <span class='op'>=</span> <span class='fl'>5</span>, sd <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
 <span class='va'>inv_sigma2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/GammaDist.html'>rgamma</a></span><span class='op'>(</span><span class='va'>num_draws</span>,
                      shape <span class='op'>=</span> <span class='fl'>1</span> <span class='op'>/</span> <span class='fl'>2</span>, rate <span class='op'>=</span> <span class='fl'>1</span> <span class='op'>/</span> <span class='fl'>2</span><span class='op'>)</span>

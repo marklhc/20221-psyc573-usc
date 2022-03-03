@@ -5,7 +5,7 @@ description: |
 output_dir: "_site"
 theme: theme.css
 include: ["slides"]
-exclude: ["distill-hack.RMarkdown"]
+exclude: ["distill-hack.RMarkdown", "group_comparisons.Rmd"]
 base_url: https://psyc573-2022spring.netlify.app
 repository_url: https://github.com/marklhc/20221-psyc573-usc
 creative_commons: CC BY-NC-SA
@@ -37,6 +37,8 @@ navbar:
           href: gibbs.html
         - text: "HMC and Stan"
           href: hmc_stan.html
+        - text: "Hierarchical Models"
+          href: hierarchical_models.html
   source_url: https://github.com/marklhc/20221-psyc573-usc
 output:
   distill::distill_article:

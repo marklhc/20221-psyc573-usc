@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Hierarchical Models</title>
+    <meta charset="utf-8" />
+    <meta name="date" content="2022-03-03" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/viz/viz.js"></script>
+    <link href="libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
+    <script src="libs/grViz-binding/grViz.js"></script>
+    <link rel="stylesheet" href="my_style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Hierarchical Models
+## PSYC 573
+### University of Southern California
+### March 3, 2022
+
+---
+
+class: inverse, middle, center
+
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+--shareagain-twitter: none;
+--shareagain-facebook: none;
+--shareagain-linkedin: none;
+--shareagain-pinterest: none;
+--shareagain-pocket: none;
+--shareagain-reddit: none;
+}</style>
+
+
+
+
+
+# Therapeutic Touch Example (`\(N\)` = 28)
+
+---
+
+# Data Points From One Person
+
+.pull-left[
+
+
+
+`\(y\)`: whether the guess of which hand was hovered over was correct
+
+]
+
+.pull-right[
+
+Person S01
+
+.font70[
+
+
+|  y|s   |
+|--:|:---|
+|  1|S01 |
+|  0|S01 |
+|  0|S01 |
+|  0|S01 |
+|  0|S01 |
+|  0|S01 |
+|  0|S01 |
+|  0|S01 |
+|  0|S01 |
+|  0|S01 |
+
+]
+]
+
+---
+
+# Binomial Model
+
+We can use a Bernoulli model:
+`$$y_i \sim \mathrm{Bern}(\theta)$$`
+for `\(i = 1, \ldots, N\)`
+
+--
+
+Assuming exchangeability given `\(\theta\)`, more succint to write
+`$$z \sim \mathrm{Bin}(N, \theta)$$`
+for `\(z = \sum_{i = 1}^N y_i\)`
+
+--
+
+- Bernoulli: Individual trial
+- Binomial: total count of "1"s
+
+---
+class: clear
+
+Prior: Beta(1, 1)
+
+1 success, 9 failures
+
+Posterior: Beta(2, 10)
+
+&lt;img src="hierarchical_models_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Multiple People
+
+.pull-left[
+
+&lt;img src="hierarchical_models_files/figure-html/tt-count-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+We could repeat the binomial model for each of the 28 participants, to obtain posteriors for `\(\theta_1\)`, `\(\ldots\)`, `\(\theta_{28}\)`
+
+]
+
+But . . . 
+
+--
+
+&gt; Do we think our belief about `\(\theta_1\)` would inform our belief about `\(\theta_2\)`, etc?
+
+--
+
+After all, human beings share 99.9% of genetic makeup
+
+---
+
+# Three Positions of Pooling
+
+- No pooling: each individual is completely different; inference of `\(\theta_1\)` should be independent of `\(\theta_2\)`, etc
+
+- Complete pooling: each individual is exactly the same; just one `\(\theta\)` instead of 28 `\(\theta_j\)`'s
+
+- **Partial pooling**: each individual has something in common but also is somewhat different
+
+---
+
+# No Pooling
+
+<div id="htmlwidget-fe2b16013bb0479fc583" style="width:100%;height:345.6px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-fe2b16013bb0479fc583">{"x":{"diagram":"\ndigraph boxes_and_circles {\n  graph [layout = neato, overlap = true, fontsize = 30]\n\n  node [penwidth = 0, fontname = \"Helvetica\"]\n  # Person\n  th1 [pos = \"-1.2,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  th2 [pos = \"-0.6,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  th3 [pos = \"0,1!\", label=\"...\"]\n  th4 [pos = \"0.6,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  th5 [pos = \"1.2,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n  # Repeated measures\n  y1 [pos = \"-1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  y2 [pos = \"-0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  y3 [pos = \"0,0!\", label=\"...\"]\n  y4 [pos = \"0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  y5 [pos = \"1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n\n  # edges\n  edge [dir = \"none\"]\n  th1 -> y1\n  th2 -> y2\n  th4 -> y4\n  th5 -> y5\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+
+---
+
+# Complete Pooling
+
+<div id="htmlwidget-b60a3e102ced7401d5ca" style="width:100%;height:345.6px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b60a3e102ced7401d5ca">{"x":{"diagram":"\ndigraph boxes_and_circles {\n  graph [layout = neato, overlap = true, fontsize = 30]\n\n  node [penwidth = 0, fontname = \"Helvetica\"]\n  # Person\n  th [pos = \"0,1!\", label=<&theta;>]\n  # Repeated measures\n  y1 [pos = \"-1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  y2 [pos = \"-0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  y3 [pos = \"0,0!\", label=\"...\"]\n  y4 [pos = \"0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  y5 [pos = \"1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n\n  # edges\n  edge [dir = \"none\"]\n  th -> {y1; y2; y4; y5}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+
+---
+
+# Partial Pooling
+
+<div id="htmlwidget-3c1af9a099de15132c29" style="width:100%;height:518.4px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3c1af9a099de15132c29">{"x":{"diagram":"\ndigraph boxes_and_circles {\n  graph [layout = neato, overlap = true, fontsize = 30]\n\n  node [penwidth = 0, fontname = \"Helvetica\"]\n  # Common parameters\n  hy [pos = \"0,2!\", label=<&mu;, &kappa;>]\n  # Person\n  th1 [pos = \"-1.2,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  th2 [pos = \"-0.6,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  th3 [pos = \"0,1!\", label=\"...\"]\n  th4 [pos = \"0.6,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  th5 [pos = \"1.2,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n  # Repeated measures\n  y1 [pos = \"-1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  y2 [pos = \"-0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  y3 [pos = \"0,0!\", label=\"...\"]\n  y4 [pos = \"0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  y5 [pos = \"1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n\n  # edges\n  edge [dir = \"none\"]\n  hy -> {th1; th2; th4; th5;}\n  th1 -> y1\n  th2 -> y2\n  th4 -> y4\n  th5 -> y5\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+
+---
+
+# Partial Pooling in Hierarchical Models
+
+Hierarchical Priors: `\(\theta_j \sim \mathrm{Beta2}(\mu, \kappa)\)`
+
+Beta2: *reparameterized* Beta distribution
+- mean `\(\mu = a / (a + b)\)`
+- concentration `\(\kappa = a + b\)`
+
+Expresses the prior belief:
+&gt; Individual `\(\theta\)`s follow a common Beta distribution with mean `\(\mu\)` and concentration `\(\kappa\)`
+
+---
+
+# How to Choose `\(\kappa\)`
+
+If `\(\kappa \to \infty\)`: everyone is the same; no individual differences (i.e., complete pooling)
+
+If `\(\kappa = 0\)`: everybody is different; nothing is shared (i.e., no pooling)
+
+--
+
+We can fix a `\(\kappa\)` value based on our belief of how individuals are similar or different
+
+--
+
+A more Bayesian approach is to treat `\(\kappa\)` as an unknown, and use Bayesian inference to update our belief about `\(\kappa\)`
+
+---
+class: clear
+
+Generic prior by Kruschke (2015): `\(\kappa\)` `\(\sim\)` Gamma(0.01, 0.01) 
+
+&lt;img src="hierarchical_models_files/figure-html/unnamed-chunk-7-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+Sometimes you may want a stronger prior like Gamma(1, 1), if it is unrealistic to do no pooling
+
+---
+
+# Full Model
+
+.panelset[
+.panel[.panel-name[Model]
+
+Model:
+`\begin{align}
+  z_j &amp; \sim \mathrm{Bin}(N_j, \theta_j) \\
+  \theta_j &amp; \sim \mathrm{Beta2}(\mu, \kappa)
+\end{align}`
+Prior:
+`\begin{align}
+  \mu &amp; \sim \mathrm{Beta}(1.5, 1.5) \\
+  \kappa &amp; \sim \mathrm{Gamma}(0.01, 0.01)
+\end{align}`
+
+]
+
+.panel[.panel-name[Stan code]
+
+.font70[
+
+
+```stan
+data {
+  int&lt;lower=0&gt; J;         // number of clusters (e.g., studies, persons)
+  int y[J];               // number of "1"s in each cluster
+  int N[J];               // sample size for each cluster
+}
+parameters {
+  vector&lt;lower=0, upper=1&gt;[J] theta;   // cluster-specific probabilities
+  real&lt;lower=0, upper=1&gt; mu;     // overall mean probability
+  real&lt;lower=0&gt; kappa;           // overall concentration
+}
+model {
+  y ~ binomial(N, theta);              // each observation is binomial
+  theta ~ beta_proportion(mu, kappa);  // prior; Beta2 dist
+  mu ~ beta(1.5, 1.5);           // weak prior
+  kappa ~ gamma(.01, .01);       // prior recommended by Kruschke
+}
+```
+
+]
+]
+]
+
+---
+
+
+
+# Shrinkage
+
+&lt;img src="hierarchical_models_files/figure-html/unnamed-chunk-8-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+&lt;img src="hierarchical_models_files/figure-html/unnamed-chunk-9-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Multiple Comparisons?
+
+Frequentist: family-wise error rate depends on the number of intended contrasts
+
+Bayesian: only one posterior; hierarchical priors already express the possibility that groups are the same
+
+&gt; Thus, Bayesian hierarchical model "completely solves the multiple comparisons problem."&lt;sup&gt;1&lt;/sup&gt;
+
+.footnote[
+
+.font70[
+
+[1]: see &lt;https://statmodeling.stat.columbia.edu/2016/08/22/bayesian-inference-completely-solves-the-multiple-comparisons-problem/&gt;
+
+[2]: See more in ch 11.4 of Kruschke (2015)
+
+]
+]
+
+---
+class: inverse, center, middle
+
+# Hierarchical Normal Model
+
+---
+class: clear
+
+Effect of coaching on SAT-V
+
+
+|School | Treatment Effect Estimate| Standard Error|
+|:------|-------------------------:|--------------:|
+|A      |                        28|             15|
+|B      |                         8|             10|
+|C      |                        -3|             16|
+|D      |                         7|             11|
+|E      |                        -1|              9|
+|F      |                         1|             11|
+|G      |                        18|             10|
+|H      |                        12|             18|
+
+---
+class: clear
+
+.panelset[
+.panel[.panel-name[Model]
+
+Model:
+`\begin{align}
+  d_j &amp; \sim N(\theta_j, s_j) \\
+  \theta_j &amp; \sim N(\mu, \tau)
+\end{align}`
+Prior:
+`\begin{align}
+  \mu &amp; \sim N(0, 100) \\
+  \tau &amp; \sim t^+_4(0, 100)
+\end{align}`
+
+]
+
+.panel[.panel-name[Stan code]
+
+.font70[
+
+
+```stan
+data {
+  int&lt;lower=0&gt; J;          // number of schools 
+  real y[J];               // estimated treatment effects
+  real&lt;lower=0&gt; sigma[J];  // s.e. of effect estimates 
+}
+parameters {
+  real mu;                 // overall mean
+  real&lt;lower=0&gt; tau;       // between-school SD
+  vector[J] eta;           // standardized deviation (z score)
+}
+transformed parameters {
+  vector[J] theta;
+  theta = mu + tau * eta;   // non-centered parameterization
+}
+model {
+  eta ~ std_normal();       // same as eta ~ normal(0, 1);
+  y ~ normal(theta, sigma);
+  // priors
+  mu ~ normal(0, 100);
+  tau ~ student_t(4, 0, 100);
+}
+```
+
+]
+]
+]
+
+---
+class: clear
+
+# Individual-School Treatment Effects
+
+
+
+&lt;img src="hierarchical_models_files/figure-html/areas-fit-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Prediction Interval
+
+Posterior distribution of the true effect size of a new study, `\(\tilde \theta\)`
+
+&lt;img src="hierarchical_models_files/figure-html/pred-interval-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+.footnote[
+
+.font70[
+
+See https://onlinelibrary.wiley.com/doi/abs/10.1002/jrsm.12 for an introductory paper on random-effect meta-analysis
+
+]
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

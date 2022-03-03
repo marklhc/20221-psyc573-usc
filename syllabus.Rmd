@@ -257,7 +257,7 @@ dates <- paste(
 | Week 6\        | - STAN & HMC           | - Kruschke ch. 14                | - Exercise: Divergent transition       |
 | Feb 15 & 17    |                        | - [MCMC Interactive Gallery][8]  | - HW 5                                 |
 +----------------+------------------------+----------------------------------+----------------------------------------+
-| Week 7\        | - Hierarchical models  | - Kruschke ch. 9                 | - Exercise: Identifying data structure |
+| Week 7\        | - Hierarchical models  | - Kruschke ch. 9                 | - Exercise: Partial Pooling            |
 | Feb 22 & 24    |                        |                                  | - HW 6                                 |
 +----------------+------------------------+----------------------------------+----------------------------------------+
 | Week 8\        | - Group Comparisons    | - Kruschke ch. 12.1, 16          | - Exercise: ROPE                       |

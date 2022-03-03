@@ -264,7 +264,7 @@ By the end of this module, you will be able to
 
 - Describe, conceptually, how the **Hamiltonian Monte Carlo (HMC)** algorithm achieves a better efficiency with the use of the gradients
 - Explain how tuning the **step size** and the **tree depth** affects HMC
-- Program a simple Bayesian model in **STAN**
+- Program a simple Bayesian model in **Stan**
 
 ## Task Lists
 
@@ -281,6 +281,40 @@ By the end of this module, you will be able to
 
 ```{r embed-7, echo = FALSE}
 embed_xaringan("slides/hmc_stan.html", ratio = "4:3")
+```
+
+:::
+
+::: {.panel}
+
+# Week 8
+
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Explain the logic of a **hierarchical model**
+- Apply the **binomial distribution** to describe the sum of multiple Bernoulli trials
+- Program a hierarchical binomial model in Stan
+- Analyze secondary data using a hierarchical normal model (i.e., random-effect meta-analysis)
+
+## Task Lists
+
+1. Complete the assigned readings
+    * Kruschke ch. 9
+2. Review the resources (slides and [note][17])
+3. Attend the Tuesday and Thursday class meetings
+4. Start thinking about the class project
+    * Prospectus due March 21
+
+[17]: hierarchical_models.html
+
+## Slides
+
+[PDF version](slides/hierarchical_models.pdf){target="_blank"}
+
+```{r embed-8, echo = FALSE}
+embed_xaringan("slides/hierarchical_models.html", ratio = "4:3")
 ```
 
 :::

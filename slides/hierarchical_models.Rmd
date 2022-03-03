@@ -1,0 +1,486 @@
+---
+title: "Hierarchical Models"
+subtitle: "PSYC 573"
+institute: "University of Southern California"
+date: "March 3, 2022"
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts, "my_style.css"]
+    lib_dir: libs
+    nature:
+      countIncrementalSlides: false
+params:
+  for_class: false
+---
+class: inverse, middle, center
+
+```{r, child = "slide_settings.RMarkdown"}
+```
+
+```{r xaringan-panelset, echo = FALSE}
+xaringanExtra::use_panelset()
+```
+
+```{r xaringan-scribble, echo = FALSE, eval = params$for_class}
+xaringanExtra::use_scribble()
+```
+
+# Therapeutic Touch Example (`\(N\)` = 28)
+
+---
+
+# Data Points From One Person
+
+.pull-left[
+
+```{r, eval = params$for_class}
+knitr::include_graphics("https://c.pxhere.com/photos/6b/f4/protect_hands_energy_ecology_protection_sun_live_responsibility-1334144.jpg!d")
+```
+
+$y$: whether the guess of which hand was hovered over was correct
+
+]
+
+.pull-right[
+
+Person S01
+
+.font70[
+
+```{r tt_dat}
+library(here)
+# Data file from https://github.com/boboppie/kruschke-doing_bayesian_data_analysis/blob/master/2e/TherapeuticTouchData.csv
+tt_dat <- read.csv(here("data_files", "TherapeuticTouchData.csv"))
+# Get aggregated data by summing the counts
+knitr::kable(tt_dat[tt_dat$s == "S01", ])
+```
+
+]
+]
+
+---
+
+# Binomial Model
+
+We can use a Bernoulli model:
+$$y_i \sim \mathrm{Bern}(\theta)$$
+for $i = 1, \ldots, N$
+
+--
+
+Assuming exchangeability given $\theta$, more succint to write
+$$z \sim \mathrm{Bin}(N, \theta)$$
+for $z = \sum_{i = 1}^N y_i$
+
+--
+
+- Bernoulli: Individual trial
+- Binomial: total count of "1"s
+
+---
+class: clear
+
+Prior: Beta(1, 1)
+
+1 success, 9 failures
+
+Posterior: Beta(2, 10)
+
+```{r}
+ggplot() +
+    stat_function(fun = dbeta, args = list(shape1 = 2, shape2 = 10)) +
+    labs(x = expression(theta), y = "Posterior density")
+```
+
+---
+
+# Multiple People
+
+.pull-left[
+
+```{r tt-count, fig.width = 3}
+# Get aggregated data by summing the counts
+tt_agg <- tt_dat %>%
+    group_by(s) %>%
+    summarise(y = sum(y),  # total number of correct
+              n = n())
+# Plot proportion correct distribution
+ggplot(tt_agg, aes(x = y / n)) +
+    geom_histogram(binwidth = .1) +
+    labs(x = "Proportion Correct")
+```
+
+]
+
+.pull-right[
+
+We could repeat the binomial model for each of the 28 participants, to obtain posteriors for $\theta_1$, $\ldots$, $\theta_{28}$
+
+]
+
+But . . . 
+
+--
+
+> Do we think our belief about $\theta_1$ would inform our belief about $\theta_2$, etc?
+
+--
+
+After all, human beings share 99.9% of genetic makeup
+
+---
+
+# Three Positions of Pooling
+
+- No pooling: each individual is completely different; inference of $\theta_1$ should be independent of $\theta_2$, etc
+
+- Complete pooling: each individual is exactly the same; just one $\theta$ instead of 28 $\theta_j$'s
+
+- **Partial pooling**: each individual has something in common but also is somewhat different
+
+---
+
+# No Pooling
+
+```{r, fig.align = "center", fig.asp = 0.8, out.width = "100%"}
+DiagrammeR::grViz("
+digraph boxes_and_circles {
+  graph [layout = neato, overlap = true, fontsize = 30]
+
+  node [penwidth = 0, fontname = 'Helvetica']
+  # Person
+  th1 [pos = '-1.2,1!', label=<&theta;@_{1}>]
+  th2 [pos = '-0.6,1!', label=<&theta;@_{2}>]
+  th3 [pos = '0,1!', label='...']
+  th4 [pos = '0.6,1!', label=<&theta;@_{J - 1}>]
+  th5 [pos = '1.2,1!', label=<&theta;@_{J}>]
+  # Repeated measures
+  y1 [pos = '-1.2,0!', label='y@_{1}']
+  y2 [pos = '-0.6,0!', label='y@_{2}']
+  y3 [pos = '0,0!', label='...']
+  y4 [pos = '0.6,0!', label='y@_{J - 1}']
+  y5 [pos = '1.2,0!', label='y@_{J}']
+
+  # edges
+  edge [dir = 'none']
+  th1 -> y1
+  th2 -> y2
+  th4 -> y4
+  th5 -> y5
+}
+")
+```
+
+---
+
+# Complete Pooling
+
+```{r, fig.align = "center", fig.asp = 0.8, out.width = "100%"}
+DiagrammeR::grViz("
+digraph boxes_and_circles {
+  graph [layout = neato, overlap = true, fontsize = 30]
+
+  node [penwidth = 0, fontname = 'Helvetica']
+  # Person
+  th [pos = '0,1!', label=<&theta;>]
+  # Repeated measures
+  y1 [pos = '-1.2,0!', label='y@_{1}']
+  y2 [pos = '-0.6,0!', label='y@_{2}']
+  y3 [pos = '0,0!', label='...']
+  y4 [pos = '0.6,0!', label='y@_{J - 1}']
+  y5 [pos = '1.2,0!', label='y@_{J}']
+
+  # edges
+  edge [dir = 'none']
+  th -> {y1; y2; y4; y5}
+}
+")
+```
+
+---
+
+# Partial Pooling
+
+```{r, fig.align = "center", fig.asp = 6 / 5, out.width = "100%"}
+DiagrammeR::grViz("
+digraph boxes_and_circles {
+  graph [layout = neato, overlap = true, fontsize = 30]
+
+  node [penwidth = 0, fontname = 'Helvetica']
+  # Common parameters
+  hy [pos = '0,2!', label=<&mu;, &kappa;>]
+  # Person
+  th1 [pos = '-1.2,1!', label=<&theta;@_{1}>]
+  th2 [pos = '-0.6,1!', label=<&theta;@_{2}>]
+  th3 [pos = '0,1!', label='...']
+  th4 [pos = '0.6,1!', label=<&theta;@_{J - 1}>]
+  th5 [pos = '1.2,1!', label=<&theta;@_{J}>]
+  # Repeated measures
+  y1 [pos = '-1.2,0!', label='y@_{1}']
+  y2 [pos = '-0.6,0!', label='y@_{2}']
+  y3 [pos = '0,0!', label='...']
+  y4 [pos = '0.6,0!', label='y@_{J - 1}']
+  y5 [pos = '1.2,0!', label='y@_{J}']
+
+  # edges
+  edge [dir = 'none']
+  hy -> {th1; th2; th4; th5;}
+  th1 -> y1
+  th2 -> y2
+  th4 -> y4
+  th5 -> y5
+}
+")
+```
+
+---
+
+# Partial Pooling in Hierarchical Models
+
+Hierarchical Priors: $\theta_j \sim \mathrm{Beta2}(\mu, \kappa)$
+
+Beta2: *reparameterized* Beta distribution
+- mean $\mu = a / (a + b)$
+- concentration $\kappa = a + b$
+
+Expresses the prior belief:
+> Individual $\theta$s follow a common Beta distribution with mean $\mu$ and concentration $\kappa$
+
+---
+
+# How to Choose $\kappa$
+
+If $\kappa \to \infty$: everyone is the same; no individual differences (i.e., complete pooling)
+
+If $\kappa = 0$: everybody is different; nothing is shared (i.e., no pooling)
+
+--
+
+We can fix a $\kappa$ value based on our belief of how individuals are similar or different
+
+--
+
+A more Bayesian approach is to treat $\kappa$ as an unknown, and use Bayesian inference to update our belief about $\kappa$
+
+---
+class: clear
+
+Generic prior by Kruschke (2015): $\kappa$ $\sim$ Gamma(0.01, 0.01) 
+
+```{r}
+ggplot() +
+    stat_function(fun = dgamma,
+                  args = list(shape = 0.01, rate = 0.01),
+                  n = 501, aes(col = "Gamma(0.01, 0.01)")) +
+    stat_function(fun = dgamma,
+                  args = list(shape = 1, rate = 1),
+                  n = 501, aes(col = "Gamma(1, 1)")) +
+    labs(x = expression(kappa), y = "density") +
+    xlim(0, 10)
+```
+
+Sometimes you may want a stronger prior like Gamma(1, 1), if it is unrealistic to do no pooling
+
+---
+
+# Full Model
+
+.panelset[
+.panel[.panel-name[Model]
+
+Model:
+\begin{align}
+  z_j & \sim \mathrm{Bin}(N_j, \theta_j) \\
+  \theta_j & \sim \mathrm{Beta2}(\mu, \kappa)
+\end{align}
+Prior:
+\begin{align}
+  \mu & \sim \mathrm{Beta}(1.5, 1.5) \\
+  \kappa & \sim \mathrm{Gamma}(0.01, 0.01)
+\end{align}
+
+]
+
+.panel[.panel-name[Stan code]
+
+.font70[
+
+```{stan stan1, code = readLines(here("slides/stan", "hierarchical_bin.stan")), echo = TRUE, eval = FALSE, output.var = "hbern_mod"}
+```
+
+]
+]
+]
+
+---
+
+```{r tt_fit, results = "hide"}
+library(rstan)
+rstan_options(auto_write = TRUE)  # save compiled STAN object
+tt_fit <- stan(
+    file = here("slides/stan", "hierarchical_bin.stan"),
+    data = list(J = nrow(tt_agg),
+                y = tt_agg$y,
+                N = tt_agg$n),
+    seed = 1716,  # for reproducibility
+    chains = 4,
+    iter = 4000,  # default gives warning saying iter needs to be higher
+    # may need higher adapt_delta (default = .8) for hierarchical models
+    control = list(adapt_delta = 0.8)
+)
+```
+
+# Shrinkage
+
+```{r, out.width = "50%", fig.width = 4.29}
+theta1_post <- extract(tt_fit, pars = "theta[1]")
+ggplot() +
+  stat_function(
+    fun = dbeta, args = list(shape1 = 2, shape2 = 10),
+    aes(col = "no pooling")
+  ) +
+  geom_density(
+    data = as_tibble(theta1_post),
+    aes(x = `theta[1]`, col = "partial pooling"), bw = "SJ"
+  ) +
+  labs(
+    x = expression(theta[1]),
+    y = "Posterior density", col = NULL
+  ) +
+  xlim(0, 1)
+```
+
+```{r, out.width = "50%", fig.width = 4.29}
+theta15_post <- extract(tt_fit, pars = "theta[15]")
+ggplot() +
+  stat_function(
+    fun = dbeta, args = list(shape1 = 6, shape2 = 6),
+    aes(col = "no pooling")
+  ) +
+  geom_density(
+    data = as_tibble(theta15_post),
+    aes(x = `theta[15]`, col = "partial pooling"), bw = "SJ"
+  ) +
+  labs(
+    x = expression(theta[15]),
+    y = "Posterior density", col = NULL
+  ) +
+  xlim(0, 1)
+```
+
+---
+
+# Multiple Comparisons?
+
+Frequentist: family-wise error rate depends on the number of intended contrasts
+
+Bayesian: only one posterior; hierarchical priors already express the possibility that groups are the same
+
+> Thus, Bayesian hierarchical model "completely solves the multiple comparisons problem."<sup>1</sup>
+
+.footnote[
+
+.font70[
+
+[1]: see <https://statmodeling.stat.columbia.edu/2016/08/22/bayesian-inference-completely-solves-the-multiple-comparisons-problem/>
+
+[2]: See more in ch 11.4 of Kruschke (2015)
+
+]
+]
+
+---
+class: inverse, center, middle
+
+# Hierarchical Normal Model
+
+---
+class: clear
+
+Effect of coaching on SAT-V
+
+```{r}
+schools_dat <- list(J = 8,
+                    y = c(28, 8, -3,  7, -1, 1, 18, 12),
+                    sigma = c(15, 10, 16, 11, 9, 11, 10, 18))
+with(schools_dat,
+     tibble(School = LETTERS[1:8],
+            `Treatment Effect Estimate` = y,
+            `Standard Error` = sigma)) %>%
+    knitr::kable()
+```
+
+---
+class: clear
+
+.panelset[
+.panel[.panel-name[Model]
+
+Model:
+\begin{align}
+  d_j & \sim N(\theta_j, s_j) \\
+  \theta_j & \sim N(\mu, \tau)
+\end{align}
+Prior:
+\begin{align}
+  \mu & \sim N(0, 100) \\
+  \tau & \sim t^+_4(0, 100)
+\end{align}
+
+]
+
+.panel[.panel-name[Stan code]
+
+.font70[
+
+```{stan stan2, code = readLines(here("slides/stan", "hierarchical_norm.stan")), echo = TRUE, eval = FALSE, output.var = "hnorm_mod"}
+```
+
+]
+]
+]
+
+---
+class: clear
+
+# Individual-School Treatment Effects
+
+```{r fit, results = "hide"}
+fit <- stan(
+    file = here("slides/stan", "hierarchical_norm.stan"),
+    data = schools_dat,
+    seed = 1804,  # for reproducibility
+    # higher adapt_delta due to divergent transitions
+    pars = c("mu", "tau", "theta"),  # skip the etas
+    control = list(adapt_delta = 0.95)
+)
+```
+
+```{r areas-fit, fig.asp = 1}
+library(bayesplot)
+mcmc_areas(fit, regex_pars = c("theta"))
+```
+
+---
+
+# Prediction Interval
+
+Posterior distribution of the true effect size of a new study, $\tilde \theta$
+
+```{r pred-interval}
+library(posterior)
+# Prediction Interval (can also be done in Stan)
+extract(fit, pars = c("mu", "tau")) %>%
+    as_draws_array() %>%
+    mutate_variables(theta_tilde = rnorm(4000, mean = mu, sd = tau)) %>%
+    mcmc_areas()
+```
+
+.footnote[
+
+.font70[
+
+See https://onlinelibrary.wiley.com/doi/abs/10.1002/jrsm.12 for an introductory paper on random-effect meta-analysis
+
+]
+]
