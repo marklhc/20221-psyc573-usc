@@ -301,7 +301,7 @@ Here are the individual-school treatment effects:
 mcmc_areas(fit, regex_pars = "theta")
 ```
 
-### Prediction Interval
+## Prediction Interval
 
 Posterior distribution of the true effect size of a new study, $\tilde \theta$
 
@@ -313,7 +313,7 @@ extract(fit, pars = c("mu", "tau")) %>%
     summarise_draws()
 ```
 
-The posterior interval for $\tilde \theta$ indicates a range that the treatment effect for a new study can be
+The posterior interval for $\tilde \theta$ indicates a range that the treatment effect for a new study can be.
 
 <!-- The following chunk is only used in the website -->
 

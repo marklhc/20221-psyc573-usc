@@ -2505,10 +2505,8 @@ Notes
 <ul>
 <li><a href="#eight-schools-example">Eight Schools Example</a></li>
 <li><a href="#model">Model</a></li>
-<li><a href="#non-centered-parameterization">Non-Centered Parameterization</a>
-<ul>
+<li><a href="#non-centered-parameterization">Non-Centered Parameterization</a></li>
 <li><a href="#prediction-interval">Prediction Interval</a></li>
-</ul></li>
 <li><a href="#last-updated">Last updated</a></li>
 </ul></li>
 </ul>
@@ -3196,7 +3194,7 @@ model {
 #&gt; mu        7.79    0.13 5.11  -2.20 4.69  7.89 11.01 17.54  1605    1
 #&gt; tau       6.28    0.14 5.32   0.23 2.38  5.00  8.75 19.55  1436    1
 #&gt; 
-#&gt; Samples were drawn using NUTS(diag_e) at Wed Mar  2 23:00:40 2022.
+#&gt; Samples were drawn using NUTS(diag_e) at Sat Mar  5 16:11:08 2022.
 #&gt; For each parameter, n_eff is a crude measure of effective sample size,
 #&gt; and Rhat is the potential scale reduction factor on split chains (at 
 #&gt; convergence, Rhat=1).</code></pre>
@@ -3220,7 +3218,7 @@ model {
 </div>
 <p><img src="hierarchical_models_files/figure-html5/areas-fit-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<h3 id="prediction-interval">Prediction Interval</h3>
+<h2 id="prediction-interval">Prediction Interval</h2>
 <p>Posterior distribution of the true effect size of a new study, <span class="math inline">\(\tilde \theta\)</span></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -3239,7 +3237,7 @@ model {
 #&gt; 3 theta_tilde  7.87   7.84  9.79  7.13 -6.44   22.8  1.00    3816.
 #&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
-<p>The posterior interval for <span class="math inline">\(\tilde \theta\)</span> indicates a range that the treatment effect for a new study can be</p>
+<p>The posterior interval for <span class="math inline">\(\tilde \theta\)</span> indicates a range that the treatment effect for a new study can be.</p>
 <!-- The following chunk is only used in the website -->
 <section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
 <h2 class="appendix">Last updated</h2>

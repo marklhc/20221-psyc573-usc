@@ -137,6 +137,10 @@ We could repeat the binomial model for each of the 28 participants, to obtain po
 
 But . . . 
 
+???
+
+We'll continue the therapeutic touch example. To recap, we have 28 participants, each of them go through 10 trials to guess which of their hands was hovered above. The histogram shows the distribution of the proportion correct.
+
 --
 
 &gt; Do we think our belief about `\(\theta_1\)` would inform our belief about `\(\theta_2\)`, etc?
@@ -159,22 +163,22 @@ After all, human beings share 99.9% of genetic makeup
 
 # No Pooling
 
-<div id="htmlwidget-fe2b16013bb0479fc583" style="width:100%;height:345.6px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-fe2b16013bb0479fc583">{"x":{"diagram":"\ndigraph boxes_and_circles {\n  graph [layout = neato, overlap = true, fontsize = 30]\n\n  node [penwidth = 0, fontname = \"Helvetica\"]\n  # Person\n  th1 [pos = \"-1.2,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  th2 [pos = \"-0.6,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  th3 [pos = \"0,1!\", label=\"...\"]\n  th4 [pos = \"0.6,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  th5 [pos = \"1.2,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n  # Repeated measures\n  y1 [pos = \"-1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  y2 [pos = \"-0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  y3 [pos = \"0,0!\", label=\"...\"]\n  y4 [pos = \"0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  y5 [pos = \"1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n\n  # edges\n  edge [dir = \"none\"]\n  th1 -> y1\n  th2 -> y2\n  th4 -> y4\n  th5 -> y5\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-a2756020f14ee37e0128" style="width:100%;height:345.6px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a2756020f14ee37e0128">{"x":{"diagram":"\ndigraph boxes_and_circles {\n  graph [layout = neato, overlap = true, fontsize = 30]\n\n  node [penwidth = 0, fontname = \"Helvetica\"]\n  # Person\n  th1 [pos = \"-1.2,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  th2 [pos = \"-0.6,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  th3 [pos = \"0,1!\", label=\"...\"]\n  th4 [pos = \"0.6,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  th5 [pos = \"1.2,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n  # Repeated measures\n  y1 [pos = \"-1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  y2 [pos = \"-0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  y3 [pos = \"0,0!\", label=\"...\"]\n  y4 [pos = \"0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  y5 [pos = \"1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n\n  # edges\n  edge [dir = \"none\"]\n  th1 -> y1\n  th2 -> y2\n  th4 -> y4\n  th5 -> y5\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 ---
 
 # Complete Pooling
 
-<div id="htmlwidget-b60a3e102ced7401d5ca" style="width:100%;height:345.6px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b60a3e102ced7401d5ca">{"x":{"diagram":"\ndigraph boxes_and_circles {\n  graph [layout = neato, overlap = true, fontsize = 30]\n\n  node [penwidth = 0, fontname = \"Helvetica\"]\n  # Person\n  th [pos = \"0,1!\", label=<&theta;>]\n  # Repeated measures\n  y1 [pos = \"-1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  y2 [pos = \"-0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  y3 [pos = \"0,0!\", label=\"...\"]\n  y4 [pos = \"0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  y5 [pos = \"1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n\n  # edges\n  edge [dir = \"none\"]\n  th -> {y1; y2; y4; y5}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-52a3f05259fe3acf6630" style="width:100%;height:345.6px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-52a3f05259fe3acf6630">{"x":{"diagram":"\ndigraph boxes_and_circles {\n  graph [layout = neato, overlap = true, fontsize = 30]\n\n  node [penwidth = 0, fontname = \"Helvetica\"]\n  # Person\n  th [pos = \"0,1!\", label=<&theta;>]\n  # Repeated measures\n  y1 [pos = \"-1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  y2 [pos = \"-0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  y3 [pos = \"0,0!\", label=\"...\"]\n  y4 [pos = \"0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  y5 [pos = \"1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n\n  # edges\n  edge [dir = \"none\"]\n  th -> {y1; y2; y4; y5}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 ---
 
 # Partial Pooling
 
-<div id="htmlwidget-3c1af9a099de15132c29" style="width:100%;height:518.4px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3c1af9a099de15132c29">{"x":{"diagram":"\ndigraph boxes_and_circles {\n  graph [layout = neato, overlap = true, fontsize = 30]\n\n  node [penwidth = 0, fontname = \"Helvetica\"]\n  # Common parameters\n  hy [pos = \"0,2!\", label=<&mu;, &kappa;>]\n  # Person\n  th1 [pos = \"-1.2,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  th2 [pos = \"-0.6,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  th3 [pos = \"0,1!\", label=\"...\"]\n  th4 [pos = \"0.6,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  th5 [pos = \"1.2,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n  # Repeated measures\n  y1 [pos = \"-1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  y2 [pos = \"-0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  y3 [pos = \"0,0!\", label=\"...\"]\n  y4 [pos = \"0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  y5 [pos = \"1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n\n  # edges\n  edge [dir = \"none\"]\n  hy -> {th1; th2; th4; th5;}\n  th1 -> y1\n  th2 -> y2\n  th4 -> y4\n  th5 -> y5\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-1ea91d0ec4c29bba3061" style="width:100%;height:518.4px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1ea91d0ec4c29bba3061">{"x":{"diagram":"\ndigraph boxes_and_circles {\n  graph [layout = neato, overlap = true, fontsize = 30]\n\n  node [penwidth = 0, fontname = \"Helvetica\"]\n  # Common parameters\n  hy [pos = \"0,2!\", label=<&mu;, &kappa;>]\n  # Person\n  th1 [pos = \"-1.2,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  th2 [pos = \"-0.6,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  th3 [pos = \"0,1!\", label=\"...\"]\n  th4 [pos = \"0.6,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  th5 [pos = \"1.2,1!\", label = <&theta;<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n  # Repeated measures\n  y1 [pos = \"-1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>1<\/SUB><\/FONT>>]\n  y2 [pos = \"-0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>2<\/SUB><\/FONT>>]\n  y3 [pos = \"0,0!\", label=\"...\"]\n  y4 [pos = \"0.6,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J - 1<\/SUB><\/FONT>>]\n  y5 [pos = \"1.2,0!\", label = <y<FONT POINT-SIZE=\"8\"><SUB>J<\/SUB><\/FONT>>]\n\n  # edges\n  edge [dir = \"none\"]\n  hy -> {th1; th2; th4; th5;}\n  th1 -> y1\n  th2 -> y2\n  th4 -> y4\n  th5 -> y5\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 ---
 
@@ -234,6 +238,18 @@ Prior:
 
 ]
 
+???
+
+Here's our model. For each person j, the number of correct responses follows a binoial distribution in N equals 10 trials. The probability, or the ability to sense the experimenter's hand, is captured by theta j.
+
+Now, we assume the theta js come from a common Beta distribution. Beta here is parameterized with the common mean mu, and the concentration kappa that controls how much to pool.
+
+As for the priors, because mu is the common mean of the thetas, it is again between 0 and 1. I set a weak Beta(1.5, 1.5) prior, which corresponds to half a success and half a failure. If you have stronger belief that the data mostly reflect random guessing, you can put something like Beta(5, 5).
+
+The gamma prior for kappa is recommended by your text as a weak default prior.
+
+--
+
 .panel[.panel-name[Stan code]
 
 .font70[
@@ -262,9 +278,35 @@ model {
 ]
 ]
 
+???
+
+Here is the Stan code. The inputs are J, the number of people, y, which is actually z in our model for the individual counts, but I use y just because y is usually the outcome in Stan. N is the number of trials per person, and here N[J] means the number of trials can be different across individuals.
+
+The parameters and the model block pretty much follow the mathematical model. The beta_proportion() function is what I said Beta2 as the beta distribution with the mean and the concentration as the parameters.
+
+You may want to pause here to make sure you understand the Stan code.
+
 ---
 
 
+
+# Posterior of Hyperparameters
+
+
+```r
+library(bayesplot)
+mcmc_dens(tt_fit, pars = c("mu", "kappa"))
+```
+
+&lt;img src="hierarchical_models_files/figure-html/post-mu-kappa-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+???
+
+The graphs show the posterior for mu and kappa. As you can see, the average probability of guessing correctly has most density between .4 and .5.
+
+For kappa, the posterior has a pretty long tail, and the value of kappa being very large, like 100 or 200, is pretty likely. So this suggests the individuals may be pretty similar to each other.
+
+---
 
 # Shrinkage
 
@@ -272,13 +314,31 @@ model {
 
 &lt;img src="hierarchical_models_files/figure-html/unnamed-chunk-9-1.png" width="50%" style="display: block; margin: auto;" /&gt;
 
+???
+
+From the previous model, we get posterior distributions for all parameters, including mu, kappa, and 28 thetas. The first graph shows the posterior for theta for person 1. The red curve is the one without any pooling, so the distribution is purely based on the 10 trials for person 1. The blue curve, on the other hand, is much closer to .5 due to partial pooling. Because the posterior of kappa is pretty large, the posterior is pooled towards the grand mean, mu.
+
+For the graph below, the posterior mean is close to .5 with or without partial pooling, but the distribution is narrower with partial pooling, which reflects a stronger belief. This is because, with partial pooling, the posterior distribution uses more information than just the 10 trials of person 15; it also borrows information from the other 27 individuals.
+
 ---
 
 # Multiple Comparisons?
 
 Frequentist: family-wise error rate depends on the number of intended contrasts
 
-Bayesian: only one posterior; hierarchical priors already express the possibility that groups are the same
+???
+
+One advantage of the hierarchical model is it is a solution to the multiple comparison problem. In frequentist analysis, if you have multiple groups, and you want to test each contrast, you will need to consider family-wise error rate, and do something like Bonferroni corrections. 
+
+--
+
+&amp;zwj;Bayesian: only one posterior; hierarchical priors already express the possibility that groups are the same
+
+???
+
+The Bayesian alternative is to do a hierarchial model with partial pooling. With Bayesian, you have one posterior distribution, which is the joint distribution of all parameters. And the use of a common distribution of the thetas already assigns some probability to the prior belief that the groups are the same.
+
+--
 
 &gt; Thus, Bayesian hierarchical model "completely solves the multiple comparisons problem."&lt;sup&gt;1&lt;/sup&gt;
 
@@ -293,10 +353,18 @@ Bayesian: only one posterior; hierarchical priors already express the possibilit
 ]
 ]
 
+???
+
+Therefore, with a hierarchical model, you can obtain the posterior of the difference of any groups, without worrying about how many comparisons you have conducted. You can read more in the sources listed here.
+
 ---
 class: inverse, center, middle
 
 # Hierarchical Normal Model
+
+???
+
+In this video, we'll talk about another Bayesian hierarchical model, the hierarchical normal model.
 
 ---
 class: clear
@@ -314,6 +382,14 @@ Effect of coaching on SAT-V
 |F      |                         1|             11|
 |G      |                        18|             10|
 |H      |                        12|             18|
+
+???
+
+The data come from the 1980s when scholars were debating the effect of coaching on standardized tests. The test of interest is the SAT verbal subtest. The note contains more description of it.
+
+The analysis will be on the secondary data from eight schools, from school A to school H. Each schools conducts its own randomized trial. The middle column shows the treatment effect estimate for the effect of coaching. For example, for school A, we see that students with coaching outperformed students without coaching by 28 points. However, for schools C and E, the effects were smaller and negative. 
+
+Finally, in the last column, we have the standard error of the treatment effect for each school, based on a t-test. As you know, the smaller the standard error, the less uncertainty we have on the treatment effect.
 
 ---
 class: clear
@@ -333,6 +409,16 @@ Prior:
 \end{align}`
 
 ]
+
+???
+
+We can use the same idea of partial pooling for this data. The idea is that, while the effect of coaching may be different across schools, there should be some similarity of the schools. Like if you are a school official, if you hear all other schools found coaching to be increasing performance, you'd probably expect coaching works for the students in your school as well.
+
+So the logic is the same; but instead of a binomial outcome, we have something like a continuous outcome in treatment effect, so we model the treatment effect, which I call d here, by a normal distribution. Note that d here is the sample difference between the treatment and the control group; because the sample difference is not the true treatment effect, we assume d j is normally distributed with a mean theta j, where theta j is the true treatment effect for school j. s j here is the standard error of the treatment effect, the third column in the data. It reflects the degree of uncertainty in the sample treatment effect d. 
+
+Next, we have the theta js coming from a common normal distribution, with mean mu, and standard deviation tau. So like kappa in the previous model, tau here controls how much to pool. If tau is small, it means the thetas are very similar; if tau is large, it means the thetas are very different.
+
+--
 
 .panel[.panel-name[Stan code]
 
