@@ -1,0 +1,519 @@
+---
+title: "Group Comparisons"
+author: "Mark Lai"
+date: "February 24, 2022"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = "#>", collapse = TRUE,
+                      fig.width = 6, fig.asp = 0.618,
+                      out.width = "70%", fig.align = "center")
+comma <- function(x, digits. = 2L) {
+    format(x, digits = digits., big.mark = ",")
+}
+```
+
+```{r load-pkg, message = FALSE}
+library(tidyverse)
+library(haven)  # for importing SPSS data
+library(here)
+library(rstan)
+rstan_options(auto_write = TRUE)  # save compiled STAN object
+library(posterior)  # for summarizing draws
+library(bayesplot)  # for plotting
+theme_set(theme_classic() +
+    theme(panel.grid.major.y = element_line(color = "grey92")))
+```
+
+## Data
+
+We will use the data in [Frank, Biberci, and Verschuere (2019)](https://www.tandfonline.com/doi/full/10.1080/02699931.2018.1553148), which is a replication study examining the response time (RT) when lying. Specifically, the researchers were interested in whether RT is shorter or longer when lying in the native language. In the original study, the researchers found that the difference between telling a lie and a truth (lie-truth difference) was smaller in English than in German for native German speakers. In the replication study, the same design was used to see whether the findings could be replicated on Dutch speakers. The data can be found at https://osf.io/x4rfk/.
+
+Instead of looking at lie-truth difference across languages, we will start by comparing the difference in RT for telling a lie in Dutch between males (man) and females (vrouw), as the model is easier to understand for independent sample comparisons and can be applied generally for between-subject experimental designs. 
+
+```{r lies}
+datfile <- here("data_files", "ENDFILE.xlsx")
+if (!file.exists(datfile)) {
+    dir.create(here("data_files"))
+    download.file("https://osf.io/gtjf6/download",
+        destfile = datfile
+    )
+}
+lies <- readxl::read_excel(here("data_files", "ENDFILE.xlsx"))
+```
+
+```{r lies_cc, layout="l-body-outset", out.width = "100%", fig.width = 8.57}
+# Exclude missing values
+lies_cc <- drop_na(lies, LDMRT)
+# Rescale response time from ms to sec
+lies_cc <- lies_cc %>%
+    # Use `across()` for doing the same operation on multiple variables
+    # `~ . / 1000` means apply the operation x / 1000 for each
+    # specified variable x
+    mutate(across(LDMRT:TEMRT, ~ . / 1000,
+           # create new variables by adding `_sec` to the new
+           # variable names
+           .names = "{.col}_sec"))
+# Describe the data
+psych::describe(lies_cc %>% select(Age, LDMRT_sec:TEMRT_sec))
+# Plot the data
+lies_cc %>%
+    select(Age, Gender, LDMRT_sec:TEMRT_sec) %>%
+    psych::pairs.panels()
+```
+
+## Plots
+
+```{r plot-LDMRT, fig.asp = 1}
+ggplot(lies_cc, aes(x = LDMRT_sec)) +
+    geom_histogram(binwidth = 0.3) +
+    facet_wrap(~ Gender,  ncol = 1) +
+    labs(x = "Lying in Dutch (sec)")
+```
+
+## Independent Sample $t$-Test
+
+### Frequentist
+
+```{r t-test}
+# Independent-sample t-test
+t.test(LDMRT_sec ~ Gender, data = lies_cc)
+```
+
+### Bayesian
+
+The $t$-test above does not directly show the underlying model. In fully Bayesian analyses, this has to be made explicit. A statistical model states the underlying assumptions of the statistical procedure. And to say more directly, a model is mostly a set of distributional assumptions. Below is the model for a $t$-test:
+
+$$
+  \begin{aligned}
+    \text{RT}_{i, \text{male}} & \sim N(\mu_1, \sigma_1) \\
+    \text{RT}_{i, \text{female}} & \sim N(\mu_2, \sigma_2)
+  \end{aligned}
+$$
+
+Note that we don't assume $\sigma_1 = \sigma_2$, which correspond to the Welch's $t$ test. We could impose homogeneity of variance across groups using a common $\sigma$.
+
+```{r m0}
+# 1. form the data list for Stan
+stan_dat <- with(lies_cc,
+    list(N1 = sum(Gender == "man"),
+         N2 = sum(Gender == "vrouw"),
+         y1 = LDMRT_sec[which(Gender == "man")],
+         y2 = LDMRT_sec[which(Gender == "vrouw")])
+)
+# 2. Run Stan (with lines for the likelihood commented out)
+m0 <- stan(
+    file = here("stan", "normal_2group.stan"),
+    data = stan_dat,
+    seed = 2151  # for reproducibility
+)
+```
+
+```{r print-m0}
+print(m0, pars = c("mu1", "mu2", "sigma1", "sigma2"))
+```
+
+### Normal models are not robust
+
+Let's add one outlier to the vrouw group with a value of 8.
+
+```{r m0_out}
+# 1. form the data list for Stan
+out_dat <- with(lies_cc,
+    list(N1 = sum(Gender == "man"),
+         N2 = sum(Gender == "vrouw") + 1,
+         y1 = LDMRT_sec[which(Gender == "man")],
+         y2 = c(LDMRT_sec[which(Gender == "vrouw")], 8))
+)
+# 2. Run Stan (with lines for the likelihood commented out)
+m0_out <- stan(
+    file = here("stan", "normal_2group.stan"),
+    data = out_dat,
+    seed = 2151  # for reproducibility
+)
+```
+
+```{r print-m0_out}
+print(m0_out, pars = c("mu1", "mu2", "sigma1", "sigma2"))
+```
+
+```{r ppc-m0-out}
+# PPC for Group 2 (vrouw)
+y2_tilde <- extract(m0_out, pars = "y2_rep")$y2_rep
+# Randomly sample 100 data sets (to make plotting faster)
+set.seed(2154)
+selected_rows <- sample.int(nrow(y2_tilde), size = 100)
+ppc_dens_overlay(out_dat$y2,
+                 yrep = y2_tilde[selected_rows, ],
+                 bw = "SJ")
+```
+
+## Bayesian Robust Model
+
+One robust option against (some) outliers is the $t$ model. While fitting a $t$ model is more challenging in frequentist analyses, in Bayesian, it is as easy as the normal model. Specifically,
+
+$$
+  \begin{aligned}
+    \text{RT}_{i, \text{male}} & \sim t_\nu(\mu_1, \sigma_1) \\
+    \text{RT}_{i, \text{female}} & \sim t_\nu(\mu_2, \sigma_2),
+  \end{aligned}
+$$
+
+where $\nu \in [1, \infty)$ is the *degrees of freedom* parameter, also called the normality parameter. The larger $\nu$, the more normal the distribution is. On the other hand, when $\nu$ is close to 1, the distribution allows for highly extreme values. When $\nu = 1$, the distribution is from a Cauchy family. The only difference from a normal model is that we need to assign a prior for $\nu$. A good option is Gamma(2, 0.1) (see https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations#prior-for-degrees-of-freedom-in-students-t-distribution).
+
+```{r m0r}
+# 2. Run Stan (with lines for the likelihood commented out)
+m0r <- stan(
+    file = here("stan", "robust_2group.stan"),
+    data = out_dat,
+    seed = 2151  # for reproducibility
+)
+```
+
+```{r print-m0r}
+print(m0r, pars = c("mu1", "mu2", "sigma1", "sigma2", "nu"))
+```
+
+Notice that $\nu$ is estimated to be close to 1.
+
+```{r ppc-m0r}
+# PPC for Group 2 (vrouw)
+y2_tilde <- extract(m0r, pars = "y2_rep")$y2_rep
+# Randomly sample 100 data sets (to make plotting faster)
+set.seed(2154)
+selected_rows <- sample.int(nrow(y2_tilde), size = 100)
+ppc_dens_overlay(out_dat$y2,
+                 yrep = y2_tilde[selected_rows, ],
+                 bw = "SJ")
+```
+
+## Bayesian Lognormal Model
+
+It is not necessary to use a normal model for group comparisons. Indeed, for many problems, the normal model may not be the best option. There has been rich literature on how to model response data. One key issue to address is that response time is non-negative, but a normal model implies that a negative value is always possible. A better option is to assume the *logarithm* of response time is normally distributed. This implies that the outcome follows a *lognormal* distribution, which ensures that the outcome will be non-negative. Below is the log-transformed data:
+
+```{r plot-log-LDMRT, fig.asp = 1}
+ggplot(lies_cc, aes(x = log(LDMRT_sec))) +
+    geom_histogram(bins = 10) +
+    facet_wrap(~ Gender,  ncol = 1) +
+    labs(x = "log RT of Lying in Dutch (sec)")
+```
+
+Below is a lognormal model with some weak priors:
+
+$$
+  \begin{aligned}
+    \text{RT}_{i, \text{male}} & \sim \mathrm{Lognormal}(\mu_1, \sigma_1) \\
+    \text{RT}_{i, \text{female}} & \sim \mathrm{Lognormal}(\mu_2, \sigma_2) \\
+    \mu_1 & \sim N(0, 1) \\
+    \mu_2 & \sim N(0, 1) \\
+    \sigma_1 & \sim N^+(0, 1) \\
+    \sigma_2 & \sim N^+(0, 1)
+  \end{aligned}
+$$
+
+```{stan, code = readLines(here("stan", "lognormal_2group.stan")), echo = TRUE, eval = FALSE, output.var="lognorm_gp_mod"}
+```
+
+### Prior Predictive
+
+The first time I used $\mu \sim N(0, 1)$ and $\sigma \sim N^+(0, 1)$ for both groups.
+
+```{r prior-predictive}
+# Here I use Stan to sample the prior
+# 1. form the data list for Stan
+m1_dat <- with(lies_cc,
+    list(N1 = sum(Gender == "man"),
+         N2 = sum(Gender == "vrouw"),
+         y1 = LDMRT_sec[which(Gender == "man")],
+         y2 = LDMRT_sec[which(Gender == "vrouw")])
+)
+# 2. Run Stan (with lines for the likelihood commented out)
+m1_prior <- stan(
+    file = here("stan", "lognormal_2group_prior_only0.stan"),
+    data = m1_dat,
+    seed = 2151  # for reproducibility
+)
+# PPC for Group 1 (man)
+y1_tilde <- extract(m1_prior, pars = "y1_rep")$y1_rep
+# Randomly sample 100 data sets (to make plotting faster)
+set.seed(2154)
+selected_rows <- sample.int(nrow(y1_tilde), size = 100)
+ppc_dens_overlay(m1_dat$y1,
+                 yrep = y1_tilde[selected_rows, ],
+                 bw = "SJ")
+```
+
+The plot looks off because the priors imply the possibility of very extreme data. I can instead place stronger priors on $\sigma$ with $N^+(0, 0.5)$;
+
+```{r prior-predictive-2}
+m1_prior <- stan(
+    file = here("stan", "lognormal_2group_prior_only.stan"),
+    data = m1_dat,
+    seed = 2151  # for reproducibility
+)
+# PPC for Group 1 (man) and Group 2 (vrouw)
+y1_tilde <- extract(m1_prior, pars = "y1_rep")$y1_rep
+y2_tilde <- extract(m1_prior, pars = "y2_rep")$y2_rep
+# Randomly sample 100 data sets (to make plotting faster)
+set.seed(2154)
+selected_rows <- sample.int(nrow(y1_tilde), size = 100)
+ppc_dens_overlay(m1_dat$y1,
+                 yrep = y1_tilde[selected_rows, ],
+                 bw = "SJ")
+ppc_dens_overlay(m1_dat$y2,
+                 yrep = y2_tilde[selected_rows, ],
+                 bw = "SJ")
+```
+
+which looks a bit better in terms of capturing what is possible, although one can argue it still wouldn't make sense to have observations with RT more than 10 seconds.
+
+### MCMC Sampling
+
+Let's feed the data to `rstan`.
+
+```{r m1, message = FALSE}
+m1 <- stan(here("stan", "lognormal_2group.stan"),
+    data = m1_dat,
+    seed = 2151,  # for reproducibility
+    iter = 4000
+)
+```
+
+We can summarize the posterior:
+
+```{r summarize}
+m1_summary <- as.array(m1,
+                       pars = c("mu1", "sigma1", "mu2", "sigma2")) %>%
+    summarize_draws()
+```
+
+It appears that $\mu$ is much larger for man than for women. You can obtain the posterior for $\mu_2 - \mu_1$ to check: 
+
+```{r summarize-dmu}
+as.array(m1, pars = c("mu1", "sigma1", "mu2", "sigma2")) %>%
+    as_draws() %>%
+    mutate_variables(dmu = mu2 - mu1) %>%
+    summarize_draws()
+```
+
+We can show some visual as well:
+
+```{r areas-m1}
+mcmc_areas(m1, pars = c("mu1", "mu2"))
+mcmc_areas(m1, pars = c("sigma1", "sigma2"))
+```
+
+```{r, include = FALSE}
+get_mean_ci <- function(i, unit = "log(seconds)", summ = m1_summary) {
+  paste0(round(summ[i, "mean"], 2), " ", unit,
+         ", 90% CI [",
+         round(summ[i, "q5"], 2), ", ",
+         round(summ[i, "q95"], 2), "]")
+}
+```
+
+> From the normal model, it was estimated that the mean log(RT) for lying in Dutch was `r get_mean_ci(1)`. On average, women had faster log(RT) when asked to tell lies in Dutch than mens, with the mean log(RT) for women being `r get_mean_ci(2)`.
+
+### Posterior Predictive Check
+
+#### Densities
+
+We can first check the densities:
+
+```{r ppc-m1}
+y1_tilde <- rstan::extract(m1, pars = "y1_rep")$y1_rep
+y2_tilde <- rstan::extract(m1, pars = "y2_rep")$y2_rep
+# Randomly sample 20 data sets (for faster plotting)
+selected_rows <- sample.int(nrow(y1_tilde), size = 20)
+ppc_dens_overlay(m1_dat$y1,
+                 yrep = y1_tilde[selected_rows, ],
+                 bw = "SJ")
+ppc_dens_overlay(m1_dat$y2,
+                 yrep = y2_tilde[selected_rows, ],
+                 bw = "SJ")
+```
+
+#### Minimum
+
+For response time data, one thing that would be important is the minimum of the data, as the lognormal model implies that it is possible to have an RT close to zero. In a lot of tasks, on the other end, the minimum is much larger than the 0 because there is a limit on how fast a person can respond to a task.
+
+```{r ppc-m1-min}
+# Man
+ppc_stat(
+  m1_dat$y1,
+  yrep = y1_tilde,
+  stat = min
+)
+# Vrouw
+ppc_stat(
+  m1_dat$y2,
+  yrep = y2_tilde,
+  stat = min
+)
+```
+
+In this case, the minimum of the data was within the range of what the model would predict.
+
+#### Proportion Outliers
+
+Another check we can perform is in predicting the proportion of outliers.
+
+```{r ppc-m1-prop_out}
+# Function for number of outliers
+prop_outliers <- function(x) {
+  length(boxplot.stats(x)$out)
+}
+# Man
+ppc_stat(
+  m1_dat$y1,
+  yrep = y1_tilde,
+  stat = prop_outliers
+)
+# Vrouw
+ppc_stat(
+  m1_dat$y2,
+  yrep = y2_tilde,
+  stat = prop_outliers
+)
+```
+
+### Use Difference As Parameter
+
+The above model has $\mu_1$ and $\mu_2$ as parameters, and $\delta = \mu_2 - \mu_1$ as a derived quantify from the parameters. We can instead treat $\mu_1$ and $\delta$ as parameters, and $\mu_2 = \mu_1 + \delta$ as a derived quantity. We can also impose the **homogeneity of variance** assumption, as shown below, although it is usually not advisable in a two-group setting:
+
+$$
+  \begin{aligned}
+    \text{RT}_{i, \text{male}} & \sim \mathrm{Lognormal}(\mu_1, \sigma) \\
+    \text{RT}_{i, \text{female}} & \sim \mathrm{Lognormal}(\mu_1 + \delta, \sigma) \\
+    \mu_1 & \sim N(0, 1) \\
+    \delta & \sim N(0, 1) \\
+    \sigma & \sim N^+(0, 0.5)
+  \end{aligned}
+$$
+
+```{r m2, message = FALSE}
+m2 <- stan(here("stan", "lognormal_diff.stan"),
+    data = m1_dat,
+    seed = 1922,  # for reproducibility
+    iter = 4000
+)
+```
+
+```{r print-m2, message = FALSE}
+print(m2, pars = c("mu1", "dmu", "sigma", "mu2"))
+```
+
+# Within-Subject
+
+This is similar to a paired $t$ test, but uses a lognormal distribution.
+
+\begin{align}
+  \text{LDMRT}_{i} & \sim \mathrm{Lognormal}(\theta_i, \sigma) \\
+  \text{LEMRT}_{i} & \sim \mathrm{Lognormal}(\theta_i + \delta, \sigma) \\
+  \theta_i & = mu_1 + \tau \eta_i \\
+  \eta_i & \sim N(0, \tau) \\
+  \mu_1 & \sim N(0, 1) \\
+  \delta & \sim N(0, 1) \\
+  \sigma & \sim N(0, 0.5) \\
+  \tau & \sim t^+(4, 0, 0.5)
+\end{align}
+
+Parameters:
+
+- $\mu_1$: mean parameter for log(RT) for lying in Dutch condition
+- $\delta$: mean difference in log(RT) between the lying in English and lying in Dutch
+- $\sigma$: within-person standard deviation of log(RT)
+- $\eta_1$, $\ldots$, $\eta_63$: z-scores for individual mean response time
+- $\tau$: standard deviation of individual differences
+
+This is an example of a hierarchical model with a non-centered parameterization (using $\eta$ instead of $\theta$ as a parameter). We're letting the data update our belief on how much individual difference there is.
+
+```{r}
+m3_dat <- with(lies_cc,
+    list(N = length(LDMRT_sec),
+         y1 = LDMRT_sec,
+         y2 = LEMRT_sec)
+)
+m3 <- stan(here("stan", "within-subjects_lognorm.stan"),
+    data = m3_dat,
+    seed = 2151,  # for reproducibility
+    iter = 4000,
+    control = list(adapt_delta = .95)
+)
+```
+
+```{r print-m3, message = FALSE}
+print(m3, pars = c("mu1", "dmu", "sigma", "tau"))
+```
+
+## Posterior Predictive Check
+
+We can look at the posterior predictive distributions of the individual differences in response time across conditions
+
+```{r ppc-m3, message = FALSE}
+y1_tilde <- rstan::extract(m3, pars = "y1_rep")$y1_rep
+y2_tilde <- rstan::extract(m3, pars = "y2_rep")$y2_rep
+# Randomly sample 20 data sets (for faster plotting)
+selected_rows <- sample.int(nrow(y1_tilde), size = 20)
+ppc_dens_overlay(m3_dat$y2 - m3_dat$y1,
+                 yrep = y2_tilde[selected_rows, ] - y1_tilde[selected_rows, ],
+                 bw = "SJ")
+```
+
+## Effect Size
+
+An effect size measures the magnitude of a difference. When the unit of the outcome is meaningful, an unstandardized effect size should be used. In this case, the response is in seconds, but the parameter $\delta$ is in the log unit. To convert things back to the original unit, we need to use the property that the expected value of a lognormal distribution is $\exp(\mu + \sigma^2 / 2)$. Therefore, to obtain the mean difference between the two conditions in seconds, we have
+$$\exp(\mu_2 + \sigma^2 / 2) - \exp(\mu_1 + \sigma^2 / 2)$$
+
+```{r eff-size}
+m3_draws <- as.array(m3, pars = c("mu1", "dmu", "sigma")) %>%
+    as_draws_array() %>%
+    mutate_variables(es = exp(mu1 + dmu + sigma^2 / 2) -
+        exp(mu1 + sigma^2 / 2))
+m3_summary <- summarise_draws(m3_draws)
+```
+
+So the mean difference estimate in seconds between the two conditions was `r get_mean_ci(4, unit = "seconds", summ = m3_summary)`.
+
+## Region of Practical Equivalence
+
+One thing that is often of interest in research is establishing equivalence between two values. We may wonder, for example, 
+
+- whether an experimental manipulation has an effect size of zero ($d$ = 0), 
+- whether two variables are truly uncorrelated ($r$ = 0), 
+- whether the blood type distribution is the same across countries,
+- whether two parallel forms of a test have the same difficulty level
+
+Here in our example, we can investigate 
+
+> Whether lying in native and second languages requires the same response time.
+
+In all these above scenarios, we are interested in "confirming" whether a quantity is equal to another quantity. The traditional null hypothesis significance testing (NHST), however, won't allow us to do that. That's because NHST is set up to reject the null hypothesis, but failure to reject $d$ = 0 does not confirm that $d$ = 0; it just means that we don't have enough evidence for that. In addition, we know in advance, with a high degree of certainty, that $d$ $\neq$ 0. Do we truly believe that the treatment group and the control group will perform exactly the same on an IQ test? Even when one group got 100 and the other 100.0000001, the null hypothesis is false.
+
+Therefore, what we really meant when saying whether two things are equal is not whether two quantities are exactly the same, which is basically impossible, but whether two quantities are *close enough*, or *practically equivalent*. In the IQ test example, most of us would agree that the two groups are practically equivalent.
+
+So what we actually want to test, in mathematical notation, is
+$$|\mu_2 - \mu_1| < \epsilon,$$
+where $\epsilon$ is some small value of a difference by which $\beta$ and $\beta_0$ are deemed practically equivalent. For example, in our analysis, we may think that if the difference is less than .05 seconds (or 50ms), we may say that there is no difference in RT. In other words, if there is a high probability (in a Bayesian sense) that $$-\epsilon < \beta < \epsilon$$ than we considered there is sufficient evident that $\beta$ = $\beta_0$ in a practical sense. The interval ($-\epsilon$, $\epsilon$) is what your textbook author referred to as the *region of practical equivalence*, or ROPE.
+
+> Using ROPE, we accept the difference in two parameters is practically zero if there is a high probability that delta is within a region indistinguishable from zero.
+
+Let's compute the probability of the effect size being within [-50ms, 50ms]:
+
+```{r proportion-in-rope}
+es_draws <- extract_variable(m3_draws, variable = "es")
+mean(es_draws >= -.05 & es_draws <= .05)
+```
+
+So there is a high probability that the mean difference is null.
+
+<!-- The following chunk is only used in the website -->
+
+```{r, echo = FALSE, results = 'asis', eval = file.exists("distill-hack.RMarkdown")}
+knitrenv <- knitr::knit_global()
+assign("knit_input", knitr::current_input(), knitrenv)
+append_res <- knitr::knit_child("distill-hack.RMarkdown",
+    envir = knitrenv, quiet = TRUE
+)
+cat(append_res)
+```

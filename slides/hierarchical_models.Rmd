@@ -321,7 +321,7 @@ The gamma prior for kappa is recommended by your text as a weak default prior.
 
 .font70[
 
-```{stan stan1, code = readLines(here("slides/stan", "hierarchical_bin.stan")), echo = TRUE, eval = FALSE, output.var = "hbern_mod"}
+```{stan stan1, code = readLines(here("stan", "hierarchical_bin.stan")), echo = TRUE, eval = FALSE, output.var = "hbern_mod"}
 ```
 
 ]
@@ -342,7 +342,7 @@ You may want to pause here to make sure you understand the Stan code.
 library(rstan)
 rstan_options(auto_write = TRUE)  # save compiled STAN object
 tt_fit <- stan(
-    file = here("slides/stan", "hierarchical_bin.stan"),
+    file = here("stan", "hierarchical_bin.stan"),
     data = list(J = nrow(tt_agg),
                 y = tt_agg$y,
                 N = tt_agg$n),
@@ -516,7 +516,7 @@ Next, we have the theta js coming from a common normal distribution, with mean m
 
 .font70[
 
-```{stan stan2, code = readLines(here("slides/stan", "hierarchical_norm.stan")), echo = TRUE, eval = FALSE, output.var = "hnorm_mod"}
+```{stan stan2, code = readLines(here("stan", "hierarchical_norm.stan")), echo = TRUE, eval = FALSE, output.var = "hnorm_mod"}
 ```
 
 ]
@@ -530,7 +530,7 @@ class: clear
 
 ```{r fit, results = "hide"}
 fit <- stan(
-    file = here("slides/stan", "hierarchical_norm.stan"),
+    file = here("stan", "hierarchical_norm.stan"),
     data = schools_dat,
     seed = 1804,  # for reproducibility
     # higher adapt_delta due to divergent transitions

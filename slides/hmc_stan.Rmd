@@ -336,7 +336,7 @@ class: clear
 
 .font70[
 
-```{stan normal_mod, code = readLines("stan/normal_model.stan"), echo = TRUE, eval = FALSE, output.var = "norm_mod"}
+```{stan normal_mod, code = readLines(here("stan", "normal_model.stan")), echo = TRUE, eval = FALSE, output.var = "norm_mod"}
 ```
 
 ]
@@ -382,7 +382,7 @@ nt_list <- list(
 )
 # Call Stan
 norm_prior <- stan(
-    file = "stan/normal_model.stan",
+    file = here("stan", "normal_model.stan"),
     data = nt_list,
     seed = 1234  # for reproducibility
 )

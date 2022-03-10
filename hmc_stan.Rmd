@@ -17,6 +17,7 @@ comma <- function(x, digits. = 2L) {
 library(tidyverse)
 library(plotly)  # for 3D plot
 library(haven)  # for importing SPSS data
+library(here)
 library(posterior)  # for summarizing draws
 library(bayesplot)  # for plotting
 theme_set(theme_classic() +
@@ -272,7 +273,7 @@ The engine used for running the Bayesian analyses covered in this course is `STA
 
 In `STAN`, you need to define a model using the `STAN` language. Below is an example for a normal model, which is saved with the file name `"normal_model.stan"`.
 
-```{stan normal_mod, code = readLines("slides/stan/normal_model.stan"), echo = TRUE, eval = FALSE, output.var = "norm_mod"}
+```{stan normal_mod, code = readLines(here("stan", "normal_model.stan")), echo = TRUE, eval = FALSE, output.var = "norm_mod"}
 ```
 
 In `STAN`, anything after `//` denotes comments and will be ignored by the program. In each block (e.g., `data {}`), a statement should end with a semicolon (`;`). There are several blocks in the above `STAN` code:
@@ -334,14 +335,14 @@ rstan_options(auto_write = TRUE)  # save compiled STAN object
 
 The priors used in the STAN code is $\mu \sim N(0, 10)$ and $\sigma \sim t^+_4(0, 3)$. To perform a prior predictive check, we can sample the prior. In STAN there's no direct option to do it, but we can modify the STAN code to comment out the model part:
 
-```{stan normal_mod_prior, code = readLines("slides/stan/normal_model_prior_only.stan"), echo = TRUE, eval = FALSE, output.var = "norm_mod_prior"}
+```{stan normal_mod_prior, code = readLines(here("stan", "normal_model_prior_only.stan")), echo = TRUE, eval = FALSE, output.var = "norm_mod_prior"}
 ```
 
 Then call `stan()`
 
 ```{r norm_prior, results = 'hide'}
 norm_prior <- stan(
-    file = "slides/stan/normal_model_prior_only.stan", data = nt_list,
+    file = here("stan", "normal_model_prior_only.stan"), data = nt_list,
     seed = 1234,  # for reproducibility
     # Below are optional arguments
     iter = 2000,  # number of iterations
@@ -364,7 +365,7 @@ ppc_dens_overlay(wc_laptop, yrep = y_tilde[selected_rows, ], bw = "SJ")
 
 ```{r norm_fit, results = 'hide'}
 norm_fit <- stan(
-    file = "slides/stan/normal_model.stan", data = nt_list,
+    file = here("stan", "normal_model.stan"), data = nt_list,
     seed = 1234  # for reproducibility
 )
 ```

@@ -2450,6 +2450,7 @@ Notes
 <a href="gibbs.html">MCMC: Gibbs</a>
 <a href="hmc_stan.html">HMC and Stan</a>
 <a href="hierarchical_models.html">Hierarchical Models</a>
+<a href="group_comparisons.html">Group Comparisons</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2625,7 +2626,7 @@ model {
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>tt_fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
-    file <span class='op'>=</span> <span class='st'>"slides/stan/hierarchical_bin.stan"</span>,
+    file <span class='op'>=</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"hierarchical_bin.stan"</span><span class='op'>)</span>,
     data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>J <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>tt_agg</span><span class='op'>)</span>,
                 y <span class='op'>=</span> <span class='va'>tt_agg</span><span class='op'>$</span><span class='va'>y</span>,
                 N <span class='op'>=</span> <span class='va'>tt_agg</span><span class='op'>$</span><span class='va'>n</span><span class='op'>)</span>,
@@ -3162,7 +3163,7 @@ model {
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
-    file <span class='op'>=</span> <span class='st'>"slides/stan/hierarchical_norm.stan"</span>,
+    file <span class='op'>=</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"hierarchical_norm.stan"</span><span class='op'>)</span>,
     data <span class='op'>=</span> <span class='va'>schools_dat</span>,
     seed <span class='op'>=</span> <span class='fl'>1804</span>,  <span class='co'># for reproducibility</span>
     <span class='co'># higher adapt_delta due to divergent transitions</span>
@@ -3194,7 +3195,7 @@ model {
 #&gt; mu        7.79    0.13 5.11  -2.20 4.69  7.89 11.01 17.54  1605    1
 #&gt; tau       6.28    0.14 5.32   0.23 2.38  5.00  8.75 19.55  1436    1
 #&gt; 
-#&gt; Samples were drawn using NUTS(diag_e) at Sat Mar  5 16:11:08 2022.
+#&gt; Samples were drawn using NUTS(diag_e) at Thu Mar 10 09:42:51 2022.
 #&gt; For each parameter, n_eff is a crude measure of effective sample size,
 #&gt; and Rhat is the potential scale reduction factor on split chains (at 
 #&gt; convergence, Rhat=1).</code></pre>
@@ -3242,7 +3243,7 @@ model {
 <section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code>#&gt; [1] &quot;March 02, 2022&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;March 10, 2022&quot;</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 
