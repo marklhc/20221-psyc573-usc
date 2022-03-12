@@ -360,6 +360,32 @@ add_youtube("yQExiCLVcCk")
 
 :::
 
+::: {.panel}
+
+# Week 9
+
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Conduct a Bayesian **comparison** of two groups
+- Apply a **$t$ model** for robust modeling
+- Select an appropriate distribution for different kinds of data
+- Conduct comparisons with hierarchical data (e.g., within-subject designs)
+
+## Task Lists
+
+1. Complete the assigned readings
+    * Kruschke ch. 12.1, 16
+2. Review the resources ([note][18])
+3. Attend class meetings
+4. Start thinking about the class project
+    * Prospectus due March 21
+
+[18]: group_comparisons.html
+
+:::
+
 :::
 
 ## Last updated {.appendix}
