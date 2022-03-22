@@ -2367,7 +2367,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2444,6 +2444,7 @@ Notes
 <a href="hmc_stan.html">HMC and Stan</a>
 <a href="hierarchical_models.html">Hierarchical Models</a>
 <a href="group_comparisons.html">Group Comparisons</a>
+<a href="glm.html">Generalized Linear Model I</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2474,36 +2475,46 @@ Notes
 <ul>
 <li><a href="#games-of-chance">Games of chance</a></li>
 </ul></li>
-<li><a href="#different-ways-to-interpret-probability">Different Ways to Interpret Probability</a>
+<li><a href="#different-ways-to-interpret-probability">Different Ways to
+Interpret Probability</a>
 <ul>
-<li><a href="#classical-interpretation">Classical Interpretation</a></li>
+<li><a href="#classical-interpretation">Classical
+Interpretation</a></li>
 <li><a href="#frequentist-interpretation">Frequentist Interpretation</a>
 <ul>
-<li><a href="#problem-of-the-single-case">Problem of the single case</a></li>
+<li><a href="#problem-of-the-single-case">Problem of the single
+case</a></li>
 </ul></li>
-<li><a href="#subjectivist-interpretation">Subjectivist Interpretation</a>
+<li><a href="#subjectivist-interpretation">Subjectivist
+Interpretation</a>
 <ul>
-<li><a href="#calibrating-a-subjective-belief">Calibrating a subjective belief</a></li>
+<li><a href="#calibrating-a-subjective-belief">Calibrating a subjective
+belief</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#basics-of-probability">Basics of Probability</a>
 <ul>
 <li><a href="#probability-distributions">Probability Distributions</a>
 <ul>
-<li><a href="#example-normal-distribution">Example: Normal Distribution</a></li>
+<li><a href="#example-normal-distribution">Example: Normal
+Distribution</a></li>
 </ul></li>
-<li><a href="#summarizing-a-probability-distribution">Summarizing a Probability Distribution</a>
+<li><a href="#summarizing-a-probability-distribution">Summarizing a
+Probability Distribution</a>
 <ul>
 <li><a href="#central-tendency">Central Tendency</a></li>
 <li><a href="#dispersion">Dispersion</a></li>
 <li><a href="#interval">Interval</a></li>
-<li><a href="#computing-summaries-of-sample-distributions-using-r">Computing Summaries of Sample Distributions Using R</a></li>
+<li><a
+href="#computing-summaries-of-sample-distributions-using-r">Computing
+Summaries of Sample Distributions Using R</a></li>
 </ul></li>
 <li><a href="#multiple-variables">Multiple Variables</a>
 <ul>
 <li><a href="#conditional-probability">Conditional Probability</a></li>
 <li><a href="#independence">Independence</a></li>
-<li><a href="#law-of-total-probability">Law of Total Probability</a></li>
+<li><a href="#law-of-total-probability">Law of Total
+Probability</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -2511,69 +2522,147 @@ Notes
 </div>
 <h1 id="history-of-probability">History of Probability</h1>
 <h2 id="games-of-chance">Games of chance</h2>
-<p>Correspondence between French Mathematicians (Pierre de Fermat and Blaise Pascal) on gambling problem by Antoine Gombaud, Chevalier de Méré. The problem is roughly of the form<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
+<p>Correspondence between French Mathematicians (Pierre de Fermat and
+Blaise Pascal) on gambling problem by Antoine Gombaud, Chevalier de
+Méré. The problem is roughly of the form<a href="#fn1"
+class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a>:</p>
 <blockquote>
-<p>Imagine two people playing a multi-round game. In each round, each person has an equal chance of winning. The first person who wins six rounds will get a huge cash prize. Now, consider a scenario in which A and B have played six rounds, where A has won five and B has won one. At that time, the game had to be stopped due to a thunderstorm. Since neither A and B have reached six wins, instead of giving the prize to either one of them, they agree to divide up the prize. What would be a fair way to do so?</p>
+<p>Imagine two people playing a multi-round game. In each round, each
+person has an equal chance of winning. The first person who wins six
+rounds will get a huge cash prize. Now, consider a scenario in which A
+and B have played six rounds, where A has won five and B has won one. At
+that time, the game had to be stopped due to a thunderstorm. Since
+neither A and B have reached six wins, instead of giving the prize to
+either one of them, they agree to divide up the prize. What would be a
+fair way to do so?</p>
 </blockquote>
-<p>The discussion led to the formalization of using mathematics to solve the problem. Basically, one way is to say if A has a 97% chance to win the prize eventually and B has a 3% chance, then A should get 97% of the prize.</p>
-<h1 id="different-ways-to-interpret-probability">Different Ways to Interpret Probability</h1>
-<p>There are multiple perspectives for understanding probability.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> What you’ve learned in your statistics training is likely based on the <em>frequentist</em> interpretation of probability (and thus frequentist statistics), whereas what you will learn in this class have the foundation on the <em>subjectivist</em> interpretation of probability. Understanding the different perspectives on probability is helpful for understanding the Bayesian framework.</p>
+<p>The discussion led to the formalization of using mathematics to solve
+the problem. Basically, one way is to say if A has a 97% chance to win
+the prize eventually and B has a 3% chance, then A should get 97% of the
+prize.</p>
+<h1 id="different-ways-to-interpret-probability">Different Ways to
+Interpret Probability</h1>
+<p>There are multiple perspectives for understanding probability.<a
+href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a> What you’ve learned in your
+statistics training is likely based on the <em>frequentist</em>
+interpretation of probability (and thus frequentist statistics), whereas
+what you will learn in this class have the foundation on the
+<em>subjectivist</em> interpretation of probability. Understanding the
+different perspectives on probability is helpful for understanding the
+Bayesian framework.</p>
 <blockquote>
-<p>You don’t need to commit to one interpretation of probability in order to conduct Bayesian data analysis.</p>
+<p>You don’t need to commit to one interpretation of probability in
+order to conduct Bayesian data analysis.</p>
 </blockquote>
 <h2 id="classical-interpretation">Classical Interpretation</h2>
-<p>This is an earlier perspective and is based on counting rules. The idea is that probability is equally distributed among all “indifferent” outcomes. “Indifferent” outcomes are those where a person does not have any evidence to say that one outcome is more likely than another. For example, when one throws a die, one does not think that a certain number is more likely than another unless one knows that the die is biased. In this case, there are six equally likely outcomes, so the probability of each outcome is 1 / 6.</p>
+<p>This is an earlier perspective and is based on counting rules. The
+idea is that probability is equally distributed among all “indifferent”
+outcomes. “Indifferent” outcomes are those where a person does not have
+any evidence to say that one outcome is more likely than another. For
+example, when one throws a die, one does not think that a certain number
+is more likely than another unless one knows that the die is biased. In
+this case, there are six equally likely outcomes, so the probability of
+each outcome is 1 / 6.</p>
 <p><img src="slides/images/dice.png" /></p>
 <h2 id="frequentist-interpretation">Frequentist Interpretation</h2>
-<p>The frequentist interpretation states that probability is essentially the long-run relative frequency of an outcome. For example, to find the probability of getting a “1” when throwing a die, one can repeat the experiment many times, as illustrated below:</p>
+<p>The frequentist interpretation states that probability is essentially
+the long-run relative frequency of an outcome. For example, to find the
+probability of getting a “1” when throwing a die, one can repeat the
+experiment many times, as illustrated below:</p>
 <div class="layout-chunk" data-layout="l-body">
 <table>
 <thead>
-<tr class="header">
-<th style="text-align: center;">Trial</th>
-<th style="text-align: center;">Outcome</th>
+<tr>
+<th style="text-align:center;">
+Trial
+</th>
+<th style="text-align:center;">
+Outcome
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">2</td>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">3</td>
+<tr>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+3
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">1</td>
+<tr>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+1
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">3</td>
+<tr>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+3
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">1</td>
+<tr>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+1
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">1</td>
+<tr>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+1
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">5</td>
+<tr>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+5
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">6</td>
+<tr>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+6
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: center;">9</td>
-<td style="text-align: center;">3</td>
+<tr>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+3
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: center;">10</td>
-<td style="text-align: center;">3</td>
+<tr>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+3
+</td>
 </tr>
 </tbody>
 </table>
@@ -2582,61 +2671,167 @@ Notes
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="probability_files/figure-html5/plot-frequency-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
-<p>As you can see, with more trials, the relative frequency approaches 1 / 6. It’s the reason why in introductory statistics, many of the concepts require you to think in terms of repeated sampling (e.g., sampling distribution, <span class="math inline">\(p\)</span>-values, standard errors, confidence intervals), because probability in this framework is only possible when the outcome can be repeated. It’s also the reason why we don’t talk about something like:</p>
+<p>As you can see, with more trials, the relative frequency approaches 1
+/ 6. It’s the reason why in introductory statistics, many of the
+concepts require you to think in terms of repeated sampling (e.g.,
+sampling distribution, <span class="math inline">\(p\)</span>-values,
+standard errors, confidence intervals), because probability in this
+framework is only possible when the outcome can be repeated. It’s also
+the reason why we don’t talk about something like:</p>
 <ul>
 <li>the probability of the null hypothesis being true, or</li>
-<li>the probability that the population mean is in the interval [75.5, 80.5],</li>
+<li>the probability that the population mean is in the interval [75.5,
+80.5],</li>
 </ul>
-<p>because the population is fixed and cannot be repeated. Only the samples can be repeated, so probability in frequentist statistics is only about samples.</p>
+<p>because the population is fixed and cannot be repeated. Only the
+samples can be repeated, so probability in frequentist statistics is
+only about samples.</p>
 <h3 id="problem-of-the-single-case">Problem of the single case</h3>
-<p>Because of the frequentist’s reference to long-run relative frequency, under this framework, it does not make sense to talk about the probability of an event that cannot be repeated. For example, it does not make sense to talk about - the probability that the Democrats/Republicans will win the 2024 US Presidential Election, or - the probability that the LA Rams winning the 2022 Super Bowl, or - the probability that it will rain on Christmas Day in LA in 2022, because all these are specific events that cannot be repeated. However, it is common for lay people to talk about probabilities or chances for these events.</p>
+<p>Because of the frequentist’s reference to long-run relative
+frequency, under this framework, it does not make sense to talk about
+the probability of an event that cannot be repeated. For example, it
+does not make sense to talk about - the probability that the
+Democrats/Republicans will win the 2024 US Presidential Election, or -
+the probability that the LA Rams winning the 2022 Super Bowl, or - the
+probability that it will rain on Christmas Day in LA in 2022, because
+all these are specific events that cannot be repeated. However, it is
+common for lay people to talk about probabilities or chances for these
+events.</p>
 <h2 id="subjectivist-interpretation">Subjectivist Interpretation</h2>
-<p>The frequentist interpretation is sometimes called the “objectivist view,” as the reference of probability is based on empirical evidence of long-run relative frequency (albeit hypothetical in many cases). In contrast, the <em>subjectivist</em> view of probability is based on one’s belief. For example, when I say that the probability of getting a “1” from rolling a die is 1 / 6, it reflects the state of my mind about the die. My belief can arise from different sources: Maybe I make the die and know it is a fair one; maybe I saw someone throwing the die 1,000 times, and the number of “1”s was close to 1,000 / 6, or maybe someone I trust and with authority says that the die has a 1-in-6 chance of showing a “1”.</p>
-<p>The “subjective” component has been criticized a lot by frequentist scholars, sometimes unfairly. To be clear, what “subjective” here means is that probability reflects the state of one’s mind instead of the state of the world, and so it is totally fine that two people can have different beliefs about the same event. However, it does not mean that probability is arbitrary, as the beliefs are subjected to the constraints of the axioms of probability as well as the condition that the person possessing such beliefs is <em>rational</em>.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Therefore, if two persons are exposed to the same information, they should form similar, though likely not identical, beliefs about the event.</p>
-<p>The subjective interpretation works perfectly fine with single events, as one can have a belief about whether it rains on a particular day or a belief about a particular election result.</p>
-<h3 id="calibrating-a-subjective-belief">Calibrating a subjective belief</h3>
-<p>In order to represent one’s belief by probability, one needs to assign a nonzero value to every plausible outcome of an event. This has been the job of odds-makers for a long time. Indeed, a lot of the development in the field of probability has to do with coming up with a fair bet. The process of assigning probabilities to outcomes of an event according to one’s belief is called <em>calibration</em>. For example, consider three possible outcomes for tomorrow’s weather. For simplicity, consider three mutually exclusive possible outcomes: sunny, cloudy, and rainy.</p>
-<p>To calibrate my belief, consider first if you bet $10, and the return is (a) $30 for sunny, (b) $30 for cloudy, and (c) $30 for rainy. Which one will you bet? If you’re like me in LA, I’m pretty sure I’ll bet on (a), as I think that it is more likely to have a sunny day. This means that setting <span class="math inline">\(P\)</span>(sunny) = <span class="math inline">\(P\)</span>(cloudy) = <span class="math inline">\(P\)</span>(rainy) = 1 / 3 is not a good reflection of my belief.</p>
-<p>Now consider the bet with the returns (a) $20 for sunny, (b) $30 for cloudy, and (c) $60 for rainy. This would reflect the belief that there is a 50% chance of a sunny day, 33.33% chance of a cloudy day, and 16.67% chance of a rainy day. Will you take the bet? This is an improvement from the last one, but I would still say a sunny day is a good bet, which suggests that the probability of 50% is too low for a sunny day. The idea is to continue iterating until it is hard to consider (a), (b), or (c) as a clear betting favorite. For me, this would end up being something like (a) $16.7 for sunny, (b) $33.3 for cloudy, and (c) $100 for rainy, which would correspond to 60% sunny, 30% cloudy, and 10% rainy.</p>
-<p>If it’s hard for you to consider the gambling analogy, an alternative way is to consider how many times is a sunny day more likely than a non-sunny day, and how many times is a cloudy day more likely than a rainy day. For example, I may consider a sunny day to be twice as likely as a non-sunny day, which would give the probability of a sunny day to be 66.67%. Then, if I also think that a cloudy day is three times as likely as a rainy day, I would assign a probability of 33.33% <span class="math inline">\(\times\)</span> 3 / 4 = 25% for a cloudy day, and a probability of 33.33% <span class="math inline">\(\times\)</span> 1 / 4 = 8.33% for a rainy day.</p>
-<p>The process of calibrating one’s belief plays a key role in Bayesian data analysis, namely in the form of formulating a <em>prior</em> probability distribution.</p>
+<p>The frequentist interpretation is sometimes called the “objectivist
+view,” as the reference of probability is based on empirical evidence of
+long-run relative frequency (albeit hypothetical in many cases). In
+contrast, the <em>subjectivist</em> view of probability is based on
+one’s belief. For example, when I say that the probability of getting a
+“1” from rolling a die is 1 / 6, it reflects the state of my mind about
+the die. My belief can arise from different sources: Maybe I make the
+die and know it is a fair one; maybe I saw someone throwing the die
+1,000 times, and the number of “1”s was close to 1,000 / 6, or maybe
+someone I trust and with authority says that the die has a 1-in-6 chance
+of showing a “1”.</p>
+<p>The “subjective” component has been criticized a lot by frequentist
+scholars, sometimes unfairly. To be clear, what “subjective” here means
+is that probability reflects the state of one’s mind instead of the
+state of the world, and so it is totally fine that two people can have
+different beliefs about the same event. However, it does not mean that
+probability is arbitrary, as the beliefs are subjected to the
+constraints of the axioms of probability as well as the condition that
+the person possessing such beliefs is <em>rational</em>.<a href="#fn3"
+class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>
+Therefore, if two persons are exposed to the same information, they
+should form similar, though likely not identical, beliefs about the
+event.</p>
+<p>The subjective interpretation works perfectly fine with single
+events, as one can have a belief about whether it rains on a particular
+day or a belief about a particular election result.</p>
+<h3 id="calibrating-a-subjective-belief">Calibrating a subjective
+belief</h3>
+<p>In order to represent one’s belief by probability, one needs to
+assign a nonzero value to every plausible outcome of an event. This has
+been the job of odds-makers for a long time. Indeed, a lot of the
+development in the field of probability has to do with coming up with a
+fair bet. The process of assigning probabilities to outcomes of an event
+according to one’s belief is called <em>calibration</em>. For example,
+consider three possible outcomes for tomorrow’s weather. For simplicity,
+consider three mutually exclusive possible outcomes: sunny, cloudy, and
+rainy.</p>
+<p>To calibrate my belief, consider first if you bet $10, and the return
+is (a) $30 for sunny, (b) $30 for cloudy, and (c) $30 for rainy. Which
+one will you bet? If you’re like me in LA, I’m pretty sure I’ll bet on
+(a), as I think that it is more likely to have a sunny day. This means
+that setting <span class="math inline">\(P\)</span>(sunny) = <span
+class="math inline">\(P\)</span>(cloudy) = <span
+class="math inline">\(P\)</span>(rainy) = 1 / 3 is not a good reflection
+of my belief.</p>
+<p>Now consider the bet with the returns (a) $20 for sunny, (b) $30 for
+cloudy, and (c) $60 for rainy. This would reflect the belief that there
+is a 50% chance of a sunny day, 33.33% chance of a cloudy day, and
+16.67% chance of a rainy day. Will you take the bet? This is an
+improvement from the last one, but I would still say a sunny day is a
+good bet, which suggests that the probability of 50% is too low for a
+sunny day. The idea is to continue iterating until it is hard to
+consider (a), (b), or (c) as a clear betting favorite. For me, this
+would end up being something like (a) $16.7 for sunny, (b) $33.3 for
+cloudy, and (c) $100 for rainy, which would correspond to 60% sunny, 30%
+cloudy, and 10% rainy.</p>
+<p>If it’s hard for you to consider the gambling analogy, an alternative
+way is to consider how many times is a sunny day more likely than a
+non-sunny day, and how many times is a cloudy day more likely than a
+rainy day. For example, I may consider a sunny day to be twice as likely
+as a non-sunny day, which would give the probability of a sunny day to
+be 66.67%. Then, if I also think that a cloudy day is three times as
+likely as a rainy day, I would assign a probability of 33.33% <span
+class="math inline">\(\times\)</span> 3 / 4 = 25% for a cloudy day, and
+a probability of 33.33% <span class="math inline">\(\times\)</span> 1 /
+4 = 8.33% for a rainy day.</p>
+<p>The process of calibrating one’s belief plays a key role in Bayesian
+data analysis, namely in the form of formulating a <em>prior</em>
+probability distribution.</p>
 <h1 id="basics-of-probability">Basics of Probability</h1>
 <p>Kolmogorov axioms:</p>
 <blockquote>
 <ul>
-<li>For an event <span class="math inline">\(A_i\)</span> (e.g., getting a “1” from throwing a die)
+<li>For an event <span class="math inline">\(A_i\)</span> (e.g., getting
+a “1” from throwing a die)
 <ul>
-<li><span class="math inline">\(P(A_i) \geq 0\)</span> [All probabilities are non-negative]</li>
-<li><span class="math inline">\(P(A_1 \cup A_2 \cup \cdots) = 1\)</span> [Union of all possibilities is 1]</li>
-<li><span class="math inline">\(P(A_1) + P(A_2) = P(A_1 \text{ or } A_2)\)</span> [Addition rule]</li>
+<li><span class="math inline">\(P(A_i) \geq 0\)</span> [All
+probabilities are non-negative]</li>
+<li><span class="math inline">\(P(A_1 \cup A_2 \cup \cdots) = 1\)</span>
+[Union of all possibilities is 1]</li>
+<li><span class="math inline">\(P(A_1) + P(A_2) = P(A_1 \text{ or }
+A_2)\)</span> [Addition rule]</li>
 </ul></li>
 </ul>
 </blockquote>
 <p>Consider two events, for example, on throwing a die,</p>
 <ul>
 <li><span class="math inline">\(A\)</span>: The number is odd</li>
-<li><span class="math inline">\(B\)</span>: The number is larger than or equal to 4</li>
+<li><span class="math inline">\(B\)</span>: The number is larger than or
+equal to 4</li>
 </ul>
-<p>Assuming that die is (believed to be) fair, you can verify that the probability of <span class="math inline">\(A\)</span> is <span class="math inline">\(P(A)\)</span> = 3 / 6 = 1 / 2, and the probability of <span class="math inline">\(B\)</span> is also <span class="math inline">\(P(B)\)</span> = 3 / 6 = 1 / 2.</p>
+<p>Assuming that die is (believed to be) fair, you can verify that the
+probability of <span class="math inline">\(A\)</span> is <span
+class="math inline">\(P(A)\)</span> = 3 / 6 = 1 / 2, and the probability
+of <span class="math inline">\(B\)</span> is also <span
+class="math inline">\(P(B)\)</span> = 3 / 6 = 1 / 2.</p>
 <h2 id="probability-distributions">Probability Distributions</h2>
 <ul>
-<li><p>Discrete event (e.g., outcome of throwing a die or an election): probability <em>mass</em>. The probability is nonzero, at least for some outcomes. The graph below on the left shows the probability mass of the sum of the numbers from two dice.</p></li>
-<li><p>Continuous event (e.g., temperature): probability <em>density</em>. The probability is basically zero for any outcome. Instead, the probability density is approximated by <span class="math inline">\(P(A \leq a \leq A + h) / h\)</span> for a very small <span class="math inline">\(h\)</span>.</p>
+<li><p>Discrete event (e.g., outcome of throwing a die or an election):
+probability <em>mass</em>. The probability is nonzero, at least for some
+outcomes. The graph below on the left shows the probability mass of the
+sum of the numbers from two dice.</p></li>
+<li><p>Continuous event (e.g., temperature): probability
+<em>density</em>. The probability is basically zero for any outcome.
+Instead, the probability density is approximated by <span
+class="math inline">\(P(A \leq a \leq A + h) / h\)</span> for a very
+small <span class="math inline">\(h\)</span>.</p>
 <ul>
-<li>For example, to find the probability density that a person’s well-being score is 80, we first find the probability that a person scores between 80 and 80.5 (or 80 and 80.0005), and divide that probability by 0.5 (or 0.0005). See the shaded area of the graph below on the right.</li>
+<li>For example, to find the probability density that a person’s
+well-being score is 80, we first find the probability that a person
+scores between 80 and 80.5 (or 80 and 80.0005), and divide that
+probability by 0.5 (or 0.0005). See the shaded area of the graph below
+on the right.</li>
 </ul></li>
 </ul>
 <aside>
-For many problems in the social and behavioral sciences, the measured variables are not truly continuous, but we still use continuous distributions to approximate them.
+For many problems in the social and behavioral sciences, the measured
+variables are not truly continuous, but we still use continuous
+distributions to approximate them.
 </aside>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="probability_files/figure-html5/prob-mass-density-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <blockquote>
-<p>For this course, as in the textbook, we use <span class="math inline">\(P(x)\)</span> to mean both the probability mass for an outcome <span class="math inline">\(x\)</span> when the event is discrete, and the probability density at an outcome <span class="math inline">\(x\)</span> when the event is continuous.</p>
+<p>For this course, as in the textbook, we use <span
+class="math inline">\(P(x)\)</span> to mean both the probability mass
+for an outcome <span class="math inline">\(x\)</span> when the event is
+discrete, and the probability density at an outcome <span
+class="math inline">\(x\)</span> when the event is continuous.</p>
 </blockquote>
 <h3 id="example-normal-distribution">Example: Normal Distribution</h3>
-<p><span class="math display">\[P(x) = \frac{1}{\sqrt{2 \pi} \sigma} \exp\left(-\frac{1}{2}\left[\frac{x - \mu}{\sigma}\right]^2\right)\]</span></p>
+<p><span class="math display">\[P(x) = \frac{1}{\sqrt{2 \pi} \sigma}
+\exp\left(-\frac{1}{2}\left[\frac{x -
+\mu}{\sigma}\right]^2\right)\]</span></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Write a function to compute the density of an outcome x for a normal distribution</span>
@@ -2649,12 +2844,19 @@ For many problems in the social and behavioral sciences, the measured variables 
 </div>
 <pre><code>#&gt; [1] 0.01497275</code></pre>
 </div>
-<h2 id="summarizing-a-probability-distribution">Summarizing a Probability Distribution</h2>
-<p>While it is useful to know the probability mass/density of every possible outcome, in many situations, it is helpful to summarize a distribution by some numbers.</p>
+<h2 id="summarizing-a-probability-distribution">Summarizing a
+Probability Distribution</h2>
+<p>While it is useful to know the probability mass/density of every
+possible outcome, in many situations, it is helpful to summarize a
+distribution by some numbers.</p>
 <h3 id="central-tendency">Central Tendency</h3>
 <ul>
-<li>Mean: <span class="math inline">\(E(X) = \int x \cdot P(x) d x\)</span></li>
-<li>Median: 50th percentile; the median of <span class="math inline">\(X\)</span> is <span class="math inline">\(\mathit{Mdn}_X\)</span> such that <span class="math inline">\(P(X \leq \mathit{Mdn}_X)\)</span> = 1 / 2</li>
+<li>Mean: <span class="math inline">\(E(X) = \int x \cdot P(x) d
+x\)</span></li>
+<li>Median: 50th percentile; the median of <span
+class="math inline">\(X\)</span> is <span
+class="math inline">\(\mathit{Mdn}_X\)</span> such that <span
+class="math inline">\(P(X \leq \mathit{Mdn}_X)\)</span> = 1 / 2</li>
 <li>Mode: A value with maximum probability mass/density</li>
 </ul>
 <div class="layout-chunk" data-layout="l-body">
@@ -2664,25 +2866,40 @@ For many problems in the social and behavioral sciences, the measured variables 
 <ul>
 <li>Variance: <span class="math inline">\(V(X) = E[X - E(X)]^2\)</span>
 <ul>
-<li>Standard deviation: <span class="math inline">\(\sigma(X) = \sqrt{V(X)}\)</span></li>
+<li>Standard deviation: <span class="math inline">\(\sigma(X) =
+\sqrt{V(X)}\)</span></li>
 </ul></li>
-<li>Median absolute deviation (MAD): <span class="math inline">\(1.4826 \times \mathit{Mdn}(|X - \mathit{Mdn}_X|)\)</span></li>
+<li>Median absolute deviation (MAD): <span class="math inline">\(1.4826
+\times \mathit{Mdn}(|X - \mathit{Mdn}_X|)\)</span></li>
 </ul>
 <h3 id="interval">Interval</h3>
-<p>Use <span class="math inline">\(C(X)\)</span> to denote an interval. A <span class="math inline">\(W\)</span>% interval means <span class="math inline">\(P(X \in C[X]) \approx W\%\)</span></p>
+<p>Use <span class="math inline">\(C(X)\)</span> to denote an interval.
+A <span class="math inline">\(W\)</span>% interval means <span
+class="math inline">\(P(X \in C[X]) \approx W\%\)</span></p>
 <ul>
-<li>One-sided interval: <span class="math inline">\(C(X)\)</span> is half-bounded</li>
-<li>Symmetric <span class="math inline">\(W\)</span>% interval: <span class="math inline">\(C(X) = [L(X), U(X)]\)</span> is bounded, with <span class="math inline">\(P(X &lt; L[X]) = P(X &gt; U[X]) \approx W\% / 2\)</span>
+<li>One-sided interval: <span class="math inline">\(C(X)\)</span> is
+half-bounded</li>
+<li>Symmetric <span class="math inline">\(W\)</span>% interval: <span
+class="math inline">\(C(X) = [L(X), U(X)]\)</span> is bounded, with
+<span class="math inline">\(P(X &lt; L[X]) = P(X &gt; U[X]) \approx W\%
+/ 2\)</span>
 <ul>
 <li>Also called <em>equal-tailed</em> interval</li>
 </ul></li>
-<li>Highest density <span class="math inline">\(W\)</span>% interval (HDI): <span class="math inline">\(P(x_c) \geq P(x_o)\)</span> for every <span class="math inline">\(x_c\)</span> in <span class="math inline">\(C(X)\)</span> and every <span class="math inline">\(x_o\)</span> outside <span class="math inline">\(C(X)\)</span>. In general, the HDI is the shortest <span class="math inline">\(W\)</span>% interval.</li>
+<li>Highest density <span class="math inline">\(W\)</span>% interval
+(HDI): <span class="math inline">\(P(x_c) \geq P(x_o)\)</span> for every
+<span class="math inline">\(x_c\)</span> in <span
+class="math inline">\(C(X)\)</span> and every <span
+class="math inline">\(x_o\)</span> outside <span
+class="math inline">\(C(X)\)</span>. In general, the HDI is the shortest
+<span class="math inline">\(W\)</span>% interval.</li>
 </ul>
 <p>The plot below shows several 80% intervals</p>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="probability_files/figure-html5/interval-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<h3 id="computing-summaries-of-sample-distributions-using-r">Computing Summaries of Sample Distributions Using R</h3>
+<h3 id="computing-summaries-of-sample-distributions-using-r">Computing
+Summaries of Sample Distributions Using R</h3>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Simulate data from a half-Student's t distribution with df = 4, and call it sim_s</span>
@@ -2750,21 +2967,42 @@ For many problems in the social and behavioral sciences, the measured variables 
 <h2 id="multiple-variables">Multiple Variables</h2>
 <ul>
 <li>Joint probability: <span class="math inline">\(P(X, Y)\)</span></li>
-<li>Marginal probability: <span class="math display">\[P(X) = \int P(X, y) dy\]</span> <span class="math display">\[P(Y) = \int P(x, Y) dx\]</span>
+<li>Marginal probability: <span class="math display">\[P(X) = \int P(X,
+y) dy\]</span> <span class="math display">\[P(Y) = \int P(x, Y)
+dx\]</span>
 <ul>
-<li>The probability that outcome <span class="math inline">\(X\)</span> happens, regardless of what values <span class="math inline">\(Y\)</span> take.</li>
+<li>The probability that outcome <span class="math inline">\(X\)</span>
+happens, regardless of what values <span
+class="math inline">\(Y\)</span> take.</li>
 </ul></li>
 </ul>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="probability_files/figure-html5/marginal-dist-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h3 id="conditional-probability">Conditional Probability</h3>
-<p>Conditional probability is the probability of an event given some other information. In the real world, you can say that everything is conditional. For example, the probability of getting an odd number on throwing a die is 1/2 is conditional on the die being fair. We use <span class="math inline">\(P(A \mid B)\)</span> to represent the <span style="color:red">the conditional probability of event <span class="math inline">\(A\)</span> given event <span class="math inline">\(B\)</span>.</span>.</p>
-<p>Continuing from the previous example, <span class="math inline">\(P(A \mid B)\)</span> is the conditional probability of getting an odd number, <em>knowing that the number is at least 4</em>. By definition, conditional probability is the probability that both <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> happen, divided by the probability that <span class="math inline">\(B\)</span> happens.</p>
+<p>Conditional probability is the probability of an event given some
+other information. In the real world, you can say that everything is
+conditional. For example, the probability of getting an odd number on
+throwing a die is 1/2 is conditional on the die being fair. We use <span
+class="math inline">\(P(A \mid B)\)</span> to represent the <span
+style="color:red">the conditional probability of event <span
+class="math inline">\(A\)</span> given event <span
+class="math inline">\(B\)</span>.</span>.</p>
+<p>Continuing from the previous example, <span class="math inline">\(P(A
+\mid B)\)</span> is the conditional probability of getting an odd
+number, <em>knowing that the number is at least 4</em>. By definition,
+conditional probability is the probability that both <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> happen, divided by the probability that
+<span class="math inline">\(B\)</span> happens.</p>
 <blockquote>
-<p><span class="math inline">\(P(A \mid B) = \dfrac{P(A, B)}{P(B)}\)</span></p>
+<p><span class="math inline">\(P(A \mid B) = \dfrac{P(A,
+B)}{P(B)}\)</span></p>
 </blockquote>
-<p>In the example, <span class="math inline">\(P(A, B)\)</span> = 1 / 6, because 5 is the only even number <span class="math inline">\(\geq\)</span> 4 when throwing a die. Thus, <span class="math display">\[\begin{align}
+<p>In the example, <span class="math inline">\(P(A, B)\)</span> = 1 / 6,
+because 5 is the only even number <span
+class="math inline">\(\geq\)</span> 4 when throwing a die. Thus, <span
+class="math display">\[\begin{align}
     P(A \mid B) &amp; = 1 / 3 \\
              &amp; = \frac{P(A, B)}{P(B)} \\
              &amp; = \frac{1 / 6}{1 / 2}
@@ -2772,17 +3010,27 @@ For many problems in the social and behavioral sciences, the measured variables 
 <p>This picture should make it clear:</p>
 <p><img src="images/cond_prob2.png" style="width:50.0%" /></p>
 <blockquote>
-<p>It’s important to recognize that <span class="math inline">\(P(A \mid B) \neq P(B \mid A)\)</span>. For example, when throwing a die, <span class="math inline">\(P\)</span>(number is six | even number) = 1/3, but <span class="math inline">\(P\)</span>(even number | number is six) is 1.</p>
+<p>It’s important to recognize that <span class="math inline">\(P(A \mid
+B) \neq P(B \mid A)\)</span>. For example, when throwing a die, <span
+class="math inline">\(P\)</span>(number is six | even number) = 1/3, but
+<span class="math inline">\(P\)</span>(even number | number is six) is
+1.</p>
 </blockquote>
 <h3 id="independence">Independence</h3>
-<p>Two events, <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, are independent if</p>
+<p>Two events, <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>, are independent if</p>
 <blockquote>
 <p><span class="math inline">\(P(A \mid B) = P(A)\)</span></p>
 </blockquote>
-<p>This means that any knowledge of <span class="math inline">\(B\)</span> does not (or should not) affect one’s belief about <span class="math inline">\(A\)</span>. Consider the example:</p>
+<p>This means that any knowledge of <span
+class="math inline">\(B\)</span> does not (or should not) affect one’s
+belief about <span class="math inline">\(A\)</span>. Consider the
+example:</p>
 <ul>
-<li><span class="math inline">\(A\)</span>: A die shows five or more</li>
-<li><span class="math inline">\(B\)</span>: A die shows an odd number</li>
+<li><span class="math inline">\(A\)</span>: A die shows five or
+more</li>
+<li><span class="math inline">\(B\)</span>: A die shows an odd
+number</li>
 </ul>
 <p>Here is the joint probability</p>
 <table>
@@ -2806,11 +3054,20 @@ For many problems in the social and behavioral sciences, the measured variables 
 </tr>
 </tbody>
 </table>
-<p>So the conditional probability of <span class="math inline">\(P\)</span>(&gt;= 5 | odd) = (1/6) / (1/2) = 1/3, which is the same as <span class="math inline">\(P\)</span>(&gt;= 5 | even) = (1/6) / (1/2) = 1/3. Similarly it can be verified that <span class="math inline">\(P\)</span>(&lt;= 4 | odd) = <span class="math inline">\(P\)</span>(&lt;= 4 | even) = 2/3. Therefore, <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are independent.</p>
+<p>So the conditional probability of <span
+class="math inline">\(P\)</span>(&gt;= 5 | odd) = (1/6) / (1/2) = 1/3,
+which is the same as <span class="math inline">\(P\)</span>(&gt;= 5 |
+even) = (1/6) / (1/2) = 1/3. Similarly it can be verified that <span
+class="math inline">\(P\)</span>(&lt;= 4 | odd) = <span
+class="math inline">\(P\)</span>(&lt;= 4 | even) = 2/3. Therefore, <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> are independent.</p>
 <p>On the other hand, for the example</p>
 <ul>
-<li><span class="math inline">\(A\)</span>: A die shows four or more</li>
-<li><span class="math inline">\(B\)</span>: A die shows an odd number</li>
+<li><span class="math inline">\(A\)</span>: A die shows four or
+more</li>
+<li><span class="math inline">\(B\)</span>: A die shows an odd
+number</li>
 </ul>
 <p>the joint probabilities are</p>
 <table>
@@ -2834,19 +3091,35 @@ For many problems in the social and behavioral sciences, the measured variables 
 </tr>
 </tbody>
 </table>
-<p>Obviously, <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are not independent because once we know that the number is four or above, it changes the probability of whether it is an odd number or not.</p>
+<p>Obviously, <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> are not independent because once we
+know that the number is four or above, it changes the probability of
+whether it is an odd number or not.</p>
 <p>Independence can also be expressed as</p>
 <blockquote>
-<p>With independence, <span class="math inline">\(P(A, B) = P(A) P(B)\)</span></p>
+<p>With independence, <span class="math inline">\(P(A, B) = P(A)
+P(B)\)</span></p>
 </blockquote>
 <h3 id="law-of-total-probability">Law of Total Probability</h3>
-<p>When we talk about conditional probability, like <span class="math inline">\(B_1\)</span> = 4 or above and <span class="math inline">\(B_2\)</span> = 3 or below, we can get <span class="math inline">\(P(A \mid B_1)\)</span> and <span class="math inline">\(P(A \mid B_2)\)</span> (see the figure below), we refer <span class="math inline">\(P(A)\)</span> as the <em>marginal probability</em>, meaning that the probability of <span class="math inline">\(A\)</span> <span style="color:red"> without knowledge of <span class="math inline">\(B\)</span></span>.</p>
+<p>When we talk about conditional probability, like <span
+class="math inline">\(B_1\)</span> = 4 or above and <span
+class="math inline">\(B_2\)</span> = 3 or below, we can get <span
+class="math inline">\(P(A \mid B_1)\)</span> and <span
+class="math inline">\(P(A \mid B_2)\)</span> (see the figure below), we
+refer <span class="math inline">\(P(A)\)</span> as the <em>marginal
+probability</em>, meaning that the probability of <span
+class="math inline">\(A\)</span> <span style="color:red"> without
+knowledge of <span class="math inline">\(B\)</span></span>.</p>
 <p><img src="slides/images/total_probability.png" /></p>
-<p>If <span class="math inline">\(B_1, B_2, \cdots, B_n\)</span> are all mutually exclusive possibilities for an event (so they add up to a probability of 1), then by the <span style="color:red"> law of total probability</span>,</p>
+<p>If <span class="math inline">\(B_1, B_2, \cdots, B_n\)</span> are all
+mutually exclusive possibilities for an event (so they add up to a
+probability of 1), then by the <span style="color:red"> law of total
+probability</span>,</p>
 <blockquote>
 <p><span class="math display">\[\begin{align}
 P(A) &amp; = P(A, B_1) + P(A, B_2) + \cdots + P(A, B_n)  \\
-&amp; = P(A \mid B_1)P(B_1) + P(A \mid B_2)P(B_2) + \cdots + P(A \mid B_n) P(B_n)  \\
+&amp; = P(A \mid B_1)P(B_1) + P(A \mid B_2)P(B_2) + \cdots + P(A \mid
+B_n) P(B_n)  \\
 &amp; = \sum_{k = 1}^n P(A \mid B_k) P(B_k)
 \end{align}\]</span></p>
 </blockquote>
@@ -2876,13 +3149,32 @@ The denominator is not important for practical Bayesian analysis, therefore, it 
 ***
 
 -->
-<div class="sourceCode" id="cb8"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
-<section class="footnotes" role="doc-endnotes">
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<section class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>see the exact form at <a href="https://en.wikipedia.org/wiki/Problem_of_points" class="uri">https://en.wikipedia.org/wiki/Problem_of_points</a>)<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>See <a href="http://plato.stanford.edu/entries/probability-interpret/" class="uri">http://plato.stanford.edu/entries/probability-interpret/</a> for more information<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>In a purely subjectivist view of probability, assigning a probability <span class="math inline">\(P\)</span> to an event does not require any justifications, as long as it follows the axioms of probability. For example, I can say that the probability of me winning the lottery and thus becoming the wealthiest person on earth tomorrow is 95%, which by definition would make the probability of me not winning the lottery 5%. Most Bayesian scholars, however, do not endorse this version of subjectivist probability and require justifications of one’s beliefs (that has some correspondence to the world).<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>see the exact form at <a
+href="https://en.wikipedia.org/wiki/Problem_of_points"
+class="uri">https://en.wikipedia.org/wiki/Problem_of_points</a>)<a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>See <a
+href="http://plato.stanford.edu/entries/probability-interpret/"
+class="uri">http://plato.stanford.edu/entries/probability-interpret/</a>
+for more information<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>In a purely subjectivist view of
+probability, assigning a probability <span
+class="math inline">\(P\)</span> to an event does not require any
+justifications, as long as it follows the axioms of probability. For
+example, I can say that the probability of me winning the lottery and
+thus becoming the wealthiest person on earth tomorrow is 95%, which by
+definition would make the probability of me not winning the lottery 5%.
+Most Bayesian scholars, however, do not endorse this version of
+subjectivist probability and require justifications of one’s beliefs
+(that has some correspondence to the world).<a href="#fnref3"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->
@@ -2915,7 +3207,10 @@ The denominator is not important for practical Bayesian analysis, therefore, it 
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
 <p>© Copyright 2022 Hok Chio (Mark) Lai</p>
-<p>Template by <a href="https://github.com/distillpub/template/blob/master/AUTHORS">The Distill Template Authors</a> and <a href="https://www.rstudio.com">RStudio, Inc</a>.</p>
+<p>Template by <a
+href="https://github.com/distillpub/template/blob/master/AUTHORS">The
+Distill Template Authors</a> and <a
+href="https://www.rstudio.com">RStudio, Inc</a>.</p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 

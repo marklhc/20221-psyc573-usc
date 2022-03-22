@@ -2367,7 +2367,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2444,6 +2444,7 @@ Notes
 <a href="hmc_stan.html">HMC and Stan</a>
 <a href="hierarchical_models.html">Hierarchical Models</a>
 <a href="group_comparisons.html">Group Comparisons</a>
+<a href="glm.html">Generalized Linear Model I</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2474,21 +2475,27 @@ Notes
 <li><a href="#learning-objectives">Learning Objectives</a></li>
 <li><a href="#course-notes">Course Notes</a></li>
 <li><a href="#communication">Communication</a></li>
-<li><a href="#technological-proficiency-and-hardwaresoftware-required">Technological Proficiency and Hardware/Software Required</a>
+<li><a
+href="#technological-proficiency-and-hardwaresoftware-required">Technological
+Proficiency and Hardware/Software Required</a>
 <ul>
-<li><a href="#usc-technology-rental-program">USC technology rental program</a></li>
-<li><a href="#usc-technology-support-links">USC Technology Support Links</a></li>
+<li><a href="#usc-technology-rental-program">USC technology rental
+program</a></li>
+<li><a href="#usc-technology-support-links">USC Technology Support
+Links</a></li>
 </ul></li>
 <li><a href="#required-materials">Required Materials</a></li>
 <li><a href="#recommended-materials">Recommended Materials</a></li>
-<li><a href="#assignments">Description and Assessment of Assignments</a></li>
+<li><a href="#assignments">Description and Assessment of
+Assignments</a></li>
 <li><a href="#participation">Participation</a></li>
 <li><a href="#grading-breakdown">Grading Breakdown</a></li>
 <li><a href="#grading-scale">Grading Scale</a></li>
 <li><a href="#assignment-submission">Assignment Submission</a></li>
 <li><a href="#grading-timeline">Grading Timeline</a></li>
 <li><a href="#late-work">Late work</a></li>
-<li><a href="#technology-in-the-classroom">Technology in the classroom</a>
+<li><a href="#technology-in-the-classroom">Technology in the
+classroom</a>
 <ul>
 <li><a href="#phones">Phones</a></li>
 <li><a href="#tablets-and-laptops">Tablets and Laptops</a></li>
@@ -2497,8 +2504,11 @@ Notes
 <li><a href="#classroom-norms">Classroom Norms</a></li>
 <li><a href="#covid-19-guidance">COVID-19 Guidance</a></li>
 <li><a href="#course-evaluation">Course Evaluation</a></li>
-<li><a href="#tentative-course-schedule-a-weekly-breakdown">(Tentative) Course Schedule: A Weekly Breakdown</a></li>
-<li><a href="#statement-on-academic-conduct-and-support-systems">Statement on Academic Conduct and Support Systems</a>
+<li><a href="#tentative-course-schedule-a-weekly-breakdown">(Tentative)
+Course Schedule: A Weekly Breakdown</a></li>
+<li><a
+href="#statement-on-academic-conduct-and-support-systems">Statement on
+Academic Conduct and Support Systems</a>
 <ul>
 <li><a href="#academic-conduct">Academic Conduct:</a></li>
 <li><a href="#support-systems">Support Systems:</a></li>
@@ -2512,86 +2522,220 @@ Notes
 <p><img src="https://identity.usc.edu/files/2012/01/primaryshieldwordmark.png" title="Logo of the University of Southern California" alt="Logo of the University of Southern California" width="50%" /></p>
 </div>
 <p><strong>Units:</strong> 4<br />
-<strong>Term–Day–Time:</strong> Spring 2022–Tues &amp; Thurs–10:00-11:50 am</p>
+<strong>Term–Day–Time:</strong> Spring 2022–Tues &amp; Thurs–10:00-11:50
+am</p>
 <p><strong>Location:</strong> WPH 205</p>
 <p><strong>Instructor</strong>: Hok Chio (Mark) Lai<br />
-<strong>Office Hours:</strong> Tues 12:00–1:00 pm, and by appointment.<br />
-<strong>Contact Info:</strong> (Email) <a href="mailto:hokchiol@usc.edu">hokchiol@usc.edu</a>, (Slack) <a href="https://usc.enterprise.slack.com/" class="uri">https://usc.enterprise.slack.com/</a>.<br />
+<strong>Office Hours:</strong> Tues 12:00–1:00 pm, and by
+appointment.<br />
+<strong>Contact Info:</strong> (Email) <a
+href="mailto:hokchiol@usc.edu">hokchiol@usc.edu</a>, (Slack) <a
+href="https://usc.enterprise.slack.com/"
+class="uri">https://usc.enterprise.slack.com/</a>.<br />
 Timeline for replying to emails: within 48 hours.</p>
 <p><strong>IT Help:</strong> ITS, Blackboard<br />
 <strong>Contact Info:</strong><br />
-ITS (Email, Monday – Friday, 8:00 A.M. – 6:00 P.M.) <a href="mailto:consult@usc.edu">consult@usc.edu</a>, (Phone, 24/7/365) 213-740-5555, (Online) <a href="https://itsusc.service-now.com/">ServiceNow Portal</a><br />
-Blackboard (Email, 24/7/365) <a href="mailto:blackboard@usc.edu">blackboard@usc.edu</a>, (Online Help) <a href="https://studentblackboardhelp.usc.edu/">Blackboard Help for Students</a></p>
+ITS (Email, Monday – Friday, 8:00 A.M. – 6:00 P.M.) <a
+href="mailto:consult@usc.edu">consult@usc.edu</a>, (Phone, 24/7/365)
+213-740-5555, (Online) <a
+href="https://itsusc.service-now.com/">ServiceNow Portal</a><br />
+Blackboard (Email, 24/7/365) <a
+href="mailto:blackboard@usc.edu">blackboard@usc.edu</a>, (Online Help)
+<a href="https://studentblackboardhelp.usc.edu/">Blackboard Help for
+Students</a></p>
 <h1 id="course-description">Course Description</h1>
-<p>Bayesian statistics is a coherent framework of doing statistics. It has been one of the biggest ongoing revolutions in quantitative research methods and has been recommended as an alternative to the classical approach of hypothesis testing, as well as a computational device for some problems not easily handled in the classical approach. Students will learn about applications of Bayesian statistical methods specifically on behavioral and social science data and develop skills in conducting Bayesian analysis of real-life data.</p>
-<p>The course begins with a brief discussion on the history of the Bayesian method and the Bayesian view of probability and some comments on the philosophical differences between Bayesian and classical statistical analyses. One-parameter models and group comparisons are then discussed, with an emphasis on how Bayesian analysis incorporates information from data to update researchers’ beliefs about the world. After an introduction on Markov Chain Monte Carlo Estimation—the engine primarily responsible for the resurrection of Bayesian statistics, the course covers applications of Bayesian statistics in commonly used statistical models, including linear and generalized linear models. It also illustrates the components in the Bayesian workflow, such as the selection of priors, model checking and model comparisons, and missing data handling.</p>
+<p>Bayesian statistics is a coherent framework of doing statistics. It
+has been one of the biggest ongoing revolutions in quantitative research
+methods and has been recommended as an alternative to the classical
+approach of hypothesis testing, as well as a computational device for
+some problems not easily handled in the classical approach. Students
+will learn about applications of Bayesian statistical methods
+specifically on behavioral and social science data and develop skills in
+conducting Bayesian analysis of real-life data.</p>
+<p>The course begins with a brief discussion on the history of the
+Bayesian method and the Bayesian view of probability and some comments
+on the philosophical differences between Bayesian and classical
+statistical analyses. One-parameter models and group comparisons are
+then discussed, with an emphasis on how Bayesian analysis incorporates
+information from data to update researchers’ beliefs about the world.
+After an introduction on Markov Chain Monte Carlo Estimation—the engine
+primarily responsible for the resurrection of Bayesian statistics, the
+course covers applications of Bayesian statistics in commonly used
+statistical models, including linear and generalized linear models. It
+also illustrates the components in the Bayesian workflow, such as the
+selection of priors, model checking and model comparisons, and missing
+data handling.</p>
 <h1 id="learning-objectives">Learning Objectives</h1>
-<p>After the successful completion of this course, students will be able to</p>
+<p>After the successful completion of this course, students will be able
+to</p>
 <ol type="1">
-<li>Describe the foundations of the Bayesian framework of statistics;</li>
-<li>Explain to fellow researchers the terminologies in Bayesian analysis, such as prior, posterior, credible intervals, MCMC, etc.;</li>
-<li>Explain and demonstrate in applications the advantages and disadvantages of the Bayesian approach in comparisons to classical approaches;</li>
-<li>Independently perform Bayesian analyses covered in this class using statistical software on real data;</li>
-<li>Conduct a research project involving Bayesian analysis and effectively communicate their findings/products in an oral presentation and a written report.</li>
+<li>Describe the foundations of the Bayesian framework of
+statistics;</li>
+<li>Explain to fellow researchers the terminologies in Bayesian
+analysis, such as prior, posterior, credible intervals, MCMC, etc.;</li>
+<li>Explain and demonstrate in applications the advantages and
+disadvantages of the Bayesian approach in comparisons to classical
+approaches;</li>
+<li>Independently perform Bayesian analyses covered in this class using
+statistical software on real data;</li>
+<li>Conduct a research project involving Bayesian analysis and
+effectively communicate their findings/products in an oral presentation
+and a written report.</li>
 </ol>
 <p><strong>Prerequisite(s):</strong> None</p>
 <p><strong>Co-Requisite(s):</strong> None</p>
 <p><strong>Concurrent Enrollment:</strong> None</p>
-<p><strong>Recommended Preparation:</strong> PSYC 501: Classic and Modern Statistical Methods I; Experience with R</p>
+<p><strong>Recommended Preparation:</strong> PSYC 501: Classic and
+Modern Statistical Methods I; Experience with R</p>
 <h1 id="course-notes">Course Notes</h1>
-<p>Students are expected to finish the reading assignments before class meetings and actively participate in class discussions and activities. A typical class meeting will include lectures, quizzes, software demonstrations, and small-group discussions/activities. Lecture slides/notes will be posted on Blackboard before class meetings, but please note that the lecture slides only serve to guide class discussions and cannot replace the assigned readings. Students are expected to bring laptops to class to follow the software demonstration and work on in-class exercises.</p>
-<p>As announced in the Provost’s memo (<a href="https://we-are.usc.edu/2022/01/07/1-7-22-spring-semester-and-omicron/" class="uri">https://we-are.usc.edu/2022/01/07/1-7-22-spring-semester-and-omicron/</a>), the first two weeks of classes in 2022 Spring will be conducted remotely. In-person instruction is expected to resume starting Week 3.</p>
+<p>Students are expected to finish the reading assignments before class
+meetings and actively participate in class discussions and activities. A
+typical class meeting will include lectures, quizzes, software
+demonstrations, and small-group discussions/activities. Lecture
+slides/notes will be posted on Blackboard before class meetings, but
+please note that the lecture slides only serve to guide class
+discussions and cannot replace the assigned readings. Students are
+expected to bring laptops to class to follow the software demonstration
+and work on in-class exercises.</p>
+<p>As announced in the Provost’s memo (<a
+href="https://we-are.usc.edu/2022/01/07/1-7-22-spring-semester-and-omicron/"
+class="uri">https://we-are.usc.edu/2022/01/07/1-7-22-spring-semester-and-omicron/</a>),
+the first two weeks of classes in 2022 Spring will be conducted
+remotely. In-person instruction is expected to resume starting Week
+3.</p>
 <h1 id="communication">Communication</h1>
-<p>To promote independence and critical thinking, students are encouraged to work through the following process for obtaining answers to course-related questions before contacting the instructor:</p>
+<p>To promote independence and critical thinking, students are
+encouraged to work through the following process for obtaining answers
+to course-related questions before contacting the instructor:</p>
 <ul>
 <li>consult the course syllabus;</li>
 <li>consult a classmate or post your questions on Slack;</li>
-<li>meet with the instructor during office hours or Q&amp;A sessions on Tuesdays;</li>
-<li>for personal questions, email the instructor at <a href="mailto:hokchiol@usc.edu" class="email">hokchiol@usc.edu</a></li>
+<li>meet with the instructor during office hours or Q&amp;A sessions on
+Tuesdays;</li>
+<li>for personal questions, email the instructor at <a
+href="mailto:hokchiol@usc.edu" class="email">hokchiol@usc.edu</a></li>
 </ul>
-<h1 id="technological-proficiency-and-hardwaresoftware-required">Technological Proficiency and Hardware/Software Required</h1>
+<h1
+id="technological-proficiency-and-hardwaresoftware-required">Technological
+Proficiency and Hardware/Software Required</h1>
 <ul>
-<li><a href="https://cloud.r-project.org/">R</a> and <a href="https://rstudio.com/products/rstudio/download/">RStudio</a> are needed to complete the course assignments. It is highly recommended that students update to the latest versions of both software (R 4.1.0, RStudio 2021.09.0, or above). We will briefly discuss setting up R and RStudio in Week 1.</li>
-<li>The textbook and most of the supplemental readings can be accessed through the USC Libraries at <a href="https://libraries.usc.edu/" class="uri">https://libraries.usc.edu/</a></li>
+<li><a href="https://cloud.r-project.org/">R</a> and <a
+href="https://rstudio.com/products/rstudio/download/">RStudio</a> are
+needed to complete the course assignments. It is highly recommended that
+students update to the latest versions of both software (R 4.1.0,
+RStudio 2021.09.0, or above). We will briefly discuss setting up R and
+RStudio in Week 1.</li>
+<li>The textbook and most of the supplemental readings can be accessed
+through the USC Libraries at <a href="https://libraries.usc.edu/"
+class="uri">https://libraries.usc.edu/</a></li>
 </ul>
-<h2 id="usc-technology-rental-program">USC technology rental program</h2>
-<p>If you need resources to successfully participate in this class, such as a laptop or internet hotspot, you may be eligible for the university’s equipment rental program. To apply, please <a href="https://studentbasicneeds.usc.edu/resources/technology-assistance/">submit an application</a>.</p>
+<h2 id="usc-technology-rental-program">USC technology rental
+program</h2>
+<p>If you need resources to successfully participate in this class, such
+as a laptop or internet hotspot, you may be eligible for the
+university’s equipment rental program. To apply, please <a
+href="https://studentbasicneeds.usc.edu/resources/technology-assistance/">submit
+an application</a>.</p>
 <h2 id="usc-technology-support-links">USC Technology Support Links</h2>
-<p><a href="https://keepteaching.usc.edu/students/student-toolkit/classroom/zoom/">Zoom information for students</a> <a href="https://studentblackboardhelp.usc.edu/">Blackboard help for students</a><br />
-<a href="https://keepteaching.usc.edu/students/student-toolkit/classroom/slack/">Slack information for students</a><br />
-<a href="https://software.usc.edu/">Software available to USC Campus</a></p>
+<p><a
+href="https://keepteaching.usc.edu/students/student-toolkit/classroom/zoom/">Zoom
+information for students</a> <a
+href="https://studentblackboardhelp.usc.edu/">Blackboard help for
+students</a><br />
+<a
+href="https://keepteaching.usc.edu/students/student-toolkit/classroom/slack/">Slack
+information for students</a><br />
+<a href="https://software.usc.edu/">Software available to USC
+Campus</a></p>
 <h1 id="required-materials">Required Materials</h1>
 <ul>
-<li>Kruschke, J. K. (2015). <em>Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan</em> (2nd ed.). Academic Press.
+<li>Kruschke, J. K. (2015). <em>Doing Bayesian data analysis: A tutorial
+with R, JAGS, and Stan</em> (2nd ed.). Academic Press.
 <ul>
-<li>Available from USC Libraries (login required): <a href="https://www-sciencedirect-com.libproxy2.usc.edu/book/9780124058880/doing-bayesian-data-analysis" class="uri">https://www-sciencedirect-com.libproxy2.usc.edu/book/9780124058880/doing-bayesian-data-analysis</a></li>
-<li>Corrigenda: <a href="https://docs.google.com/spreadsheets/d/1gWjvDKXfSvEhlrdjevSzf6YqnVcFL3QLPGxybAriIng" class="uri">https://docs.google.com/spreadsheets/d/1gWjvDKXfSvEhlrdjevSzf6YqnVcFL3QLPGxybAriIng</a></li>
+<li>Available from USC Libraries (login required): <a
+href="https://www-sciencedirect-com.libproxy2.usc.edu/book/9780124058880/doing-bayesian-data-analysis"
+class="uri">https://www-sciencedirect-com.libproxy2.usc.edu/book/9780124058880/doing-bayesian-data-analysis</a></li>
+<li>Corrigenda: <a
+href="https://docs.google.com/spreadsheets/d/1gWjvDKXfSvEhlrdjevSzf6YqnVcFL3QLPGxybAriIng"
+class="uri">https://docs.google.com/spreadsheets/d/1gWjvDKXfSvEhlrdjevSzf6YqnVcFL3QLPGxybAriIng</a></li>
 </ul></li>
 </ul>
 <h1 id="recommended-materials">Recommended Materials</h1>
 <p>E-copies of all below are available at USC Libraries.</p>
 <ul>
-<li>McElreath, R. (2020). <em>Statistical rethinking: A Bayesian course with examples in R and Stan</em> (2nd ed.). CRC Press.</li>
-<li>Gelman, A., Hill, J., &amp; Vehtari, A. (2021). <em>Regression and Other Stories</em>. Cambridge University Press. <a href="https://doi.org/10.1017/9781139161879" class="uri">https://doi.org/10.1017/9781139161879</a> [Very good book on regression]</li>
-<li>Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., &amp; Rubin, D. B. (2014). <em>Bayesian data analysis</em> (3rd ed.). CRC Press. [For more technical depth]</li>
-<li>McGrayne, S. B. (2012). <em>The theory that would not die: How Bayes’ rule cracked the Enigma code, hunted down Russian submarines, and emerged triumphant from two centuries of controversy</em>. Yale University Press. [A very nice historical account of the Bayes’ theorem.]</li>
+<li>McElreath, R. (2020). <em>Statistical rethinking: A Bayesian course
+with examples in R and Stan</em> (2nd ed.). CRC Press.</li>
+<li>Gelman, A., Hill, J., &amp; Vehtari, A. (2021). <em>Regression and
+Other Stories</em>. Cambridge University Press. <a
+href="https://doi.org/10.1017/9781139161879"
+class="uri">https://doi.org/10.1017/9781139161879</a> [Very good book on
+regression]</li>
+<li>Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A.,
+&amp; Rubin, D. B. (2014). <em>Bayesian data analysis</em> (3rd ed.).
+CRC Press. [For more technical depth]</li>
+<li>McGrayne, S. B. (2012). <em>The theory that would not die: How
+Bayes’ rule cracked the Enigma code, hunted down Russian submarines, and
+emerged triumphant from two centuries of controversy</em>. Yale
+University Press. [A very nice historical account of the Bayes’
+theorem.]</li>
 </ul>
 <h1 id="assignments">Description and Assessment of Assignments</h1>
 <ol type="1">
-<li><p>In-class exercises (10%). During some of the class sessions, students will participate in quizzes or group exercises. If students miss an exercise for participation credit, they can complete the exercise posted on Blackboard within 24 hours to get credits.</p></li>
-<li><p>Homework problems (70%). There will be weekly homework assignments for students to apply the concepts and techniques discussed in class to analytic problems. The assignments typically involve performing data analyses using data sets of your own or provided by the instructor, and interpreting the results with guided questions. Please submit your work electronically to Blackboard by <strong>Monday 11:59 p.m. Pacific Time</strong> the week after the homework is assigned. See policy on <a href="#late-work">late work</a>.</p></li>
-<li><p>Final project (20%: 5% prospectus, 15% presentation/final report). You will complete a research project related to Bayesian analysis, typically a report analyzing real data or a theoretical/methodological analysis of certain aspects of Bayesian data analysis. For empirical analyses, the focuses are (a) formulating and justifying prior distributions from a review of previous literature, (b) obtaining and interpreting posterior distributions, and (c) comprehensive reporting of methods and results. Students can also replicate the analyses of an existing study, as long as the chosen study shared sufficient data and materials and did not use a Bayesian analysis with informative priors. Students interested in project ideas other than an empirical research report (e.g., software package development, systematic review/meta-analysis) are encouraged to discuss their ideas with the instructor. Each student can choose to work on their own or in a group of up to three people.</p>
+<li><p>In-class exercises (10%). During some of the class sessions,
+students will participate in quizzes or group exercises. If students
+miss an exercise for participation credit, they can complete the
+exercise posted on Blackboard within 24 hours to get credits.</p></li>
+<li><p>Homework problems (70%). There will be weekly homework
+assignments for students to apply the concepts and techniques discussed
+in class to analytic problems. The assignments typically involve
+performing data analyses using data sets of your own or provided by the
+instructor, and interpreting the results with guided questions. Please
+submit your work electronically to Blackboard by <strong>Monday 11:59
+p.m. Pacific Time</strong> the week after the homework is assigned. See
+policy on <a href="#late-work">late work</a>.</p></li>
+<li><p>Final project (20%: 5% prospectus, 15% presentation/final
+report). You will complete a research project related to Bayesian
+analysis, typically a report analyzing real data or a
+theoretical/methodological analysis of certain aspects of Bayesian data
+analysis. For empirical analyses, the focuses are (a) formulating and
+justifying prior distributions from a review of previous literature, (b)
+obtaining and interpreting posterior distributions, and (c)
+comprehensive reporting of methods and results. Students can also
+replicate the analyses of an existing study, as long as the chosen study
+shared sufficient data and materials and did not use a Bayesian analysis
+with informative priors. Students interested in project ideas other than
+an empirical research report (e.g., software package development,
+systematic review/meta-analysis) are encouraged to discuss their ideas
+with the instructor. Each student can choose to work on their own or in
+a group of up to three people.</p>
 <p>There are two grading components for your final project:</p>
 <ul>
 <li><p>Prospectus (5%)<br />
-A prospectus about your project should be submitted by <strong>Monday, March 21</strong>. The prospectus should contain a concise description of what you (or your group) plan to do for your project, including a preliminary plan for statistical analysis. The prospectus should be limited to 1 single-spaced page (excluding tables, figures, references, and other supplemental materials).</p></li>
+A prospectus about your project should be submitted by <strong>Monday,
+March 21</strong>. The prospectus should contain a concise description
+of what you (or your group) plan to do for your project, including a
+preliminary plan for statistical analysis. The prospectus should be
+limited to 1 single-spaced page (excluding tables, figures, references,
+and other supplemental materials).</p></li>
 <li><p>Final Presentation/Report (15%)<br />
-If you choose to do a presentation, on <strong>April 26 and 28</strong>, you or your group will give a 15-minute presentation on your project. You will also need to submit your slides to Blackboard for grading <strong>on the day of your presentation</strong>, which should include a link to the reproducible code for your analyses. A grading rubric on the final presentation will be posted on Blackboard.</p>
-<p>If you choose to do a final report, your report will be due <strong>Tuesday, May 10, at 1:00 p.m. Pacific Time</strong> (the assigned final exam time for the class). There should also be a link to the reproducible code for your analyses. The final paper should be 6-10 double-spaced pages of text (i.e., excluding title page, references, tables, figures, and appendices).</p></li>
+If you choose to do a presentation, on <strong>April 26 and 28</strong>,
+you or your group will give a 15-minute presentation on your project.
+You will also need to submit your slides to Blackboard for grading
+<strong>on the day of your presentation</strong>, which should include a
+link to the reproducible code for your analyses. A grading rubric on the
+final presentation will be posted on Blackboard.</p>
+<p>If you choose to do a final report, your report will be due
+<strong>Tuesday, May 10, at 1:00 p.m. Pacific Time</strong> (the
+assigned final exam time for the class). There should also be a link to
+the reproducible code for your analyses. The final paper should be 6-10
+double-spaced pages of text (i.e., excluding title page, references,
+tables, figures, and appendices).</p></li>
 </ul></li>
 </ol>
 <h1 id="participation">Participation</h1>
-<p>Participation accounts for 10% of the course grade. Students should complete and turn in all in-class exercises to earn full credit for participation.</p>
+<p>Participation accounts for 10% of the course grade. Students should
+complete and turn in all in-class exercises to earn full credit for
+participation.</p>
 <h1 id="grading-breakdown">Grading Breakdown</h1>
 <table>
 <thead>
@@ -2662,43 +2806,87 @@ If you choose to do a presentation, on <strong>April 26 and 28</strong>, you or 
 </tbody>
 </table>
 <h1 id="assignment-submission">Assignment Submission</h1>
-<p>The assignments should be submitted through Blackboard by Monday at 11:59 p.m. Pacific Time.</p>
+<p>The assignments should be submitted through Blackboard by Monday at
+11:59 p.m. Pacific Time.</p>
 <h1 id="grading-timeline">Grading Timeline</h1>
-<p>Generally, all graded work will be returned no later than one week from the submission deadline. However, given the high number of students in the class, the instructor may only grade selected questions in each assignment. Solutions will be posted so that students can check their own work.</p>
+<p>Generally, all graded work will be returned no later than one week
+from the submission deadline. However, given the high number of students
+in the class, the instructor may only grade selected questions in each
+assignment. Solutions will be posted so that students can check their
+own work.</p>
 <h1 id="late-work">Late work</h1>
-<p>Late work will be penalized by a 10% reduction in the assignment grade every 24 hours late unless due to an emergency excused by the instructor. Please email the instructor as soon as possible to discuss alternate arrangements due to an emergency.</p>
+<p>Late work will be penalized by a 10% reduction in the assignment
+grade every 24 hours late unless due to an emergency excused by the
+instructor. Please email the instructor as soon as possible to discuss
+alternate arrangements due to an emergency.</p>
 <h1 id="technology-in-the-classroom">Technology in the classroom</h1>
 <h2 id="phones">Phones</h2>
-<p>Your phone should be turned off or in silent mode (not on vibrate), and should not be used in the classroom.</p>
+<p>Your phone should be turned off or in silent mode (not on vibrate),
+and should not be used in the classroom.</p>
 <h2 id="tablets-and-laptops">Tablets and Laptops</h2>
-<p>During lecture time in the classroom, students can use tablets and laptops only for purposes of viewing course materials and taking notes. Use of tablets and laptops for multitasking is strongly discouraged as it may distract both yourself and your peers (<a href="https://www.sciencedirect.com/science/article/pii/S0360131512002254">Sana, Weston, &amp; Cepeda, 2013</a>). During the in-class exercises, students should use their laptops to complete the assignments.</p>
+<p>During lecture time in the classroom, students can use tablets and
+laptops only for purposes of viewing course materials and taking notes.
+Use of tablets and laptops for multitasking is strongly discouraged as
+it may distract both yourself and your peers (<a
+href="https://www.sciencedirect.com/science/article/pii/S0360131512002254">Sana,
+Weston, &amp; Cepeda, 2013</a>). During the in-class exercises, students
+should use their laptops to complete the assignments.</p>
 <h1 id="attendance">Attendance</h1>
-<p>Students are expected to attend all Thursday class sessions on time. If they miss a session, they should complete the class exercises and turn in their work within the timeframe specified in <a href="#assignments">Description and Assessment of Assignments</a>.</p>
+<p>Students are expected to attend all Thursday class sessions on time.
+If they miss a session, they should complete the class exercises and
+turn in their work within the timeframe specified in <a
+href="#assignments">Description and Assessment of Assignments</a>.</p>
 <h1 id="classroom-norms">Classroom Norms</h1>
-<p>From USC’s <a href="https://we-are.usc.edu/wp-content/uploads/2021/08/2021-Fall-Guide.pdf">FALL 2021 GUIDE: Return To Campus Protocols</a> document,</p>
+<p>From USC’s <a
+href="https://we-are.usc.edu/wp-content/uploads/2021/08/2021-Fall-Guide.pdf">FALL
+2021 GUIDE: Return To Campus Protocols</a> document,</p>
 <blockquote>
-<p>Students, faculty and staff need to be aware of <a href="https://studenthealth.usc.edu/files/2020/08/COVID19-symptoms-768x556.jpg">COVID-19 symptoms</a>, and are required to complete a daily self-screening via <a href="https://trojancheck.usc.edu/login#/consent">Trojan Check</a> before coming onto campus or leaving their on-campus residence.</p>
+<p>Students, faculty and staff need to be aware of <a
+href="https://studenthealth.usc.edu/files/2020/08/COVID19-symptoms-768x556.jpg">COVID-19
+symptoms</a>, and are required to complete a daily self-screening via <a
+href="https://trojancheck.usc.edu/login#/consent">Trojan Check</a>
+before coming onto campus or leaving their on-campus residence.</p>
 </blockquote>
 <blockquote>
-<p>Students, faculty, and staff are required to wear masks indoors, including classrooms, and no food or drink is permitted during class</p>
+<p>Students, faculty, and staff are required to wear masks indoors,
+including classrooms, and no food or drink is permitted during class</p>
 </blockquote>
-<p>From USC’s <a href="https://coronavirus.usc.edu/2022/01/05/updated-masking-guidance-for-campus-environments/">Updated Masking Guidance for Campus Environments</a>,</p>
+<p>From USC’s <a
+href="https://coronavirus.usc.edu/2022/01/05/updated-masking-guidance-for-campus-environments/">Updated
+Masking Guidance for Campus Environments</a>,</p>
 <blockquote>
-<p>Individuals on USC campus premises in locations where masking is required are now required to <strong>wear medical grade masks</strong>, which at minimum are surgical masks and may also include higher grade respirator masks (N95, KN95, or KF94).</p>
+<p>Individuals on USC campus premises in locations where masking is
+required are now required to <strong>wear medical grade masks</strong>,
+which at minimum are surgical masks and may also include higher grade
+respirator masks (N95, KN95, or KF94).</p>
 </blockquote>
-<p>The following applies to both in-person and online communications (e.g., Slack discussions and email communications)</p>
+<p>The following applies to both in-person and online communications
+(e.g., Slack discussions and email communications)</p>
 <ul>
 <li>Respect each other’s views.</li>
-<li>In written communication messages, make sure they are something you could say to someone to their face.</li>
+<li>In written communication messages, make sure they are something you
+could say to someone to their face.</li>
 <li>Recognize and/or remember that we have different backgrounds.</li>
 <li>Criticize ideas, not individuals or groups.</li>
-<li>Either support statements with evidence, or speak from personal experience.</li>
+<li>Either support statements with evidence, or speak from personal
+experience.</li>
 </ul>
 <h1 id="covid-19-guidance">COVID-19 Guidance</h1>
-<p>Students should consult the latest COVID-19 testing and health protocol requirements for on-campus courses. Continuously updated requirements can be found on the USC COVID-19 resource center website at <a href="https://coronavirus.usc.edu/" class="uri">https://coronavirus.usc.edu/</a> and <a href="https://we-are.usc.edu/" class="uri">https://we-are.usc.edu/</a>.</p>
+<p>Students should consult the latest COVID-19 testing and health
+protocol requirements for on-campus courses. Continuously updated
+requirements can be found on the USC COVID-19 resource center website at
+<a href="https://coronavirus.usc.edu/"
+class="uri">https://coronavirus.usc.edu/</a> and <a
+href="https://we-are.usc.edu/"
+class="uri">https://we-are.usc.edu/</a>.</p>
 <h1 id="course-evaluation">Course Evaluation</h1>
-<p>Student feedback is essential to the instructor and the Department to keep improving this course and faculty pedagogy. Students are encouraged to share their feedback and suggestions in an early-term feedback survey around week 4 to 5, and respond to the standard USC course evaluation survey at the end of the semester.</p>
-<h1 id="tentative-course-schedule-a-weekly-breakdown">(Tentative) Course Schedule: A Weekly Breakdown</h1>
+<p>Student feedback is essential to the instructor and the Department to
+keep improving this course and faculty pedagogy. Students are encouraged
+to share their feedback and suggestions in an early-term feedback survey
+around week 4 to 5, and respond to the standard USC course evaluation
+survey at the end of the semester.</p>
+<h1 id="tentative-course-schedule-a-weekly-breakdown">(Tentative) Course
+Schedule: A Weekly Breakdown</h1>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
@@ -2726,9 +2914,15 @@ Jan 11 &amp; 13 (Remote)</td>
 <li>R Markdown</li>
 </ul></td>
 <td><ul>
-<li><a href="https://drive.google.com/file/d/1tr7XpIVf04S44o5ZploxJcd37Fg1GygV/view">Kruschke ch. 2</a></li>
-<li>Supplemental: <a href="https://jim-stone.staff.shef.ac.uk/BookBayes2012/bookbayesch01.pdf">James ch. 1</a></li>
-<li><a href="https://web.mit.edu/r/current/RStudio/resources/markdown_help.html">Markdown Quick Reference</a></li>
+<li><a
+href="https://drive.google.com/file/d/1tr7XpIVf04S44o5ZploxJcd37Fg1GygV/view">Kruschke
+ch. 2</a></li>
+<li>Supplemental: <a
+href="https://jim-stone.staff.shef.ac.uk/BookBayes2012/bookbayesch01.pdf">James
+ch. 1</a></li>
+<li><a
+href="https://web.mit.edu/r/current/RStudio/resources/markdown_help.html">Markdown
+Quick Reference</a></li>
 </ul></td>
 <td><ul>
 <li>Exercise: R Markdown</li>
@@ -2744,7 +2938,9 @@ Jan 18 &amp; 20</td>
 </ul></td>
 <td><ul>
 <li>Kruschke ch. 4</li>
-<li>Wickham &amp; Grolemund ch. <a href="https://r4ds.had.co.nz/exploratory-data-analysis.html">7</a>, <a href="https://r4ds.had.co.nz/functions.html">19</a></li>
+<li>Wickham &amp; Grolemund ch. <a
+href="https://r4ds.had.co.nz/exploratory-data-analysis.html">7</a>, <a
+href="https://r4ds.had.co.nz/functions.html">19</a></li>
 </ul></td>
 <td><ul>
 <li>Exercise: Function &amp; Loop in R</li>
@@ -2758,7 +2954,9 @@ Jan 25 &amp; 27</td>
 <li>Bayes Theorem</li>
 </ul></td>
 <td><ul>
-<li><a href="https://pure.mpg.de/rest/items/item_2101336/component/file_2101335/content">Gigerenzer (2004)</a></li>
+<li><a
+href="https://pure.mpg.de/rest/items/item_2101336/component/file_2101335/content">Gigerenzer
+(2004)</a></li>
 <li>Kruschke ch. 5</li>
 </ul></td>
 <td><ul>
@@ -2774,7 +2972,9 @@ Feb 1 &amp; 3</td>
 </ul></td>
 <td><ul>
 <li>Kruschke ch. 6</li>
-<li><a href="https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssa.12378">Gabry et al. (2019)</a></li>
+<li><a
+href="https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssa.12378">Gabry
+et al. (2019)</a></li>
 </ul></td>
 <td><ul>
 <li>Exercise: Graphical check</li>
@@ -2803,7 +3003,8 @@ Feb 15 &amp; 17</td>
 </ul></td>
 <td><ul>
 <li>Kruschke ch. 14</li>
-<li><a href="https://chi-feng.github.io/mcmc-demo/app.html">MCMC Interactive Gallery</a></li>
+<li><a href="https://chi-feng.github.io/mcmc-demo/app.html">MCMC
+Interactive Gallery</a></li>
 </ul></td>
 <td><ul>
 <li>Exercise: Divergent transition</li>
@@ -2952,45 +3153,88 @@ Apr 26 &amp; 28</td>
 </tr>
 </tbody>
 </table>
-<h1 id="statement-on-academic-conduct-and-support-systems">Statement on Academic Conduct and Support Systems</h1>
+<h1 id="statement-on-academic-conduct-and-support-systems">Statement on
+Academic Conduct and Support Systems</h1>
 <h2 id="academic-conduct">Academic Conduct:</h2>
-<p>Plagiarism—presenting someone else’s ideas as your own, either verbatim or recast in your own words—is a serious academic offense with serious consequences. Please familiarize yourself with the discussion of plagiarism in <em>SCampus</em> in Part B, Section 11, “Behavior Violating University Standards” <a href="https://policy.usc.edu/scampus-part-b/">policy.usc.edu/scampus-part-b</a>. Other forms of academic dishonesty are equally unacceptable. See additional information in SCampus and university policies on scientific misconduct, <a href="https://policy.usc.edu/scientific-misconduct">policy.usc.edu/scientific-misconduct</a>.</p>
+<p>Plagiarism—presenting someone else’s ideas as your own, either
+verbatim or recast in your own words—is a serious academic offense with
+serious consequences. Please familiarize yourself with the discussion of
+plagiarism in <em>SCampus</em> in Part B, Section 11, “Behavior
+Violating University Standards” <a
+href="https://policy.usc.edu/scampus-part-b/">policy.usc.edu/scampus-part-b</a>.
+Other forms of academic dishonesty are equally unacceptable. See
+additional information in SCampus and university policies on scientific
+misconduct, <a
+href="https://policy.usc.edu/scientific-misconduct">policy.usc.edu/scientific-misconduct</a>.</p>
 <h2 id="support-systems">Support Systems:</h2>
-<p><em>Counseling and Mental Health - (213) 740-9355 - 24/7 on call</em><br />
-<a href="https://studenthealth.usc.edu/counseling/">studenthealth.usc.edu/counseling</a><br />
-Free and confidential mental health treatment for students, including short-term psychotherapy, group counseling, stress fitness workshops, and crisis intervention.</p>
-<p><em>National Suicide Prevention Lifeline - 1 (800) 273-8255 - 24/7 on call</em><br />
-<a href="https://www.suicidepreventionlifeline.org">suicidepreventionlifeline.org</a><br />
-Free and confidential emotional support to people in suicidal crisis or emotional distress 24 hours a day, 7 days a week.</p>
-<p><em>Relationship and Sexual Violence Prevention Services (RSVP) - (213) 740-9355(WELL), press “0” after hours - 24/7 on call</em><br />
-<a href="https://studenthealth.usc.edu/sexual-assault/">studenthealth.usc.edu/sexual-assault</a><br />
-Free and confidential therapy services, workshops, and training for situations related to gender-based harm.</p>
-<p><em>Office of Equity and Diversity (OED) - (213) 740-5086 | Title IX - (213) 821-8298</em><br />
-<a href="https://equity.usc.edu/">equity.usc.edu</a>, <a href="https://titleix.usc.edu/">titleix.usc.edu</a><br />
-Information about how to get help or help someone affected by harassment or discrimination, rights of protected classes, reporting options, and additional resources for students, faculty, staff, visitors, and applicants.</p>
-<p><em>Reporting Incidents of Bias or Harassment - (213) 740-5086 or (213) 821-8298</em><br />
-<a href="https://usc-advocate.symplicity.com/care_report/">usc-advocate.symplicity.com/care_report</a><br />
-Avenue to report incidents of bias, hate crimes, and microaggressions to the Office of Equity and Diversity |Title IX for appropriate investigation, supportive measures, and response.</p>
-<p><em>The Office of Disability Services and Programs - (213) 740-0776</em><br />
+<p><em>Counseling and Mental Health - (213) 740-9355 - 24/7 on
+call</em><br />
+<a
+href="https://studenthealth.usc.edu/counseling/">studenthealth.usc.edu/counseling</a><br />
+Free and confidential mental health treatment for students, including
+short-term psychotherapy, group counseling, stress fitness workshops,
+and crisis intervention.</p>
+<p><em>National Suicide Prevention Lifeline - 1 (800) 273-8255 - 24/7 on
+call</em><br />
+<a
+href="https://www.suicidepreventionlifeline.org">suicidepreventionlifeline.org</a><br />
+Free and confidential emotional support to people in suicidal crisis or
+emotional distress 24 hours a day, 7 days a week.</p>
+<p><em>Relationship and Sexual Violence Prevention Services (RSVP) -
+(213) 740-9355(WELL), press “0” after hours - 24/7 on call</em><br />
+<a
+href="https://studenthealth.usc.edu/sexual-assault/">studenthealth.usc.edu/sexual-assault</a><br />
+Free and confidential therapy services, workshops, and training for
+situations related to gender-based harm.</p>
+<p><em>Office of Equity and Diversity (OED) - (213) 740-5086 | Title IX
+- (213) 821-8298</em><br />
+<a href="https://equity.usc.edu/">equity.usc.edu</a>, <a
+href="https://titleix.usc.edu/">titleix.usc.edu</a><br />
+Information about how to get help or help someone affected by harassment
+or discrimination, rights of protected classes, reporting options, and
+additional resources for students, faculty, staff, visitors, and
+applicants.</p>
+<p><em>Reporting Incidents of Bias or Harassment - (213) 740-5086 or
+(213) 821-8298</em><br />
+<a
+href="https://usc-advocate.symplicity.com/care_report/">usc-advocate.symplicity.com/care_report</a><br />
+Avenue to report incidents of bias, hate crimes, and microaggressions to
+the Office of Equity and Diversity |Title IX for appropriate
+investigation, supportive measures, and response.</p>
+<p><em>The Office of Disability Services and Programs - (213)
+740-0776</em><br />
 <a href="https://dsp.usc.edu/">dsp.usc.edu</a><br />
-Support and accommodations for students with disabilities. Services include assistance in providing readers/notetakers/interpreters, special accommodations for test taking needs, assistance with architectural barriers, assistive technology, and support for individual needs.</p>
+Support and accommodations for students with disabilities. Services
+include assistance in providing readers/notetakers/interpreters, special
+accommodations for test taking needs, assistance with architectural
+barriers, assistive technology, and support for individual needs.</p>
 <p><em>USC Campus Support and Intervention - (213) 821-4710</em><br />
 <a href="https://campussupport.usc.edu/">campussupport.usc.edu</a><br />
-Assists students and families in resolving complex personal, financial, and academic issues adversely affecting their success as a student.</p>
+Assists students and families in resolving complex personal, financial,
+and academic issues adversely affecting their success as a student.</p>
 <p><em>Diversity at USC - (213) 740-2101</em><br />
 <a href="https://diversity.usc.edu/">diversity.usc.edu</a><br />
-Information on events, programs and training, the Provost’s Diversity and Inclusion Council, Diversity Liaisons for each academic school, chronology, participation, and various resources for students.</p>
-<p><em>USC Emergency - UPC: (213) 740-4321, HSC: (323) 442-1000 - 24/7 on call</em><br />
-<a href="https://dps.usc.edu/">dps.usc.edu</a>, <a href="https://emergency.usc.edu/">emergency.usc.edu</a><br />
-Emergency assistance and avenue to report a crime. Latest updates regarding safety, including ways in which instruction will be continued if an officially declared emergency makes travel to campus infeasible.</p>
-<p><em>USC Department of Public Safety - UPC: (213) 740-6000, HSC: (323) 442-1200 - 24/7 on call</em><br />
+Information on events, programs and training, the Provost’s Diversity
+and Inclusion Council, Diversity Liaisons for each academic school,
+chronology, participation, and various resources for students.</p>
+<p><em>USC Emergency - UPC: (213) 740-4321, HSC: (323) 442-1000 - 24/7
+on call</em><br />
+<a href="https://dps.usc.edu/">dps.usc.edu</a>, <a
+href="https://emergency.usc.edu/">emergency.usc.edu</a><br />
+Emergency assistance and avenue to report a crime. Latest updates
+regarding safety, including ways in which instruction will be continued
+if an officially declared emergency makes travel to campus
+infeasible.</p>
+<p><em>USC Department of Public Safety - UPC: (213) 740-6000, HSC: (323)
+442-1200 - 24/7 on call</em><br />
 <a href="https://dps.usc.edu/">dps.usc.edu</a><br />
 Non-emergency assistance or information.</p>
 <h2 class="appendix" id="last-updated">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
 <pre><code>[1] &quot;February 26, 2022&quot;</code></pre>
 </div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -3012,7 +3256,10 @@ Non-emergency assistance or information.</p>
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
 <p>© Copyright 2022 Hok Chio (Mark) Lai</p>
-<p>Template by <a href="https://github.com/distillpub/template/blob/master/AUTHORS">The Distill Template Authors</a> and <a href="https://www.rstudio.com">RStudio, Inc</a>.</p>
+<p>Template by <a
+href="https://github.com/distillpub/template/blob/master/AUTHORS">The
+Distill Template Authors</a> and <a
+href="https://www.rstudio.com">RStudio, Inc</a>.</p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 

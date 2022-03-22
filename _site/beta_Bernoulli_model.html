@@ -2368,7 +2368,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
   <script src="site_libs/clipboard-2.0.6/clipboard.min.js"></script>
   <link href="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
   <script src="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
@@ -2451,6 +2451,7 @@ Notes
 <a href="hmc_stan.html">HMC and Stan</a>
 <a href="hierarchical_models.html">Hierarchical Models</a>
 <a href="group_comparisons.html">Group Comparisons</a>
+<a href="glm.html">Generalized Linear Model I</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2483,13 +2484,15 @@ Notes
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#steps-of-bayesian-data-analysis">Steps of Bayesian Data Analysis</a></li>
+<li><a href="#steps-of-bayesian-data-analysis">Steps of Bayesian Data
+Analysis</a></li>
 <li><a href="#beta-bernoulli-example">Beta-Bernoulli Example</a>
 <ul>
 <li><a href="#bernoulli-model">Bernoulli Model</a></li>
 <li><a href="#exchangeability">Exchangeability</a></li>
 <li><a href="#check-the-support">Check the Support</a></li>
-<li><a href="#conjugate-prior-beta-distribution">Conjugate Prior: Beta Distribution</a>
+<li><a href="#conjugate-prior-beta-distribution">Conjugate Prior: Beta
+Distribution</a>
 <ul>
 <li><a href="#dont-be-stubborn">Don’t Be Stubborn</a></li>
 </ul></li>
@@ -2497,9 +2500,12 @@ Notes
 <li><a href="#posterior">Posterior</a>
 <ul>
 <li><a href="#summarize-the-posterior">Summarize the posterior</a></li>
-<li><a href="#posterior-predictive-check">Posterior Predictive Check</a></li>
-<li><a href="#comparison-to-frequentist-results">Comparison to frequentist results</a></li>
-<li><a href="#sensitivity-to-different-priors">Sensitivity to different priors</a></li>
+<li><a href="#posterior-predictive-check">Posterior Predictive
+Check</a></li>
+<li><a href="#comparison-to-frequentist-results">Comparison to
+frequentist results</a></li>
+<li><a href="#sensitivity-to-different-priors">Sensitivity to different
+priors</a></li>
 </ul></li>
 <li><a href="#last-updated">Last updated</a></li>
 </ul></li>
@@ -2516,41 +2522,76 @@ Notes
 </code></pre>
 </div>
 </div>
-<h1 id="steps-of-bayesian-data-analysis">Steps of Bayesian Data Analysis</h1>
-<p>Some authors described the process as “turning the Bayesian Crank,” as the same workflow applies to a variety of research scenarios.</p>
-<p>Adapted from Kruschke (2015, p.25), I conceptualize Bayesian data analysis as the following steps:</p>
+<h1 id="steps-of-bayesian-data-analysis">Steps of Bayesian Data
+Analysis</h1>
+<p>Some authors described the process as “turning the Bayesian Crank,”
+as the same workflow applies to a variety of research scenarios.</p>
+<p>Adapted from Kruschke (2015, p.25), I conceptualize Bayesian data
+analysis as the following steps:</p>
 <ol type="1">
-<li><strong>Identify/Collect the data</strong> required to answer the research questions.
+<li><strong>Identify/Collect the data</strong> required to answer the
+research questions.
 <ol start="2" type="a">
-<li>As a general recommendation, it is helpful to <strong>visualize</strong> the data to get a sense of how the data look, as well as to inspect for any potential anomalies in the data collection.</li>
+<li>As a general recommendation, it is helpful to
+<strong>visualize</strong> the data to get a sense of how the data look,
+as well as to inspect for any potential anomalies in the data
+collection.</li>
 </ol></li>
-<li><strong>Choose a statistical model</strong> for the data in relation to the research questions. The model should have sound theoretical justification and have parameters that are meaningful for the research questions.</li>
-<li><strong>Specify prior distributions</strong> for the model parameters. Although this is a subjective endeavor, the priors chosen should be at least sensible to a skeptical audience.</li>
-<li><strong>Obtain the posterior distributions</strong> for the model parameters. As described below and later in the course, this can be obtained by analytical or various mathematical approximations.
+<li><strong>Choose a statistical model</strong> for the data in relation
+to the research questions. The model should have sound theoretical
+justification and have parameters that are meaningful for the research
+questions.</li>
+<li><strong>Specify prior distributions</strong> for the model
+parameters. Although this is a subjective endeavor, the priors chosen
+should be at least sensible to a skeptical audience.</li>
+<li><strong>Obtain the posterior distributions</strong> for the model
+parameters. As described below and later in the course, this can be
+obtained by analytical or various mathematical approximations.
 <ol start="2" type="a">
-<li>For mathematical approximations, one should check the algorithms for <strong>convergence</strong> to make sure the results closely mimic the target posterior distributions.</li>
+<li>For mathematical approximations, one should check the algorithms for
+<strong>convergence</strong> to make sure the results closely mimic the
+target posterior distributions.</li>
 </ol></li>
-<li>Conduct a <strong>posterior predictive check</strong> to examine the fit between the model and the data, i.e., whether the chosen model with the estimated parameters generate predictions that deviate from the data being analyzed on important features.
+<li>Conduct a <strong>posterior predictive check</strong> to examine the
+fit between the model and the data, i.e., whether the chosen model with
+the estimated parameters generate predictions that deviate from the data
+being analyzed on important features.
 <ol start="2" type="a">
-<li>If the model does not fit the data, one should go back to step 2 to specify a different model.</li>
+<li>If the model does not fit the data, one should go back to step 2 to
+specify a different model.</li>
 </ol></li>
-<li>If the fit between the model and the data is deemed satisfactory, one can proceed to <strong>interpret the results</strong> in the context of the research questions. It is also important to <strong>visualize the results</strong> in ways that are meaningful for the analysis.</li>
+<li>If the fit between the model and the data is deemed satisfactory,
+one can proceed to <strong>interpret the results</strong> in the context
+of the research questions. It is also important to <strong>visualize the
+results</strong> in ways that are meaningful for the analysis.</li>
 </ol>
 <h1 id="beta-bernoulli-example">Beta-Bernoulli Example</h1>
-<p>We will be using a built-in data set in R about patients diagnosed with AIDS in Australia before July 1, 1991. Here is a description of the variables (from the R documentation):</p>
+<p>We will be using a built-in data set in R about patients diagnosed
+with AIDS in Australia before July 1, 1991. Here is a description of the
+variables (from the R documentation):</p>
 <figure>
-<img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Australia_states_1931-present.png" class="external" alt="Figure from https://commons.wikimedia.org/wiki/File:Australia_states_1931-present.png" /><figcaption aria-hidden="true">Figure from <a href="https://commons.wikimedia.org/wiki/File:Australia_states_1931-present.png" class="uri">https://commons.wikimedia.org/wiki/File:Australia_states_1931-present.png</a></figcaption>
+<img
+src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Australia_states_1931-present.png"
+class="external"
+alt="Figure from https://commons.wikimedia.org/wiki/File:Australia_states_1931-present.png" />
+<figcaption aria-hidden="true">Figure from <a
+href="https://commons.wikimedia.org/wiki/File:Australia_states_1931-present.png"
+class="uri">https://commons.wikimedia.org/wiki/File:Australia_states_1931-present.png</a></figcaption>
 </figure>
 <ul>
-<li><code>state</code>: Grouped state of origin: “NSW”includes ACT and “other” is WA, SA, NT, and TAS.</li>
+<li><code>state</code>: Grouped state of origin: “NSW”includes ACT and
+“other” is WA, SA, NT, and TAS.</li>
 <li><code>sex</code>: Sex of patient.</li>
 <li><code>diag</code>:(Julian) date of diagnosis.</li>
-<li><code>death</code>: (Julian) date of death or end of observation.</li>
-<li><code>status</code>: “A” (alive) or “D” (dead) at end of observation.</li>
+<li><code>death</code>: (Julian) date of death or end of
+observation.</li>
+<li><code>status</code>: “A” (alive) or “D” (dead) at end of
+observation.</li>
 <li><code>T.categ</code>: Reported transmission category.</li>
 <li><code>age</code>: Age (years) at diagnosis.</li>
 </ul>
-<p>You should always first plot your data and get some summary statistics:</p>
+<p>You should always first plot your data and get some summary
+statistics:</p>
 <div class="layout-chunk" data-layout="l-body-outset">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"Aids2"</span>, package <span class='op'>=</span> <span class='st'>"MASS"</span><span class='op'>)</span>
@@ -2570,21 +2611,39 @@ Notes
 </div>
 <p><img src="beta_Bernoulli_model_files/figure-html5/unnamed-chunk-1-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
-<p>We will be using the <code>status</code> variable. Our simple research question is:</p>
+<p>We will be using the <code>status</code> variable. Our simple
+research question is:</p>
 <pre><code>What was the death rate of AIDS in Australia when the data were collected?</code></pre>
 <h2 id="bernoulli-model">Bernoulli Model</h2>
-<p>If we assume that the outcome of the observations are exchangeable, meaning that the observations can be reordered in any way and still gives the same inference, then one can choose a model: <span class="math display">\[y_i \sim \text{Bern}(\theta) \text{for }i = 1, 2, \ldots, N\]</span></p>
+<p>If we assume that the outcome of the observations are exchangeable,
+meaning that the observations can be reordered in any way and still
+gives the same inference, then one can choose a model: <span
+class="math display">\[y_i \sim \text{Bern}(\theta) \text{for }i = 1, 2,
+\ldots, N\]</span></p>
 <ul>
-<li><span class="math inline">\(y_i\)</span> = status of observation <span class="math inline">\(i\)</span> (0 = “A”, 1 = “D”)</li>
-<li><span class="math inline">\(N\)</span> = number of patients in the data set</li>
-<li><span class="math inline">\(\theta\)</span> = probability of “D”<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li><span class="math inline">\(y_i\)</span> = status of observation
+<span class="math inline">\(i\)</span> (0 = “A”, 1 = “D”)</li>
+<li><span class="math inline">\(N\)</span> = number of patients in the
+data set</li>
+<li><span class="math inline">\(\theta\)</span> = probability of “D”<a
+href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></li>
 </ul>
-<p>The model states that: the sample data <span class="math inline">\(y\)</span> follows a Bernoulli distribution with <span class="math inline">\(n\)</span> with a parameter <span class="math inline">\(\theta\)</span></p>
+<p>The model states that: the sample data <span
+class="math inline">\(y\)</span> follows a Bernoulli distribution with
+<span class="math inline">\(n\)</span> with a parameter <span
+class="math inline">\(\theta\)</span></p>
 <aside>
-When the data consist of observations that are binary, the variable is called a <em>Bernoulli</em> variable. It is conventional to denote one outcome as success and coded as 1, and the other as failure and coded as 0 (poor terminology maybe, but that’s by convention). Therefore, in the AIDS example, each observation is considered a “Bernoulli” outcome (Alive vs. Dead).
+When the data consist of observations that are binary, the variable is
+called a <em>Bernoulli</em> variable. It is conventional to denote one
+outcome as success and coded as 1, and the other as failure and coded as
+0 (poor terminology maybe, but that’s by convention). Therefore, in the
+AIDS example, each observation is considered a “Bernoulli” outcome
+(Alive vs. Dead).
 </aside>
 <h2 id="exchangeability">Exchangeability</h2>
-<p>To illustrate exchangeability in an example, say we take 6 rows in our data set:</p>
+<p>To illustrate exchangeability in an example, say we take 6 rows in
+our data set:</p>
 <div class="layout-chunk" data-layout="l-body">
 <table>
 <thead>
@@ -2663,7 +2722,8 @@ When the data consist of observations that are binary, the variable is called a 
 </tbody>
 </table>
 </div>
-<p>Now, when we reorder the column <code>status</code> to something like:</p>
+<p>Now, when we reorder the column <code>status</code> to something
+like:</p>
 <div class="layout-chunk" data-layout="l-body">
 <table>
 <thead>
@@ -2742,51 +2802,129 @@ When the data consist of observations that are binary, the variable is called a 
 </tbody>
 </table>
 </div>
-<p>If the results are expected to be the same, then we say that the observations are assumed exchangeable. It happens when we assume that all observations have one common mean. However, if we think that there is a mean for females and a different mean for males, we cannot reorder the outcome randomly because they are no longer exchangeable (i.e., you cannot exchange a female score for a male score and expect to get the same results).</p>
+<p>If the results are expected to be the same, then we say that the
+observations are assumed exchangeable. It happens when we assume that
+all observations have one common mean. However, if we think that there
+is a mean for females and a different mean for males, we cannot reorder
+the outcome randomly because they are no longer exchangeable (i.e., you
+cannot exchange a female score for a male score and expect to get the
+same results).</p>
 <blockquote>
-<p>Exchangeability: A set of observations is said to be exchangeable if their joint probability distribution stays the same under all permutations. Roughly speaking, it means that the observations can be reordered and still provide the same inferences.</p>
+<p>Exchangeability: A set of observations is said to be exchangeable if
+their joint probability distribution stays the same under all
+permutations. Roughly speaking, it means that the observations can be
+reordered and still provide the same inferences.</p>
 </blockquote>
 <h2 id="check-the-support">Check the Support</h2>
-<p>The first thing is to identify the support of the parameter, <span class="math inline">\(\theta\)</span>. Because <span class="math inline">\(\theta\)</span> is a probability, its support is <span class="math inline">\([0, 1]\)</span>, meaning that it is continuous and can take any value from 0 to 1. For a continuous parameter, there are infinitely many possible values, and it is impossible to specify our beliefs for each value. So more commonly, we choose a probability density function with the same support as the parameter to express our prior belief.</p>
-<h2 id="conjugate-prior-beta-distribution">Conjugate Prior: Beta Distribution</h2>
-<p>A commonly used family of prior distributions for a Bernoulli/binomial model is the <em>Beta distribution</em>, which has two parameters. We can write the prior as <span class="math display">\[P(\theta) \sim \text{Beta}(a, b)\]</span></p>
-<p><span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are the two parameters. Here are a few examples:</p>
+<p>The first thing is to identify the support of the parameter, <span
+class="math inline">\(\theta\)</span>. Because <span
+class="math inline">\(\theta\)</span> is a probability, its support is
+<span class="math inline">\([0, 1]\)</span>, meaning that it is
+continuous and can take any value from 0 to 1. For a continuous
+parameter, there are infinitely many possible values, and it is
+impossible to specify our beliefs for each value. So more commonly, we
+choose a probability density function with the same support as the
+parameter to express our prior belief.</p>
+<h2 id="conjugate-prior-beta-distribution">Conjugate Prior: Beta
+Distribution</h2>
+<p>A commonly used family of prior distributions for a
+Bernoulli/binomial model is the <em>Beta distribution</em>, which has
+two parameters. We can write the prior as <span
+class="math display">\[P(\theta) \sim \text{Beta}(a, b)\]</span></p>
+<p><span class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> are the two parameters. Here are a few
+examples:</p>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="beta_Bernoulli_model_files/figure-html5/plot_beta-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>You will notice that when <span class="math inline">\(a &gt; b\)</span>, there will be more density closer to the right region (i.e., larger <span class="math inline">\(\theta\)</span>), and vice versa. Also, when <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> become larger, the variance decreases.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<p>A nice interpretation of <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> in a Beta prior distribution is to consider</p>
+<p>You will notice that when <span class="math inline">\(a &gt;
+b\)</span>, there will be more density closer to the right region (i.e.,
+larger <span class="math inline">\(\theta\)</span>), and vice versa.
+Also, when <span class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> become larger, the variance
+decreases.<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a></p>
+<p>A nice interpretation of <span class="math inline">\(a\)</span> and
+<span class="math inline">\(b\)</span> in a Beta prior distribution is
+to consider</p>
 <ul>
-<li><span class="math inline">\(a - 1\)</span> = number of prior ‘successes’ (e.g., “D”)</li>
-<li><span class="math inline">\(b - 1\)</span> = number of prior ‘failures’ (e.g., “A”)</li>
+<li><span class="math inline">\(a - 1\)</span> = number of prior
+‘successes’ (e.g., “D”)</li>
+<li><span class="math inline">\(b - 1\)</span> = number of prior
+‘failures’ (e.g., “A”)</li>
 </ul>
-<p>Therefore, with <span class="math inline">\(\text{Beta}(1, 1)\)</span>, one has seen 0 prior success and 0 failure, meaning that there is no prior information (i.e., <em>noninformative</em>). Therefore, it makes sense that all <span class="math inline">\(\theta\)</span> values are equally likely. On the other hand, if one chooses <span class="math inline">\(\text{Beta}(10, 20)\)</span>, one has seen 9 prior successes and 19 prior failures, so one has quite a lot of prior information (indeed more than the data with only 10 observations), so this is a <em>strong</em> prior.</p>
+<p>Therefore, with <span class="math inline">\(\text{Beta}(1,
+1)\)</span>, one has seen 0 prior success and 0 failure, meaning that
+there is no prior information (i.e., <em>noninformative</em>).
+Therefore, it makes sense that all <span
+class="math inline">\(\theta\)</span> values are equally likely. On the
+other hand, if one chooses <span class="math inline">\(\text{Beta}(10,
+20)\)</span>, one has seen 9 prior successes and 19 prior failures, so
+one has quite a lot of prior information (indeed more than the data with
+only 10 observations), so this is a <em>strong</em> prior.</p>
 <blockquote>
-<p>The smaller the variance of the prior distribution, the stronger one’s belief before looking at the data, the more prior information</p>
+<p>The smaller the variance of the prior distribution, the stronger
+one’s belief before looking at the data, the more prior information</p>
 </blockquote>
-<p>So by manipulating the values of <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, which are sometimes called <em>hyperparameters</em>, you can control the shape of the prior distribution as well as its strength, so it is quite flexible. Another advantage of using a beta prior is that it is a <em>conjugate prior</em> of the Bernoulli model, which means that the posterior distribution <span class="math inline">\(P(\theta \mid y)\)</span> is also a beta distribution, the same as the prior distribution, although with different parameter values.</p>
+<p>So by manipulating the values of <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span>, which are sometimes called
+<em>hyperparameters</em>, you can control the shape of the prior
+distribution as well as its strength, so it is quite flexible. Another
+advantage of using a beta prior is that it is a <em>conjugate prior</em>
+of the Bernoulli model, which means that the posterior distribution
+<span class="math inline">\(P(\theta \mid y)\)</span> is also a beta
+distribution, the same as the prior distribution, although with
+different parameter values.</p>
 <blockquote>
-<p>Conjugate Prior: For a specific model, conjugate priors yield posterior distributions in the same distribution family as the priors</p>
+<p>Conjugate Prior: For a specific model, conjugate priors yield
+posterior distributions in the same distribution family as the
+priors</p>
 </blockquote>
-<p>Conjugacy greatly simplifies the computational burden for Bayesian analyses, so conjugate priors are almost the only ones used in earlier literature. However, this limited the applications of Bayesian methods, as for many problems, no conjugate priors can provide a realistic representation of one’s belief. Modern Bayesian analysis instead relies on <em>simulation-based</em> methods to approximate the posterior distribution, which can accommodate almost any kind of prior distribution. Aside from a few examples in this note, mainly for pedagogical purposes, we will be using simulation-based methods in the coming weeks.</p>
+<p>Conjugacy greatly simplifies the computational burden for Bayesian
+analyses, so conjugate priors are almost the only ones used in earlier
+literature. However, this limited the applications of Bayesian methods,
+as for many problems, no conjugate priors can provide a realistic
+representation of one’s belief. Modern Bayesian analysis instead relies
+on <em>simulation-based</em> methods to approximate the posterior
+distribution, which can accommodate almost any kind of prior
+distribution. Aside from a few examples in this note, mainly for
+pedagogical purposes, we will be using simulation-based methods in the
+coming weeks.</p>
 <h4 id="proof-of-conjugacy">Proof of Conjugacy*</h4>
-<p>To derive the form of the posterior, first recognize that the Beta distribution has the form:</p>
+<p>To derive the form of the posterior, first recognize that the Beta
+distribution has the form:</p>
 <p><span class="math display">\[\begin{align}
-  P(\theta) &amp; = \mathrm{B}^{-1}(a, b) \theta^{a - 1} (1 - \theta)^{b - 1} \\
+  P(\theta) &amp; = \mathrm{B}^{-1}(a, b) \theta^{a - 1} (1 - \theta)^{b
+- 1} \\
   &amp; \propto \theta^{a - 1} (1 - \theta)^{b - 1}
 \end{align}\]</span></p>
-<p>Where <span class="math inline">\(\mathrm{B}(\cdot)\)</span> is the beta function which is not very important for the class. As the density function is a function of <span class="math inline">\(\theta\)</span>, it suffices to write only the terms that involve <span class="math inline">\(\theta\)</span>.</p>
-<p>Similarly, <span class="math display">\[P(\mathbf{y} \mid \theta) \propto \theta^z (1 - \theta)^{N - z}.\]</span></p>
+<p>Where <span class="math inline">\(\mathrm{B}(\cdot)\)</span> is the
+beta function which is not very important for the class. As the density
+function is a function of <span class="math inline">\(\theta\)</span>,
+it suffices to write only the terms that involve <span
+class="math inline">\(\theta\)</span>.</p>
+<p>Similarly, <span class="math display">\[P(\mathbf{y} \mid \theta)
+\propto \theta^z (1 - \theta)^{N - z}.\]</span></p>
 <p>Therefore,</p>
 <p><span class="math display">\[\begin{align}
   P(\theta \mid \mathbf{y}) &amp; \propto P(y \mid \theta) P(\theta)  \\
-                &amp; \propto \theta^z (1 - \theta)^{N - z} 
+                &amp; \propto \theta^z (1 - \theta)^{N - z}
                           \theta^{a - 1} (1 - \theta)^{b - 1}  \\
                 &amp; = \theta^{a + z - 1} (1 - \theta)^{b + N - z - 1}.
 \end{align}\]</span></p>
-<p>If we let <span class="math inline">\(a^* = a + z\)</span>, <span class="math inline">\(b^* = b + N - z\)</span>, we can see that <span class="math inline">\(P(\theta \mid \mathbf{y})\)</span> is in the same form as the prior with <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> replaced by <span class="math inline">\(a^*\)</span> and <span class="math inline">\(b^*\)</span>. Therefore, the posterior is also a beta distribution. So the beta distribution is a conjugate prior for the Bernoulli model.</p>
+<p>If we let <span class="math inline">\(a^* = a + z\)</span>, <span
+class="math inline">\(b^* = b + N - z\)</span>, we can see that <span
+class="math inline">\(P(\theta \mid \mathbf{y})\)</span> is in the same
+form as the prior with <span class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> replaced by <span
+class="math inline">\(a^*\)</span> and <span
+class="math inline">\(b^*\)</span>. Therefore, the posterior is also a
+beta distribution. So the beta distribution is a conjugate prior for the
+Bernoulli model.</p>
 <hr />
-<p>In this example, we will choose a <em>weakly informative</em> Beta(2, 2) prior, which represents a weak belief as below:</p>
+<p>In this example, we will choose a <em>weakly informative</em> Beta(2,
+2) prior, which represents a weak belief as below:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>th <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
@@ -2800,9 +2938,12 @@ When the data consist of observations that are binary, the variable is called a 
 <h3 id="dont-be-stubborn">Don’t Be Stubborn</h3>
 <p>One thing to remember is:</p>
 <blockquote>
-<p>A good prior should give a non-zero probability/density for all possible values of a parameter</p>
+<p>A good prior should give a non-zero probability/density for all
+possible values of a parameter</p>
 </blockquote>
-<p>Otherwise, if the prior density for some parameter values is zero, the posterior density will be zero, regardless of how much the data support those parameter values</p>
+<p>Otherwise, if the prior density for some parameter values is zero,
+the posterior density will be zero, regardless of how much the data
+support those parameter values</p>
 <h2 id="data">Data</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2813,7 +2954,9 @@ When the data consist of observations that are binary, the variable is called a 
 #&gt; 1      A 1082
 #&gt; 2      D 1761</code></pre>
 </div>
-<p>The likelihood function is highly concentrated. I ran into some numerical issues as the computation gave zero, so I plotted the log-likelihood instead.</p>
+<p>The likelihood function is highly concentrated. I ran into some
+numerical issues as the computation gave zero, so I plotted the
+log-likelihood instead.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>loglik</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>th</span>, <span class='va'>N</span> <span class='op'>=</span> <span class='fl'>1082</span> <span class='op'>+</span> <span class='fl'>1761</span>, <span class='va'>z</span> <span class='op'>=</span> <span class='fl'>1761</span><span class='op'>)</span> <span class='op'>{</span>
@@ -2826,9 +2969,22 @@ When the data consist of observations that are binary, the variable is called a 
 </div>
 <p><img src="beta_Bernoulli_model_files/figure-html5/status-lik-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>Note I only show a range of [0.610, 0.630] for the x-axis, which contains where the likelihood (thus also the log-likelihood) peaked.</p>
+<p>Note I only show a range of [0.610, 0.630] for the x-axis, which
+contains where the likelihood (thus also the log-likelihood) peaked.</p>
 <h2 id="posterior">Posterior</h2>
-<p>Based on the conjugacy, the posterior of <span class="math inline">\(\theta\)</span> is Beta(1,807, 1,116). As we’re using a conjugate prior, the posterior is also a Beta distribution: <span class="math display">\[P(\theta \mid y) \sim \text{Beta}(a + z, b + N - z),\]</span> which is a distribution for <span class="math inline">\(a + z - 1\)</span> successes and <span class="math inline">\(b + N - z\)</span> failures. This makes perfect sense as our prior information as <span class="math inline">\(a - 1\)</span> successes and <span class="math inline">\(b - 1\)</span> failures, and from our data, we have <span class="math inline">\(y\)</span> successes and <span class="math inline">\(n - y\)</span> failures, so our updated belief is based on adding up those successes and failures.</p>
+<p>Based on the conjugacy, the posterior of <span
+class="math inline">\(\theta\)</span> is Beta(1,807, 1,116). As we’re
+using a conjugate prior, the posterior is also a Beta distribution:
+<span class="math display">\[P(\theta \mid y) \sim \text{Beta}(a + z, b
++ N - z),\]</span> which is a distribution for <span
+class="math inline">\(a + z - 1\)</span> successes and <span
+class="math inline">\(b + N - z\)</span> failures. This makes perfect
+sense as our prior information as <span class="math inline">\(a -
+1\)</span> successes and <span class="math inline">\(b - 1\)</span>
+failures, and from our data, we have <span
+class="math inline">\(y\)</span> successes and <span
+class="math inline">\(n - y\)</span> failures, so our updated belief is
+based on adding up those successes and failures.</p>
 <h3 id="summarize-the-posterior">Summarize the posterior</h3>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2861,7 +3017,12 @@ When the data consist of observations that are binary, the variable is called a 
 #&gt;                              0.632766654</code></pre>
 </div>
 <h3 id="posterior-predictive-check">Posterior Predictive Check</h3>
-<p>Now, we need to know whether the model fits the data well. We don’t have much to check for a Bernoulli model if we only have the <code>status</code> variable. However, as there is information for other variables, we can use them to check the exchangeability assumption. For example, we can ask whether the data from different state categories are exchangeable. The death rate across the 4 state categories are</p>
+<p>Now, we need to know whether the model fits the data well. We don’t
+have much to check for a Bernoulli model if we only have the
+<code>status</code> variable. However, as there is information for other
+variables, we can use them to check the exchangeability assumption. For
+example, we can ask whether the data from different state categories are
+exchangeable. The death rate across the 4 state categories are</p>
 <div class="layout-chunk" data-layout="l-body">
 <pre><code>#&gt;        status
 #&gt; state      A    D
@@ -2876,7 +3037,8 @@ When the data consist of observations that are binary, the variable is called a 
 #&gt;   QLD   0.3451327 0.6548673
 #&gt;   VIC   0.3962585 0.6037415</code></pre>
 </div>
-<p>Now, we can generate some predictions from our posterior distribution and our model.</p>
+<p>Now, we can generate some predictions from our posterior distribution
+and our model.</p>
 <div class="layout-chunk" data-layout="l-body-outset">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>plist</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/vector.html'>vector</a></span><span class='op'>(</span><span class='st'>"list"</span>, <span class='fl'>12L</span><span class='op'>)</span>
@@ -2908,7 +3070,10 @@ When the data consist of observations that are binary, the variable is called a 
 </div>
 <p><img src="beta_Bernoulli_model_files/figure-html5/ppc-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
-<p>So the observed data (the first subplot) look similar to the simulated data. We can also conduct a posterior predictive check by a test statistic for subgroups. Here we will use the <code>bayesplot</code> package and look at fit across groups:</p>
+<p>So the observed data (the first subplot) look similar to the
+simulated data. We can also conduct a posterior predictive check by a
+test statistic for subgroups. Here we will use the
+<code>bayesplot</code> package and look at fit across groups:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Draw posterior samples of theta</span>
@@ -2934,7 +3099,10 @@ When the data consist of observations that are binary, the variable is called a 
 </div>
 <p><img src="beta_Bernoulli_model_files/figure-html5/ppc-stat-state-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>If the fit is good, the mean, indicated by the darker line, should be within the simulated distribution based on the model. So the model that assumes observations are exchangeable across states is not too off, although it seems fitting less well for <code>Other</code> states.</p>
+<p>If the fit is good, the mean, indicated by the darker line, should be
+within the simulated distribution based on the model. So the model that
+assumes observations are exchangeable across states is not too off,
+although it seems fitting less well for <code>Other</code> states.</p>
 <h4 id="another-check-on-age">Another check on <code>age</code></h4>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2964,15 +3132,25 @@ When the data consist of observations that are binary, the variable is called a 
 <p><img src="beta_Bernoulli_model_files/figure-html5/ppc-stat-age-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <p>As can be seen, the model seems off for those aged 50+.</p>
-<h3 id="comparison-to-frequentist-results">Comparison to frequentist results</h3>
-<p>Using maximum likelihood, the estimated death rate would be <span class="math inline">\(\hat \theta = 1761 / 2843 = 0.62\)</span>, with a standard error (<em>SE</em>) of <span class="math inline">\(\sqrt{0.62 (1 - 0.62) / n} = 0.0091\)</span>, with a 90% confidence interval of <span class="math inline">\([0.6, 0.63]\)</span>, which is similar to the interval with Bayesian inference.</p>
-<h3 id="sensitivity-to-different-priors">Sensitivity to different priors</h3>
+<h3 id="comparison-to-frequentist-results">Comparison to frequentist
+results</h3>
+<p>Using maximum likelihood, the estimated death rate would be <span
+class="math inline">\(\hat \theta = 1761 / 2843 = 0.62\)</span>, with a
+standard error (<em>SE</em>) of <span class="math inline">\(\sqrt{0.62
+(1 - 0.62) / n} = 0.0091\)</span>, with a 90% confidence interval of
+<span class="math inline">\([0.6, 0.63]\)</span>, which is similar to
+the interval with Bayesian inference.</p>
+<h3 id="sensitivity-to-different-priors">Sensitivity to different
+priors</h3>
 <div class="layout-chunk" data-layout="l-body-outset">
 <p><img src="beta_Bernoulli_model_files/figure-html5/sensitivity-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
-<p>You can see one needs a very strong prior (equivalent to 600 data points), and with the prior and the data not agreeing to get a substantially different conclusion.</p>
+<p>You can see one needs a very strong prior (equivalent to 600 data
+points), and with the prior and the data not agreeing to get a
+substantially different conclusion.</p>
 <!-- The following chunk is only used in the website -->
-<section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
+<section id="last-updated" class="appendix layout-chunk"
+data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
 <pre><code>#&gt; [1] &quot;February 07, 2022&quot;</code></pre>
@@ -2980,14 +3158,35 @@ When the data consist of observations that are binary, the variable is called a 
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 </section>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
-<section class="footnotes" role="doc-endnotes">
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<section class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>An additional thing to note for the Bernoulli/binomial model is that, instead of setting the prior on <span class="math inline">\(\theta\)</span>, sometimes we’re more interested in setting the prior for a transformed parameter that has values between <span class="math inline">\(-\infty\)</span> and <span class="math inline">\(\infty\)</span>, such as one on the <em>logit</em> scale (as related to logistic regression).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>The <span class="math inline">\(\mathrm{Beta}(1 / 2, 1 / 2)\)</span> distribution is called a <em>Jeffreys prior</em> (<a href="https://en.wikipedia.org/wiki/Jeffreys_prior" class="uri">https://en.wikipedia.org/wiki/Jeffreys_prior</a>), which is derived according to some statistical principles for different models. One big advantage of a Jeffreys prior is that it is <strong>invariant</strong>, meaningful that the prior will stay the same even under reparameterization. However, like conjugate priors, Jeffreys prior limits the choice of prior even when true prior information is available.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>An additional thing to note for the
+Bernoulli/binomial model is that, instead of setting the prior on <span
+class="math inline">\(\theta\)</span>, sometimes we’re more interested
+in setting the prior for a transformed parameter that has values between
+<span class="math inline">\(-\infty\)</span> and <span
+class="math inline">\(\infty\)</span>, such as one on the <em>logit</em>
+scale (as related to logistic regression).<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>The <span
+class="math inline">\(\mathrm{Beta}(1 / 2, 1 / 2)\)</span> distribution
+is called a <em>Jeffreys prior</em> (<a
+href="https://en.wikipedia.org/wiki/Jeffreys_prior"
+class="uri">https://en.wikipedia.org/wiki/Jeffreys_prior</a>), which is
+derived according to some statistical principles for different models.
+One big advantage of a Jeffreys prior is that it is
+<strong>invariant</strong>, meaningful that the prior will stay the same
+even under reparameterization. However, like conjugate priors, Jeffreys
+prior limits the choice of prior even when true prior information is
+available.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->
@@ -3020,7 +3219,10 @@ When the data consist of observations that are binary, the variable is called a 
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
 <p>© Copyright 2022 Hok Chio (Mark) Lai</p>
-<p>Template by <a href="https://github.com/distillpub/template/blob/master/AUTHORS">The Distill Template Authors</a> and <a href="https://www.rstudio.com">RStudio, Inc</a>.</p>
+<p>Template by <a
+href="https://github.com/distillpub/template/blob/master/AUTHORS">The
+Distill Template Authors</a> and <a
+href="https://www.rstudio.com">RStudio, Inc</a>.</p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 

@@ -2368,7 +2368,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
   <script src="site_libs/clipboard-2.0.6/clipboard.min.js"></script>
   <link href="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
   <script src="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
@@ -2451,6 +2451,7 @@ Notes
 <a href="hmc_stan.html">HMC and Stan</a>
 <a href="hierarchical_models.html">Hierarchical Models</a>
 <a href="group_comparisons.html">Group Comparisons</a>
+<a href="glm.html">Generalized Linear Model I</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2483,11 +2484,15 @@ Notes
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#hierarchical-bernoullibinomial">Hierarchical Bernoulli/Binomial</a>
+<li><a href="#hierarchical-bernoullibinomial">Hierarchical
+Bernoulli/Binomial</a>
 <ul>
-<li><a href="#alternative-parameterization-of-beta">Alternative Parameterization of Beta</a></li>
-<li><a href="#multiple-bernoulli-binomial">Multiple Bernoulli = Binomial</a></li>
-<li><a href="#multiple-binomial-observations">Multiple Binomial Observations</a></li>
+<li><a href="#alternative-parameterization-of-beta">Alternative
+Parameterization of Beta</a></li>
+<li><a href="#multiple-bernoulli-binomial">Multiple Bernoulli =
+Binomial</a></li>
+<li><a href="#multiple-binomial-observations">Multiple Binomial
+Observations</a></li>
 <li><a href="#therapeutic-touch-example">Therapeutic Touch Example</a>
 <ul>
 <li><a href="#stan-code">STAN Code</a></li>
@@ -2506,7 +2511,8 @@ Notes
 <ul>
 <li><a href="#eight-schools-example">Eight Schools Example</a></li>
 <li><a href="#model">Model</a></li>
-<li><a href="#non-centered-parameterization">Non-Centered Parameterization</a></li>
+<li><a href="#non-centered-parameterization">Non-Centered
+Parameterization</a></li>
 <li><a href="#prediction-interval">Prediction Interval</a></li>
 <li><a href="#last-updated">Last updated</a></li>
 </ul></li>
@@ -2526,21 +2532,109 @@ Notes
 </code></pre>
 </div>
 </div>
-<p>Although many statistical models can be fitted using Bayesian or frequentist methods, some models are more naturally used in the Bayesian framework. One class of such models is the family of <strong>hierarchical models.</strong> Consider situations when the data contain some <em>clusters</em>, such as multiple data points in each of many participants, multiple participants in each of several treatment conditions, etc. While it is possible to run <span class="math inline">\(J\)</span> Bayesian analyses for the <span class="math inline">\(J\)</span> subsets of the data, it is usually more efficient to <em>pool</em> the data together, such that cluster <span class="math inline">\(j\)</span> has some parameters <span class="math inline">\(\theta_j\)</span>, and these <span class="math inline">\(J\)</span> <span class="math inline">\(\theta\)</span> values themselves come from a common distribution. This is the same idea as <em>multilevel modeling</em>.</p>
-<p>In this note, you will see two examples, one from the textbook with a hierarchical Bernoulli/binomial model, and another from a classic data set with eight schools, modelled by a hierarchical normal model.</p>
-<h1 id="hierarchical-bernoullibinomial">Hierarchical Bernoulli/Binomial</h1>
-<p>Previously, we have seen the Bernoulli model for <span class="math inline">\(N\)</span> outcomes, such as multiple coin flips from the same coin: <span class="math display">\[y_i \sim \text{Bern}(\theta_i), \text{for }i = 1, \ldots, N\]</span> We assumed exchangeability as the flips are from the same coin.</p>
-<h2 id="alternative-parameterization-of-beta">Alternative Parameterization of Beta</h2>
-<p>Previously we have used the Beta(a, b) prior for a Bernoulli outcome, such that <span class="math display">\[P(\theta \mid a, b) \propto \theta^{a - 1} (1 - \theta)^{b - 1}.\]</span> However, in hierarchical models to be discussed later, it is beneficial to consider another way to express the Beta distribution, in terms of the <em>prior mean</em>, <span class="math inline">\(\mu = a / (a + b)\)</span>, <span class="math inline">\(\mu \in [0, 1]\)</span>, and the concentration, <span class="math inline">\(\kappa = a + b\)</span>, <span class="math inline">\(\kappa \in [0, \infty)\)</span>. So instead of the above formula, we can write <span class="math display">\[P(\theta \mid \mu, \kappa) \propto \theta^{\mu \kappa - 1} (1 - \theta)^{(1 - \mu) \kappa - 1}.\]</span> The two expressions represent exactly the same distribution, but just in terms of parameters of different meanings. Therefore, they are referred to as <strong>different parameterization</strong> of the Beta distribution.</p>
+<p>Although many statistical models can be fitted using Bayesian or
+frequentist methods, some models are more naturally used in the Bayesian
+framework. One class of such models is the family of
+<strong>hierarchical models.</strong> Consider situations when the data
+contain some <em>clusters</em>, such as multiple data points in each of
+many participants, multiple participants in each of several treatment
+conditions, etc. While it is possible to run <span
+class="math inline">\(J\)</span> Bayesian analyses for the <span
+class="math inline">\(J\)</span> subsets of the data, it is usually more
+efficient to <em>pool</em> the data together, such that cluster <span
+class="math inline">\(j\)</span> has some parameters <span
+class="math inline">\(\theta_j\)</span>, and these <span
+class="math inline">\(J\)</span> <span
+class="math inline">\(\theta\)</span> values themselves come from a
+common distribution. This is the same idea as <em>multilevel
+modeling</em>.</p>
+<p>In this note, you will see two examples, one from the textbook with a
+hierarchical Bernoulli/binomial model, and another from a classic data
+set with eight schools, modelled by a hierarchical normal model.</p>
+<h1 id="hierarchical-bernoullibinomial">Hierarchical
+Bernoulli/Binomial</h1>
+<p>Previously, we have seen the Bernoulli model for <span
+class="math inline">\(N\)</span> outcomes, such as multiple coin flips
+from the same coin: <span class="math display">\[y_i \sim
+\text{Bern}(\theta_i), \text{for }i = 1, \ldots, N\]</span> We assumed
+exchangeability as the flips are from the same coin.</p>
+<h2 id="alternative-parameterization-of-beta">Alternative
+Parameterization of Beta</h2>
+<p>Previously we have used the Beta(a, b) prior for a Bernoulli outcome,
+such that <span class="math display">\[P(\theta \mid a, b) \propto
+\theta^{a - 1} (1 - \theta)^{b - 1}.\]</span> However, in hierarchical
+models to be discussed later, it is beneficial to consider another way
+to express the Beta distribution, in terms of the <em>prior mean</em>,
+<span class="math inline">\(\mu = a / (a + b)\)</span>, <span
+class="math inline">\(\mu \in [0, 1]\)</span>, and the concentration,
+<span class="math inline">\(\kappa = a + b\)</span>, <span
+class="math inline">\(\kappa \in [0, \infty)\)</span>. So instead of the
+above formula, we can write <span class="math display">\[P(\theta \mid
+\mu, \kappa) \propto \theta^{\mu \kappa - 1} (1 - \theta)^{(1 - \mu)
+\kappa - 1}.\]</span> The two expressions represent exactly the same
+distribution, but just in terms of parameters of different meanings.
+Therefore, they are referred to as <strong>different
+parameterization</strong> of the Beta distribution.</p>
 <aside>
-Note your textbook used <span class="math inline">\(\omega\)</span> = <span class="math inline">\((a - 1) / (a + b - 2)\)</span> for the mode, instead of the mean. This is yet another parameterization in terms of <span class="math inline">\(\omega\)</span> and <span class="math inline">\(\kappa\)</span>, but I found the mean parameterization more natural and common in the literature.
+Note your textbook used <span class="math inline">\(\omega\)</span> =
+<span class="math inline">\((a - 1) / (a + b - 2)\)</span> for the mode,
+instead of the mean. This is yet another parameterization in terms of
+<span class="math inline">\(\omega\)</span> and <span
+class="math inline">\(\kappa\)</span>, but I found the mean
+parameterization more natural and common in the literature.
 </aside>
 <h2 id="multiple-bernoulli-binomial">Multiple Bernoulli = Binomial</h2>
-<p>With <span class="math inline">\(N\)</span> exchangeable Bernoulli observations, an equivalent but more efficient way to code the model is to use the <em>binomial</em> distribution. Let <span class="math inline">\(z = \sum_{i = 1}^N y_i\)</span>, then <span class="math display">\[z \sim \mathrm{Bin}(N, \theta)\]</span></p>
-<h2 id="multiple-binomial-observations">Multiple Binomial Observations</h2>
-<p>Now, consider the situation with multiple coins, perhaps each coin with some noticeable differences, as discussed in chapter 9.2 of the textbook. If we have <span class="math inline">\(J\)</span> = 3 coins, and <span class="math inline">\(N_j\)</span> flips for the <span class="math inline">\(j\)</span>th coin. If we believe that the coins all have the same bias, then we could consider the model <span class="math display">\[z_j \sim \mathrm{Bin}(N_j, \theta),\]</span> which still contains only one parameter, <span class="math inline">\(\theta\)</span>. However, if we have reason to believe that the coins have different biases, then we should have <span class="math display">\[z_j \sim \mathrm{Bin}(N_j, \theta_{\color{red}{j}}),\]</span> with parameters <span class="math inline">\(\theta_1, \ldots, \theta_j\)</span>.</p>
-<p>We can assign priors to each individual <span class="math inline">\(\theta_j\)</span>. However, if our prior belief is such that there’s something common among the different coins, say they’re from the same factory, so that they come from the same distribution, we can have common parameters for the prior distributions of the <span class="math inline">\(\theta\)</span>s: <span class="math display">\[\theta_j \sim \mathrm{Beta2}(\mu, \kappa),\]</span> note I use Beta2 to denote the mean parameterization. Here, we express the prior belief that the <strong>mean bias</strong> of the different coins is <span class="math inline">\(\mu\)</span>, and how each coin is different from the mean depends on <span class="math inline">\(\kappa\)</span>. Now, <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\kappa\)</span> are hyperparameters. We can assign some fixed values to <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\kappa\)</span>, as if we know what the average bias is. However, the power of the hierarchical model is that we can put priors (or hyper priors) on <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\kappa\)</span>, and obtain posterior distributions of them, based on what the data say.</p>
-<p>What priors to use for <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\kappa\)</span>? <span class="math inline">\(\mu\)</span> is relatively easy because it is the mean bias; if we put a Beta prior for bias, we can again use a Beta prior for the mean bias. <span class="math inline">\(\kappa\)</span> is more challenging. A larger <span class="math inline">\(\kappa\)</span> means that the biases of the coins are more similar to each other. We can perform a prior predictive check to see what the data look like. As a starting point, chapter 9 of the textbook suggested using Gamma(0.01, 0.01). So the full model in our case, with a weak Beta(1.5, 1.5) prior on <span class="math inline">\(\mu\)</span>, is</p>
+<p>With <span class="math inline">\(N\)</span> exchangeable Bernoulli
+observations, an equivalent but more efficient way to code the model is
+to use the <em>binomial</em> distribution. Let <span
+class="math inline">\(z = \sum_{i = 1}^N y_i\)</span>, then <span
+class="math display">\[z \sim \mathrm{Bin}(N, \theta)\]</span></p>
+<h2 id="multiple-binomial-observations">Multiple Binomial
+Observations</h2>
+<p>Now, consider the situation with multiple coins, perhaps each coin
+with some noticeable differences, as discussed in chapter 9.2 of the
+textbook. If we have <span class="math inline">\(J\)</span> = 3 coins,
+and <span class="math inline">\(N_j\)</span> flips for the <span
+class="math inline">\(j\)</span>th coin. If we believe that the coins
+all have the same bias, then we could consider the model <span
+class="math display">\[z_j \sim \mathrm{Bin}(N_j, \theta),\]</span>
+which still contains only one parameter, <span
+class="math inline">\(\theta\)</span>. However, if we have reason to
+believe that the coins have different biases, then we should have <span
+class="math display">\[z_j \sim \mathrm{Bin}(N_j,
+\theta_{\color{red}{j}}),\]</span> with parameters <span
+class="math inline">\(\theta_1, \ldots, \theta_j\)</span>.</p>
+<p>We can assign priors to each individual <span
+class="math inline">\(\theta_j\)</span>. However, if our prior belief is
+such that there’s something common among the different coins, say
+they’re from the same factory, so that they come from the same
+distribution, we can have common parameters for the prior distributions
+of the <span class="math inline">\(\theta\)</span>s: <span
+class="math display">\[\theta_j \sim \mathrm{Beta2}(\mu,
+\kappa),\]</span> note I use Beta2 to denote the mean parameterization.
+Here, we express the prior belief that the <strong>mean bias</strong> of
+the different coins is <span class="math inline">\(\mu\)</span>, and how
+each coin is different from the mean depends on <span
+class="math inline">\(\kappa\)</span>. Now, <span
+class="math inline">\(\mu\)</span> and <span
+class="math inline">\(\kappa\)</span> are hyperparameters. We can assign
+some fixed values to <span class="math inline">\(\mu\)</span> and <span
+class="math inline">\(\kappa\)</span>, as if we know what the average
+bias is. However, the power of the hierarchical model is that we can put
+priors (or hyper priors) on <span class="math inline">\(\mu\)</span> and
+<span class="math inline">\(\kappa\)</span>, and obtain posterior
+distributions of them, based on what the data say.</p>
+<p>What priors to use for <span class="math inline">\(\mu\)</span> and
+<span class="math inline">\(\kappa\)</span>? <span
+class="math inline">\(\mu\)</span> is relatively easy because it is the
+mean bias; if we put a Beta prior for bias, we can again use a Beta
+prior for the mean bias. <span class="math inline">\(\kappa\)</span> is
+more challenging. A larger <span class="math inline">\(\kappa\)</span>
+means that the biases of the coins are more similar to each other. We
+can perform a prior predictive check to see what the data look like. As
+a starting point, chapter 9 of the textbook suggested using Gamma(0.01,
+0.01). So the full model in our case, with a weak Beta(1.5, 1.5) prior
+on <span class="math inline">\(\mu\)</span>, is</p>
 <p>Model: <span class="math display">\[
   \begin{aligned}
     z_j &amp; \sim \mathrm{Bin}(N_j, \theta_j) \\
@@ -2553,7 +2647,8 @@ Note your textbook used <span class="math inline">\(\omega\)</span> = <span clas
   \end{aligned}
 \]</span></p>
 <h2 id="therapeutic-touch-example">Therapeutic Touch Example</h2>
-<p>See the description of the research problem from chapter 9.2.4 of the textbook.</p>
+<p>See the description of the research problem from chapter 9.2.4 of the
+textbook.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Data file from https://github.com/boboppie/kruschke-doing_bayesian_data_analysis/blob/master/2e/TherapeuticTouchData.csv</span>
@@ -2575,25 +2670,27 @@ Note your textbook used <span class="math inline">\(\omega\)</span> = <span clas
 </div>
 <h3 id="stan-code">STAN Code</h3>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="stan"><code>data {
-  int&lt;lower=0&gt; J;         // number of clusters (e.g., studies, persons)
-  int y[J];               // number of &quot;1&quot;s in each cluster
-  int N[J];               // sample size for each cluster
-}
-parameters {
-  vector&lt;lower=0, upper=1&gt;[J] theta;   // cluster-specific probabilities
-  real&lt;lower=0, upper=1&gt; mu;     // overall mean probability
-  real&lt;lower=0&gt; kappa;           // overall concentration
-}
-model {
-  y ~ binomial(N, theta);              // each observation is binomial
-  theta ~ beta_proportion(mu, kappa);  // prior; Beta2 dist
-  mu ~ beta(1.5, 1.5);           // weak prior
-  kappa ~ gamma(.01, .01);       // prior recommended by Kruschke
-}</code></pre>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode stan"><code class="sourceCode stan"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; J;         <span class="co">// number of clusters (e.g., studies, persons)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> y[J];               <span class="co">// number of &quot;1&quot;s in each cluster</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> N[J];               <span class="co">// sample size for each cluster</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt;[J] theta;   <span class="co">// cluster-specific probabilities</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; mu;     <span class="co">// overall mean probability</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; kappa;           <span class="co">// overall concentration</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  y ~ binomial(N, theta);              <span class="co">// each observation is binomial</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  theta ~ beta_proportion(mu, kappa);  <span class="co">// prior; Beta2 dist</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  mu ~ beta(<span class="fl">1.5</span>, <span class="fl">1.5</span>);           <span class="co">// weak prior</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  kappa ~ gamma(.<span class="dv">01</span>, .<span class="dv">01</span>);       <span class="co">// prior recommended by Kruschke</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <h3 id="prior-predictive">Prior predictive</h3>
-<p>You can use Stan to sample the prior by commenting out the model line; here I show how to do it in R:</p>
+<p>You can use Stan to sample the prior by commenting out the model
+line; here I show how to do it in R:</p>
 <div class="layout-chunk" data-layout="l-body-outset">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1706</span><span class='op'>)</span>
@@ -2621,7 +2718,10 @@ model {
 </div>
 <p><img src="hierarchical_models_files/figure-html5/ppc-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
-<p>The prior on <span class="math inline">\(\kappa\)</span> is actually not very realistic because it tends to push the bias to either 0 or 1. Using something like Gamma(0.1, 0.1) or Gamma(2, 0.01) may be a bit more reasonable (you can try it out yourself).</p>
+<p>The prior on <span class="math inline">\(\kappa\)</span> is actually
+not very realistic because it tends to push the bias to either 0 or 1.
+Using something like Gamma(0.1, 0.1) or Gamma(2, 0.01) may be a bit more
+reasonable (you can try it out yourself).</p>
 <h3 id="calling-rstan">Calling <code>rstan</code></h3>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2639,7 +2739,8 @@ model {
 </code></pre>
 </div>
 </div>
-<p>You can explore the convergence and posterior distributions using the <code>shinystan</code> package</p>
+<p>You can explore the convergence and posterior distributions using the
+<code>shinystan</code> package</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://mc-stan.org/shinystan/reference/launch_shinystan.html'>launch_shinystan</a></span><span class='op'>(</span><span class='va'>tt_fit</span><span class='op'>)</span>
@@ -2660,397 +2761,1043 @@ model {
 </div>
 <table>
 <thead>
-<tr class="header">
-<th style="text-align: left;">variable</th>
-<th style="text-align: right;">mean</th>
-<th style="text-align: right;">median</th>
-<th style="text-align: right;">sd</th>
-<th style="text-align: right;">mad</th>
-<th style="text-align: right;">q5</th>
-<th style="text-align: right;">q95</th>
-<th style="text-align: right;">rhat</th>
-<th style="text-align: right;">ess_bulk</th>
-<th style="text-align: right;">ess_tail</th>
+<tr>
+<th style="text-align:left;">
+variable
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+median
+</th>
+<th style="text-align:right;">
+sd
+</th>
+<th style="text-align:right;">
+mad
+</th>
+<th style="text-align:right;">
+q5
+</th>
+<th style="text-align:right;">
+q95
+</th>
+<th style="text-align:right;">
+rhat
+</th>
+<th style="text-align:right;">
+ess_bulk
+</th>
+<th style="text-align:right;">
+ess_tail
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">theta[1]</td>
-<td style="text-align: right;">0.37</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.22</td>
-<td style="text-align: right;">0.49</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">2053.33</td>
-<td style="text-align: right;">3524.75</td>
+<tr>
+<td style="text-align:left;">
+theta[1]
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+<td style="text-align:right;">
+0.38
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.22
+</td>
+<td style="text-align:right;">
+0.49
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+2053.33
+</td>
+<td style="text-align:right;">
+3524.75
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[2]</td>
-<td style="text-align: right;">0.39</td>
-<td style="text-align: right;">0.40</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.51</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">2511.75</td>
-<td style="text-align: right;">3398.59</td>
+<tr>
+<td style="text-align:left;">
+theta[2]
+</td>
+<td style="text-align:right;">
+0.39
+</td>
+<td style="text-align:right;">
+0.40
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.25
+</td>
+<td style="text-align:right;">
+0.51
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+2511.75
+</td>
+<td style="text-align:right;">
+3398.59
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[3]</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.53</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">4815.11</td>
-<td style="text-align: right;">4070.49</td>
+<tr>
+<td style="text-align:left;">
+theta[3]
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.28
+</td>
+<td style="text-align:right;">
+0.53
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+4815.11
+</td>
+<td style="text-align:right;">
+4070.49
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[4]</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.42</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.53</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">4101.83</td>
-<td style="text-align: right;">4049.36</td>
+<tr>
+<td style="text-align:left;">
+theta[4]
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.42
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.28
+</td>
+<td style="text-align:right;">
+0.53
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+4101.83
+</td>
+<td style="text-align:right;">
+4049.36
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[5]</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.54</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">4772.51</td>
-<td style="text-align: right;">3885.97</td>
+<tr>
+<td style="text-align:left;">
+theta[5]
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.28
+</td>
+<td style="text-align:right;">
+0.54
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+4772.51
+</td>
+<td style="text-align:right;">
+3885.97
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[6]</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.53</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">4047.04</td>
-<td style="text-align: right;">3824.50</td>
+<tr>
+<td style="text-align:left;">
+theta[6]
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.28
+</td>
+<td style="text-align:right;">
+0.53
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+4047.04
+</td>
+<td style="text-align:right;">
+3824.50
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[7]</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.53</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">4640.84</td>
-<td style="text-align: right;">4110.38</td>
+<tr>
+<td style="text-align:left;">
+theta[7]
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.28
+</td>
+<td style="text-align:right;">
+0.53
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+4640.84
+</td>
+<td style="text-align:right;">
+4110.38
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[8]</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.42</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.53</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">5153.56</td>
-<td style="text-align: right;">3501.47</td>
+<tr>
+<td style="text-align:left;">
+theta[8]
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.42
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.28
+</td>
+<td style="text-align:right;">
+0.53
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+5153.56
+</td>
+<td style="text-align:right;">
+3501.47
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[9]</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.42</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.53</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">4419.30</td>
-<td style="text-align: right;">3629.47</td>
+<tr>
+<td style="text-align:left;">
+theta[9]
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.42
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.28
+</td>
+<td style="text-align:right;">
+0.53
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+4419.30
+</td>
+<td style="text-align:right;">
+3629.47
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[10]</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.42</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">0.53</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">4456.35</td>
-<td style="text-align: right;">4172.13</td>
+<tr>
+<td style="text-align:left;">
+theta[10]
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.42
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.28
+</td>
+<td style="text-align:right;">
+0.53
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+4456.35
+</td>
+<td style="text-align:right;">
+4172.13
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[11]</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.31</td>
-<td style="text-align: right;">0.56</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">5807.17</td>
-<td style="text-align: right;">4867.03</td>
+<tr>
+<td style="text-align:left;">
+theta[11]
+</td>
+<td style="text-align:right;">
+0.43
+</td>
+<td style="text-align:right;">
+0.43
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.31
+</td>
+<td style="text-align:right;">
+0.56
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+5807.17
+</td>
+<td style="text-align:right;">
+4867.03
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[12]</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.31</td>
-<td style="text-align: right;">0.56</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">6574.03</td>
-<td style="text-align: right;">4769.95</td>
+<tr>
+<td style="text-align:left;">
+theta[12]
+</td>
+<td style="text-align:right;">
+0.43
+</td>
+<td style="text-align:right;">
+0.43
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.31
+</td>
+<td style="text-align:right;">
+0.56
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+6574.03
+</td>
+<td style="text-align:right;">
+4769.95
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[13]</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.31</td>
-<td style="text-align: right;">0.55</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">5961.52</td>
-<td style="text-align: right;">5136.70</td>
+<tr>
+<td style="text-align:left;">
+theta[13]
+</td>
+<td style="text-align:right;">
+0.43
+</td>
+<td style="text-align:right;">
+0.43
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.31
+</td>
+<td style="text-align:right;">
+0.55
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+5961.52
+</td>
+<td style="text-align:right;">
+5136.70
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[14]</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.31</td>
-<td style="text-align: right;">0.56</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">6730.63</td>
-<td style="text-align: right;">4665.01</td>
+<tr>
+<td style="text-align:left;">
+theta[14]
+</td>
+<td style="text-align:right;">
+0.43
+</td>
+<td style="text-align:right;">
+0.43
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.31
+</td>
+<td style="text-align:right;">
+0.56
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+6730.63
+</td>
+<td style="text-align:right;">
+4665.01
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[15]</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.31</td>
-<td style="text-align: right;">0.56</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">6650.31</td>
-<td style="text-align: right;">4776.49</td>
+<tr>
+<td style="text-align:left;">
+theta[15]
+</td>
+<td style="text-align:right;">
+0.43
+</td>
+<td style="text-align:right;">
+0.43
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.31
+</td>
+<td style="text-align:right;">
+0.56
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+6650.31
+</td>
+<td style="text-align:right;">
+4776.49
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[16]</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.33</td>
-<td style="text-align: right;">0.58</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">5540.38</td>
-<td style="text-align: right;">4309.31</td>
+<tr>
+<td style="text-align:left;">
+theta[16]
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.33
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+5540.38
+</td>
+<td style="text-align:right;">
+4309.31
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[17]</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.33</td>
-<td style="text-align: right;">0.58</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">5923.26</td>
-<td style="text-align: right;">4321.04</td>
+<tr>
+<td style="text-align:left;">
+theta[17]
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.33
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+5923.26
+</td>
+<td style="text-align:right;">
+4321.04
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[18]</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.33</td>
-<td style="text-align: right;">0.59</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">5847.91</td>
-<td style="text-align: right;">4571.55</td>
+<tr>
+<td style="text-align:left;">
+theta[18]
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.33
+</td>
+<td style="text-align:right;">
+0.59
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+5847.91
+</td>
+<td style="text-align:right;">
+4571.55
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[19]</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.33</td>
-<td style="text-align: right;">0.58</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">6091.28</td>
-<td style="text-align: right;">4497.21</td>
+<tr>
+<td style="text-align:left;">
+theta[19]
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.33
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+6091.28
+</td>
+<td style="text-align:right;">
+4497.21
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[20]</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.34</td>
-<td style="text-align: right;">0.58</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">5986.57</td>
-<td style="text-align: right;">5008.05</td>
+<tr>
+<td style="text-align:left;">
+theta[20]
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.34
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+5986.57
+</td>
+<td style="text-align:right;">
+5008.05
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[21]</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.34</td>
-<td style="text-align: right;">0.58</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">5802.48</td>
-<td style="text-align: right;">4252.67</td>
+<tr>
+<td style="text-align:left;">
+theta[21]
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.34
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+5802.48
+</td>
+<td style="text-align:right;">
+4252.67
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[22]</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.33</td>
-<td style="text-align: right;">0.58</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">6348.07</td>
-<td style="text-align: right;">4875.46</td>
+<tr>
+<td style="text-align:left;">
+theta[22]
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.33
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+6348.07
+</td>
+<td style="text-align:right;">
+4875.46
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[23]</td>
-<td style="text-align: right;">0.47</td>
-<td style="text-align: right;">0.47</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.35</td>
-<td style="text-align: right;">0.62</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">4740.90</td>
-<td style="text-align: right;">3684.04</td>
+<tr>
+<td style="text-align:left;">
+theta[23]
+</td>
+<td style="text-align:right;">
+0.47
+</td>
+<td style="text-align:right;">
+0.47
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.35
+</td>
+<td style="text-align:right;">
+0.62
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+4740.90
+</td>
+<td style="text-align:right;">
+3684.04
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[24]</td>
-<td style="text-align: right;">0.47</td>
-<td style="text-align: right;">0.47</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.35</td>
-<td style="text-align: right;">0.61</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">4619.95</td>
-<td style="text-align: right;">3751.58</td>
+<tr>
+<td style="text-align:left;">
+theta[24]
+</td>
+<td style="text-align:right;">
+0.47
+</td>
+<td style="text-align:right;">
+0.47
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.35
+</td>
+<td style="text-align:right;">
+0.61
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+4619.95
+</td>
+<td style="text-align:right;">
+3751.58
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[25]</td>
-<td style="text-align: right;">0.50</td>
-<td style="text-align: right;">0.49</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.64</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">3260.56</td>
-<td style="text-align: right;">4164.74</td>
+<tr>
+<td style="text-align:left;">
+theta[25]
+</td>
+<td style="text-align:right;">
+0.50
+</td>
+<td style="text-align:right;">
+0.49
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.38
+</td>
+<td style="text-align:right;">
+0.64
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+3260.56
+</td>
+<td style="text-align:right;">
+4164.74
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[26]</td>
-<td style="text-align: right;">0.50</td>
-<td style="text-align: right;">0.49</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.37</td>
-<td style="text-align: right;">0.64</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">3150.89</td>
-<td style="text-align: right;">3983.83</td>
+<tr>
+<td style="text-align:left;">
+theta[26]
+</td>
+<td style="text-align:right;">
+0.50
+</td>
+<td style="text-align:right;">
+0.49
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+<td style="text-align:right;">
+0.64
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+3150.89
+</td>
+<td style="text-align:right;">
+3983.83
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">theta[27]</td>
-<td style="text-align: right;">0.50</td>
-<td style="text-align: right;">0.49</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.37</td>
-<td style="text-align: right;">0.64</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">3107.08</td>
-<td style="text-align: right;">4280.18</td>
+<tr>
+<td style="text-align:left;">
+theta[27]
+</td>
+<td style="text-align:right;">
+0.50
+</td>
+<td style="text-align:right;">
+0.49
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+<td style="text-align:right;">
+0.64
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+3107.08
+</td>
+<td style="text-align:right;">
+4280.18
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">theta[28]</td>
-<td style="text-align: right;">0.52</td>
-<td style="text-align: right;">0.51</td>
-<td style="text-align: right;">0.09</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.39</td>
-<td style="text-align: right;">0.68</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">2300.07</td>
-<td style="text-align: right;">3538.60</td>
+<tr>
+<td style="text-align:left;">
+theta[28]
+</td>
+<td style="text-align:right;">
+0.52
+</td>
+<td style="text-align:right;">
+0.51
+</td>
+<td style="text-align:right;">
+0.09
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.39
+</td>
+<td style="text-align:right;">
+0.68
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+2300.07
+</td>
+<td style="text-align:right;">
+3538.60
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">mu</td>
-<td style="text-align: right;">0.44</td>
-<td style="text-align: right;">0.44</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">0.39</td>
-<td style="text-align: right;">0.50</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">1982.77</td>
-<td style="text-align: right;">3741.91</td>
+<tr>
+<td style="text-align:left;">
+mu
+</td>
+<td style="text-align:right;">
+0.44
+</td>
+<td style="text-align:right;">
+0.44
+</td>
+<td style="text-align:right;">
+0.03
+</td>
+<td style="text-align:right;">
+0.03
+</td>
+<td style="text-align:right;">
+0.39
+</td>
+<td style="text-align:right;">
+0.50
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1982.77
+</td>
+<td style="text-align:right;">
+3741.91
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">kappa</td>
-<td style="text-align: right;">64.85</td>
-<td style="text-align: right;">42.77</td>
-<td style="text-align: right;">65.48</td>
-<td style="text-align: right;">33.83</td>
-<td style="text-align: right;">12.37</td>
-<td style="text-align: right;">189.87</td>
-<td style="text-align: right;">1.01</td>
-<td style="text-align: right;">614.23</td>
-<td style="text-align: right;">1036.57</td>
+<tr>
+<td style="text-align:left;">
+kappa
+</td>
+<td style="text-align:right;">
+64.85
+</td>
+<td style="text-align:right;">
+42.77
+</td>
+<td style="text-align:right;">
+65.48
+</td>
+<td style="text-align:right;">
+33.83
+</td>
+<td style="text-align:right;">
+12.37
+</td>
+<td style="text-align:right;">
+189.87
+</td>
+<td style="text-align:right;">
+1.01
+</td>
+<td style="text-align:right;">
+614.23
+</td>
+<td style="text-align:right;">
+1036.57
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">lp__</td>
-<td style="text-align: right;">-198.32</td>
-<td style="text-align: right;">-198.72</td>
-<td style="text-align: right;">10.33</td>
-<td style="text-align: right;">10.87</td>
-<td style="text-align: right;">-214.29</td>
-<td style="text-align: right;">-180.15</td>
-<td style="text-align: right;">1.01</td>
-<td style="text-align: right;">550.59</td>
-<td style="text-align: right;">935.98</td>
+<tr>
+<td style="text-align:left;">
+lp__
+</td>
+<td style="text-align:right;">
+-198.32
+</td>
+<td style="text-align:right;">
+-198.72
+</td>
+<td style="text-align:right;">
+10.33
+</td>
+<td style="text-align:right;">
+10.87
+</td>
+<td style="text-align:right;">
+-214.29
+</td>
+<td style="text-align:right;">
+-180.15
+</td>
+<td style="text-align:right;">
+1.01
+</td>
+<td style="text-align:right;">
+550.59
+</td>
+<td style="text-align:right;">
+935.98
+</td>
 </tr>
 </tbody>
 </table>
 </div>
 <h3 id="derived-coefficients">Derived coefficients</h3>
-<p>One nice thing about MCMC is that it is straightforward to obtain posterior distributions that are functions of the parameters. For example, even though we only sampled from the posteriors of the <span class="math inline">\(\theta\)</span>s, we can ask questions like whether there is evidence for a nonzero <em>difference</em> in <span class="math inline">\(\theta\)</span> between person 1 and person 28.</p>
+<p>One nice thing about MCMC is that it is straightforward to obtain
+posterior distributions that are functions of the parameters. For
+example, even though we only sampled from the posteriors of the <span
+class="math inline">\(\theta\)</span>s, we can ask questions like
+whether there is evidence for a nonzero <em>difference</em> in <span
+class="math inline">\(\theta\)</span> between person 1 and person
+28.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://mc-stan.org/posterior/reference/draws_df.html'>as_draws_df</a></span><span class='op'>(</span><span class='va'>tt_fit</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
@@ -3073,7 +3820,9 @@ model {
 #&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 <h3 id="conclusion">Conclusion</h3>
-<p>As 0.5 is included in the 95% CI of <span class="math inline">\(\theta\)</span> for all participants, there is insufficient evidence that people can sense “therapeutic touch.”</p>
+<p>As 0.5 is included in the 95% CI of <span
+class="math inline">\(\theta\)</span> for all participants, there is
+insufficient evidence that people can sense “therapeutic touch.”</p>
 <h2 id="shrinkage">Shrinkage</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -3093,12 +3842,29 @@ model {
 </div>
 <p><img src="hierarchical_models_files/figure-html5/shrinkage-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>As can be seen, the posterior distributions are closer to the center than the data (in red). This <strong>pooling</strong> is a result of the belief that the participants have something in common.</p>
+<p>As can be seen, the posterior distributions are closer to the center
+than the data (in red). This <strong>pooling</strong> is a result of the
+belief that the participants have something in common.</p>
 <h3 id="multiple-comparisons">Multiple Comparisons?</h3>
-<p>Another benefit of a Bayesian hierarchical model is that <em>you don’t need to worry about multiple comparisons</em>. There are multiple angles on why this is the case, but the basic answer is that the use of common prior distributions builds in the prior belief that the clusters/groups are likely to be equal. See discussion <a href="https://statmodeling.stat.columbia.edu/2016/08/22/bayesian-inference-completely-solves-the-multiple-comparisons-problem/">here</a> and <a href="https://stats.stackexchange.com/questions/203378/why-dont-bayesian-methods-require-multiple-testing-corrections">here</a>.</p>
+<p>Another benefit of a Bayesian hierarchical model is that <em>you
+don’t need to worry about multiple comparisons</em>. There are multiple
+angles on why this is the case, but the basic answer is that the use of
+common prior distributions builds in the prior belief that the
+clusters/groups are likely to be equal. See discussion <a
+href="https://statmodeling.stat.columbia.edu/2016/08/22/bayesian-inference-completely-solves-the-multiple-comparisons-problem/">here</a>
+and <a
+href="https://stats.stackexchange.com/questions/203378/why-dont-bayesian-methods-require-multiple-testing-corrections">here</a>.</p>
 <h1 id="hierarchical-normal-model">Hierarchical Normal Model</h1>
 <h2 id="eight-schools-example">Eight Schools Example</h2>
-<p>This is a classic data set first analyzed by <a href="https://journals.sagepub.com/doi/abs/10.3102/10769986006004377">Rubin (1981)</a>. It is also the example used in the <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">RStan Getting Started</a> page. The data contains the effect of coaching from randomized experiments in eight schools. The numbers shown (labelled as <code>y</code>) are the mean difference (i.e., effect size) in performance between the treatment group and the control group on SAT-V scores.</p>
+<p>This is a classic data set first analyzed by <a
+href="https://journals.sagepub.com/doi/abs/10.3102/10769986006004377">Rubin
+(1981)</a>. It is also the example used in the <a
+href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">RStan
+Getting Started</a> page. The data contains the effect of coaching from
+randomized experiments in eight schools. The numbers shown (labelled as
+<code>y</code>) are the mean difference (i.e., effect size) in
+performance between the treatment group and the control group on SAT-V
+scores.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>schools_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>J <span class='op'>=</span> <span class='fl'>8</span>,
@@ -3107,7 +3873,11 @@ model {
 </code></pre>
 </div>
 </div>
-<p>In the above data, some numbers are positive, and some are negative. Because the sample sizes are different, the data also contained the standard errors (labelled as <code>sigma</code>) of the effect sizes. Generally speaking, a larger sample size corresponds to a smaller standard error. The research question is</p>
+<p>In the above data, some numbers are positive, and some are negative.
+Because the sample sizes are different, the data also contained the
+standard errors (labelled as <code>sigma</code>) of the effect sizes.
+Generally speaking, a larger sample size corresponds to a smaller
+standard error. The research question is</p>
 <blockquote>
 <ol type="1">
 <li>What is the average treatment effect of coaching?</li>
@@ -3126,10 +3896,28 @@ model {
     \tau &amp; \sim t^+_4(0, 100)
   \end{aligned}
 \]</span></p>
-<p>Given the SAT score range, it is unlikely that a coaching program will improve scores by 100 or so, so we use a prior of <span class="math inline">\(\mu \sim N(0, 100)\)</span> and <span class="math inline">\(\tau \sim t^+_4(0, 100)\)</span>.</p>
-<p>Note: The model above is the same as one used in a <em>random-effect meta-analysis</em>. See <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/jrsm.12">this paper</a> for an introduction.</p>
-<h2 id="non-centered-parameterization">Non-Centered Parameterization</h2>
-<p>The hierarchical model is known to create issues in MCMC sampling, such that the posterior draws tend to be highly correlated even with more advanced techniques like HMC. One way to alleviate that is to reparameterize the model using what is called the <strong>non-centered parameterization</strong>. The basic idea is that, instead of treating the <span class="math inline">\(\theta\)</span>s as parameters, one uses the <strong>standardized deviation</strong> from the mean to be parameters. You can think about it as converting the <span class="math inline">\(\theta\)</span>s into <span class="math inline">\(z\)</span> scores, and then sample the <span class="math inline">\(z\)</span> scores instead of the original <span class="math inline">\(\theta\)</span>s.</p>
+<p>Given the SAT score range, it is unlikely that a coaching program
+will improve scores by 100 or so, so we use a prior of <span
+class="math inline">\(\mu \sim N(0, 100)\)</span> and <span
+class="math inline">\(\tau \sim t^+_4(0, 100)\)</span>.</p>
+<p>Note: The model above is the same as one used in a <em>random-effect
+meta-analysis</em>. See <a
+href="https://onlinelibrary.wiley.com/doi/abs/10.1002/jrsm.12">this
+paper</a> for an introduction.</p>
+<h2 id="non-centered-parameterization">Non-Centered
+Parameterization</h2>
+<p>The hierarchical model is known to create issues in MCMC sampling,
+such that the posterior draws tend to be highly correlated even with
+more advanced techniques like HMC. One way to alleviate that is to
+reparameterize the model using what is called the <strong>non-centered
+parameterization</strong>. The basic idea is that, instead of treating
+the <span class="math inline">\(\theta\)</span>s as parameters, one uses
+the <strong>standardized deviation</strong> from the mean to be
+parameters. You can think about it as converting the <span
+class="math inline">\(\theta\)</span>s into <span
+class="math inline">\(z\)</span> scores, and then sample the <span
+class="math inline">\(z\)</span> scores instead of the original <span
+class="math inline">\(\theta\)</span>s.</p>
 <p>Model: <span class="math display">\[
   \begin{aligned}
     d_j &amp; \sim N(\theta_j, s_j) \\
@@ -3138,27 +3926,28 @@ model {
   \end{aligned}
 \]</span></p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="stan"><code>data {
-  int&lt;lower=0&gt; J;          // number of schools 
-  real y[J];               // estimated treatment effects
-  real&lt;lower=0&gt; sigma[J];  // s.e. of effect estimates 
-}
-parameters {
-  real mu;                 // overall mean
-  real&lt;lower=0&gt; tau;       // between-school SD
-  vector[J] eta;           // standardized deviation (z score)
-}
-transformed parameters {
-  vector[J] theta;
-  theta = mu + tau * eta;   // non-centered parameterization
-}
-model {
-  eta ~ std_normal();       // same as eta ~ normal(0, 1);
-  y ~ normal(theta, sigma);
-  // priors
-  mu ~ normal(0, 100);
-  tau ~ student_t(4, 0, 100);
-}</code></pre>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode stan"><code class="sourceCode stan"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; J;          <span class="co">// number of schools </span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> y[J];               <span class="co">// estimated treatment effects</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma[J];  <span class="co">// s.e. of effect estimates </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> mu;                 <span class="co">// overall mean</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; tau;       <span class="co">// between-school SD</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[J] eta;           <span class="co">// standardized deviation (z score)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span> {</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[J] theta;</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  theta = mu + tau * eta;   <span class="co">// non-centered parameterization</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  eta ~ std_normal();       <span class="co">// same as eta ~ normal(0, 1);</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  y ~ normal(theta, sigma);</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">// priors</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  mu ~ normal(<span class="dv">0</span>, <span class="dv">100</span>);</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  tau ~ student_t(<span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">100</span>);</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -3173,7 +3962,10 @@ model {
 </code></pre>
 </div>
 </div>
-<p>Treatment effect estimates of individual schools (<span class="math inline">\(\theta\)</span>), average treatment effect (<span class="math inline">\(\mu\)</span>), and treatment effect heterogeneity (<span class="math inline">\(\tau\)</span>).</p>
+<p>Treatment effect estimates of individual schools (<span
+class="math inline">\(\theta\)</span>), average treatment effect (<span
+class="math inline">\(\mu\)</span>), and treatment effect heterogeneity
+(<span class="math inline">\(\tau\)</span>).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>fit</span>, pars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"theta"</span>, <span class='st'>"mu"</span>, <span class='st'>"tau"</span><span class='op'>)</span><span class='op'>)</span>
@@ -3195,13 +3987,16 @@ model {
 #&gt; mu        7.79    0.13 5.11  -2.20 4.69  7.89 11.01 17.54  1605    1
 #&gt; tau       6.28    0.14 5.32   0.23 2.38  5.00  8.75 19.55  1436    1
 #&gt; 
-#&gt; Samples were drawn using NUTS(diag_e) at Thu Mar 10 09:42:51 2022.
+#&gt; Samples were drawn using NUTS(diag_e) at Mon Mar 21 18:06:54 2022.
 #&gt; For each parameter, n_eff is a crude measure of effective sample size,
 #&gt; and Rhat is the potential scale reduction factor on split chains (at 
 #&gt; convergence, Rhat=1).</code></pre>
 </div>
-<p>On average, based on the 95% CI, coaching seemed to improve SAT-V by -2.2 to 17.54 points. There was substantial heterogeneity across schools.</p>
-<p>We can also get the probability that the treatment effect was &gt; 0:</p>
+<p>On average, based on the 95% CI, coaching seemed to improve SAT-V by
+-2.2 to 17.54 points. There was substantial heterogeneity across
+schools.</p>
+<p>We can also get the probability that the treatment effect was &gt;
+0:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Obtain draws</span>
@@ -3220,7 +4015,8 @@ model {
 <p><img src="hierarchical_models_files/figure-html5/areas-fit-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h2 id="prediction-interval">Prediction Interval</h2>
-<p>Posterior distribution of the true effect size of a new study, <span class="math inline">\(\tilde \theta\)</span></p>
+<p>Posterior distribution of the true effect size of a new study, <span
+class="math inline">\(\tilde \theta\)</span></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Prediction Interval (can also be done in Stan)</span>
@@ -3238,9 +4034,12 @@ model {
 #&gt; 3 theta_tilde  7.87   7.84  9.79  7.13 -6.44   22.8  1.00    3816.
 #&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
-<p>The posterior interval for <span class="math inline">\(\tilde \theta\)</span> indicates a range that the treatment effect for a new study can be.</p>
+<p>The posterior interval for <span class="math inline">\(\tilde
+\theta\)</span> indicates a range that the treatment effect for a new
+study can be.</p>
 <!-- The following chunk is only used in the website -->
-<section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
+<section id="last-updated" class="appendix layout-chunk"
+data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
 <pre><code>#&gt; [1] &quot;March 10, 2022&quot;</code></pre>
@@ -3248,9 +4047,11 @@ model {
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 </section>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -3281,7 +4082,10 @@ model {
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
 <p>© Copyright 2022 Hok Chio (Mark) Lai</p>
-<p>Template by <a href="https://github.com/distillpub/template/blob/master/AUTHORS">The Distill Template Authors</a> and <a href="https://www.rstudio.com">RStudio, Inc</a>.</p>
+<p>Template by <a
+href="https://github.com/distillpub/template/blob/master/AUTHORS">The
+Distill Template Authors</a> and <a
+href="https://www.rstudio.com">RStudio, Inc</a>.</p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 

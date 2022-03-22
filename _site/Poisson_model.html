@@ -2368,7 +2368,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
   <script src="site_libs/clipboard-2.0.6/clipboard.min.js"></script>
   <link href="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
   <script src="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
@@ -2451,6 +2451,7 @@ Notes
 <a href="hmc_stan.html">HMC and Stan</a>
 <a href="hierarchical_models.html">Hierarchical Models</a>
 <a href="group_comparisons.html">Group Comparisons</a>
+<a href="glm.html">Generalized Linear Model I</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2484,7 +2485,8 @@ Notes
 <h3>Contents</h3>
 <ul>
 <li><a href="#research-question">Research Question</a></li>
-<li><a href="#data-import-and-pre-processing">Data Import and Pre-Processing</a></li>
+<li><a href="#data-import-and-pre-processing">Data Import and
+Pre-Processing</a></li>
 <li><a href="#poisson-model">Poisson Model</a>
 <ul>
 <li><a href="#choosing-a-prior">Choosing a Prior</a>
@@ -2494,7 +2496,8 @@ Notes
 <li><a href="#posterior">Posterior</a>
 <ul>
 <li><a href="#summary">Summary</a></li>
-<li><a href="#posterior-predictive-check">Posterior Predictive Check</a></li>
+<li><a href="#posterior-predictive-check">Posterior Predictive
+Check</a></li>
 </ul></li>
 <li><a href="#last-updated">Last updated</a></li>
 </ul></li>
@@ -2502,7 +2505,8 @@ Notes
 </nav>
 </div>
 <blockquote>
-<p>Please note: This document uses count data on fatal police shootings.</p>
+<p>Please note: This document uses count data on fatal police
+shootings.</p>
 </blockquote>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2515,13 +2519,21 @@ Notes
 </code></pre>
 </div>
 </div>
-<p>I came across this data set from <a href="https://andrewpwheeler.com/2021/01/11/checking-a-poisson-distribution-fit-an-example-with-officer-involved-shooting-deaths-wapo-data-r-functions/" class="uri">https://andrewpwheeler.com/2021/01/11/checking-a-poisson-distribution-fit-an-example-with-officer-involved-shooting-deaths-wapo-data-r-functions/</a></p>
-<p>As explained <a href="https://github.com/washingtonpost/data-police-shootings">here</a>, the data are by the Washington Post in an effort to record every fatal shooting in the United States by a police officer since January 1, 2015.</p>
+<p>I came across this data set from <a
+href="https://andrewpwheeler.com/2021/01/11/checking-a-poisson-distribution-fit-an-example-with-officer-involved-shooting-deaths-wapo-data-r-functions/"
+class="uri">https://andrewpwheeler.com/2021/01/11/checking-a-poisson-distribution-fit-an-example-with-officer-involved-shooting-deaths-wapo-data-r-functions/</a></p>
+<p>As explained <a
+href="https://github.com/washingtonpost/data-police-shootings">here</a>,
+the data are by the Washington Post in an effort to record every fatal
+shooting in the United States by a police officer since January 1,
+2015.</p>
 <h1 id="research-question">Research Question</h1>
 <blockquote>
-<p>What’s the rate of fatal police shootings in the United States per year?</p>
+<p>What’s the rate of fatal police shootings in the United States per
+year?</p>
 </blockquote>
-<h1 id="data-import-and-pre-processing">Data Import and Pre-Processing</h1>
+<h1 id="data-import-and-pre-processing">Data Import and
+Pre-Processing</h1>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Import data</span>
@@ -2554,10 +2566,30 @@ Notes
 #&gt; 7 2021   1055</code></pre>
 </div>
 <h1 id="poisson-model">Poisson Model</h1>
-<p>Our interest is the rate of occurrence of fatal police shootings per year. Denote this as <span class="math inline">\(\theta\)</span>. The <em>support</em> of <span class="math inline">\(\theta\)</span> is <span class="math inline">\([0, \infty)\)</span>.</p>
-<p>A Poisson model is usually a starting point for analyzing count data in a fixed amount of time. It assumes that the data follow a Poisson distribution with a fixed rate parameter: <span class="math display">\[P(y \mid \theta) \propto \theta^y \exp(- \theta),\]</span> where the data can be any non-negative integers (no decimals).</p>
+<p>Our interest is the rate of occurrence of fatal police shootings per
+year. Denote this as <span class="math inline">\(\theta\)</span>. The
+<em>support</em> of <span class="math inline">\(\theta\)</span> is <span
+class="math inline">\([0, \infty)\)</span>.</p>
+<p>A Poisson model is usually a starting point for analyzing count data
+in a fixed amount of time. It assumes that the data follow a Poisson
+distribution with a fixed rate parameter: <span
+class="math display">\[P(y \mid \theta) \propto \theta^y \exp(-
+\theta),\]</span> where the data can be any non-negative integers (no
+decimals).</p>
 <h2 id="choosing-a-prior">Choosing a Prior</h2>
-<p>The <a href="https://en.wikipedia.org/wiki/Gamma_distribution">Gamma distribution</a> has support: <span class="math inline">\([0, \infty)\)</span>, and is a conjugate family to the Poisson model. The Gamma distribution has the form <span class="math display">\[P(\theta) \propto \theta^{a - 1} \exp(-b \theta),\]</span> where <span class="math inline">\(a\)</span> is the prior incidence rate, and <span class="math inline">\(b\)</span> is the number of prior data points to control for the prior strength. Here, without much prior knowledge, I would simply guess there is one fatal shooting per state per month, so 600 shootings per year, but my belief is pretty weak, so I will assume a prior <span class="math inline">\(b\)</span> of 1 / 200 (one observation is one year). The <span class="math inline">\(a\)</span> will be 600 * <span class="math inline">\(b\)</span> = 3.</p>
+<p>The <a href="https://en.wikipedia.org/wiki/Gamma_distribution">Gamma
+distribution</a> has support: <span class="math inline">\([0,
+\infty)\)</span>, and is a conjugate family to the Poisson model. The
+Gamma distribution has the form <span class="math display">\[P(\theta)
+\propto \theta^{a - 1} \exp(-b \theta),\]</span> where <span
+class="math inline">\(a\)</span> is the prior incidence rate, and <span
+class="math inline">\(b\)</span> is the number of prior data points to
+control for the prior strength. Here, without much prior knowledge, I
+would simply guess there is one fatal shooting per state per month, so
+600 shootings per year, but my belief is pretty weak, so I will assume a
+prior <span class="math inline">\(b\)</span> of 1 / 200 (one observation
+is one year). The <span class="math inline">\(a\)</span> will be 600 *
+<span class="math inline">\(b\)</span> = 3.</p>
 <p>Here’s a plot:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2610,7 +2642,10 @@ Notes
 <p><img src="Poisson_model_files/figure-html5/prior-check-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h2 id="posterior">Posterior</h2>
-<p>With a conjugate prior, the posterior distribution is Gamma(<span class="math inline">\(a\)</span> + <span class="math inline">\(\sum_{i = 1}^N y_i\)</span>, <span class="math inline">\(b\)</span> + <span class="math inline">\(N\)</span>).</p>
+<p>With a conjugate prior, the posterior distribution is Gamma(<span
+class="math inline">\(a\)</span> + <span class="math inline">\(\sum_{i =
+1}^N y_i\)</span>, <span class="math inline">\(b\)</span> + <span
+class="math inline">\(N\)</span>).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>th <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2000</span><span class='op'>)</span><span class='op'>)</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
@@ -2679,7 +2714,8 @@ Notes
 <p><img src="Poisson_model_files/figure-html5/ppc-time-series-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <!-- The following chunk is only used in the website -->
-<section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
+<section id="last-updated" class="appendix layout-chunk"
+data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
 <pre><code>#&gt; [1] &quot;February 11, 2022&quot;</code></pre>
@@ -2687,9 +2723,11 @@ Notes
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 </section>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -2720,7 +2758,10 @@ Notes
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
 <p>© Copyright 2022 Hok Chio (Mark) Lai</p>
-<p>Template by <a href="https://github.com/distillpub/template/blob/master/AUTHORS">The Distill Template Authors</a> and <a href="https://www.rstudio.com">RStudio, Inc</a>.</p>
+<p>Template by <a
+href="https://github.com/distillpub/template/blob/master/AUTHORS">The
+Distill Template Authors</a> and <a
+href="https://www.rstudio.com">RStudio, Inc</a>.</p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 

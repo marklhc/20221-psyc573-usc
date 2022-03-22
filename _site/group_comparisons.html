@@ -2368,7 +2368,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
   <script src="site_libs/clipboard-2.0.6/clipboard.min.js"></script>
   <link href="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
   <script src="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
@@ -2451,6 +2451,7 @@ Notes
 <a href="hmc_stan.html">HMC and Stan</a>
 <a href="hierarchical_models.html">Hierarchical Models</a>
 <a href="group_comparisons.html">Group Comparisons</a>
+<a href="glm.html">Generalized Linear Model I</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2485,25 +2486,31 @@ Notes
 <ul>
 <li><a href="#data">Data</a></li>
 <li><a href="#plots">Plots</a></li>
-<li><a href="#independent-sample-t-test">Independent Sample <span class="math inline">\(t\)</span>-Test</a>
+<li><a href="#independent-sample-t-test">Independent Sample <span
+class="math inline">\(t\)</span>-Test</a>
 <ul>
 <li><a href="#frequentist">Frequentist</a></li>
 <li><a href="#bayesian">Bayesian</a></li>
-<li><a href="#normal-models-are-not-robust">Normal models are not robust</a></li>
+<li><a href="#normal-models-are-not-robust">Normal models are not
+robust</a></li>
 </ul></li>
 <li><a href="#bayesian-robust-model">Bayesian Robust Model</a></li>
 <li><a href="#bayesian-lognormal-model">Bayesian Lognormal Model</a>
 <ul>
 <li><a href="#prior-predictive">Prior Predictive</a></li>
 <li><a href="#mcmc-sampling">MCMC Sampling</a></li>
-<li><a href="#posterior-predictive-check">Posterior Predictive Check</a></li>
-<li><a href="#use-difference-as-parameter">Use Difference As Parameter</a></li>
+<li><a href="#posterior-predictive-check">Posterior Predictive
+Check</a></li>
+<li><a href="#use-difference-as-parameter">Use Difference As
+Parameter</a></li>
 </ul></li>
 <li><a href="#within-subject">Within-Subject</a>
 <ul>
-<li><a href="#posterior-predictive-check-1">Posterior Predictive Check</a></li>
+<li><a href="#posterior-predictive-check-1">Posterior Predictive
+Check</a></li>
 <li><a href="#effect-size">Effect Size</a></li>
-<li><a href="#region-of-practical-equivalence">Region of Practical Equivalence</a></li>
+<li><a href="#region-of-practical-equivalence">Region of Practical
+Equivalence</a></li>
 <li><a href="#last-updated">Last updated</a></li>
 </ul></li>
 </ul>
@@ -2524,8 +2531,23 @@ Notes
 </div>
 </div>
 <h2 id="data">Data</h2>
-<p>We will use the data in <a href="https://www.tandfonline.com/doi/full/10.1080/02699931.2018.1553148">Frank, Biberci, and Verschuere (2019)</a>, which is a replication study examining the response time (RT) when lying. Specifically, the researchers were interested in whether RT is shorter or longer when lying in the native language. In the original study, the researchers found that the difference between telling a lie and a truth (lie-truth difference) was smaller in English than in German for native German speakers. In the replication study, the same design was used to see whether the findings could be replicated on Dutch speakers. The data can be found at <a href="https://osf.io/x4rfk/" class="uri">https://osf.io/x4rfk/</a>.</p>
-<p>Instead of looking at lie-truth difference across languages, we will start by comparing the difference in RT for telling a lie in Dutch between males (man) and females (vrouw), as the model is easier to understand for independent sample comparisons and can be applied generally for between-subject experimental designs.</p>
+<p>We will use the data in <a
+href="https://www.tandfonline.com/doi/full/10.1080/02699931.2018.1553148">Frank,
+Biberci, and Verschuere (2019)</a>, which is a replication study
+examining the response time (RT) when lying. Specifically, the
+researchers were interested in whether RT is shorter or longer when
+lying in the native language. In the original study, the researchers
+found that the difference between telling a lie and a truth (lie-truth
+difference) was smaller in English than in German for native German
+speakers. In the replication study, the same design was used to see
+whether the findings could be replicated on Dutch speakers. The data can
+be found at <a href="https://osf.io/x4rfk/"
+class="uri">https://osf.io/x4rfk/</a>.</p>
+<p>Instead of looking at lie-truth difference across languages, we will
+start by comparing the difference in RT for telling a lie in Dutch
+between males (man) and females (vrouw), as the model is easier to
+understand for independent sample comparisons and can be applied
+generally for between-subject experimental designs.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>datfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"data_files"</span>, <span class='st'>"ENDFILE.xlsx"</span><span class='op'>)</span>
@@ -2535,7 +2557,7 @@ Notes
         destfile <span class='op'>=</span> <span class='va'>datfile</span>
     <span class='op'>)</span>
 <span class='op'>}</span>
-<span class='va'>lies</span> <span class='op'>&lt;-</span> <span class='fu'>readxl</span><span class='fu'>::</span><span class='fu'><a href='https://readxl.tidyverse.org/reference/read_excel.html'>read_excel</a></span><span class='op'>(</span><span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"data_files"</span>, <span class='st'>"ENDFILE.xlsx"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>lies</span> <span class='op'>&lt;-</span> <span class='fu'>readxl</span><span class='fu'>::</span><span class='fu'><a href='https://readxl.tidyverse.org/reference/read_excel.html'>read_excel</a></span><span class='op'>(</span><span class='va'>datfile</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
@@ -2588,7 +2610,8 @@ Notes
 </div>
 <p><img src="group_comparisons_files/figure-html5/plot-LDMRT-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<h2 id="independent-sample-t-test">Independent Sample <span class="math inline">\(t\)</span>-Test</h2>
+<h2 id="independent-sample-t-test">Independent Sample <span
+class="math inline">\(t\)</span>-Test</h2>
 <h3 id="frequentist">Frequentist</h3>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2609,14 +2632,23 @@ Notes
 #&gt;            1.811999            1.295587</code></pre>
 </div>
 <h3 id="bayesian">Bayesian</h3>
-<p>The <span class="math inline">\(t\)</span>-test above does not directly show the underlying model. In fully Bayesian analyses, this has to be made explicit. A statistical model states the underlying assumptions of the statistical procedure. And to say more directly, a model is mostly a set of distributional assumptions. Below is the model for a <span class="math inline">\(t\)</span>-test:</p>
+<p>The <span class="math inline">\(t\)</span>-test above does not
+directly show the underlying model. In fully Bayesian analyses, this has
+to be made explicit. A statistical model states the underlying
+assumptions of the statistical procedure. And to say more directly, a
+model is mostly a set of distributional assumptions. Below is the model
+for a <span class="math inline">\(t\)</span>-test:</p>
 <p><span class="math display">\[
   \begin{aligned}
     \text{RT}_{i, \text{male}} &amp; \sim N(\mu_1, \sigma_1) \\
     \text{RT}_{i, \text{female}} &amp; \sim N(\mu_2, \sigma_2)
   \end{aligned}
 \]</span></p>
-<p>Note that we don’t assume <span class="math inline">\(\sigma_1 = \sigma_2\)</span>, which correspond to the Welch’s <span class="math inline">\(t\)</span> test. We could impose homogeneity of variance across groups using a common <span class="math inline">\(\sigma\)</span>.</p>
+<p>Note that we don’t assume <span class="math inline">\(\sigma_1 =
+\sigma_2\)</span>, which correspond to the Welch’s <span
+class="math inline">\(t\)</span> test. We could impose homogeneity of
+variance across groups using a common <span
+class="math inline">\(\sigma\)</span>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 1. form the data list for Stan</span>
@@ -2637,8 +2669,8 @@ Notes
 <pre><code>#&gt; 
 #&gt; SAMPLING FOR MODEL &#39;normal_2group&#39; NOW (CHAIN 1).
 #&gt; Chain 1: 
-#&gt; Chain 1: Gradient evaluation took 7e-06 seconds
-#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
+#&gt; Chain 1: Gradient evaluation took 5e-06 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 #&gt; Chain 1: Adjust your expectations accordingly!
 #&gt; Chain 1: 
 #&gt; Chain 1: 
@@ -2655,15 +2687,15 @@ Notes
 #&gt; Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.032845 seconds (Warm-up)
-#&gt; Chain 1:                0.031523 seconds (Sampling)
-#&gt; Chain 1:                0.064368 seconds (Total)
+#&gt; Chain 1:  Elapsed Time: 0.025308 seconds (Warm-up)
+#&gt; Chain 1:                0.024613 seconds (Sampling)
+#&gt; Chain 1:                0.049921 seconds (Total)
 #&gt; Chain 1: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;normal_2group&#39; NOW (CHAIN 2).
 #&gt; Chain 2: 
-#&gt; Chain 2: Gradient evaluation took 6e-06 seconds
-#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+#&gt; Chain 2: Gradient evaluation took 5e-06 seconds
+#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 #&gt; Chain 2: Adjust your expectations accordingly!
 #&gt; Chain 2: 
 #&gt; Chain 2: 
@@ -2680,15 +2712,15 @@ Notes
 #&gt; Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 2: 
-#&gt; Chain 2:  Elapsed Time: 0.03296 seconds (Warm-up)
-#&gt; Chain 2:                0.036279 seconds (Sampling)
-#&gt; Chain 2:                0.069239 seconds (Total)
+#&gt; Chain 2:  Elapsed Time: 0.026387 seconds (Warm-up)
+#&gt; Chain 2:                0.025489 seconds (Sampling)
+#&gt; Chain 2:                0.051876 seconds (Total)
 #&gt; Chain 2: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;normal_2group&#39; NOW (CHAIN 3).
 #&gt; Chain 3: 
-#&gt; Chain 3: Gradient evaluation took 6e-06 seconds
-#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+#&gt; Chain 3: Gradient evaluation took 5e-06 seconds
+#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 #&gt; Chain 3: Adjust your expectations accordingly!
 #&gt; Chain 3: 
 #&gt; Chain 3: 
@@ -2705,15 +2737,15 @@ Notes
 #&gt; Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 3: 
-#&gt; Chain 3:  Elapsed Time: 0.032218 seconds (Warm-up)
-#&gt; Chain 3:                0.033121 seconds (Sampling)
-#&gt; Chain 3:                0.065339 seconds (Total)
+#&gt; Chain 3:  Elapsed Time: 0.025342 seconds (Warm-up)
+#&gt; Chain 3:                0.027515 seconds (Sampling)
+#&gt; Chain 3:                0.052857 seconds (Total)
 #&gt; Chain 3: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;normal_2group&#39; NOW (CHAIN 4).
 #&gt; Chain 4: 
-#&gt; Chain 4: Gradient evaluation took 7e-06 seconds
-#&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
+#&gt; Chain 4: Gradient evaluation took 5e-06 seconds
+#&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 #&gt; Chain 4: Adjust your expectations accordingly!
 #&gt; Chain 4: 
 #&gt; Chain 4: 
@@ -2730,9 +2762,9 @@ Notes
 #&gt; Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 4: 
-#&gt; Chain 4:  Elapsed Time: 0.033415 seconds (Warm-up)
-#&gt; Chain 4:                0.036693 seconds (Sampling)
-#&gt; Chain 4:                0.070108 seconds (Total)
+#&gt; Chain 4:  Elapsed Time: 0.026225 seconds (Warm-up)
+#&gt; Chain 4:                0.025281 seconds (Sampling)
+#&gt; Chain 4:                0.051506 seconds (Total)
 #&gt; Chain 4:</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
@@ -2750,7 +2782,7 @@ Notes
 #&gt; sigma1 0.54       0 0.09 0.40 0.47 0.53 0.59  0.75  3105    1
 #&gt; sigma2 0.44       0 0.05 0.36 0.40 0.43 0.47  0.54  4101    1
 #&gt; 
-#&gt; Samples were drawn using NUTS(diag_e) at Thu Mar 10 09:41:54 2022.
+#&gt; Samples were drawn using NUTS(diag_e) at Mon Mar 21 18:06:08 2022.
 #&gt; For each parameter, n_eff is a crude measure of effective sample size,
 #&gt; and Rhat is the potential scale reduction factor on split chains (at 
 #&gt; convergence, Rhat=1).</code></pre>
@@ -2777,8 +2809,8 @@ Notes
 <pre><code>#&gt; 
 #&gt; SAMPLING FOR MODEL &#39;normal_2group&#39; NOW (CHAIN 1).
 #&gt; Chain 1: 
-#&gt; Chain 1: Gradient evaluation took 8e-06 seconds
-#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
+#&gt; Chain 1: Gradient evaluation took 6e-06 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
 #&gt; Chain 1: Adjust your expectations accordingly!
 #&gt; Chain 1: 
 #&gt; Chain 1: 
@@ -2795,15 +2827,15 @@ Notes
 #&gt; Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.032168 seconds (Warm-up)
-#&gt; Chain 1:                0.033127 seconds (Sampling)
-#&gt; Chain 1:                0.065295 seconds (Total)
+#&gt; Chain 1:  Elapsed Time: 0.024196 seconds (Warm-up)
+#&gt; Chain 1:                0.024786 seconds (Sampling)
+#&gt; Chain 1:                0.048982 seconds (Total)
 #&gt; Chain 1: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;normal_2group&#39; NOW (CHAIN 2).
 #&gt; Chain 2: 
-#&gt; Chain 2: Gradient evaluation took 7e-06 seconds
-#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
+#&gt; Chain 2: Gradient evaluation took 5e-06 seconds
+#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 #&gt; Chain 2: Adjust your expectations accordingly!
 #&gt; Chain 2: 
 #&gt; Chain 2: 
@@ -2820,15 +2852,15 @@ Notes
 #&gt; Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 2: 
-#&gt; Chain 2:  Elapsed Time: 0.032547 seconds (Warm-up)
-#&gt; Chain 2:                0.033894 seconds (Sampling)
-#&gt; Chain 2:                0.066441 seconds (Total)
+#&gt; Chain 2:  Elapsed Time: 0.0262 seconds (Warm-up)
+#&gt; Chain 2:                0.026705 seconds (Sampling)
+#&gt; Chain 2:                0.052905 seconds (Total)
 #&gt; Chain 2: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;normal_2group&#39; NOW (CHAIN 3).
 #&gt; Chain 3: 
-#&gt; Chain 3: Gradient evaluation took 7e-06 seconds
-#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
+#&gt; Chain 3: Gradient evaluation took 1.4e-05 seconds
+#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
 #&gt; Chain 3: Adjust your expectations accordingly!
 #&gt; Chain 3: 
 #&gt; Chain 3: 
@@ -2845,9 +2877,9 @@ Notes
 #&gt; Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 3: 
-#&gt; Chain 3:  Elapsed Time: 0.032053 seconds (Warm-up)
-#&gt; Chain 3:                0.034736 seconds (Sampling)
-#&gt; Chain 3:                0.066789 seconds (Total)
+#&gt; Chain 3:  Elapsed Time: 0.02457 seconds (Warm-up)
+#&gt; Chain 3:                0.027685 seconds (Sampling)
+#&gt; Chain 3:                0.052255 seconds (Total)
 #&gt; Chain 3: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;normal_2group&#39; NOW (CHAIN 4).
@@ -2870,9 +2902,9 @@ Notes
 #&gt; Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 4: 
-#&gt; Chain 4:  Elapsed Time: 0.036452 seconds (Warm-up)
-#&gt; Chain 4:                0.042314 seconds (Sampling)
-#&gt; Chain 4:                0.078766 seconds (Total)
+#&gt; Chain 4:  Elapsed Time: 0.035169 seconds (Warm-up)
+#&gt; Chain 4:                0.025224 seconds (Sampling)
+#&gt; Chain 4:                0.060393 seconds (Total)
 #&gt; Chain 4:</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
@@ -2890,7 +2922,7 @@ Notes
 #&gt; sigma1 0.54       0 0.09 0.39 0.47 0.53 0.59  0.75  3447    1
 #&gt; sigma2 1.11       0 0.12 0.90 1.03 1.10 1.19  1.38  3953    1
 #&gt; 
-#&gt; Samples were drawn using NUTS(diag_e) at Thu Mar 10 09:41:56 2022.
+#&gt; Samples were drawn using NUTS(diag_e) at Mon Mar 21 18:06:09 2022.
 #&gt; For each parameter, n_eff is a crude measure of effective sample size,
 #&gt; and Rhat is the potential scale reduction factor on split chains (at 
 #&gt; convergence, Rhat=1).</code></pre>
@@ -2910,14 +2942,29 @@ Notes
 <p><img src="group_comparisons_files/figure-html5/ppc-m0-out-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h2 id="bayesian-robust-model">Bayesian Robust Model</h2>
-<p>One robust option against (some) outliers is the <span class="math inline">\(t\)</span> model. While fitting a <span class="math inline">\(t\)</span> model is more challenging in frequentist analyses, in Bayesian, it is as easy as the normal model. Specifically,</p>
+<p>One robust option against (some) outliers is the <span
+class="math inline">\(t\)</span> model. While fitting a <span
+class="math inline">\(t\)</span> model is more challenging in
+frequentist analyses, in Bayesian, it is as easy as the normal model.
+Specifically,</p>
 <p><span class="math display">\[
   \begin{aligned}
     \text{RT}_{i, \text{male}} &amp; \sim t_\nu(\mu_1, \sigma_1) \\
     \text{RT}_{i, \text{female}} &amp; \sim t_\nu(\mu_2, \sigma_2),
   \end{aligned}
 \]</span></p>
-<p>where <span class="math inline">\(\nu \in [1, \infty)\)</span> is the <em>degrees of freedom</em> parameter, also called the normality parameter. The larger <span class="math inline">\(\nu\)</span>, the more normal the distribution is. On the other hand, when <span class="math inline">\(\nu\)</span> is close to 1, the distribution allows for highly extreme values. When <span class="math inline">\(\nu = 1\)</span>, the distribution is from a Cauchy family. The only difference from a normal model is that we need to assign a prior for <span class="math inline">\(\nu\)</span>. A good option is Gamma(2, 0.1) (see <a href="https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations#prior-for-degrees-of-freedom-in-students-t-distribution" class="uri">https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations#prior-for-degrees-of-freedom-in-students-t-distribution</a>).</p>
+<p>where <span class="math inline">\(\nu \in [1, \infty)\)</span> is the
+<em>degrees of freedom</em> parameter, also called the normality
+parameter. The larger <span class="math inline">\(\nu\)</span>, the more
+normal the distribution is. On the other hand, when <span
+class="math inline">\(\nu\)</span> is close to 1, the distribution
+allows for highly extreme values. When <span class="math inline">\(\nu =
+1\)</span>, the distribution is from a Cauchy family. The only
+difference from a normal model is that we need to assign a prior for
+<span class="math inline">\(\nu\)</span>. A good option is Gamma(2, 0.1)
+(see <a
+href="https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations#prior-for-degrees-of-freedom-in-students-t-distribution"
+class="uri">https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations#prior-for-degrees-of-freedom-in-students-t-distribution</a>).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 2. Run Stan (with lines for the likelihood commented out)</span>
@@ -2931,8 +2978,8 @@ Notes
 <pre><code>#&gt; 
 #&gt; SAMPLING FOR MODEL &#39;robust_2group&#39; NOW (CHAIN 1).
 #&gt; Chain 1: 
-#&gt; Chain 1: Gradient evaluation took 1.4e-05 seconds
-#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
+#&gt; Chain 1: Gradient evaluation took 9e-06 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.09 seconds.
 #&gt; Chain 1: Adjust your expectations accordingly!
 #&gt; Chain 1: 
 #&gt; Chain 1: 
@@ -2949,15 +2996,15 @@ Notes
 #&gt; Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.082306 seconds (Warm-up)
-#&gt; Chain 1:                0.07263 seconds (Sampling)
-#&gt; Chain 1:                0.154936 seconds (Total)
+#&gt; Chain 1:  Elapsed Time: 0.063316 seconds (Warm-up)
+#&gt; Chain 1:                0.058278 seconds (Sampling)
+#&gt; Chain 1:                0.121594 seconds (Total)
 #&gt; Chain 1: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;robust_2group&#39; NOW (CHAIN 2).
 #&gt; Chain 2: 
-#&gt; Chain 2: Gradient evaluation took 1e-05 seconds
-#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.1 seconds.
+#&gt; Chain 2: Gradient evaluation took 8e-06 seconds
+#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
 #&gt; Chain 2: Adjust your expectations accordingly!
 #&gt; Chain 2: 
 #&gt; Chain 2: 
@@ -2974,15 +3021,15 @@ Notes
 #&gt; Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 2: 
-#&gt; Chain 2:  Elapsed Time: 0.08037 seconds (Warm-up)
-#&gt; Chain 2:                0.075628 seconds (Sampling)
-#&gt; Chain 2:                0.155998 seconds (Total)
+#&gt; Chain 2:  Elapsed Time: 0.063784 seconds (Warm-up)
+#&gt; Chain 2:                0.059515 seconds (Sampling)
+#&gt; Chain 2:                0.123299 seconds (Total)
 #&gt; Chain 2: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;robust_2group&#39; NOW (CHAIN 3).
 #&gt; Chain 3: 
-#&gt; Chain 3: Gradient evaluation took 9e-06 seconds
-#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.09 seconds.
+#&gt; Chain 3: Gradient evaluation took 8e-06 seconds
+#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
 #&gt; Chain 3: Adjust your expectations accordingly!
 #&gt; Chain 3: 
 #&gt; Chain 3: 
@@ -2999,15 +3046,15 @@ Notes
 #&gt; Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 3: 
-#&gt; Chain 3:  Elapsed Time: 0.085096 seconds (Warm-up)
-#&gt; Chain 3:                0.073409 seconds (Sampling)
-#&gt; Chain 3:                0.158505 seconds (Total)
+#&gt; Chain 3:  Elapsed Time: 0.063591 seconds (Warm-up)
+#&gt; Chain 3:                0.056815 seconds (Sampling)
+#&gt; Chain 3:                0.120406 seconds (Total)
 #&gt; Chain 3: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;robust_2group&#39; NOW (CHAIN 4).
 #&gt; Chain 4: 
-#&gt; Chain 4: Gradient evaluation took 9e-06 seconds
-#&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.09 seconds.
+#&gt; Chain 4: Gradient evaluation took 7e-06 seconds
+#&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
 #&gt; Chain 4: Adjust your expectations accordingly!
 #&gt; Chain 4: 
 #&gt; Chain 4: 
@@ -3024,9 +3071,9 @@ Notes
 #&gt; Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 4: 
-#&gt; Chain 4:  Elapsed Time: 0.079668 seconds (Warm-up)
-#&gt; Chain 4:                0.071351 seconds (Sampling)
-#&gt; Chain 4:                0.151019 seconds (Total)
+#&gt; Chain 4:  Elapsed Time: 0.063316 seconds (Warm-up)
+#&gt; Chain 4:                0.056644 seconds (Sampling)
+#&gt; Chain 4:                0.11996 seconds (Total)
 #&gt; Chain 4:</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
@@ -3045,12 +3092,13 @@ Notes
 #&gt; sigma2 0.33    0.00 0.06 0.22 0.29 0.33 0.37  0.47  3395    1
 #&gt; nu     2.59    0.02 0.92 1.33 1.94 2.41 3.05  4.89  2823    1
 #&gt; 
-#&gt; Samples were drawn using NUTS(diag_e) at Thu Mar 10 09:42:00 2022.
+#&gt; Samples were drawn using NUTS(diag_e) at Mon Mar 21 18:06:12 2022.
 #&gt; For each parameter, n_eff is a crude measure of effective sample size,
 #&gt; and Rhat is the potential scale reduction factor on split chains (at 
 #&gt; convergence, Rhat=1).</code></pre>
 </div>
-<p>Notice that <span class="math inline">\(\nu\)</span> is estimated to be close to 1.</p>
+<p>Notice that <span class="math inline">\(\nu\)</span> is estimated to
+be close to 1.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># PPC for Group 2 (vrouw)</span>
@@ -3066,7 +3114,15 @@ Notes
 <p><img src="group_comparisons_files/figure-html5/ppc-m0r-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h2 id="bayesian-lognormal-model">Bayesian Lognormal Model</h2>
-<p>It is not necessary to use a normal model for group comparisons. Indeed, for many problems, the normal model may not be the best option. There has been rich literature on how to model response data. One key issue to address is that response time is non-negative, but a normal model implies that a negative value is always possible. A better option is to assume the <em>logarithm</em> of response time is normally distributed. This implies that the outcome follows a <em>lognormal</em> distribution, which ensures that the outcome will be non-negative. Below is the log-transformed data:</p>
+<p>It is not necessary to use a normal model for group comparisons.
+Indeed, for many problems, the normal model may not be the best option.
+There has been rich literature on how to model response data. One key
+issue to address is that response time is non-negative, but a normal
+model implies that a negative value is always possible. A better option
+is to assume the <em>logarithm</em> of response time is normally
+distributed. This implies that the outcome follows a <em>lognormal</em>
+distribution, which ensures that the outcome will be non-negative. Below
+is the log-transformed data:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>lies_cc</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>LDMRT_sec</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
@@ -3080,8 +3136,10 @@ Notes
 <p>Below is a lognormal model with some weak priors:</p>
 <p><span class="math display">\[
   \begin{aligned}
-    \text{RT}_{i, \text{male}} &amp; \sim \mathrm{Lognormal}(\mu_1, \sigma_1) \\
-    \text{RT}_{i, \text{female}} &amp; \sim \mathrm{Lognormal}(\mu_2, \sigma_2) \\
+    \text{RT}_{i, \text{male}} &amp; \sim \mathrm{Lognormal}(\mu_1,
+\sigma_1) \\
+    \text{RT}_{i, \text{female}} &amp; \sim \mathrm{Lognormal}(\mu_2,
+\sigma_2) \\
     \mu_1 &amp; \sim N(0, 1) \\
     \mu_2 &amp; \sim N(0, 1) \\
     \sigma_1 &amp; \sim N^+(0, 1) \\
@@ -3089,39 +3147,42 @@ Notes
   \end{aligned}
 \]</span></p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="stan"><code>data {
-  int&lt;lower=0&gt; N1;  // number of observations (group 1)
-  int&lt;lower=0&gt; N2;  // number of observations (group 2)
-  vector&lt;lower=0&gt;[N1] y1;  // response time (group 1);
-  vector&lt;lower=0&gt;[N2] y2;  // response time (group 2);
-}
-parameters {
-  real mu1;  // mean of log(RT) (group 1)
-  real&lt;lower=0&gt; sigma1;  // SD of log(RT) (group 1)
-  real mu2;  // mean of log(RT) (group 2)
-  real&lt;lower=0&gt; sigma2;  // SD of log(RT) (group 2)
-}
-model {
-  // model
-  y1 ~ lognormal(mu1, sigma1);
-  y2 ~ lognormal(mu2, sigma2);
-  // prior
-  mu1 ~ normal(0, 1);
-  mu2 ~ normal(0, 1);
-  sigma1 ~ normal(0, 0.5);
-  sigma2 ~ normal(0, 0.5);
-}
-generated quantities {
-  vector&lt;lower=0&gt;[N1] y1_rep;  // place holder
-  vector&lt;lower=0&gt;[N2] y2_rep;  // place holder
-  for (n in 1:N1)
-    y1_rep[n] = lognormal_rng(mu1, sigma1);
-  for (n in 1:N2)
-    y2_rep[n] = lognormal_rng(mu2, sigma2);
-}</code></pre>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode stan"><code class="sourceCode stan"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N1;  <span class="co">// number of observations (group 1)</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N2;  <span class="co">// number of observations (group 2)</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt;[N1] y1;  <span class="co">// response time (group 1);</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt;[N2] y2;  <span class="co">// response time (group 2);</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> mu1;  <span class="co">// mean of log(RT) (group 1)</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma1;  <span class="co">// SD of log(RT) (group 1)</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> mu2;  <span class="co">// mean of log(RT) (group 2)</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma2;  <span class="co">// SD of log(RT) (group 2)</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">// model</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  y1 ~ lognormal(mu1, sigma1);</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  y2 ~ lognormal(mu2, sigma2);</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">// prior</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  mu1 ~ normal(<span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  mu2 ~ normal(<span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  sigma1 ~ normal(<span class="dv">0</span>, <span class="fl">0.5</span>);</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  sigma2 ~ normal(<span class="dv">0</span>, <span class="fl">0.5</span>);</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt;[N1] y1_rep;  <span class="co">// place holder</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt;[N2] y2_rep;  <span class="co">// place holder</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">1</span>:N1)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    y1_rep[n] = lognormal_rng(mu1, sigma1);</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">1</span>:N2)</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    y2_rep[n] = lognormal_rng(mu2, sigma2);</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <h3 id="prior-predictive">Prior Predictive</h3>
-<p>The first time I used <span class="math inline">\(\mu \sim N(0, 1)\)</span> and <span class="math inline">\(\sigma \sim N^+(0, 1)\)</span> for both groups.</p>
+<p>The first time I used <span class="math inline">\(\mu \sim N(0,
+1)\)</span> and <span class="math inline">\(\sigma \sim N^+(0,
+1)\)</span> for both groups.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Here I use Stan to sample the prior</span>
@@ -3143,8 +3204,8 @@ generated quantities {
 <pre><code>#&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_2group_prior_only0&#39; NOW (CHAIN 1).
 #&gt; Chain 1: 
-#&gt; Chain 1: Gradient evaluation took 6e-06 seconds
-#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+#&gt; Chain 1: Gradient evaluation took 7e-06 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
 #&gt; Chain 1: Adjust your expectations accordingly!
 #&gt; Chain 1: 
 #&gt; Chain 1: 
@@ -3161,15 +3222,15 @@ generated quantities {
 #&gt; Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.040527 seconds (Warm-up)
-#&gt; Chain 1:                0.035233 seconds (Sampling)
-#&gt; Chain 1:                0.07576 seconds (Total)
+#&gt; Chain 1:  Elapsed Time: 0.029414 seconds (Warm-up)
+#&gt; Chain 1:                0.02597 seconds (Sampling)
+#&gt; Chain 1:                0.055384 seconds (Total)
 #&gt; Chain 1: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_2group_prior_only0&#39; NOW (CHAIN 2).
 #&gt; Chain 2: 
-#&gt; Chain 2: Gradient evaluation took 7e-06 seconds
-#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
+#&gt; Chain 2: Gradient evaluation took 5e-06 seconds
+#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 #&gt; Chain 2: Adjust your expectations accordingly!
 #&gt; Chain 2: 
 #&gt; Chain 2: 
@@ -3186,15 +3247,15 @@ generated quantities {
 #&gt; Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 2: 
-#&gt; Chain 2:  Elapsed Time: 0.033883 seconds (Warm-up)
-#&gt; Chain 2:                0.035503 seconds (Sampling)
-#&gt; Chain 2:                0.069386 seconds (Total)
+#&gt; Chain 2:  Elapsed Time: 0.030258 seconds (Warm-up)
+#&gt; Chain 2:                0.030581 seconds (Sampling)
+#&gt; Chain 2:                0.060839 seconds (Total)
 #&gt; Chain 2: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_2group_prior_only0&#39; NOW (CHAIN 3).
 #&gt; Chain 3: 
-#&gt; Chain 3: Gradient evaluation took 5e-06 seconds
-#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
+#&gt; Chain 3: Gradient evaluation took 4e-06 seconds
+#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 #&gt; Chain 3: Adjust your expectations accordingly!
 #&gt; Chain 3: 
 #&gt; Chain 3: 
@@ -3211,9 +3272,9 @@ generated quantities {
 #&gt; Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 3: 
-#&gt; Chain 3:  Elapsed Time: 0.035385 seconds (Warm-up)
-#&gt; Chain 3:                0.035316 seconds (Sampling)
-#&gt; Chain 3:                0.070701 seconds (Total)
+#&gt; Chain 3:  Elapsed Time: 0.029864 seconds (Warm-up)
+#&gt; Chain 3:                0.029571 seconds (Sampling)
+#&gt; Chain 3:                0.059435 seconds (Total)
 #&gt; Chain 3: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_2group_prior_only0&#39; NOW (CHAIN 4).
@@ -3236,9 +3297,9 @@ generated quantities {
 #&gt; Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 4: 
-#&gt; Chain 4:  Elapsed Time: 0.047329 seconds (Warm-up)
-#&gt; Chain 4:                0.031754 seconds (Sampling)
-#&gt; Chain 4:                0.079083 seconds (Total)
+#&gt; Chain 4:  Elapsed Time: 0.030134 seconds (Warm-up)
+#&gt; Chain 4:                0.026061 seconds (Sampling)
+#&gt; Chain 4:                0.056195 seconds (Total)
 #&gt; Chain 4:</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># PPC for Group 1 (man)</span>
@@ -3253,7 +3314,10 @@ generated quantities {
 </div>
 <p><img src="group_comparisons_files/figure-html5/prior-predictive-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>The plot looks off because the priors imply the possibility of very extreme data. I can instead place stronger priors on <span class="math inline">\(\sigma\)</span> with <span class="math inline">\(N^+(0, 0.5)\)</span>;</p>
+<p>The plot looks off because the priors imply the possibility of very
+extreme data. I can instead place stronger priors on <span
+class="math inline">\(\sigma\)</span> with <span
+class="math inline">\(N^+(0, 0.5)\)</span>;</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m1_prior</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
@@ -3266,8 +3330,8 @@ generated quantities {
 <pre><code>#&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_2group_prior_only&#39; NOW (CHAIN 1).
 #&gt; Chain 1: 
-#&gt; Chain 1: Gradient evaluation took 7e-06 seconds
-#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
+#&gt; Chain 1: Gradient evaluation took 5e-06 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 #&gt; Chain 1: Adjust your expectations accordingly!
 #&gt; Chain 1: 
 #&gt; Chain 1: 
@@ -3284,15 +3348,15 @@ generated quantities {
 #&gt; Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.037639 seconds (Warm-up)
-#&gt; Chain 1:                0.031377 seconds (Sampling)
-#&gt; Chain 1:                0.069016 seconds (Total)
+#&gt; Chain 1:  Elapsed Time: 0.028304 seconds (Warm-up)
+#&gt; Chain 1:                0.027875 seconds (Sampling)
+#&gt; Chain 1:                0.056179 seconds (Total)
 #&gt; Chain 1: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_2group_prior_only&#39; NOW (CHAIN 2).
 #&gt; Chain 2: 
-#&gt; Chain 2: Gradient evaluation took 6e-06 seconds
-#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+#&gt; Chain 2: Gradient evaluation took 5e-06 seconds
+#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 #&gt; Chain 2: Adjust your expectations accordingly!
 #&gt; Chain 2: 
 #&gt; Chain 2: 
@@ -3309,15 +3373,15 @@ generated quantities {
 #&gt; Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 2: 
-#&gt; Chain 2:  Elapsed Time: 0.034085 seconds (Warm-up)
-#&gt; Chain 2:                0.031432 seconds (Sampling)
-#&gt; Chain 2:                0.065517 seconds (Total)
+#&gt; Chain 2:  Elapsed Time: 0.028852 seconds (Warm-up)
+#&gt; Chain 2:                0.026332 seconds (Sampling)
+#&gt; Chain 2:                0.055184 seconds (Total)
 #&gt; Chain 2: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_2group_prior_only&#39; NOW (CHAIN 3).
 #&gt; Chain 3: 
-#&gt; Chain 3: Gradient evaluation took 5e-06 seconds
-#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
+#&gt; Chain 3: Gradient evaluation took 6e-06 seconds
+#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
 #&gt; Chain 3: Adjust your expectations accordingly!
 #&gt; Chain 3: 
 #&gt; Chain 3: 
@@ -3334,15 +3398,15 @@ generated quantities {
 #&gt; Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 3: 
-#&gt; Chain 3:  Elapsed Time: 0.035319 seconds (Warm-up)
-#&gt; Chain 3:                0.030589 seconds (Sampling)
-#&gt; Chain 3:                0.065908 seconds (Total)
+#&gt; Chain 3:  Elapsed Time: 0.029688 seconds (Warm-up)
+#&gt; Chain 3:                0.026751 seconds (Sampling)
+#&gt; Chain 3:                0.056439 seconds (Total)
 #&gt; Chain 3: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_2group_prior_only&#39; NOW (CHAIN 4).
 #&gt; Chain 4: 
-#&gt; Chain 4: Gradient evaluation took 6e-06 seconds
-#&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+#&gt; Chain 4: Gradient evaluation took 4e-06 seconds
+#&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 #&gt; Chain 4: Adjust your expectations accordingly!
 #&gt; Chain 4: 
 #&gt; Chain 4: 
@@ -3359,9 +3423,9 @@ generated quantities {
 #&gt; Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 4: 
-#&gt; Chain 4:  Elapsed Time: 0.033919 seconds (Warm-up)
-#&gt; Chain 4:                0.033006 seconds (Sampling)
-#&gt; Chain 4:                0.066925 seconds (Total)
+#&gt; Chain 4:  Elapsed Time: 0.028525 seconds (Warm-up)
+#&gt; Chain 4:                0.027959 seconds (Sampling)
+#&gt; Chain 4:                0.056484 seconds (Total)
 #&gt; Chain 4:</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># PPC for Group 1 (man) and Group 2 (vrouw)</span>
@@ -3384,7 +3448,9 @@ generated quantities {
 </div>
 <p><img src="group_comparisons_files/figure-html5/prior-predictive-2-2.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>which looks a bit better in terms of capturing what is possible, although one can argue it still wouldn’t make sense to have observations with RT more than 10 seconds.</p>
+<p>which looks a bit better in terms of capturing what is possible,
+although one can argue it still wouldn’t make sense to have observations
+with RT more than 10 seconds.</p>
 <h3 id="mcmc-sampling">MCMC Sampling</h3>
 <p>Let’s feed the data to <code>rstan</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -3399,8 +3465,8 @@ generated quantities {
 <pre><code>#&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_2group&#39; NOW (CHAIN 1).
 #&gt; Chain 1: 
-#&gt; Chain 1: Gradient evaluation took 1.2e-05 seconds
-#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.12 seconds.
+#&gt; Chain 1: Gradient evaluation took 7e-06 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
 #&gt; Chain 1: Adjust your expectations accordingly!
 #&gt; Chain 1: 
 #&gt; Chain 1: 
@@ -3417,15 +3483,15 @@ generated quantities {
 #&gt; Chain 1: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 4000 / 4000 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.08645 seconds (Warm-up)
-#&gt; Chain 1:                0.08537 seconds (Sampling)
-#&gt; Chain 1:                0.17182 seconds (Total)
+#&gt; Chain 1:  Elapsed Time: 0.055778 seconds (Warm-up)
+#&gt; Chain 1:                0.070338 seconds (Sampling)
+#&gt; Chain 1:                0.126116 seconds (Total)
 #&gt; Chain 1: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_2group&#39; NOW (CHAIN 2).
 #&gt; Chain 2: 
-#&gt; Chain 2: Gradient evaluation took 8e-06 seconds
-#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
+#&gt; Chain 2: Gradient evaluation took 6e-06 seconds
+#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
 #&gt; Chain 2: Adjust your expectations accordingly!
 #&gt; Chain 2: 
 #&gt; Chain 2: 
@@ -3442,15 +3508,15 @@ generated quantities {
 #&gt; Chain 2: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #&gt; Chain 2: Iteration: 4000 / 4000 [100%]  (Sampling)
 #&gt; Chain 2: 
-#&gt; Chain 2:  Elapsed Time: 0.074035 seconds (Warm-up)
-#&gt; Chain 2:                0.073389 seconds (Sampling)
-#&gt; Chain 2:                0.147424 seconds (Total)
+#&gt; Chain 2:  Elapsed Time: 0.060515 seconds (Warm-up)
+#&gt; Chain 2:                0.071555 seconds (Sampling)
+#&gt; Chain 2:                0.13207 seconds (Total)
 #&gt; Chain 2: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_2group&#39; NOW (CHAIN 3).
 #&gt; Chain 3: 
-#&gt; Chain 3: Gradient evaluation took 8e-06 seconds
-#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
+#&gt; Chain 3: Gradient evaluation took 7e-06 seconds
+#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
 #&gt; Chain 3: Adjust your expectations accordingly!
 #&gt; Chain 3: 
 #&gt; Chain 3: 
@@ -3467,9 +3533,9 @@ generated quantities {
 #&gt; Chain 3: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #&gt; Chain 3: Iteration: 4000 / 4000 [100%]  (Sampling)
 #&gt; Chain 3: 
-#&gt; Chain 3:  Elapsed Time: 0.071698 seconds (Warm-up)
-#&gt; Chain 3:                0.073505 seconds (Sampling)
-#&gt; Chain 3:                0.145203 seconds (Total)
+#&gt; Chain 3:  Elapsed Time: 0.057879 seconds (Warm-up)
+#&gt; Chain 3:                0.059797 seconds (Sampling)
+#&gt; Chain 3:                0.117676 seconds (Total)
 #&gt; Chain 3: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_2group&#39; NOW (CHAIN 4).
@@ -3492,9 +3558,9 @@ generated quantities {
 #&gt; Chain 4: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #&gt; Chain 4: Iteration: 4000 / 4000 [100%]  (Sampling)
 #&gt; Chain 4: 
-#&gt; Chain 4:  Elapsed Time: 0.073453 seconds (Warm-up)
-#&gt; Chain 4:                0.07837 seconds (Sampling)
-#&gt; Chain 4:                0.151823 seconds (Total)
+#&gt; Chain 4:  Elapsed Time: 0.059099 seconds (Warm-up)
+#&gt; Chain 4:                0.065783 seconds (Sampling)
+#&gt; Chain 4:                0.124882 seconds (Total)
 #&gt; Chain 4:</code></pre>
 </div>
 <p>We can summarize the posterior:</p>
@@ -3506,7 +3572,9 @@ generated quantities {
 </code></pre>
 </div>
 </div>
-<p>It appears that <span class="math inline">\(\mu\)</span> is much larger for man than for women. You can obtain the posterior for <span class="math inline">\(\mu_2 - \mu_1\)</span> to check:</p>
+<p>It appears that <span class="math inline">\(\mu\)</span> is much
+larger for man than for women. You can obtain the posterior for <span
+class="math inline">\(\mu_2 - \mu_1\)</span> to check:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/array.html'>as.array</a></span><span class='op'>(</span><span class='va'>m1</span>, pars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mu1"</span>, <span class='st'>"sigma1"</span>, <span class='st'>"mu2"</span>, <span class='st'>"sigma2"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
@@ -3539,7 +3607,11 @@ generated quantities {
 <p><img src="group_comparisons_files/figure-html5/areas-m1-2.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <blockquote>
-<p>From the normal model, it was estimated that the mean log(RT) for lying in Dutch was 0.56 log(seconds), 90% CI [0.46, 0.66]. On average, women had faster log(RT) when asked to tell lies in Dutch than mens, with the mean log(RT) for women being 0.27 log(seconds), 90% CI [0.21, 0.36].</p>
+<p>From the normal model, it was estimated that the mean log(RT) for
+lying in Dutch was 0.56 log(seconds), 90% CI [0.46, 0.66]. On average,
+women had faster log(RT) when asked to tell lies in Dutch than mens,
+with the mean log(RT) for women being 0.27 log(seconds), 90% CI [0.21,
+0.36].</p>
 </blockquote>
 <h3 id="posterior-predictive-check">Posterior Predictive Check</h3>
 <h4 id="densities">Densities</h4>
@@ -3565,7 +3637,11 @@ generated quantities {
 <p><img src="group_comparisons_files/figure-html5/ppc-m1-2.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h4 id="minimum">Minimum</h4>
-<p>For response time data, one thing that would be important is the minimum of the data, as the lognormal model implies that it is possible to have an RT close to zero. In a lot of tasks, on the other end, the minimum is much larger than the 0 because there is a limit on how fast a person can respond to a task.</p>
+<p>For response time data, one thing that would be important is the
+minimum of the data, as the lognormal model implies that it is possible
+to have an RT close to zero. In a lot of tasks, on the other end, the
+minimum is much larger than the 0 because there is a limit on how fast a
+person can respond to a task.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Man</span>
@@ -3588,9 +3664,11 @@ generated quantities {
 </div>
 <p><img src="group_comparisons_files/figure-html5/ppc-m1-min-2.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>In this case, the minimum of the data was within the range of what the model would predict.</p>
+<p>In this case, the minimum of the data was within the range of what
+the model would predict.</p>
 <h4 id="proportion-outliers">Proportion Outliers</h4>
-<p>Another check we can perform is in predicting the proportion of outliers.</p>
+<p>Another check we can perform is in predicting the proportion of
+outliers.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Function for number of outliers</span>
@@ -3618,11 +3696,22 @@ generated quantities {
 <p><img src="group_comparisons_files/figure-html5/ppc-m1-prop_out-2.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h3 id="use-difference-as-parameter">Use Difference As Parameter</h3>
-<p>The above model has <span class="math inline">\(\mu_1\)</span> and <span class="math inline">\(\mu_2\)</span> as parameters, and <span class="math inline">\(\delta = \mu_2 - \mu_1\)</span> as a derived quantify from the parameters. We can instead treat <span class="math inline">\(\mu_1\)</span> and <span class="math inline">\(\delta\)</span> as parameters, and <span class="math inline">\(\mu_2 = \mu_1 + \delta\)</span> as a derived quantity. We can also impose the <strong>homogeneity of variance</strong> assumption, as shown below, although it is usually not advisable in a two-group setting:</p>
+<p>The above model has <span class="math inline">\(\mu_1\)</span> and
+<span class="math inline">\(\mu_2\)</span> as parameters, and <span
+class="math inline">\(\delta = \mu_2 - \mu_1\)</span> as a derived
+quantify from the parameters. We can instead treat <span
+class="math inline">\(\mu_1\)</span> and <span
+class="math inline">\(\delta\)</span> as parameters, and <span
+class="math inline">\(\mu_2 = \mu_1 + \delta\)</span> as a derived
+quantity. We can also impose the <strong>homogeneity of
+variance</strong> assumption, as shown below, although it is usually not
+advisable in a two-group setting:</p>
 <p><span class="math display">\[
   \begin{aligned}
-    \text{RT}_{i, \text{male}} &amp; \sim \mathrm{Lognormal}(\mu_1, \sigma) \\
-    \text{RT}_{i, \text{female}} &amp; \sim \mathrm{Lognormal}(\mu_1 + \delta, \sigma) \\
+    \text{RT}_{i, \text{male}} &amp; \sim \mathrm{Lognormal}(\mu_1,
+\sigma) \\
+    \text{RT}_{i, \text{female}} &amp; \sim \mathrm{Lognormal}(\mu_1 +
+\delta, \sigma) \\
     \mu_1 &amp; \sim N(0, 1) \\
     \delta &amp; \sim N(0, 1) \\
     \sigma &amp; \sim N^+(0, 0.5)
@@ -3640,8 +3729,8 @@ generated quantities {
 <pre><code>#&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_diff&#39; NOW (CHAIN 1).
 #&gt; Chain 1: 
-#&gt; Chain 1: Gradient evaluation took 1.4e-05 seconds
-#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
+#&gt; Chain 1: Gradient evaluation took 8e-06 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
 #&gt; Chain 1: Adjust your expectations accordingly!
 #&gt; Chain 1: 
 #&gt; Chain 1: 
@@ -3658,9 +3747,9 @@ generated quantities {
 #&gt; Chain 1: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 4000 / 4000 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.118171 seconds (Warm-up)
-#&gt; Chain 1:                0.095406 seconds (Sampling)
-#&gt; Chain 1:                0.213577 seconds (Total)
+#&gt; Chain 1:  Elapsed Time: 0.069621 seconds (Warm-up)
+#&gt; Chain 1:                0.073435 seconds (Sampling)
+#&gt; Chain 1:                0.143056 seconds (Total)
 #&gt; Chain 1: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_diff&#39; NOW (CHAIN 2).
@@ -3683,15 +3772,15 @@ generated quantities {
 #&gt; Chain 2: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #&gt; Chain 2: Iteration: 4000 / 4000 [100%]  (Sampling)
 #&gt; Chain 2: 
-#&gt; Chain 2:  Elapsed Time: 0.089907 seconds (Warm-up)
-#&gt; Chain 2:                0.094348 seconds (Sampling)
-#&gt; Chain 2:                0.184255 seconds (Total)
+#&gt; Chain 2:  Elapsed Time: 0.076806 seconds (Warm-up)
+#&gt; Chain 2:                0.079499 seconds (Sampling)
+#&gt; Chain 2:                0.156305 seconds (Total)
 #&gt; Chain 2: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_diff&#39; NOW (CHAIN 3).
 #&gt; Chain 3: 
-#&gt; Chain 3: Gradient evaluation took 8e-06 seconds
-#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
+#&gt; Chain 3: Gradient evaluation took 7e-06 seconds
+#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
 #&gt; Chain 3: Adjust your expectations accordingly!
 #&gt; Chain 3: 
 #&gt; Chain 3: 
@@ -3708,15 +3797,15 @@ generated quantities {
 #&gt; Chain 3: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #&gt; Chain 3: Iteration: 4000 / 4000 [100%]  (Sampling)
 #&gt; Chain 3: 
-#&gt; Chain 3:  Elapsed Time: 0.09124 seconds (Warm-up)
-#&gt; Chain 3:                0.098428 seconds (Sampling)
-#&gt; Chain 3:                0.189668 seconds (Total)
+#&gt; Chain 3:  Elapsed Time: 0.07659 seconds (Warm-up)
+#&gt; Chain 3:                0.083972 seconds (Sampling)
+#&gt; Chain 3:                0.160562 seconds (Total)
 #&gt; Chain 3: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;lognormal_diff&#39; NOW (CHAIN 4).
 #&gt; Chain 4: 
-#&gt; Chain 4: Gradient evaluation took 8e-06 seconds
-#&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
+#&gt; Chain 4: Gradient evaluation took 6e-06 seconds
+#&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
 #&gt; Chain 4: Adjust your expectations accordingly!
 #&gt; Chain 4: 
 #&gt; Chain 4: 
@@ -3733,9 +3822,9 @@ generated quantities {
 #&gt; Chain 4: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #&gt; Chain 4: Iteration: 4000 / 4000 [100%]  (Sampling)
 #&gt; Chain 4: 
-#&gt; Chain 4:  Elapsed Time: 0.086077 seconds (Warm-up)
-#&gt; Chain 4:                0.095663 seconds (Sampling)
-#&gt; Chain 4:                0.18174 seconds (Total)
+#&gt; Chain 4:  Elapsed Time: 0.071165 seconds (Warm-up)
+#&gt; Chain 4:                0.082832 seconds (Sampling)
+#&gt; Chain 4:                0.153997 seconds (Total)
 #&gt; Chain 4:</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
@@ -3753,16 +3842,18 @@ generated quantities {
 #&gt; sigma  0.31       0 0.03  0.26  0.29  0.31  0.33  0.37  4292    1
 #&gt; mu2    0.21       0 0.05  0.12  0.18  0.21  0.24  0.30  8734    1
 #&gt; 
-#&gt; Samples were drawn using NUTS(diag_e) at Thu Mar 10 09:42:20 2022.
+#&gt; Samples were drawn using NUTS(diag_e) at Mon Mar 21 18:06:29 2022.
 #&gt; For each parameter, n_eff is a crude measure of effective sample size,
 #&gt; and Rhat is the potential scale reduction factor on split chains (at 
 #&gt; convergence, Rhat=1).</code></pre>
 </div>
 <h1 id="within-subject">Within-Subject</h1>
-<p>This is similar to a paired <span class="math inline">\(t\)</span> test, but uses a lognormal distribution.</p>
+<p>This is similar to a paired <span class="math inline">\(t\)</span>
+test, but uses a lognormal distribution.</p>
 <p><span class="math display">\[\begin{align}
   \text{LDMRT}_{i} &amp; \sim \mathrm{Lognormal}(\theta_i, \sigma) \\
-  \text{LEMRT}_{i} &amp; \sim \mathrm{Lognormal}(\theta_i + \delta, \sigma) \\
+  \text{LEMRT}_{i} &amp; \sim \mathrm{Lognormal}(\theta_i + \delta,
+\sigma) \\
   \theta_i &amp; = mu_1 + \tau \eta_i \\
   \eta_i &amp; \sim N(0, \tau) \\
   \mu_1 &amp; \sim N(0, 1) \\
@@ -3772,13 +3863,24 @@ generated quantities {
 \end{align}\]</span></p>
 <p>Parameters:</p>
 <ul>
-<li><span class="math inline">\(\mu_1\)</span>: mean parameter for log(RT) for lying in Dutch condition</li>
-<li><span class="math inline">\(\delta\)</span>: mean difference in log(RT) between the lying in English and lying in Dutch</li>
-<li><span class="math inline">\(\sigma\)</span>: within-person standard deviation of log(RT)</li>
-<li><span class="math inline">\(\eta_1\)</span>, <span class="math inline">\(\ldots\)</span>, <span class="math inline">\(\eta_63\)</span>: z-scores for individual mean response time</li>
-<li><span class="math inline">\(\tau\)</span>: standard deviation of individual differences</li>
+<li><span class="math inline">\(\mu_1\)</span>: mean parameter for
+log(RT) for lying in Dutch condition</li>
+<li><span class="math inline">\(\delta\)</span>: mean difference in
+log(RT) between the lying in English and lying in Dutch</li>
+<li><span class="math inline">\(\sigma\)</span>: within-person standard
+deviation of log(RT)</li>
+<li><span class="math inline">\(\eta_1\)</span>, <span
+class="math inline">\(\ldots\)</span>, <span
+class="math inline">\(\eta_{63}\)</span>: z-scores for individual mean
+response time</li>
+<li><span class="math inline">\(\tau\)</span>: standard deviation of
+individual differences</li>
 </ul>
-<p>This is an example of a hierarchical model with a non-centered parameterization (using <span class="math inline">\(\eta\)</span> instead of <span class="math inline">\(\theta\)</span> as a parameter). We’re letting the data update our belief on how much individual difference there is.</p>
+<p>This is an example of a hierarchical model with a non-centered
+parameterization (using <span class="math inline">\(\eta\)</span>
+instead of <span class="math inline">\(\theta\)</span> as a parameter).
+We’re letting the data update our belief on how much individual
+difference there is.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m3_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span><span class='op'>(</span><span class='va'>lies_cc</span>,
@@ -3797,8 +3899,8 @@ generated quantities {
 <pre><code>#&gt; 
 #&gt; SAMPLING FOR MODEL &#39;within-subjects_lognorm&#39; NOW (CHAIN 1).
 #&gt; Chain 1: 
-#&gt; Chain 1: Gradient evaluation took 2.8e-05 seconds
-#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.28 seconds.
+#&gt; Chain 1: Gradient evaluation took 1.7e-05 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.17 seconds.
 #&gt; Chain 1: Adjust your expectations accordingly!
 #&gt; Chain 1: 
 #&gt; Chain 1: 
@@ -3815,15 +3917,15 @@ generated quantities {
 #&gt; Chain 1: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 4000 / 4000 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 1.15516 seconds (Warm-up)
-#&gt; Chain 1:                0.987965 seconds (Sampling)
-#&gt; Chain 1:                2.14313 seconds (Total)
+#&gt; Chain 1:  Elapsed Time: 0.948184 seconds (Warm-up)
+#&gt; Chain 1:                0.79529 seconds (Sampling)
+#&gt; Chain 1:                1.74347 seconds (Total)
 #&gt; Chain 1: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;within-subjects_lognorm&#39; NOW (CHAIN 2).
 #&gt; Chain 2: 
-#&gt; Chain 2: Gradient evaluation took 3e-05 seconds
-#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.3 seconds.
+#&gt; Chain 2: Gradient evaluation took 2.2e-05 seconds
+#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.22 seconds.
 #&gt; Chain 2: Adjust your expectations accordingly!
 #&gt; Chain 2: 
 #&gt; Chain 2: 
@@ -3840,15 +3942,15 @@ generated quantities {
 #&gt; Chain 2: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #&gt; Chain 2: Iteration: 4000 / 4000 [100%]  (Sampling)
 #&gt; Chain 2: 
-#&gt; Chain 2:  Elapsed Time: 1.12941 seconds (Warm-up)
-#&gt; Chain 2:                0.992358 seconds (Sampling)
-#&gt; Chain 2:                2.12177 seconds (Total)
+#&gt; Chain 2:  Elapsed Time: 0.926449 seconds (Warm-up)
+#&gt; Chain 2:                0.813188 seconds (Sampling)
+#&gt; Chain 2:                1.73964 seconds (Total)
 #&gt; Chain 2: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;within-subjects_lognorm&#39; NOW (CHAIN 3).
 #&gt; Chain 3: 
-#&gt; Chain 3: Gradient evaluation took 2.6e-05 seconds
-#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.26 seconds.
+#&gt; Chain 3: Gradient evaluation took 1.7e-05 seconds
+#&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.17 seconds.
 #&gt; Chain 3: Adjust your expectations accordingly!
 #&gt; Chain 3: 
 #&gt; Chain 3: 
@@ -3865,15 +3967,15 @@ generated quantities {
 #&gt; Chain 3: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #&gt; Chain 3: Iteration: 4000 / 4000 [100%]  (Sampling)
 #&gt; Chain 3: 
-#&gt; Chain 3:  Elapsed Time: 1.17877 seconds (Warm-up)
-#&gt; Chain 3:                0.948558 seconds (Sampling)
-#&gt; Chain 3:                2.12733 seconds (Total)
+#&gt; Chain 3:  Elapsed Time: 0.989808 seconds (Warm-up)
+#&gt; Chain 3:                0.789425 seconds (Sampling)
+#&gt; Chain 3:                1.77923 seconds (Total)
 #&gt; Chain 3: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL &#39;within-subjects_lognorm&#39; NOW (CHAIN 4).
 #&gt; Chain 4: 
-#&gt; Chain 4: Gradient evaluation took 2.6e-05 seconds
-#&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.26 seconds.
+#&gt; Chain 4: Gradient evaluation took 2.1e-05 seconds
+#&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.21 seconds.
 #&gt; Chain 4: Adjust your expectations accordingly!
 #&gt; Chain 4: 
 #&gt; Chain 4: 
@@ -3890,9 +3992,9 @@ generated quantities {
 #&gt; Chain 4: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #&gt; Chain 4: Iteration: 4000 / 4000 [100%]  (Sampling)
 #&gt; Chain 4: 
-#&gt; Chain 4:  Elapsed Time: 1.15819 seconds (Warm-up)
-#&gt; Chain 4:                0.957689 seconds (Sampling)
-#&gt; Chain 4:                2.11588 seconds (Total)
+#&gt; Chain 4:  Elapsed Time: 0.958794 seconds (Warm-up)
+#&gt; Chain 4:                0.788135 seconds (Sampling)
+#&gt; Chain 4:                1.74693 seconds (Total)
 #&gt; Chain 4:</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
@@ -3910,13 +4012,14 @@ generated quantities {
 #&gt; sigma  0.09       0 0.01  0.07  0.08  0.09 0.09  0.11  3505    1
 #&gt; tau    0.33       0 0.03  0.28  0.31  0.33 0.35  0.40   908    1
 #&gt; 
-#&gt; Samples were drawn using NUTS(diag_e) at Thu Mar 10 09:42:30 2022.
+#&gt; Samples were drawn using NUTS(diag_e) at Mon Mar 21 18:06:38 2022.
 #&gt; For each parameter, n_eff is a crude measure of effective sample size,
 #&gt; and Rhat is the potential scale reduction factor on split chains (at 
 #&gt; convergence, Rhat=1).</code></pre>
 </div>
 <h2 id="posterior-predictive-check-1">Posterior Predictive Check</h2>
-<p>We can look at the posterior predictive distributions of the individual differences in response time across conditions</p>
+<p>We can look at the posterior predictive distributions of the
+individual differences in response time across conditions</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>y1_tilde</span> <span class='op'>&lt;-</span> <span class='fu'>rstan</span><span class='fu'>::</span><span class='fu'><a href='https://mc-stan.org/rstan/reference/stanfit-method-extract.html'>extract</a></span><span class='op'>(</span><span class='va'>m3</span>, pars <span class='op'>=</span> <span class='st'>"y1_rep"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>y1_rep</span>
@@ -3931,7 +4034,16 @@ generated quantities {
 <p><img src="group_comparisons_files/figure-html5/ppc-m3-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h2 id="effect-size">Effect Size</h2>
-<p>An effect size measures the magnitude of a difference. When the unit of the outcome is meaningful, an unstandardized effect size should be used. In this case, the response is in seconds, but the parameter <span class="math inline">\(\delta\)</span> is in the log unit. To convert things back to the original unit, we need to use the property that the expected value of a lognormal distribution is <span class="math inline">\(\exp(\mu + \sigma^2 / 2)\)</span>. Therefore, to obtain the mean difference between the two conditions in seconds, we have <span class="math display">\[\exp(\mu_2 + \sigma^2 / 2) - \exp(\mu_1 + \sigma^2 / 2)\]</span></p>
+<p>An effect size measures the magnitude of a difference. When the unit
+of the outcome is meaningful, an unstandardized effect size should be
+used. In this case, the response is in seconds, but the parameter <span
+class="math inline">\(\delta\)</span> is in the log unit. To convert
+things back to the original unit, we need to use the property that the
+expected value of a lognormal distribution is <span
+class="math inline">\(\exp(\mu + \sigma^2 / 2)\)</span>. Therefore, to
+obtain the mean difference between the two conditions in seconds, we
+have <span class="math display">\[\exp(\mu_2 + \sigma^2 / 2) -
+\exp(\mu_1 + \sigma^2 / 2)\]</span></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m3_draws</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/array.html'>as.array</a></span><span class='op'>(</span><span class='va'>m3</span>, pars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mu1"</span>, <span class='st'>"dmu"</span>, <span class='st'>"sigma"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
@@ -3942,26 +4054,69 @@ generated quantities {
 </code></pre>
 </div>
 </div>
-<p>So the mean difference estimate in seconds between the two conditions was -0.01 seconds, 90% CI [-0.05, 0.03].</p>
-<h2 id="region-of-practical-equivalence">Region of Practical Equivalence</h2>
-<p>One thing that is often of interest in research is establishing equivalence between two values. We may wonder, for example,</p>
+<p>So the mean difference estimate in seconds between the two conditions
+was -0.01 seconds, 90% CI [-0.05, 0.03].</p>
+<h2 id="region-of-practical-equivalence">Region of Practical
+Equivalence</h2>
+<p>One thing that is often of interest in research is establishing
+equivalence between two values. We may wonder, for example,</p>
 <ul>
-<li>whether an experimental manipulation has an effect size of zero (<span class="math inline">\(d\)</span> = 0),</li>
-<li>whether two variables are truly uncorrelated (<span class="math inline">\(r\)</span> = 0),</li>
-<li>whether the blood type distribution is the same across countries,</li>
-<li>whether two parallel forms of a test have the same difficulty level</li>
+<li>whether an experimental manipulation has an effect size of zero
+(<span class="math inline">\(d\)</span> = 0),</li>
+<li>whether two variables are truly uncorrelated (<span
+class="math inline">\(r\)</span> = 0),</li>
+<li>whether the blood type distribution is the same across
+countries,</li>
+<li>whether two parallel forms of a test have the same difficulty
+level</li>
 </ul>
 <p>Here in our example, we can investigate</p>
 <blockquote>
-<p>Whether lying in native and second languages requires the same response time.</p>
+<p>Whether lying in native and second languages requires the same
+response time.</p>
 </blockquote>
-<p>In all these above scenarios, we are interested in “confirming” whether a quantity is equal to another quantity. The traditional null hypothesis significance testing (NHST), however, won’t allow us to do that. That’s because NHST is set up to reject the null hypothesis, but failure to reject <span class="math inline">\(d\)</span> = 0 does not confirm that <span class="math inline">\(d\)</span> = 0; it just means that we don’t have enough evidence for that. In addition, we know in advance, with a high degree of certainty, that <span class="math inline">\(d\)</span> <span class="math inline">\(\neq\)</span> 0. Do we truly believe that the treatment group and the control group will perform exactly the same on an IQ test? Even when one group got 100 and the other 100.0000001, the null hypothesis is false.</p>
-<p>Therefore, what we really meant when saying whether two things are equal is not whether two quantities are exactly the same, which is basically impossible, but whether two quantities are <em>close enough</em>, or <em>practically equivalent</em>. In the IQ test example, most of us would agree that the two groups are practically equivalent.</p>
-<p>So what we actually want to test, in mathematical notation, is <span class="math display">\[|\mu_2 - \mu_1| &lt; \epsilon,\]</span> where <span class="math inline">\(\epsilon\)</span> is some small value of a difference by which <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\beta_0\)</span> are deemed practically equivalent. For example, in our analysis, we may think that if the difference is less than .05 seconds (or 50ms), we may say that there is no difference in RT. In other words, if there is a high probability (in a Bayesian sense) that <span class="math display">\[-\epsilon &lt; \beta &lt; \epsilon\]</span> than we considered there is sufficient evident that <span class="math inline">\(\beta\)</span> = <span class="math inline">\(\beta_0\)</span> in a practical sense. The interval (<span class="math inline">\(-\epsilon\)</span>, <span class="math inline">\(\epsilon\)</span>) is what your textbook author referred to as the <em>region of practical equivalence</em>, or ROPE.</p>
+<p>In all these above scenarios, we are interested in “confirming”
+whether a quantity is equal to another quantity. The traditional null
+hypothesis significance testing (NHST), however, won’t allow us to do
+that. That’s because NHST is set up to reject the null hypothesis, but
+failure to reject <span class="math inline">\(d\)</span> = 0 does not
+confirm that <span class="math inline">\(d\)</span> = 0; it just means
+that we don’t have enough evidence for that. In addition, we know in
+advance, with a high degree of certainty, that <span
+class="math inline">\(d\)</span> <span
+class="math inline">\(\neq\)</span> 0. Do we truly believe that the
+treatment group and the control group will perform exactly the same on
+an IQ test? Even when one group got 100 and the other 100.0000001, the
+null hypothesis is false.</p>
+<p>Therefore, what we really meant when saying whether two things are
+equal is not whether two quantities are exactly the same, which is
+basically impossible, but whether two quantities are <em>close
+enough</em>, or <em>practically equivalent</em>. In the IQ test example,
+most of us would agree that the two groups are practically
+equivalent.</p>
+<p>So what we actually want to test, in mathematical notation, is <span
+class="math display">\[|\mu_2 - \mu_1| &lt; \epsilon,\]</span> where
+<span class="math inline">\(\epsilon\)</span> is some small value of a
+difference by which <span class="math inline">\(\beta\)</span> and <span
+class="math inline">\(\beta_0\)</span> are deemed practically
+equivalent. For example, in our analysis, we may think that if the
+difference is less than .05 seconds (or 50ms), we may say that there is
+no difference in RT. In other words, if there is a high probability (in
+a Bayesian sense) that <span class="math display">\[-\epsilon &lt; \beta
+&lt; \epsilon\]</span> than we considered there is sufficient evident
+that <span class="math inline">\(\beta\)</span> = <span
+class="math inline">\(\beta_0\)</span> in a practical sense. The
+interval (<span class="math inline">\(-\epsilon\)</span>, <span
+class="math inline">\(\epsilon\)</span>) is what your textbook author
+referred to as the <em>region of practical equivalence</em>, or
+ROPE.</p>
 <blockquote>
-<p>Using ROPE, we accept the difference in two parameters is practically zero if there is a high probability that delta is within a region indistinguishable from zero.</p>
+<p>Using ROPE, we accept the difference in two parameters is practically
+zero if there is a high probability that delta is within a region
+indistinguishable from zero.</p>
 </blockquote>
-<p>Let’s compute the probability of the effect size being within [-50ms, 50ms]:</p>
+<p>Let’s compute the probability of the effect size being within [-50ms,
+50ms]:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>es_draws</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/posterior/reference/extract_variable.html'>extract_variable</a></span><span class='op'>(</span><span class='va'>m3_draws</span>, variable <span class='op'>=</span> <span class='st'>"es"</span><span class='op'>)</span>
@@ -3972,17 +4127,20 @@ generated quantities {
 </div>
 <p>So there is a high probability that the mean difference is null.</p>
 <!-- The following chunk is only used in the website -->
-<section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
+<section id="last-updated" class="appendix layout-chunk"
+data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code>#&gt; [1] &quot;March 10, 2022&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;March 20, 2022&quot;</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 </section>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -4013,7 +4171,10 @@ generated quantities {
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
 <p>© Copyright 2022 Hok Chio (Mark) Lai</p>
-<p>Template by <a href="https://github.com/distillpub/template/blob/master/AUTHORS">The Distill Template Authors</a> and <a href="https://www.rstudio.com">RStudio, Inc</a>.</p>
+<p>Template by <a
+href="https://github.com/distillpub/template/blob/master/AUTHORS">The
+Distill Template Authors</a> and <a
+href="https://www.rstudio.com">RStudio, Inc</a>.</p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 

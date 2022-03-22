@@ -2368,7 +2368,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
   <script src="site_libs/clipboard-2.0.6/clipboard.min.js"></script>
   <link href="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
   <script src="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
@@ -2451,6 +2451,7 @@ Notes
 <a href="hmc_stan.html">HMC and Stan</a>
 <a href="hierarchical_models.html">Hierarchical Models</a>
 <a href="group_comparisons.html">Group Comparisons</a>
+<a href="glm.html">Generalized Linear Model I</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2485,11 +2486,13 @@ Notes
 <ul>
 <li><a href="#bayess-theorem">Bayes’s Theorem</a>
 <ul>
-<li><a href="#example-1-base-rate-fallacy-from-wikipedia">Example 1: Base rate fallacy (From Wikipedia)</a></li>
+<li><a href="#example-1-base-rate-fallacy-from-wikipedia">Example 1:
+Base rate fallacy (From Wikipedia)</a></li>
 </ul></li>
 <li><a href="#bayesian-statistics">Bayesian Statistics</a>
 <ul>
-<li><a href="#example-2-locating-a-plane">Example 2: Locating a Plane</a>
+<li><a href="#example-2-locating-a-plane">Example 2: Locating a
+Plane</a>
 <ul>
 <li><a href="#influence-of-prior">Influence of Prior</a></li>
 <li><a href="#influence-of-more-data">Influence of More Data</a></li>
@@ -2504,14 +2507,17 @@ Notes
 </ul></li>
 <li><a href="#setting-priors">Setting Priors</a>
 <ul>
-<li><a href="#prior-predictive-distribution">Prior Predictive Distribution</a></li>
+<li><a href="#prior-predictive-distribution">Prior Predictive
+Distribution</a></li>
 </ul></li>
 <li><a href="#summarizing-the-posterior">Summarizing the Posterior</a>
 <ul>
-<li><a href="#influence-of-sample-size">Influence of Sample Size</a></li>
+<li><a href="#influence-of-sample-size">Influence of Sample
+Size</a></li>
 <li><a href="#influence-of-prior-1">Influence of Prior</a></li>
 </ul></li>
-<li><a href="#remark-on-grid-approximation">Remark on Grid Approximation</a></li>
+<li><a href="#remark-on-grid-approximation">Remark on Grid
+Approximation</a></li>
 <li><a href="#last-updated">Last updated</a></li>
 </ul></li>
 </ul>
@@ -2526,38 +2532,62 @@ Notes
 </div>
 </div>
 <h1 id="bayess-theorem">Bayes’s Theorem</h1>
-<p>The Bayes’s theorem is, surprisingly (or unsurprisingly), very simple:</p>
+<p>The Bayes’s theorem is, surprisingly (or unsurprisingly), very
+simple:</p>
 <blockquote>
-<p><span class="math display">\[P(B \mid A) = \frac{P(A \mid B) P(B)}{P(A)}\]</span></p>
+<p><span class="math display">\[P(B \mid A) = \frac{P(A \mid B)
+P(B)}{P(A)}\]</span></p>
 </blockquote>
-<p>More generally, we can expand it to incorporate the law of total probability to make it more applicable to data analysis. Consider <span class="math inline">\(B_i\)</span> as one of the <span class="math inline">\(n\)</span> many possible mutually exclusive events, then <span class="math display">\[\begin{align}
+<p>More generally, we can expand it to incorporate the law of total
+probability to make it more applicable to data analysis. Consider <span
+class="math inline">\(B_i\)</span> as one of the <span
+class="math inline">\(n\)</span> many possible mutually exclusive
+events, then <span class="math display">\[\begin{align}
   P(B_i \mid A) &amp; = \frac{P(A \mid B_i) P(B_i)}{P(A)}  \\
              &amp; = \frac{P(A \mid B_i) P(B_i)}
-                      {P(A \mid B_1)P(B_1) + P(A \mid B_2)P(B_2) + \cdots + 
+                      {P(A \mid B_1)P(B_1) + P(A \mid B_2)P(B_2) +
+\cdots +
                        P(A \mid B_n)P(B_n)} \\
-             &amp; = \frac{P(A \mid B_i) P(B_i)}{\sum_{k = 1}^n P(A \mid B_k)P(B_k)}
+             &amp; = \frac{P(A \mid B_i) P(B_i)}{\sum_{k = 1}^n P(A \mid
+B_k)P(B_k)}
 \end{align}\]</span></p>
-<p>If <span class="math inline">\(B_i\)</span> is a continuous variable, we will replace the sum by an integral, <span class="math display">\[P(B_i \mid A) = \frac{P(A \mid B_i) P(B_i)}{\int_k P(A \mid B_k)P(B_k)}\]</span> The denominator is not important for practical Bayesian analysis, therefore, it is sufficient to write the above equality as</p>
+<p>If <span class="math inline">\(B_i\)</span> is a continuous variable,
+we will replace the sum by an integral, <span
+class="math display">\[P(B_i \mid A) = \frac{P(A \mid B_i)
+P(B_i)}{\int_k P(A \mid B_k)P(B_k)}\]</span> The denominator is not
+important for practical Bayesian analysis, therefore, it is sufficient
+to write the above equality as</p>
 <blockquote>
-<p><span class="math display">\[P(B_i \mid A) \propto P(A \mid B_i) P(B_i)\]</span></p>
+<p><span class="math display">\[P(B_i \mid A) \propto P(A \mid B_i)
+P(B_i)\]</span></p>
 </blockquote>
 <hr />
-<h2 id="example-1-base-rate-fallacy-from-wikipedia">Example 1: Base rate fallacy (From Wikipedia)</h2>
-<p>A police officer stops a driver <em>at random</em> and does a breathalyzer test for the driver. The breathalyzer is known to detect true drunkenness 100% of the time, but in 1% of the cases, it gives a false positive when the driver is sober. We also know that in general, for every 1,000 drivers passing through that spot, one is driving drunk. Suppose that the breathalyzer shows positive for the driver. What is the probability that the driver is truly drunk?</p>
-<p><span class="math inline">\(P(\text{positive} | \text{drunk}) = 1\)</span><br />
-<span class="math inline">\(P(\text{positive} | \text{sober}) = 0.01\)</span><br />
+<h2 id="example-1-base-rate-fallacy-from-wikipedia">Example 1: Base rate
+fallacy (From Wikipedia)</h2>
+<p>A police officer stops a driver <em>at random</em> and does a
+breathalyzer test for the driver. The breathalyzer is known to detect
+true drunkenness 100% of the time, but in 1% of the cases, it gives a
+false positive when the driver is sober. We also know that in general,
+for every 1,000 drivers passing through that spot, one is driving drunk.
+Suppose that the breathalyzer shows positive for the driver. What is the
+probability that the driver is truly drunk?</p>
+<p><span class="math inline">\(P(\text{positive} | \text{drunk}) =
+1\)</span><br />
+<span class="math inline">\(P(\text{positive} | \text{sober}) =
+0.01\)</span><br />
 <span class="math inline">\(P(\text{drunk}) = 1 / 1000\)</span><br />
 <span class="math inline">\(P(\text{sober}) = 999 / 1000\)</span></p>
 <p>Using Bayes’ Theorem,</p>
 <p><span class="math display">\[\begin{align}
-  P(\text{drunk} | \text{positive}) 
+  P(\text{drunk} | \text{positive})
   &amp; = \frac{P(\text{positive} | \text{drunk}) P(\text{drunk})}
-           {P(\text{positive} | \text{drunk}) P(\text{drunk}) + 
+           {P(\text{positive} | \text{drunk}) P(\text{drunk}) +
             P(\text{positive} | \text{sober}) P(\text{sober})}  \\
   &amp; = \frac{1 \times 0.001}{1 \times 0.001 + 0.01 \times 0.999} \\
   &amp; = 100 / 1099 \approx 0.091
 \end{align}\]</span></p>
-<p>So there is less than a 10% chance that the driver is drunk even when the breathalyzer shows positive.</p>
+<p>So there is less than a 10% chance that the driver is drunk even when
+the breathalyzer shows positive.</p>
 <p>You can verify that with a simulation using R:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2601,34 +2631,74 @@ Notes
 </div>
 <hr />
 <h1 id="bayesian-statistics">Bayesian Statistics</h1>
-<p><code>Bayesian statistics</code> is a way to estimate some parameter <span class="math inline">\(\theta\)</span> (i.e., some quantities of interest, such as the population mean, regression coefficient, etc) by applying the Bayes’ Theorem. &gt; <span class="math display">\[P(\theta | D) \propto P(D | \theta) P(\theta)\]</span></p>
+<p><code>Bayesian statistics</code> is a way to estimate some parameter
+<span class="math inline">\(\theta\)</span> (i.e., some quantities of
+interest, such as the population mean, regression coefficient, etc) by
+applying the Bayes’ Theorem. &gt; <span class="math display">\[P(\theta
+| D) \propto P(D | \theta) P(\theta)\]</span></p>
 <p>There are three components in the above equality:</p>
 <ul>
-<li><span class="math inline">\(P(D | \theta)\)</span>, the probability that you observe data <span class="math inline">\(D\)</span>, given the parameter <span class="math inline">\(\theta\)</span>; this is called the <code>likelihood</code> (Note: It is the likelihood of <span class="math inline">\(\theta\)</span>, but probability about <span class="math inline">\(y\)</span>)</li>
-<li><span class="math inline">\(P(\theta)\)</span>, the probability distribution <span class="math inline">\(\theta\)</span>, without referring to the data <span class="math inline">\(D\)</span>. This usually requires appeals to one’s degree of belief, and so is called the <code>prior</code></li>
-<li><span class="math inline">\(P(\theta | y)\)</span>, the updated probability distribution of <span class="math inline">\(\theta\)</span>, after observing the data <span class="math inline">\(D\)</span>; this is called the <code>posterior</code></li>
+<li><span class="math inline">\(P(D | \theta)\)</span>, the probability
+that you observe data <span class="math inline">\(D\)</span>, given the
+parameter <span class="math inline">\(\theta\)</span>; this is called
+the <code>likelihood</code> (Note: It is the likelihood of <span
+class="math inline">\(\theta\)</span>, but probability about <span
+class="math inline">\(y\)</span>)</li>
+<li><span class="math inline">\(P(\theta)\)</span>, the probability
+distribution <span class="math inline">\(\theta\)</span>, without
+referring to the data <span class="math inline">\(D\)</span>. This
+usually requires appeals to one’s degree of belief, and so is called the
+<code>prior</code></li>
+<li><span class="math inline">\(P(\theta | y)\)</span>, the updated
+probability distribution of <span class="math inline">\(\theta\)</span>,
+after observing the data <span class="math inline">\(D\)</span>; this is
+called the <code>posterior</code></li>
 </ul>
-<p>On the other hand, classical/frequentist statistics focuses solely on the likelihood function.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> In Bayesian statistics, the goal is to update one’s belief about <span class="math inline">\(\theta\)</span> based on the observed data <span class="math inline">\(D\)</span>.</p>
+<p>On the other hand, classical/frequentist statistics focuses solely on
+the likelihood function.<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a> In Bayesian statistics, the goal is
+to update one’s belief about <span class="math inline">\(\theta\)</span>
+based on the observed data <span class="math inline">\(D\)</span>.</p>
 <hr />
 <h2 id="example-2-locating-a-plane">Example 2: Locating a Plane</h2>
-<p>Consider a highly simplified scenario of locating a missing plane in the sea. Assume that we know the plane, before missing, happened to be flying on the same latitude, heading west across the Pacific, so we only need to find the longitude of it. We want to go out to collect debris (data) so that we can narrow the location (<span class="math inline">\(\theta\)</span>) of the plane down.</p>
-<p>We start with our prior. Assume that we have some rough idea that the plane should be, so we express our belief in a probability distribution like the following:</p>
+<p>Consider a highly simplified scenario of locating a missing plane in
+the sea. Assume that we know the plane, before missing, happened to be
+flying on the same latitude, heading west across the Pacific, so we only
+need to find the longitude of it. We want to go out to collect debris
+(data) so that we can narrow the location (<span
+class="math inline">\(\theta\)</span>) of the plane down.</p>
+<p>We start with our prior. Assume that we have some rough idea that the
+plane should be, so we express our belief in a probability distribution
+like the following:</p>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="bayes_rule_files/figure-html5/unnamed-chunk-1-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>which says that our belief is that the plane is about twice more likely to be towards the east than towards the west. Below are two other options for priors (out of infinitely many), one providing virtually no information and the other encoding stronger information:</p>
+<p>which says that our belief is that the plane is about twice more
+likely to be towards the east than towards the west. Below are two other
+options for priors (out of infinitely many), one providing virtually no
+information and the other encoding stronger information:</p>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="bayes_rule_files/figure-html5/unnamed-chunk-2-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>The prior is chosen to reflect the researcher’s belief, so it is likely that different researchers will formulate a different prior for the same problem, and that’s okay as long as the prior is reasonable and justified. Later we will learn that in regular Bayesian analyses, with moderate sample size, different priors generally make only negligible differences.</p>
-<p>Now, assume that we have collected debris in the locations shown in the graph,</p>
+<p>The prior is chosen to reflect the researcher’s belief, so it is
+likely that different researchers will formulate a different prior for
+the same problem, and that’s okay as long as the prior is reasonable and
+justified. Later we will learn that in regular Bayesian analyses, with
+moderate sample size, different priors generally make only negligible
+differences.</p>
+<p>Now, assume that we have collected debris in the locations shown in
+the graph,</p>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="bayes_rule_files/figure-html5/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <p>Now, from Bayes’s Theorem,</p>
-<p><span class="math display">\[\text{Posterior Probability} \propto \text{Prior Probability} \times
+<p><span class="math display">\[\text{Posterior Probability} \propto
+\text{Prior Probability} \times
                                        \text{Likelihood}\]</span></p>
-<p>So we can simply multiply the prior probabilities and the likelihood to get the posterior probability for every location. A rescaling step is needed to ensure that the area under the curve will be 1, which is usually performed by the software.</p>
+<p>So we can simply multiply the prior probabilities and the likelihood
+to get the posterior probability for every location. A rescaling step is
+needed to ensure that the area under the curve will be 1, which is
+usually performed by the software.</p>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="bayes_rule_files/figure-html5/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
@@ -2644,35 +2714,80 @@ Notes
 </div>
 <hr />
 <h2 id="data-order-invariance">Data-Order Invariance</h2>
-<p>In many data analysis applications, researchers collect some data <span class="math inline">\(D_1\)</span>, and then collect some more data <span class="math inline">\(D_2\)</span>. An example would be researchers conducting two separate experiments to study the same research question. In Bayesian statistics, one can consider three ways to obtain the posterior:</p>
+<p>In many data analysis applications, researchers collect some data
+<span class="math inline">\(D_1\)</span>, and then collect some more
+data <span class="math inline">\(D_2\)</span>. An example would be
+researchers conducting two separate experiments to study the same
+research question. In Bayesian statistics, one can consider three ways
+to obtain the posterior:</p>
 <ol type="1">
-<li>Update the belief with <span class="math inline">\(D_1\)</span>, and then with <span class="math inline">\(D_2\)</span></li>
-<li>Update the belief with <span class="math inline">\(D_2\)</span>, and then with <span class="math inline">\(D_1\)</span></li>
-<li>Update the belief with both <span class="math inline">\(D_1\)</span> and <span class="math inline">\(D_2\)</span> simultaneously</li>
+<li>Update the belief with <span class="math inline">\(D_1\)</span>, and
+then with <span class="math inline">\(D_2\)</span></li>
+<li>Update the belief with <span class="math inline">\(D_2\)</span>, and
+then with <span class="math inline">\(D_1\)</span></li>
+<li>Update the belief with both <span class="math inline">\(D_1\)</span>
+and <span class="math inline">\(D_2\)</span> simultaneously</li>
 </ol>
-<p>Whether these three ways give the same posterior depends on whether <strong>data-order invariance</strong> holds. If the inference of <span class="math inline">\(D_1\)</span> does not depend on <span class="math inline">\(D_2\)</span>, or vice versa, then all three ways lead to the same posterior. Specifically, if we have <strong>conditional independence</strong> such that <span class="math display">\[P(D_1, D_2 \mid \theta) = P(D_1 \mid \theta) P(D_2 \mid \theta),\]</span> then one can show all three ways give the same posterior (see p. 108 of Kruschke, 2015).</p>
+<p>Whether these three ways give the same posterior depends on whether
+<strong>data-order invariance</strong> holds. If the inference of <span
+class="math inline">\(D_1\)</span> does not depend on <span
+class="math inline">\(D_2\)</span>, or vice versa, then all three ways
+lead to the same posterior. Specifically, if we have <strong>conditional
+independence</strong> such that <span class="math display">\[P(D_1, D_2
+\mid \theta) = P(D_1 \mid \theta) P(D_2 \mid \theta),\]</span> then one
+can show all three ways give the same posterior (see p. 108 of Kruschke,
+2015).</p>
 <h3 id="exchangeability">Exchangeability*</h3>
-<p>Exchangeability is an important concept in Bayesian statistics. Data are exchangeable when the joint distribution, <span class="math inline">\(P(D_1, \ldots, D_N)\)</span>, does not depend on the ordering of the data. A simple way to think about it is if you scramble the order of your outcome variable in your data set and still can obtain the same statistical results, then the data are exchangeable. An example situation where data are not exchangeable is</p>
+<p>Exchangeability is an important concept in Bayesian statistics. Data
+are exchangeable when the joint distribution, <span
+class="math inline">\(P(D_1, \ldots, D_N)\)</span>, does not depend on
+the ordering of the data. A simple way to think about it is if you
+scramble the order of your outcome variable in your data set and still
+can obtain the same statistical results, then the data are exchangeable.
+An example situation where data are not exchangeable is</p>
 <ul>
-<li><span class="math inline">\(D_1\)</span> is from year 1990, <span class="math inline">\(D_2\)</span> is from year 2020, and the parameter <span class="math inline">\(\theta\)</span> changes from 1990 to 2020</li>
+<li><span class="math inline">\(D_1\)</span> is from year 1990, <span
+class="math inline">\(D_2\)</span> is from year 2020, and the parameter
+<span class="math inline">\(\theta\)</span> changes from 1990 to
+2020</li>
 </ul>
-<p>When data are exchangeable, the previously discussed conditional independence condition would generally hold.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>When data are exchangeable, the previously discussed conditional
+independence condition would generally hold.<a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
 <h2 id="bernoulli-likelihood">Bernoulli Likelihood</h2>
-<p>For binary data <span class="math inline">\(y\)</span> (e.g., coin flip, pass/fail, diagnosed/not), an intuitive way to analyze is to use a Bernoulli model: <span class="math display">\[
+<p>For binary data <span class="math inline">\(y\)</span> (e.g., coin
+flip, pass/fail, diagnosed/not), an intuitive way to analyze is to use a
+Bernoulli model: <span class="math display">\[
   \begin{aligned}
     P(y = 1 \mid \theta) = \theta \\
     P(y = 0 \mid \theta) = 1 - \theta
   \end{aligned},
-\]</span> which is more compactly written as <span class="math display">\[P(y \mid \theta) = \theta^y (1 - \theta)^{(1 - y)},\]</span> where <span class="math inline">\(\theta \in [0, 1]\)</span> is the probability of a “1”. You can verify that the compact form is the same as the longer form.</p>
+\]</span> which is more compactly written as <span
+class="math display">\[P(y \mid \theta) = \theta^y (1 - \theta)^{(1 -
+y)},\]</span> where <span class="math inline">\(\theta \in [0,
+1]\)</span> is the probability of a “1”. You can verify that the compact
+form is the same as the longer form.</p>
 <h3 id="multiple-observations">Multiple Observations</h3>
-<p>When there are more than one <span class="math inline">\(y\)</span>, say <span class="math inline">\(y_1, \ldots, y_N\)</span>, that are conditionally independent, we have <span class="math display">\[
+<p>When there are more than one <span class="math inline">\(y\)</span>,
+say <span class="math inline">\(y_1, \ldots, y_N\)</span>, that are
+conditionally independent, we have <span class="math display">\[
   \begin{aligned}
-    P(y_1, \ldots, y_N \mid \theta) &amp; = \prod_{i = 1}^N P(y_i \mid \theta) \\
-    &amp; = \theta^{\sum_{i = 1}^N y_i} (1 - \theta)^{\sum_{i = 1}^N (1 - y_i)} \\
+    P(y_1, \ldots, y_N \mid \theta) &amp; = \prod_{i = 1}^N P(y_i \mid
+\theta) \\
+    &amp; = \theta^{\sum_{i = 1}^N y_i} (1 - \theta)^{\sum_{i = 1}^N (1
+- y_i)} \\
     &amp; = \theta^z (1 - \theta)^{N - z}
   \end{aligned},
-\]</span> where <span class="math inline">\(z\)</span> is the number of “1”s (e.g., number of heads in coin flips). Note that the likelihood only depends on <span class="math inline">\(z\)</span>, not the individual <span class="math inline">\(y\)</span>s. In other words, the likelihood is the same as long as there are <span class="math inline">\(z\)</span> heads, regardless of when those heads occur.</p>
-<p>Let’s say <span class="math inline">\(N\)</span> = 4 and <span class="math inline">\(z\)</span> = 1. We can plot the likelihood in R:</p>
+\]</span> where <span class="math inline">\(z\)</span> is the number of
+“1”s (e.g., number of heads in coin flips). Note that the likelihood
+only depends on <span class="math inline">\(z\)</span>, not the
+individual <span class="math inline">\(y\)</span>s. In other words, the
+likelihood is the same as long as there are <span
+class="math inline">\(z\)</span> heads, regardless of when those heads
+occur.</p>
+<p>Let’s say <span class="math inline">\(N\)</span> = 4 and <span
+class="math inline">\(z\)</span> = 1. We can plot the likelihood in
+R:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Write the likelihood as a function of theta</span>
@@ -2697,9 +2812,22 @@ Notes
 <p><img src="bayes_rule_files/figure-html5/lik-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h2 id="setting-priors">Setting Priors</h2>
-<p>Remember again the relationship between the prior and the posterior: <span class="math display">\[P(\theta | y) \propto P(y | \theta) P(\theta)\]</span> The posterior distributions are mathematically determined once the priors and the likelihood are set. However, the mathematical form of the posterior is sometimes very difficult to deal with.</p>
-<p>One straight forward, brute-force method is to discretize the parameter space into a number of points. For example, by taking <span class="math inline">\(\theta\)</span> = 0, 0.05, 0.10, . . . , 0.90, 0.95, 1.00, one can evaluate the posterior at these 21 <strong>grid points</strong>.</p>
-<p>Let’s use a prior that peaks at 0.5 and linearly decreases to both sides. I assume that <span class="math inline">\(\theta\)</span> = 0.5 is twice as likely as <span class="math inline">\(\theta = 0.25\)</span> or <span class="math inline">\(\theta = 0.75\)</span> to reflect my belief that the coin is more likely to be fair.</p>
+<p>Remember again the relationship between the prior and the posterior:
+<span class="math display">\[P(\theta | y) \propto P(y | \theta)
+P(\theta)\]</span> The posterior distributions are mathematically
+determined once the priors and the likelihood are set. However, the
+mathematical form of the posterior is sometimes very difficult to deal
+with.</p>
+<p>One straight forward, brute-force method is to discretize the
+parameter space into a number of points. For example, by taking <span
+class="math inline">\(\theta\)</span> = 0, 0.05, 0.10, . . . , 0.90,
+0.95, 1.00, one can evaluate the posterior at these 21 <strong>grid
+points</strong>.</p>
+<p>Let’s use a prior that peaks at 0.5 and linearly decreases to both
+sides. I assume that <span class="math inline">\(\theta\)</span> = 0.5
+is twice as likely as <span class="math inline">\(\theta = 0.25\)</span>
+or <span class="math inline">\(\theta = 0.75\)</span> to reflect my
+belief that the coin is more likely to be fair.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Define a grid for the parameter</span>
@@ -2719,9 +2847,19 @@ Notes
 </div>
 <p><img src="bayes_rule_files/figure-html5/grid_df-prior-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>Note the line <code>grid_df$pth &lt;- grid_df$pth / sum(grid_df$pth)</code>, which ensures that the probability values sum to one. This is a trick we will use to obtain the posterior probability.</p>
-<h3 id="prior-predictive-distribution">Prior Predictive Distribution</h3>
-<p>One way to check whether the prior is appropriate is to use the <strong>prior predictive distribution</strong>. Bayesian models are <strong>generative</strong> in the sense that they can be used to simulate data. The prior predictive distribution can be obtained by first simulating some <span class="math inline">\(\theta\)</span> values from the prior distribution and then simulating a data set for each <span class="math inline">\(\theta\)</span>.</p>
+<p>Note the line
+<code>grid_df$pth &lt;- grid_df$pth / sum(grid_df$pth)</code>, which
+ensures that the probability values sum to one. This is a trick we will
+use to obtain the posterior probability.</p>
+<h3 id="prior-predictive-distribution">Prior Predictive
+Distribution</h3>
+<p>One way to check whether the prior is appropriate is to use the
+<strong>prior predictive distribution</strong>. Bayesian models are
+<strong>generative</strong> in the sense that they can be used to
+simulate data. The prior predictive distribution can be obtained by
+first simulating some <span class="math inline">\(\theta\)</span> values
+from the prior distribution and then simulating a data set for each
+<span class="math inline">\(\theta\)</span>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Draw one theta</span>
@@ -2763,7 +2901,8 @@ Notes
 </div>
 <p><img src="bayes_rule_files/figure-html5/prior-predictive-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>The outcome seems to fit our intuition that it’s more likely to be half heads and half tails, but there is a lot of uncertainty.</p>
+<p>The outcome seems to fit our intuition that it’s more likely to be
+half heads and half tails, but there is a lot of uncertainty.</p>
 <h2 id="summarizing-the-posterior">Summarizing the Posterior</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2962,7 +3101,11 @@ Notes
 </div>
 <p><img src="bayes_rule_files/figure-html5/grid_df-post-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>The second graph above shows the posterior distribution, which represents our updated belief about <span class="math inline">\(\theta\)</span>. We can summarize it by simulating <span class="math inline">\(\theta\)</span> values from it and compute summary statistics:</p>
+<p>The second graph above shows the posterior distribution, which
+represents our updated belief about <span
+class="math inline">\(\theta\)</span>. We can summarize it by simulating
+<span class="math inline">\(\theta\)</span> values from it and compute
+summary statistics:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Define a function for computing posterior summary</span>
@@ -2989,7 +3132,9 @@ Notes
 #&gt; 0.3848000 0.4000000 0.1538429 0.1482600 0.2000000 0.6000000</code></pre>
 </div>
 <h3 id="influence-of-sample-size">Influence of Sample Size</h3>
-<p>If, instead, we have <span class="math inline">\(N\)</span> = 40 and <span class="math inline">\(z\)</span> = 10, the posterior will be more similar to the likelihood.</p>
+<p>If, instead, we have <span class="math inline">\(N\)</span> = 40 and
+<span class="math inline">\(z\)</span> = 10, the posterior will be more
+similar to the likelihood.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>grid_df2</span> <span class='op'>&lt;-</span> <span class='va'>grid_df</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
@@ -3037,7 +3182,11 @@ Notes
 #&gt; 0.28085000 0.30000000 0.06542215 0.07413000 0.20000000 0.35000000</code></pre>
 </div>
 <h3 id="influence-of-prior-1">Influence of Prior</h3>
-<p>If we have a very strong prior concentrated at <span class="math inline">\(\theta\)</span> = .5, but still with <span class="math inline">\(N\)</span> = 40 and <span class="math inline">\(z\)</span> = 10, the posterior will be more similar to the prior.</p>
+<p>If we have a very strong prior concentrated at <span
+class="math inline">\(\theta\)</span> = .5, but still with <span
+class="math inline">\(N\)</span> = 40 and <span
+class="math inline">\(z\)</span> = 10, the posterior will be more
+similar to the prior.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>grid_df3</span> <span class='op'>&lt;-</span> <span class='va'>grid_df</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
@@ -3089,9 +3238,23 @@ Notes
 #&gt; 0.4493000 0.4500000 0.1096656 0.0741300 0.3000000 0.6000000</code></pre>
 </div>
 <h2 id="remark-on-grid-approximation">Remark on Grid Approximation</h2>
-<p>In this note, we discretized <span class="math inline">\(\theta\)</span> into a finite number of grid points to compute the posterior, mainly for pedagogical purposes. A big limitation is that our posterior will have no density for values other than the chosen grid points. While increasing the number of grid points (e.g., 1,000) can give more precision, the result is still not truly continuous. A bigger issue is that the computation breaks down when there is more than one parameter; if there are <span class="math inline">\(p\)</span> parameters, with 1,000 grid points per parameter, one needs to evaluate the posterior probability for <span class="math inline">\(1,000^p\)</span> grid points, which is not feasible even with modern computers. So more efficient algorithms, namely Markov chain Monte Carlo (MCMC) methods, will be introduced as we progress in the course.</p>
+<p>In this note, we discretized <span
+class="math inline">\(\theta\)</span> into a finite number of grid
+points to compute the posterior, mainly for pedagogical purposes. A big
+limitation is that our posterior will have no density for values other
+than the chosen grid points. While increasing the number of grid points
+(e.g., 1,000) can give more precision, the result is still not truly
+continuous. A bigger issue is that the computation breaks down when
+there is more than one parameter; if there are <span
+class="math inline">\(p\)</span> parameters, with 1,000 grid points per
+parameter, one needs to evaluate the posterior probability for <span
+class="math inline">\(1,000^p\)</span> grid points, which is not
+feasible even with modern computers. So more efficient algorithms,
+namely Markov chain Monte Carlo (MCMC) methods, will be introduced as we
+progress in the course.</p>
 <!-- The following chunk is only used in the website -->
-<section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
+<section id="last-updated" class="appendix layout-chunk"
+data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
 <pre><code>#&gt; [1] &quot;January 22, 2022&quot;</code></pre>
@@ -3099,14 +3262,35 @@ Notes
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 </section>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
-<section class="footnotes" role="doc-endnotes">
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<section class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>The likelihood function in classical/frequentist statistics is usually written as <span class="math inline">\(P(y; \theta)\)</span>. You will notice that here I write the likelihood for classical/frequentist statistics to be different from the one used in Bayesian statistics. This is intentional: In frequentist conceptualization, <span class="math inline">\(\theta\)</span> is fixed, and it does not make sense to talk about the probability of <span class="math inline">\(\theta\)</span>. This implies that we cannot condition on <span class="math inline">\(\theta\)</span>, because conditional probability is defined only when <span class="math inline">\(P(\theta)\)</span> is defined.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>The <a href="https://en.wikipedia.org/wiki/De_Finetti%27s_theorem">de Finetti’s theorem</a> shows that when the data are exchangeable and can be considered an infinite sequence (i.e., not from a tiny finite population), then the data are conditionally independent given some <span class="math inline">\(\theta\)</span>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>The likelihood function in
+classical/frequentist statistics is usually written as <span
+class="math inline">\(P(y; \theta)\)</span>. You will notice that here I
+write the likelihood for classical/frequentist statistics to be
+different from the one used in Bayesian statistics. This is intentional:
+In frequentist conceptualization, <span
+class="math inline">\(\theta\)</span> is fixed, and it does not make
+sense to talk about the probability of <span
+class="math inline">\(\theta\)</span>. This implies that we cannot
+condition on <span class="math inline">\(\theta\)</span>, because
+conditional probability is defined only when <span
+class="math inline">\(P(\theta)\)</span> is defined.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>The <a
+href="https://en.wikipedia.org/wiki/De_Finetti%27s_theorem">de Finetti’s
+theorem</a> shows that when the data are exchangeable and can be
+considered an infinite sequence (i.e., not from a tiny finite
+population), then the data are conditionally independent given some
+<span class="math inline">\(\theta\)</span>.<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->
@@ -3139,7 +3323,10 @@ Notes
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
 <p>© Copyright 2022 Hok Chio (Mark) Lai</p>
-<p>Template by <a href="https://github.com/distillpub/template/blob/master/AUTHORS">The Distill Template Authors</a> and <a href="https://www.rstudio.com">RStudio, Inc</a>.</p>
+<p>Template by <a
+href="https://github.com/distillpub/template/blob/master/AUTHORS">The
+Distill Template Authors</a> and <a
+href="https://www.rstudio.com">RStudio, Inc</a>.</p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 

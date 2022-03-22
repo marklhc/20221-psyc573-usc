@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Generalized Linear Model</title>
+    <meta charset="utf-8" />
+    <meta name="date" content="2022-03-22" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my_style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Generalized Linear Model
+## PSYC 573
+### University of Southern California
+### March 22, 2022
+
+---
+
+
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+--shareagain-twitter: none;
+--shareagain-facebook: none;
+--shareagain-linkedin: none;
+--shareagain-pinterest: none;
+--shareagain-pocket: none;
+--shareagain-reddit: none;
+}</style>
+
+
+
+
+
+# Regression for Prediction
+
+One outcome `\(Y\)`, one or more predictors `\(X_1\)`, `\(X_2\)`, `\(\ldots\)`
+
+E.g.,
+
+- What will a student's college GPA be given an SAT score of `\(x\)`?
+- How long will a person live if the person adopts diet `\(x\)`?
+- What will the earth's global temperature be if the carbon emission level is `\(x\)`?
+
+---
+
+# Keep These in Mind
+
+1. Likelihood function is defined for the outcome `\(Y\)`
+
+2. Prediction is probabilistic (i.e., uncertain) and contains error
+
+---
+class: center, middle, inverse
+
+# Generalized Linear Models (GLM)
+
+---
+
+# GLM
+
+Three components:
+
+- Conditional distribution of `\(Y\)`
+- Link function
+- Linear predictor
+
+---
+
+# Some Examples
+
+| Outcome type | Support          | Distributions | Link |
+|:------------:|:----------------:|:-------------:|:----:|
+| continuous | [`\(-\infty\)`, `\(\infty\)`] | Normal | Identity |
+| count (fixed duration) | {0, 1, `\(\ldots\)`} | Poisson | Log |
+| count (known # of trials) | {0, 1, `\(\ldots\)`, `\(N\)`} | Binomial | Logit |
+| binary | {0, 1} | Bernoulli | Logit |
+| ordinal | {0, 1, `\(\ldots\)`, `\(K\)`} | categorical | Logit |
+| nominal | `\(K\)`-vector of {0, 1} | categorical | Logit |
+| multinomial | `\(K\)`-vector of {0, 1, `\(\ldots\)`, `\(K\)`} | categorical | Logit |
+
+---
+
+# Mathematical Form (One Predictor)
+
+`\begin{align}
+  Y_i &amp; \sim \mathrm{Dist}(\mu_i, \tau)  \\
+  g(\mu_i) &amp; = \eta_i \\
+  \eta_i &amp; = \beta_0 + \beta_1 X_{i}
+\end{align}`
+
+- `\(\mathrm{Dist}\)`: conditional distribution of `\(Y \mid X\)` (e.g., normal, Bernoulli, `\(\ldots\)`)
+    * I.e., distribution of **prediction error**; not the marginal distribution of `\(Y\)`
+- `\(\mu_i\)`: mean parameter for the `\(i\)`th observation
+- `\(\eta_i\)`: linear predictor
+- `\(g(\cdot)\)`: link function
+- (`\(\tau\)`: dispersion parameter)
+
+---
+
+# Illustration
+
+Next few slides contain example GLMs, with the same predictor `\(X\)`
+
+
+
+
+```r
+num_obs &lt;- 100
+x &lt;- runif(num_obs, min = 1, max = 5)  # uniform x
+beta0 &lt;- 0.2; beta1 &lt;- 0.5
+```
+
+---
+
+# Normal, Identity Link
+
+aka linear regression
+
+.panelset[
+.panel[.panel-name[Model]
+
+`\begin{align}
+  Y_i &amp; \sim N(\mu_i, \sigma) \\
+  \mu_i &amp; = \eta_i \\
+  \eta_i &amp; = \beta_0 + \beta_1 X_{i}
+\end{align}`
+
+]
+
+.panel[.panel-name[Simulation]
+
+.font70[
+
+```r
+eta &lt;- beta0 + beta1 * x
+mu &lt;- eta
+y &lt;- rnorm(num_obs, mean = mu, sd = 0.3)
+```
+]
+
+&lt;img src="glm_files/figure-html/plot-lm-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+---
+
+# Poisson, Log Link
+
+aka poisson regression
+
+.panelset[
+.panel[.panel-name[Model]
+
+`\begin{align}
+  Y_i &amp; \sim \mathrm{Pois}(\mu_i) \\
+  \log(\mu_i) &amp; = \eta_i \\
+  \eta_i &amp; = \beta_0 + \beta_1 X_{i}
+\end{align}`
+
+]
+
+.panel[.panel-name[Simulation]
+
+.font70[
+
+
+```r
+eta &lt;- beta0 + beta1 * x
+mu &lt;- exp(eta)  # inverse link
+y &lt;- rpois(num_obs, lambda = mu)
+```
+
+]
+
+&lt;img src="glm_files/figure-html/plot-pois-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+---
+
+# Bernoulli, Logit Link
+
+aka binary logistic regression
+
+.panelset[
+.panel[.panel-name[Model]
+
+`\begin{align}
+  Y_i &amp; \sim \mathrm{Bern}(\mu_i) \\
+  \log\left(\frac{\mu_i}{1 - \mu_i}\right) &amp; = \eta_i \\
+  \eta_i &amp; = \beta_0 + \beta_1 X_{i}
+\end{align}`
+
+]
+
+.panel[.panel-name[Simulation]
+
+.font70[
+
+
+```r
+eta &lt;- beta0 + beta1 * x
+mu &lt;- plogis(eta)  # inverse link is logistic
+y &lt;- rbinom(num_obs, size = 1, prob = mu)
+```
+
+]
+
+&lt;img src="glm_files/figure-html/plot-bern-logit-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+---
+
+# Binomial, Logit Link
+
+aka binomial logistic regression
+
+.panelset[
+.panel[.panel-name[Model]
+
+`\begin{align}
+  Y_i &amp; \sim \mathrm{Bin}(N, \mu_i) \\
+  \log\left(\frac{\mu_i}{1 - \mu_i}\right) &amp; = \eta_i \\
+  \eta_i &amp; = \beta_0 + \beta_1 X_{i}
+\end{align}`
+
+]
+
+.panel[.panel-name[Simulation]
+
+.font70[
+
+
+```r
+num_trials &lt;- 10
+eta &lt;- beta0 + beta1 * x
+mu &lt;- plogis(eta)  # inverse link is logistic
+y &lt;- rbinom(num_obs, size = num_trials, prob = mu)
+```
+
+]
+
+&lt;img src="glm_files/figure-html/plot-bin-logit-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+---
+
+# Remarks
+
+Different link functions can be used
+- E.g., identity link or probit link for Bernoulli variables
+
+Linearity is a strong assumption
+- GLM can allow `\(\eta\)` and `\(X\)` to be nonlinearly related, as long as it's linear in the coefficients
+    * E.g., `\(\eta_i = \beta_0 + \beta_1 \log(X_{i})\)`
+    * E.g., `\(\eta_i = \beta_0 + \beta_1 X_i + \beta_2 X_i^2\)`
+    * But not something like `\(\eta_i = \beta_0 \log(\beta_1 + x_i)\)`
+
+---
+class: inverse, middle, center
+
+# Linear Regression
+
+---
+class: clear
+
+Many relations can be approximated as linear
+
+But many relations cannot be approximated as linear
+
+---
+class: clear
+
+### Example: "Bread and peace" model
+
+
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Linear Regression Model
+
+Model:
+
+`\begin{align}
+  \text{vote}_i &amp; \sim N(\mu_i, \sigma) \\
+  \mu_i &amp; = \beta_0 + \beta_1 \text{growth}_i
+\end{align}`
+
+`\(\sigma\)`: SD (margin) of prediction error
+
+Prior:
+
+`\begin{align}
+  \beta_0 &amp; \sim N(45, 10)  \\
+  \beta_1 &amp; \sim N(0, 10)  \\
+  \sigma &amp; \sim t^+_4(0, 5)
+\end{align}`
+
+---
+class: clear
+
+.panelset[
+.panel[.panel-name[Stan]
+
+
+
+.font60[
+
+
+```stan
+data {
+  int&lt;lower=0&gt; N;  // number of observations
+  vector[N] y;  // outcome;
+  vector[N] x;  // predictor;
+}
+parameters {
+  real beta0;  // regression intercept
+  real beta1;  // regression coefficient
+  real&lt;lower=0&gt; sigma;  // SD of prediction error
+}
+model {
+  // model
+  y ~ normal(beta0 + beta1 * x, sigma);
+  // prior
+  beta0 ~ normal(45, 10);
+  beta1 ~ normal(0, 10);
+  sigma ~ student_t(4, 0, 5);
+}
+generated quantities {
+  vector[N] y_rep;  // place holder
+  for (n in 1:N)
+    y_rep[n] = normal_rng(beta0 + beta1 * x[n], sigma);
+}
+```
+
+]
+
+]
+
+.panel[.panel-name[`brms`]
+
+.font70[
+
+
+```r
+library(brms)
+m1_brm &lt;- brm(vote ~ growth,
+              data = hibbs,
+              family = gaussian(link = "identity"),
+              prior = c(
+                  prior(normal(45, 10), class = "Intercept"),
+                  prior(normal(0, 10), class = "b"),
+                  prior(student_t(4, 0, 5), class = "sigma")
+              ),
+              iter = 4000,
+              seed = 31143)
+```
+
+```
+&gt;# 
+&gt;# SAMPLING FOR MODEL '11c459bfe9958a66b303e7ee3a15738a' NOW (CHAIN 1).
+&gt;# Chain 1: 
+&gt;# Chain 1: Gradient evaluation took 1.3e-05 seconds
+&gt;# Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.13 seconds.
+&gt;# Chain 1: Adjust your expectations accordingly!
+&gt;# Chain 1: 
+&gt;# Chain 1: 
+&gt;# Chain 1: Iteration:    1 / 4000 [  0%]  (Warmup)
+&gt;# Chain 1: Iteration:  400 / 4000 [ 10%]  (Warmup)
+&gt;# Chain 1: Iteration:  800 / 4000 [ 20%]  (Warmup)
+&gt;# Chain 1: Iteration: 1200 / 4000 [ 30%]  (Warmup)
+&gt;# Chain 1: Iteration: 1600 / 4000 [ 40%]  (Warmup)
+&gt;# Chain 1: Iteration: 2000 / 4000 [ 50%]  (Warmup)
+&gt;# Chain 1: Iteration: 2001 / 4000 [ 50%]  (Sampling)
+&gt;# Chain 1: Iteration: 2400 / 4000 [ 60%]  (Sampling)
+&gt;# Chain 1: Iteration: 2800 / 4000 [ 70%]  (Sampling)
+&gt;# Chain 1: Iteration: 3200 / 4000 [ 80%]  (Sampling)
+&gt;# Chain 1: Iteration: 3600 / 4000 [ 90%]  (Sampling)
+&gt;# Chain 1: Iteration: 4000 / 4000 [100%]  (Sampling)
+&gt;# Chain 1: 
+&gt;# Chain 1:  Elapsed Time: 0.034457 seconds (Warm-up)
+&gt;# Chain 1:                0.027577 seconds (Sampling)
+&gt;# Chain 1:                0.062034 seconds (Total)
+&gt;# Chain 1: 
+&gt;# 
+&gt;# SAMPLING FOR MODEL '11c459bfe9958a66b303e7ee3a15738a' NOW (CHAIN 2).
+&gt;# Chain 2: 
+&gt;# Chain 2: Gradient evaluation took 7e-06 seconds
+&gt;# Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
+&gt;# Chain 2: Adjust your expectations accordingly!
+&gt;# Chain 2: 
+&gt;# Chain 2: 
+&gt;# Chain 2: Iteration:    1 / 4000 [  0%]  (Warmup)
+&gt;# Chain 2: Iteration:  400 / 4000 [ 10%]  (Warmup)
+&gt;# Chain 2: Iteration:  800 / 4000 [ 20%]  (Warmup)
+&gt;# Chain 2: Iteration: 1200 / 4000 [ 30%]  (Warmup)
+&gt;# Chain 2: Iteration: 1600 / 4000 [ 40%]  (Warmup)
+&gt;# Chain 2: Iteration: 2000 / 4000 [ 50%]  (Warmup)
+&gt;# Chain 2: Iteration: 2001 / 4000 [ 50%]  (Sampling)
+&gt;# Chain 2: Iteration: 2400 / 4000 [ 60%]  (Sampling)
+&gt;# Chain 2: Iteration: 2800 / 4000 [ 70%]  (Sampling)
+&gt;# Chain 2: Iteration: 3200 / 4000 [ 80%]  (Sampling)
+&gt;# Chain 2: Iteration: 3600 / 4000 [ 90%]  (Sampling)
+&gt;# Chain 2: Iteration: 4000 / 4000 [100%]  (Sampling)
+&gt;# Chain 2: 
+&gt;# Chain 2:  Elapsed Time: 0.030574 seconds (Warm-up)
+&gt;# Chain 2:                0.039529 seconds (Sampling)
+&gt;# Chain 2:                0.070103 seconds (Total)
+&gt;# Chain 2: 
+&gt;# 
+&gt;# SAMPLING FOR MODEL '11c459bfe9958a66b303e7ee3a15738a' NOW (CHAIN 3).
+&gt;# Chain 3: 
+&gt;# Chain 3: Gradient evaluation took 9e-06 seconds
+&gt;# Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.09 seconds.
+&gt;# Chain 3: Adjust your expectations accordingly!
+&gt;# Chain 3: 
+&gt;# Chain 3: 
+&gt;# Chain 3: Iteration:    1 / 4000 [  0%]  (Warmup)
+&gt;# Chain 3: Iteration:  400 / 4000 [ 10%]  (Warmup)
+&gt;# Chain 3: Iteration:  800 / 4000 [ 20%]  (Warmup)
+&gt;# Chain 3: Iteration: 1200 / 4000 [ 30%]  (Warmup)
+&gt;# Chain 3: Iteration: 1600 / 4000 [ 40%]  (Warmup)
+&gt;# Chain 3: Iteration: 2000 / 4000 [ 50%]  (Warmup)
+&gt;# Chain 3: Iteration: 2001 / 4000 [ 50%]  (Sampling)
+&gt;# Chain 3: Iteration: 2400 / 4000 [ 60%]  (Sampling)
+&gt;# Chain 3: Iteration: 2800 / 4000 [ 70%]  (Sampling)
+&gt;# Chain 3: Iteration: 3200 / 4000 [ 80%]  (Sampling)
+&gt;# Chain 3: Iteration: 3600 / 4000 [ 90%]  (Sampling)
+&gt;# Chain 3: Iteration: 4000 / 4000 [100%]  (Sampling)
+&gt;# Chain 3: 
+&gt;# Chain 3:  Elapsed Time: 0.044672 seconds (Warm-up)
+&gt;# Chain 3:                0.033552 seconds (Sampling)
+&gt;# Chain 3:                0.078224 seconds (Total)
+&gt;# Chain 3: 
+&gt;# 
+&gt;# SAMPLING FOR MODEL '11c459bfe9958a66b303e7ee3a15738a' NOW (CHAIN 4).
+&gt;# Chain 4: 
+&gt;# Chain 4: Gradient evaluation took 6e-06 seconds
+&gt;# Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+&gt;# Chain 4: Adjust your expectations accordingly!
+&gt;# Chain 4: 
+&gt;# Chain 4: 
+&gt;# Chain 4: Iteration:    1 / 4000 [  0%]  (Warmup)
+&gt;# Chain 4: Iteration:  400 / 4000 [ 10%]  (Warmup)
+&gt;# Chain 4: Iteration:  800 / 4000 [ 20%]  (Warmup)
+&gt;# Chain 4: Iteration: 1200 / 4000 [ 30%]  (Warmup)
+&gt;# Chain 4: Iteration: 1600 / 4000 [ 40%]  (Warmup)
+&gt;# Chain 4: Iteration: 2000 / 4000 [ 50%]  (Warmup)
+&gt;# Chain 4: Iteration: 2001 / 4000 [ 50%]  (Sampling)
+&gt;# Chain 4: Iteration: 2400 / 4000 [ 60%]  (Sampling)
+&gt;# Chain 4: Iteration: 2800 / 4000 [ 70%]  (Sampling)
+&gt;# Chain 4: Iteration: 3200 / 4000 [ 80%]  (Sampling)
+&gt;# Chain 4: Iteration: 3600 / 4000 [ 90%]  (Sampling)
+&gt;# Chain 4: Iteration: 4000 / 4000 [100%]  (Sampling)
+&gt;# Chain 4: 
+&gt;# Chain 4:  Elapsed Time: 0.030567 seconds (Warm-up)
+&gt;# Chain 4:                0.03102 seconds (Sampling)
+&gt;# Chain 4:                0.061587 seconds (Total)
+&gt;# Chain 4:
+```
+
+]
+]
+
+.panel[.panel-name[`brms` results]
+
+.font70[
+
+
+```
+&gt;#  Family: gaussian 
+&gt;#   Links: mu = identity; sigma = identity 
+&gt;# Formula: vote ~ growth 
+&gt;#    Data: hibbs (Number of observations: 16) 
+&gt;#   Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+&gt;#          total post-warmup draws = 8000
+&gt;# 
+&gt;# Population-Level Effects: 
+&gt;#           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+&gt;# Intercept    46.21      1.78    42.75    49.75 1.00     6338     4772
+&gt;# growth        3.05      0.76     1.52     4.55 1.00     6380     4762
+&gt;# 
+&gt;# Family Specific Parameters: 
+&gt;#       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+&gt;# sigma     3.99      0.81     2.77     5.94 1.00     5229     4889
+&gt;# 
+&gt;# Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+&gt;# and Tail_ESS are effective sample size measures, and Rhat is the potential
+&gt;# scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
+]
+]
+]
+
+---
+class: clear
+
+.pull-left[
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-6-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Meaning of Coefficients
+
+When growth = 0, `\(\text{vote} \sim N(\beta_0, \sigma)\)`
+
+When growth = 1, `\(\text{vote} \sim N(\beta_0 + \beta_1, \sigma)\)`
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-8-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Posterior Predictive Check
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-9-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+The model fits a majority of the data, but not everyone. The biggest discrepancy is 1952.
+
+---
+
+# Prediction
+
+.font70[
+
+Predicted vote share when growth = 2: `\(\tilde y \mid y \sim N(\beta_0 + \beta_1 \times 2, \sigma)\)`
+
+
+```r
+pp_growth_eq_2 &lt;- posterior_predict(m1_brm,
+    newdata = list(growth = 2)
+)
+```
+
+]
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-11-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+Probability of incumbent's vote share &gt; 50% = 0.713
+
+---
+
+# Table
+
+.font70[
+
+
+```r
+library(modelsummary)
+msummary(m1_brm, estimate = "{estimate} [{conf.low}, {conf.high}]",
+         statistic = NULL, fmt = 2)
+```
+
+&lt;table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Model 1 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_Intercept &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 46.20 [42.76, 49.75] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_growth &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3.03 [1.56, 4.56] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;box-shadow: 0px 1px"&gt; sigma &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1px"&gt; 3.88 [2.56, 5.51] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Num.Obs. &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 16 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ELPD &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −46.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ELPD s.e. &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3.6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; LOOIC &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 92.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; LOOIC s.e. &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7.2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; WAIC &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 92.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; RMSE &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 24.97 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+---
+
+# Prediction vs. Explanation
+
+Is personal income growth a reason a candidate/party got more vote share?
+
+If so, what is the mechanism?
+
+If not, what is responsible for the association?
+
+---
+
+# Additional Notes
+
+Outlier: use `\(Y_i \sim t_\nu(\mu_i, \sigma)\)`
+
+Nonconstant `\(\sigma\)`
+- One option is `\(\log(\sigma_i) = \beta^{s}_0 + \beta^{s}_1 X_i\)`
+
+Check whether linearity holds
+- Other options: splines, quadratic, log transform (i.e., lognormal model), etc
+
+---
+class: inverse, middle, center
+
+# Poisson Regression
+
+---
+class: clear
+
+.font70[
+
+- `count`: The seizure count between two visits
+- `Trt`: Either 0 or 1 indicating if the patient received anticonvulsant therapy
+
+]
+
+`\begin{align}
+  \text{count}_i &amp; \sim \mathrm{Pois}(\mu_i)  \\
+  \log(\mu_i) &amp; = \eta_i \\
+  \eta_i &amp; = \beta_0 + \beta_1 \text{Trt}_{i}
+\end{align}`
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+class: clear
+
+### Poisson with log link
+
+Predicted seizure rate = `\(\exp(\beta_0 + \beta_1) = \exp(\beta_0) \exp(\beta_1)\)` for Trt = 1; `\(\exp(\beta_0)\)` for Trt = 0
+
+`\(\beta_1\)` = mean difference in **log** rate of seizure; `\(\exp(\beta_1)\)` = ratio in rate of seizure 
+
+
+```r
+m2 &lt;- brm(count ~ Trt, data = epilepsy4,
+          family = poisson(link = "log"))
+```
+
+---
+class: clear
+
+### Poisson with identity link
+
+In this case, with one binary predictor, the link does not matter to the fit
+
+`\begin{align}
+  \text{count}_i &amp; \sim \mathrm{Pois}(\mu_i)  \\
+  \mu_i &amp; = \eta_i \\
+  \eta_i &amp; = \beta_0 + \beta_1 \text{Trt}_{i}
+\end{align}`
+
+`\(\beta_1\)` = mean difference in the rate of seizure in two weeks
+
+
+```r
+m3 &lt;- brm(count ~ Trt, data = epilepsy4,
+          family = poisson(link = "identity"))
+```
+
+---
+exclude: TRUE
+class: clear
+
+.pull-left[
+
+Prediction With Log Link
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+Prediction With Identity Link
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-17-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+class: clear
+
+.font70[
+
+&lt;table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; log link &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; identity link &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_Intercept &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2.07 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7.97 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; [1.95, 2.20] &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; [6.94, 8.96] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_Trt1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −0.17 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −1.25 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;box-shadow: 0px 1px"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1px"&gt; [−0.35, 0.02] &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1px"&gt; [−2.58, 0.16] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Num.Obs. &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 59 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 59 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ELPD &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −343.1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −345.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ELPD s.e. &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 93.8 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 95.7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; LOOIC &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 686.2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 690.2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; LOOIC s.e. &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 187.7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 191.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; WAIC &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 688.5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 687.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; RMSE &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10.50 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10.53 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

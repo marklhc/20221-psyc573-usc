@@ -2368,7 +2368,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
   <link href="site_libs/panelset-0.2.6/panelset.css" rel="stylesheet" />
   <script src="site_libs/panelset-0.2.6/panelset.js"></script>
   <script src="site_libs/clipboard-2.0.6/clipboard.min.js"></script>
@@ -2453,6 +2453,7 @@ Notes
 <a href="hmc_stan.html">HMC and Stan</a>
 <a href="hierarchical_models.html">Hierarchical Models</a>
 <a href="group_comparisons.html">Group Comparisons</a>
+<a href="glm.html">Generalized Linear Model I</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2486,24 +2487,31 @@ Notes
 <h3>Contents</h3>
 <ul>
 <li><a href="#monte-carlo-simulation">Monte Carlo Simulation</a></li>
-<li><a href="#markov-chain-monte-carlo-mcmc-drawing-dependent-samples">Markov Chain Monte Carlo (MCMC): Drawing Dependent Samples</a></li>
+<li><a
+href="#markov-chain-monte-carlo-mcmc-drawing-dependent-samples">Markov
+Chain Monte Carlo (MCMC): Drawing Dependent Samples</a></li>
 <li><a href="#the-metropolis-algorithm">The Metropolis algorithm</a>
 <ul>
 <li><a href="#shiny-app">Shiny App</a></li>
-<li><a href="#example-1-estimating-the-number-of-people-taking-the-metro">Example 1: Estimating the Number of People Taking the Metro</a></li>
+<li><a
+href="#example-1-estimating-the-number-of-people-taking-the-metro">Example
+1: Estimating the Number of People Taking the Metro</a></li>
 <li><a href="#mcmc-sampling">MCMC sampling</a></li>
 <li><a href="#more-on-markov-chain">More on Markov Chain</a></li>
 <li><a href="#warm-upburn-in">Warm-up/Burn-in</a></li>
 <li><a href="#autocorrelation">Autocorrelation</a></li>
 <li><a href="#acceptance-rate">Acceptance Rate</a></li>
-<li><a href="#effective-sample-size-ess">Effective sample size (ESS)</a></li>
+<li><a href="#effective-sample-size-ess">Effective sample size
+(ESS)</a></li>
 <li><a href="#multiple-chains">Multiple Chains</a></li>
-<li><a href="#full-r-code-with-more-iterations">Full R Code With More iterations</a></li>
+<li><a href="#full-r-code-with-more-iterations">Full R Code With More
+iterations</a></li>
 <li><a href="#convergence-check">Convergence Check</a>
 <ul>
 <li><a href="#trace-plot">Trace Plot</a></li>
 <li><a href="#rank-histograms">Rank Histograms</a></li>
-<li><a href="#hatr"><span class="math inline">\(\hat{R}\)</span></a></li>
+<li><a href="#hatr"><span
+class="math inline">\(\hat{R}\)</span></a></li>
 </ul></li>
 <li><a href="#last-updated">Last updated</a></li>
 </ul></li>
@@ -2522,11 +2530,35 @@ Notes
 </code></pre>
 </div>
 </div>
-<p>Previously, we have seen a few examples with Bayesian inferences where the posterior distribution concerns only one parameter, like the Bernoulli and the Poisson model. We have also discussed the grid approximation and the conjugate prior approaches to obtain/approximate the posterior. In this note, we will discuss the simulation method and explain why we need a special class of methods called <em>Markov Chain Monte Carlo</em>. This note will consider mainly the <strong>Metropolis algorithm</strong>, which subsumes many other commonly used MCMC algorithms. Therefore, it is beneficial to build a solid foundation on what the basic version of the Metropolis algorithm is. You will also write your own Metropolis sampler to understand how it works.</p>
+<p>Previously, we have seen a few examples with Bayesian inferences
+where the posterior distribution concerns only one parameter, like the
+Bernoulli and the Poisson model. We have also discussed the grid
+approximation and the conjugate prior approaches to obtain/approximate
+the posterior. In this note, we will discuss the simulation method and
+explain why we need a special class of methods called <em>Markov Chain
+Monte Carlo</em>. This note will consider mainly the <strong>Metropolis
+algorithm</strong>, which subsumes many other commonly used MCMC
+algorithms. Therefore, it is beneficial to build a solid foundation on
+what the basic version of the Metropolis algorithm is. You will also
+write your own Metropolis sampler to understand how it works.</p>
 <p>But first, let’s talk about what the Monte Carlo method is.</p>
 <h1 id="monte-carlo-simulation">Monte Carlo Simulation</h1>
-<p>In a previous example, we see that with a conjugate prior (e.g., Beta), the posterior distribution is from the same distributional family (Beta). Thus, we can easily draw simulation samples from the posterior distribution using R. The more samples we draw, the better we can approximate the posterior distribution based on the simulation samples. It is the same logic to get a large sample to precisely describe our population; here, the posterior distribution, determined using mathematics, is considered the population, and the simulation draws are, well, a sample from that population. With 10,000 or 100,000 samples (draws), we can accurately describe our population (posterior).</p>
-<p>For example, if we know that the posterior is a <span class="math inline">\(\mathrm{Beta}(15, 10)\)</span> distribution, consider drawing 10, 100, 10,00, and 10,000 samples from it using the R function <code>rbeta</code>, and contrast the density estimated from the samples (in the histogram) with that of the actual Beta distribution (in red).</p>
+<p>In a previous example, we see that with a conjugate prior (e.g.,
+Beta), the posterior distribution is from the same distributional family
+(Beta). Thus, we can easily draw simulation samples from the posterior
+distribution using R. The more samples we draw, the better we can
+approximate the posterior distribution based on the simulation samples.
+It is the same logic to get a large sample to precisely describe our
+population; here, the posterior distribution, determined using
+mathematics, is considered the population, and the simulation draws are,
+well, a sample from that population. With 10,000 or 100,000 samples
+(draws), we can accurately describe our population (posterior).</p>
+<p>For example, if we know that the posterior is a <span
+class="math inline">\(\mathrm{Beta}(15, 10)\)</span> distribution,
+consider drawing 10, 100, 10,00, and 10,000 samples from it using the R
+function <code>rbeta</code>, and contrast the density estimated from the
+samples (in the histogram) with that of the actual Beta distribution (in
+red).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Set the `seed` (initial point) for pseudo-random number generation algorithm</span>
@@ -2548,7 +2580,8 @@ Notes
 </div>
 <p><img src="mcmc_files/figure-html5/sim-beta-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
-<p>The figure below shows the values when drawing 100 samples in time order:</p>
+<p>The figure below shows the values when drawing 100 samples in time
+order:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>beta_draws</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
@@ -2561,8 +2594,18 @@ Notes
 </div>
 <p><img src="mcmc_files/figure-html5/trace-100sam-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>So we can say that, when the number of posterior samples is very large, the sample distribution <em>converges</em> to the population density. The Monte Carlo method will work for many situations. Note, of course, the number of simulation samples, <span class="math inline">\(S\)</span>, is controlled by the analysts; it is different from the sample size of the data, which is fixed and is a property of the observed data.</p>
-<p>In addition, most descriptive statistics (e.g., mean, <em>SD</em>) of the simulation draws will converge to the corresponding values of the true posterior distribution. The graphs below show how the mean, median, <em>SD</em>, and skewness converge to the true values (red dashed lines) when the number of simulation samples increases.</p>
+<p>So we can say that, when the number of posterior samples is very
+large, the sample distribution <em>converges</em> to the population
+density. The Monte Carlo method will work for many situations. Note, of
+course, the number of simulation samples, <span
+class="math inline">\(S\)</span>, is controlled by the analysts; it is
+different from the sample size of the data, which is fixed and is a
+property of the observed data.</p>
+<p>In addition, most descriptive statistics (e.g., mean, <em>SD</em>) of
+the simulation draws will converge to the corresponding values of the
+true posterior distribution. The graphs below show how the mean, median,
+<em>SD</em>, and skewness converge to the true values (red dashed lines)
+when the number of simulation samples increases.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>beta_draws</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
@@ -2597,33 +2640,95 @@ Notes
 </div>
 <p><img src="mcmc_files/figure-html5/sample-stat-converge-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
-<h1 id="markov-chain-monte-carlo-mcmc-drawing-dependent-samples">Markov Chain Monte Carlo (MCMC): Drawing Dependent Samples</h1>
-<p>The above Monte Carlo simulation requires that (a) we know that the posterior distribution is exactly a beta distribution, and (b) R knows how to draw simulation samples from a beta distribution (with <code>rbeta</code>). As we progress through the class, it is more of an exception that we can use conjugate prior distribution, so in general, neither (a) nor (b) would hold. For example, if we instead use a normal distribution for the prior of <span class="math inline">\(\theta\)</span>, we may get something like <span class="math display">\[P(\theta \mid y) = \frac{\mathrm{e}^{-(\theta - 1 / 2)^2} 
+<h1 id="markov-chain-monte-carlo-mcmc-drawing-dependent-samples">Markov
+Chain Monte Carlo (MCMC): Drawing Dependent Samples</h1>
+<p>The above Monte Carlo simulation requires that (a) we know that the
+posterior distribution is exactly a beta distribution, and (b) R knows
+how to draw simulation samples from a beta distribution (with
+<code>rbeta</code>). As we progress through the class, it is more of an
+exception that we can use conjugate prior distribution, so in general,
+neither (a) nor (b) would hold. For example, if we instead use a normal
+distribution for the prior of <span
+class="math inline">\(\theta\)</span>, we may get something like <span
+class="math display">\[P(\theta \mid y) = \frac{\mathrm{e}^{-(\theta - 1
+/ 2)^2}
                                      \theta^y (1 - \theta)^{n - y}}
-                       {\int_0^1 \mathrm{e}^{-(\theta^* - 1 / 2)^2} 
-                        {\theta^*}^y (1 - {\theta^*})^{n - y} d\theta^*}\]</span> and it would be very hard, if possible at all, to directly draw simulation samples from the posterior. Luckily, MCMC provides a way to draw samples from the posterior distribution without the need to know everything about the posterior distribution. For example, the basic version of the Metropolis algorithm only requires that we know the <em>density ratio</em> of every two possible values <span class="math inline">\(\theta_1\)</span> and <span class="math inline">\(\theta_2\)</span>. Thus, we don’t need to deal with the integral in the denominator, as the integral does not depend on <span class="math inline">\(\theta\)</span> and will get canceled out when taking the ratio.</p>
+                       {\int_0^1 \mathrm{e}^{-(\theta^* - 1 / 2)^2}
+                        {\theta^*}^y (1 - {\theta^*})^{n - y}
+d\theta^*}\]</span> and it would be very hard, if possible at all, to
+directly draw simulation samples from the posterior. Luckily, MCMC
+provides a way to draw samples from the posterior distribution without
+the need to know everything about the posterior distribution. For
+example, the basic version of the Metropolis algorithm only requires
+that we know the <em>density ratio</em> of every two possible values
+<span class="math inline">\(\theta_1\)</span> and <span
+class="math inline">\(\theta_2\)</span>. Thus, we don’t need to deal
+with the integral in the denominator, as the integral does not depend on
+<span class="math inline">\(\theta\)</span> and will get canceled out
+when taking the ratio.</p>
 <h1 id="the-metropolis-algorithm">The Metropolis algorithm</h1>
-<p>The Metropolis algorithm can generally be used to draw samples from a distribution as long as the density ratio of any two points can be computed. Remember in Bayesian inference, for two values in the posterior distribution, the ratio of the posterior densities at <span class="math inline">\(\theta_1\)</span> and <span class="math inline">\(\theta_2\)</span> is <span class="math display">\[\begin{align*}
-  \frac{P(\theta = \theta_2 \mid y)}{P(\theta = \theta_1 \mid y)} 
+<p>The Metropolis algorithm can generally be used to draw samples from a
+distribution as long as the density ratio of any two points can be
+computed. Remember in Bayesian inference, for two values in the
+posterior distribution, the ratio of the posterior densities at <span
+class="math inline">\(\theta_1\)</span> and <span
+class="math inline">\(\theta_2\)</span> is <span
+class="math display">\[\begin{align*}
+  \frac{P(\theta = \theta_2 \mid y)}{P(\theta = \theta_1 \mid y)}
   &amp; = \frac{P(y \mid \theta = \theta_2) P(\theta = \theta_2) / P(y)}
          {P(y \mid \theta = \theta_1) P(\theta = \theta_1) / P(y)} \\
   &amp; = \frac{P(y \mid \theta = \theta_2) P(\theta = \theta_2)}
          {P(y \mid \theta = \theta_1) P(\theta = \theta_1)}.
-\end{align*}\]</span> Therefore, even though we may not know <span class="math inline">\(P(\theta = \theta_1 \mid y)\)</span> as it involves <span class="math inline">\(P(y)\)</span> as the denominator, we can still compute the density ratio.</p>
-<p>In addition, the Metropolis algorithm requires the use of a <strong>proposal distribution</strong>, which can be any symmetric distribution. Common choices are normal distribution or uniform distribution. For example, let’s assume we will be using a <span class="math inline">\(N(0, 0.1)\)</span> proposal distribution, with 0.1 being the standard deviation.</p>
+\end{align*}\]</span> Therefore, even though we may not know <span
+class="math inline">\(P(\theta = \theta_1 \mid y)\)</span> as it
+involves <span class="math inline">\(P(y)\)</span> as the denominator,
+we can still compute the density ratio.</p>
+<p>In addition, the Metropolis algorithm requires the use of a
+<strong>proposal distribution</strong>, which can be any symmetric
+distribution. Common choices are normal distribution or uniform
+distribution. For example, let’s assume we will be using a <span
+class="math inline">\(N(0, 0.1)\)</span> proposal distribution, with 0.1
+being the standard deviation.</p>
 <p>The steps of a Metropolis algorithm are:</p>
 <ol type="1">
-<li>Randomly start from a certain point in the parameter space, and call that point <span class="math inline">\(\theta_0\)</span></li>
-<li>Randomly generate a sampled value from a <span class="math inline">\(N(\theta_0, 0.11)\)</span> distribution. Call this proposed value <span class="math inline">\(\theta^\text{prop}\)</span></li>
-<li>Compute the density ratio <span class="math inline">\([P(\theta = \theta^\text{prop} \mid y)] / [P(\theta = \theta_0 \mid y)]\)</span></li>
-<li>If the ratio is larger than 1, accept <span class="math inline">\(\theta^\text{prop}\)</span> and include this value in the sample</li>
-<li>If the ratio is smaller than 1, accept <span class="math inline">\(\theta^\text{prop}\)</span> with probability equal to the density ratio. For example, if the ratio is 0.7, one first generated a simulated value, <span class="math inline">\(u\)</span>, from a uniform distribution between 0 and 1 (i.e., <span class="math inline">\(U(0, 1)\)</span>). If <span class="math inline">\(u\)</span> is smaller than the ratio, accept <span class="math inline">\(\theta^\text{prop}\)</span> and include it in the sample. Otherwise, reject the proposed value, and include <span class="math inline">\(\theta_0\)</span> (again) in the sample</li>
-<li>After accepting <span class="math inline">\(\theta^\text{prop}\)</span> or <span class="math inline">\(\theta_0\)</span> in the sample, denote the accepted value as <span class="math inline">\(\theta_0\)</span>, and repeat steps 2 to 6.</li>
+<li>Randomly start from a certain point in the parameter space, and call
+that point <span class="math inline">\(\theta_0\)</span></li>
+<li>Randomly generate a sampled value from a <span
+class="math inline">\(N(\theta_0, 0.11)\)</span> distribution. Call this
+proposed value <span
+class="math inline">\(\theta^\text{prop}\)</span></li>
+<li>Compute the density ratio <span class="math inline">\([P(\theta =
+\theta^\text{prop} \mid y)] / [P(\theta = \theta_0 \mid
+y)]\)</span></li>
+<li>If the ratio is larger than 1, accept <span
+class="math inline">\(\theta^\text{prop}\)</span> and include this value
+in the sample</li>
+<li>If the ratio is smaller than 1, accept <span
+class="math inline">\(\theta^\text{prop}\)</span> with probability equal
+to the density ratio. For example, if the ratio is 0.7, one first
+generated a simulated value, <span class="math inline">\(u\)</span>,
+from a uniform distribution between 0 and 1 (i.e., <span
+class="math inline">\(U(0, 1)\)</span>). If <span
+class="math inline">\(u\)</span> is smaller than the ratio, accept <span
+class="math inline">\(\theta^\text{prop}\)</span> and include it in the
+sample. Otherwise, reject the proposed value, and include <span
+class="math inline">\(\theta_0\)</span> (again) in the sample</li>
+<li>After accepting <span
+class="math inline">\(\theta^\text{prop}\)</span> or <span
+class="math inline">\(\theta_0\)</span> in the sample, denote the
+accepted value as <span class="math inline">\(\theta_0\)</span>, and
+repeat steps 2 to 6.</li>
 </ol>
-<p>Compared to the Monte Carlo method, which directly samples from a Beta distribution, the Metropolis algorithm does not require an R function to draw samples from the target distribution. The cost, however, is that the sampling process is not as <em>efficient</em> because the sampled values are dependent. We’ll discuss this point later after seeing an example of the algorithm.</p>
+<p>Compared to the Monte Carlo method, which directly samples from a
+Beta distribution, the Metropolis algorithm does not require an R
+function to draw samples from the target distribution. The cost,
+however, is that the sampling process is not as <em>efficient</em>
+because the sampled values are dependent. We’ll discuss this point later
+after seeing an example of the algorithm.</p>
 <hr />
 <h2 id="shiny-app">Shiny App</h2>
-<p>To see a visual demonstration, you may run the shiny app I created by typing in R</p>
+<p>To see a visual demonstration, you may run the shiny app I created by
+typing in R</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/runUrl.html'>runGitHub</a></span><span class='op'>(</span><span class='st'>"metropolis_demo"</span>, <span class='st'>"marklhc"</span><span class='op'>)</span>
@@ -2631,8 +2736,17 @@ Notes
 </div>
 </div>
 <hr />
-<h2 id="example-1-estimating-the-number-of-people-taking-the-metro">Example 1: Estimating the Number of People Taking the Metro</h2>
-<p>This example uses data from the <a href="https://cesr.usc.edu/labarometer/overview">LA Barometer</a> survey conducted by the USC Dornsife Center for Economic and Social Research. Specifically, I’m interested in the proportion they took the Metro in the previous year among participants who are first-generation immigrants in LA county. You can see a press release on the data at <a href="https://dornsife.usc.edu/news/stories/3164/labarometer-mobility-in-los-angeles-survey/" class="uri">https://dornsife.usc.edu/news/stories/3164/labarometer-mobility-in-los-angeles-survey/</a></p>
+<h2
+id="example-1-estimating-the-number-of-people-taking-the-metro">Example
+1: Estimating the Number of People Taking the Metro</h2>
+<p>This example uses data from the <a
+href="https://cesr.usc.edu/labarometer/overview">LA Barometer</a> survey
+conducted by the USC Dornsife Center for Economic and Social Research.
+Specifically, I’m interested in the proportion they took the Metro in
+the previous year among participants who are first-generation immigrants
+in LA county. You can see a press release on the data at <a
+href="https://dornsife.usc.edu/news/stories/3164/labarometer-mobility-in-los-angeles-survey/"
+class="uri">https://dornsife.usc.edu/news/stories/3164/labarometer-mobility-in-los-angeles-survey/</a></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>uas_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://haven.tidyverse.org/reference/read_dta.html'>read_dta</a></span><span class='op'>(</span><span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"data_files"</span>, <span class='st'>"uas219_psyc573.dta"</span><span class='op'>)</span><span class='op'>)</span>
@@ -2648,9 +2762,14 @@ Notes
 #&gt; 2     1 [1 Yes]   111
 #&gt; 3 NA(a)           192</code></pre>
 </div>
-<p>So in 338 participants who are first-generation immigrants, 86 said they had used the Metro.</p>
-<p>Let’s use a weakly informative prior of Beta(1.5, 2), which has a weight of 1.5 prior data points, with a weak belief that less than half of the people had used the Metro.</p>
-<p>Model: <span class="math display">\[\text{usemetro}_i \sim \mathrm{Bern}(\theta)\]</span> Prior: <span class="math display">\[\theta \sim \mathrm{Beta}(1.5, 2)\]</span></p>
+<p>So in 338 participants who are first-generation immigrants, 86 said
+they had used the Metro.</p>
+<p>Let’s use a weakly informative prior of Beta(1.5, 2), which has a
+weight of 1.5 prior data points, with a weak belief that less than half
+of the people had used the Metro.</p>
+<p>Model: <span class="math display">\[\text{usemetro}_i \sim
+\mathrm{Bern}(\theta)\]</span> Prior: <span
+class="math display">\[\theta \sim \mathrm{Beta}(1.5, 2)\]</span></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>prior_a</span> <span class='op'>&lt;-</span> <span class='fl'>1.5</span>
@@ -2658,7 +2777,11 @@ Notes
 </code></pre>
 </div>
 </div>
-<p>Based on conjugacy, we know the posterior is Beta(87.5, 254). For pedagogical purposes, we will instead use a Metropolis sampler, which only the ratio of prior <span class="math inline">\(\times\)</span> likelihood for any two <span class="math inline">\(\theta\)</span> values.</p>
+<p>Based on conjugacy, we know the posterior is Beta(87.5, 254). For
+pedagogical purposes, we will instead use a Metropolis sampler, which
+only the ratio of prior <span class="math inline">\(\times\)</span>
+likelihood for any two <span class="math inline">\(\theta\)</span>
+values.</p>
 <h2 id="mcmc-sampling">MCMC sampling</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2708,7 +2831,8 @@ Notes
 </code></pre>
 </div>
 </div>
-<p>We can visualize the MCMC chain by plotting the iteration index on the x-axis and the sampled value on the y-axis:</p>
+<p>We can visualize the MCMC chain by plotting the iteration index on
+the x-axis and the sampled value on the y-axis:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>
@@ -2720,18 +2844,54 @@ Notes
 </div>
 <p><img src="mcmc_files/figure-html5/trace-mcmc1-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>Each step in MCMC is called an <em>iteration</em>. The sampled values are <em>dependent</em>, meaning that the value at iteration <span class="math inline">\(s\)</span> depends on the value at iteration <span class="math inline">\(s - 1\)</span>. This is a major difference from functions that simulate independent random samples, like <code>rbeta()</code> or <code>rnorm()</code>. The resulting sampled values will form a <em>Markov chain</em>, meaning that each sampled value is correlated with the previous value (e.g., if <span class="math inline">\(\theta^{(s)}\)</span> is large, <span class="math inline">\(\theta^{(s + 1)}\)</span> is also large).</p>
-<p>As shown above, the chain starts at 0.10 then quickly moves to the region around 0.25, the area with high posterior density. It then oscillates around that for the remaining iterations.</p>
+<p>Each step in MCMC is called an <em>iteration</em>. The sampled values
+are <em>dependent</em>, meaning that the value at iteration <span
+class="math inline">\(s\)</span> depends on the value at iteration <span
+class="math inline">\(s - 1\)</span>. This is a major difference from
+functions that simulate independent random samples, like
+<code>rbeta()</code> or <code>rnorm()</code>. The resulting sampled
+values will form a <em>Markov chain</em>, meaning that each sampled
+value is correlated with the previous value (e.g., if <span
+class="math inline">\(\theta^{(s)}\)</span> is large, <span
+class="math inline">\(\theta^{(s + 1)}\)</span> is also large).</p>
+<p>As shown above, the chain starts at 0.10 then quickly moves to the
+region around 0.25, the area with high posterior density. It then
+oscillates around that for the remaining iterations.</p>
 <h2 id="more-on-markov-chain">More on Markov Chain</h2>
-<p>A Markov chain describes how a variable transitions from one “state” to another. The current state depends on the previous state. A well-behaved Markov Chain is said to be <em>ergodic</em>, which means that it is (see <a href="https://pdhoff.github.io/book/">Hoff, 2009</a>, chapter 10):</p>
+<p>A Markov chain describes how a variable transitions from one “state”
+to another. The current state depends on the previous state. A
+well-behaved Markov Chain is said to be <em>ergodic</em>, which means
+that it is (see <a href="https://pdhoff.github.io/book/">Hoff, 2009</a>,
+chapter 10):</p>
 <ul>
-<li><em>irreducible</em>: at any state <span class="math inline">\(\theta^{(s)}\)</span>, it can go to any value <span class="math inline">\(\theta^*\)</span> eventually. A reducible chain is one where some states cannot get to some other states; an example is when, at some point, the chain stays as a positive value forever and never get back to the negative side.</li>
-<li><em>aperiodic</em>: the chain does not have any periodic states. If it is a periodic chain, some values can only be visited every <span class="math inline">\(k\)</span>th iteration.</li>
-<li><em>recurrent</em>: after the chain visits a certain state <span class="math inline">\(\theta^*\)</span>, if the chain runs long enough, it eventually gets back to the same state <span class="math inline">\(\theta^*\)</span>.</li>
+<li><em>irreducible</em>: at any state <span
+class="math inline">\(\theta^{(s)}\)</span>, it can go to any value
+<span class="math inline">\(\theta^*\)</span> eventually. A reducible
+chain is one where some states cannot get to some other states; an
+example is when, at some point, the chain stays as a positive value
+forever and never get back to the negative side.</li>
+<li><em>aperiodic</em>: the chain does not have any periodic states. If
+it is a periodic chain, some values can only be visited every <span
+class="math inline">\(k\)</span>th iteration.</li>
+<li><em>recurrent</em>: after the chain visits a certain state <span
+class="math inline">\(\theta^*\)</span>, if the chain runs long enough,
+it eventually gets back to the same state <span
+class="math inline">\(\theta^*\)</span>.</li>
 </ul>
-<p>Under the above conditions, a Markov chain will converge to a <em>stationary distribution</em>. Thus, after a certain large amount of iterations, the draws from the chain can be considered a random (but correlated) sample of the stationary distribution. Moreover, one can prove that, with the Metropolis algorithm, the converging stationary distribution is the posterior distribution (see the discussion in Kruschke, 2015, chapter 7).</p>
+<p>Under the above conditions, a Markov chain will converge to a
+<em>stationary distribution</em>. Thus, after a certain large amount of
+iterations, the draws from the chain can be considered a random (but
+correlated) sample of the stationary distribution. Moreover, one can
+prove that, with the Metropolis algorithm, the converging stationary
+distribution is the posterior distribution (see the discussion in
+Kruschke, 2015, chapter 7).</p>
 <h2 id="warm-upburn-in">Warm-up/Burn-in</h2>
-<p>A Markov chain needs some iterations to get to the stationary distribution. Those iterations are usually called <em>warm-up</em> or <em>burn-in</em> (depending on the algorithm and the software) iterations and are usually discarded. In many software programs, the first half of the iterations are considered warm-ups, so even though we got 1,000 iterations, only 500 will be used:</p>
+<p>A Markov chain needs some iterations to get to the stationary
+distribution. Those iterations are usually called <em>warm-up</em> or
+<em>burn-in</em> (depending on the algorithm and the software)
+iterations and are usually discarded. In many software programs, the
+first half of the iterations are considered warm-ups, so even though we
+got 1,000 iterations, only 500 will be used:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>num_warmup</span> <span class='op'>&lt;-</span> <span class='va'>num_draws</span> <span class='op'>/</span> <span class='fl'>2</span>
@@ -2740,7 +2900,11 @@ Notes
 </div>
 </div>
 <h2 id="autocorrelation">Autocorrelation</h2>
-<p>The degree to which the value at iteration <span class="math inline">\(s\)</span> is correlated with the value at <span class="math inline">\(s - 1\)</span> (and at <span class="math inline">\(s - 2\)</span>, etc) can be measured by the autocorrelation. For example, below shows the lag-1 correlation:</p>
+<p>The degree to which the value at iteration <span
+class="math inline">\(s\)</span> is correlated with the value at <span
+class="math inline">\(s - 1\)</span> (and at <span
+class="math inline">\(s - 2\)</span>, etc) can be measured by the
+autocorrelation. For example, below shows the lag-1 correlation:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>current <span class='op'>=</span> <span class='va'>th_draws</span>,
@@ -2765,7 +2929,8 @@ Notes
 </div>
 <p><img src="mcmc_files/figure-html5/lag-1-scatter-rbeta-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>You can get the autocorrelation function plot (autocorrelation plot on the right):</p>
+<p>You can get the autocorrelation function plot (autocorrelation plot
+on the right):</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://mc-stan.org/bayesplot/reference/MCMC-combos.html'>mcmc_combo</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>theta <span class='op'>=</span> <span class='va'>th_draws</span><span class='op'>)</span>,
@@ -2775,11 +2940,23 @@ Notes
 </div>
 <p><img src="mcmc_files/figure-html5/combo-plot-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>which shows substantial autocorrelations until about 9 iterations apart.</p>
+<p>which shows substantial autocorrelations until about 9 iterations
+apart.</p>
 <h2 id="acceptance-rate">Acceptance Rate</h2>
-<p>When using the Metropolis algorithm, you want to monitor the acceptance rate and make sure it is within the optimal range. If you accept almost every time, it likely means that, in each iteration, the chain only jumps a tiny step (so that the acceptance ratio is close to 1 every time). As such, the chain will take many iterations to reach other regions of the stationary distribution, and consecutive draws are very strongly correlated. On the other hand, if the acceptance rate is very low, the chain gets stuck in the same location for many iterations before moving to a different state. For the basic Metropolis algorithm with one parameter, an optimal acceptance rate would be something between 40% to 50%.</p>
+<p>When using the Metropolis algorithm, you want to monitor the
+acceptance rate and make sure it is within the optimal range. If you
+accept almost every time, it likely means that, in each iteration, the
+chain only jumps a tiny step (so that the acceptance ratio is close to 1
+every time). As such, the chain will take many iterations to reach other
+regions of the stationary distribution, and consecutive draws are very
+strongly correlated. On the other hand, if the acceptance rate is very
+low, the chain gets stuck in the same location for many iterations
+before moving to a different state. For the basic Metropolis algorithm
+with one parameter, an optimal acceptance rate would be something
+between 40% to 50%.</p>
 <aside>
-For Hamiltonian Monte Carlo to be discussed later, the optimal acceptance rate would be much higher, from 80% to 99%, or even higher.
+For Hamiltonian Monte Carlo to be discussed later, the optimal
+acceptance rate would be much higher, from 80% to 99%, or even higher.
 </aside>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2790,7 +2967,16 @@ For Hamiltonian Monte Carlo to be discussed later, the optimal acceptance rate w
 <pre><code>#&gt; [1] 0.306</code></pre>
 </div>
 <h2 id="effective-sample-size-ess">Effective sample size (ESS)</h2>
-<p>When iterations are dependent, each iteration contains overlapping information with the previous iterations. In other words, when one gets 500 dependent draws from the posterior, it only contains information equivalent to &lt; 500 independent draws. The ESS quantifies the actual amount of information, so a chain with ESS = <span class="math inline">\(n\)</span> will contain roughly the same information as in <span class="math inline">\(n\)</span> independent draws. In general, we want ESS to be at least 400 for the general purpose of summarizing the posterior. You can obtain ESS using the <code>posterior::ess_basic</code> function:</p>
+<p>When iterations are dependent, each iteration contains overlapping
+information with the previous iterations. In other words, when one gets
+500 dependent draws from the posterior, it only contains information
+equivalent to &lt; 500 independent draws. The ESS quantifies the actual
+amount of information, so a chain with ESS = <span
+class="math inline">\(n\)</span> will contain roughly the same
+information as in <span class="math inline">\(n\)</span> independent
+draws. In general, we want ESS to be at least 400 for the general
+purpose of summarizing the posterior. You can obtain ESS using the
+<code>posterior::ess_basic</code> function:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://mc-stan.org/posterior/reference/ess_basic.html'>ess_basic</a></span><span class='op'>(</span><span class='va'>th_draws</span><span class='op'>)</span>
@@ -2800,9 +2986,16 @@ For Hamiltonian Monte Carlo to be discussed later, the optimal acceptance rate w
 </div>
 <p>which is not sufficient for summarizing the posterior.</p>
 <h2 id="multiple-chains">Multiple Chains</h2>
-<p>Because each state in a Markov chain depends on the previous states, the starting value(s) can influence the sampled values. Remember, in complex problems, one does not know how the posterior distributions would look. One solution to check the sensitivity to the starting value(s) is to use multiple chains, each with different starting values.</p>
+<p>Because each state in a Markov chain depends on the previous states,
+the starting value(s) can influence the sampled values. Remember, in
+complex problems, one does not know how the posterior distributions
+would look. One solution to check the sensitivity to the starting
+value(s) is to use multiple chains, each with different starting
+values.</p>
 <blockquote>
-<p>If multiple chains sample the same target distribution, they should be <em>mixing</em> well, meaning they cross each other in a trace plot.</p>
+<p>If multiple chains sample the same target distribution, they should
+be <em>mixing</em> well, meaning they cross each other in a trace
+plot.</p>
 </blockquote>
 <p>Below are examples of two chains with good/poor mixing.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2822,7 +3015,8 @@ For Hamiltonian Monte Carlo to be discussed later, the optimal acceptance rate w
 </div>
 </section>
 </div>
-<h2 id="full-r-code-with-more-iterations">Full R Code With More iterations</h2>
+<h2 id="full-r-code-with-more-iterations">Full R Code With More
+iterations</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>num_yes</span> <span class='op'>&lt;-</span> <span class='fl'>86</span>
@@ -2875,7 +3069,8 @@ For Hamiltonian Monte Carlo to be discussed later, the optimal acceptance rate w
 </code></pre>
 </div>
 </div>
-<p>As shown below, the MCMC draws approximate the posterior distribution reasonably well.</p>
+<p>As shown below, the MCMC draws approximate the posterior distribution
+reasonably well.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>th <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>th_draws</span><span class='op'>)</span><span class='op'>)</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>th</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
@@ -2898,14 +3093,21 @@ For Hamiltonian Monte Carlo to be discussed later, the optimal acceptance rate w
 <p><img src="mcmc_files/figure-html5/metropolis-hist-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h2 id="convergence-check">Convergence Check</h2>
-<p>The goal of checking for convergence of MCMC samples is to ensure that the draws are <em>representative</em> samples of the posterior distribution, and that they contain <em>sufficient information</em> to describe it. Convergence can be considered in two aspects:</p>
+<p>The goal of checking for convergence of MCMC samples is to ensure
+that the draws are <em>representative</em> samples of the posterior
+distribution, and that they contain <em>sufficient information</em> to
+describe it. Convergence can be considered in two aspects:</p>
 <ul>
 <li><em>Mixing</em></li>
 <li><em>Stationarity</em></li>
 </ul>
 <p>We’ll see some tools in R for diagnosing convergence.</p>
 <h3 id="trace-plot">Trace Plot</h3>
-<p>Multiple chains have good <em>mixing</em> if they frequently cross each other. If two chains iterate in different regions of the posterior distribution and never cross each other, they don’t mix well. You can check mixing using the trace plot. The below graph shows the two chains mixing well.</p>
+<p>Multiple chains have good <em>mixing</em> if they frequently cross
+each other. If two chains iterate in different regions of the posterior
+distribution and never cross each other, they don’t mix well. You can
+check mixing using the trace plot. The below graph shows the two chains
+mixing well.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Convert to `draws_array` object to use the following functions</span>
@@ -2920,7 +3122,14 @@ For Hamiltonian Monte Carlo to be discussed later, the optimal acceptance rate w
 <p><img src="mcmc_files/figure-html5/trace-th-draws-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h3 id="rank-histograms">Rank Histograms</h3>
-<p>Another useful tool is the rank histogram, recently proposed by <a href="https://projecteuclid.org/journals/bayesian-analysis/volume-16/issue-2/Rank-Normalization-Folding-and-Localization--An-Improved-R%cb%86-for/10.1214/20-BA1221.full">Vehtari et al. (2021)</a>. The idea is first to convert the posterior values into ranks and then look at the distributions of the ranks across iterations. If the chains mix well and all explore the same target distribution, the average rank in an interval of iterations should be similar for every chain. Therefore, the rank histogram should show something close to a uniform distribution, as shown below:</p>
+<p>Another useful tool is the rank histogram, recently proposed by <a
+href="https://projecteuclid.org/journals/bayesian-analysis/volume-16/issue-2/Rank-Normalization-Folding-and-Localization--An-Improved-R%cb%86-for/10.1214/20-BA1221.full">Vehtari
+et al. (2021)</a>. The idea is first to convert the posterior values
+into ranks and then look at the distributions of the ranks across
+iterations. If the chains mix well and all explore the same target
+distribution, the average rank in an interval of iterations should be
+similar for every chain. Therefore, the rank histogram should show
+something close to a uniform distribution, as shown below:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Rank plot</span>
@@ -2930,9 +3139,27 @@ For Hamiltonian Monte Carlo to be discussed later, the optimal acceptance rate w
 <p><img src="mcmc_files/figure-html5/rank-th-draws-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h3 id="hatr"><span class="math inline">\(\hat{R}\)</span></h3>
-<p>A commonly used index in diagnosing convergence is <span class="math inline">\(\hat{R}\)</span>, also called the potential scale reduction factor, proposed by Gelman and Rubin (1992) and later extended for multivariate distributions by Brooks and Gelman (1997). Vehtari et al. (2021) further improved it to account for unequal variances across chains using rank normalization and folding. <span class="math inline">\(\hat R\)</span> measures the ratio of the total variability combining multiple chains to the within-chain variability. When the Markov chains converge, each chain is based on the same posterior distribution, and they should have the same variance. Therefore, if the chains converge, there should be no between-chain variability, so <span class="math inline">\(\hat R\)</span> should be very close to 1.0.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<p>While in older literature, the cutoff of <span class="math inline">\(\hat R\)</span> &lt; 1.1 was usually used, <strong>Vehtari et al. (2021) recommended a safer criterion of <span class="math inline">\(\hat R\)</span> &lt; 1.01.</strong></p>
-<p>You can use the <code>summarize_draws()</code> function from the <code>posterior</code> package, which provides summary statistics of the posterior and some convergence diagnostics.</p>
+<p>A commonly used index in diagnosing convergence is <span
+class="math inline">\(\hat{R}\)</span>, also called the potential scale
+reduction factor, proposed by Gelman and Rubin (1992) and later extended
+for multivariate distributions by Brooks and Gelman (1997). Vehtari et
+al. (2021) further improved it to account for unequal variances across
+chains using rank normalization and folding. <span
+class="math inline">\(\hat R\)</span> measures the ratio of the total
+variability combining multiple chains to the within-chain variability.
+When the Markov chains converge, each chain is based on the same
+posterior distribution, and they should have the same variance.
+Therefore, if the chains converge, there should be no between-chain
+variability, so <span class="math inline">\(\hat R\)</span> should be
+very close to 1.0.<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
+<p>While in older literature, the cutoff of <span
+class="math inline">\(\hat R\)</span> &lt; 1.1 was usually used,
+<strong>Vehtari et al. (2021) recommended a safer criterion of <span
+class="math inline">\(\hat R\)</span> &lt; 1.01.</strong></p>
+<p>You can use the <code>summarize_draws()</code> function from the
+<code>posterior</code> package, which provides summary statistics of the
+posterior and some convergence diagnostics.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://mc-stan.org/posterior/reference/draws_summary.html'>summarize_draws</a></span><span class='op'>(</span><span class='va'>th_draws_array</span><span class='op'>)</span>
@@ -2944,13 +3171,22 @@ For Hamiltonian Monte Carlo to be discussed later, the optimal acceptance rate w
 #&gt; 1 theta    0.256  0.255 0.0233 0.0236 0.218 0.295  1.00    2368.
 #&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
-<p>The numbers <code>ess_bulk</code> and <code>ess_tail</code> are two ways to compute ESS. <code>ess_bulk</code> says more about the center region of the posterior and is useful when assessing how accurate the mean of the posterior draws approximates the true posterior mean (or the posterior median). <code>ess_tail</code> is most useful for assessing how accurate the sample quantiles in the tail areas (e.g., 1st, 95th) approximate the true posterior quantiles. For example, the accuracy of the credible intervals would require a large <code>ess_tail</code>.</p>
+<p>The numbers <code>ess_bulk</code> and <code>ess_tail</code> are two
+ways to compute ESS. <code>ess_bulk</code> says more about the center
+region of the posterior and is useful when assessing how accurate the
+mean of the posterior draws approximates the true posterior mean (or the
+posterior median). <code>ess_tail</code> is most useful for assessing
+how accurate the sample quantiles in the tail areas (e.g., 1st, 95th)
+approximate the true posterior quantiles. For example, the accuracy of
+the credible intervals would require a large <code>ess_tail</code>.</p>
 <p>As recommended by Vehtari et al. (2021),</p>
 <blockquote>
-<p>ESS should be at least 400 for <span class="math inline">\(\hat R\)</span> to be useful in diagnosing convergence.</p>
+<p>ESS should be at least 400 for <span class="math inline">\(\hat
+R\)</span> to be useful in diagnosing convergence.</p>
 </blockquote>
 <!-- The following chunk is only used in the website -->
-<section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
+<section id="last-updated" class="appendix layout-chunk"
+data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
 <pre><code>#&gt; [1] &quot;February 11, 2022&quot;</code></pre>
@@ -2958,13 +3194,20 @@ For Hamiltonian Monte Carlo to be discussed later, the optimal acceptance rate w
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 </section>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
-<section class="footnotes" role="doc-endnotes">
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<section class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>Note that in Stan, <span class="math inline">\(\hat{R}\)</span> is computed by splitting each chain into half. So if you have two chains, <span class="math inline">\(\hat{R}\)</span> will be based on four groups.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>Note that in Stan, <span
+class="math inline">\(\hat{R}\)</span> is computed by splitting each
+chain into half. So if you have two chains, <span
+class="math inline">\(\hat{R}\)</span> will be based on four groups.<a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->
@@ -2997,7 +3240,10 @@ For Hamiltonian Monte Carlo to be discussed later, the optimal acceptance rate w
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
 <p>© Copyright 2022 Hok Chio (Mark) Lai</p>
-<p>Template by <a href="https://github.com/distillpub/template/blob/master/AUTHORS">The Distill Template Authors</a> and <a href="https://www.rstudio.com">RStudio, Inc</a>.</p>
+<p>Template by <a
+href="https://github.com/distillpub/template/blob/master/AUTHORS">The
+Distill Template Authors</a> and <a
+href="https://www.rstudio.com">RStudio, Inc</a>.</p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 

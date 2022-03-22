@@ -386,6 +386,41 @@ By the end of this module, you will be able to
 
 :::
 
+::: {.panel}
+
+# Week 11
+
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Describe the three components of the **generalized linear model (GLM)**
+- Name examples of the GLM (e.g., linear regression, Poisson regression)
+- Interpret the coefficients in a linear regression model
+- Obtain posterior predictive distributions and checks
+- Perform Bayesian regression with the R package `brms`
+
+## Task Lists
+
+1. Complete the assigned readings
+    * Kruschke ch. 15, 17
+2. Review the resources ([note][19])
+3. Attend class meetings
+4. Complete Homework 7 (see instruction on Blackboard)
+5. Schedule a meeting with the instructor for your prospectus (see sign-up link on Blackboard)
+
+[19]: glm.html
+
+## Slides
+
+[PDF version](slides/glm.pdf){target="_blank"}
+
+```{r embed-11, echo = FALSE}
+embed_xaringan("slides/glm.html", ratio = "4:3")
+```
+
+:::
+
 :::
 
 ## Last updated {.appendix}

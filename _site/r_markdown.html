@@ -2368,7 +2368,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
   <script src="site_libs/clipboard-2.0.6/clipboard.min.js"></script>
   <link href="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
   <script src="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
@@ -2451,6 +2451,7 @@ Notes
 <a href="hmc_stan.html">HMC and Stan</a>
 <a href="hierarchical_models.html">Hierarchical Models</a>
 <a href="group_comparisons.html">Group Comparisons</a>
+<a href="glm.html">Generalized Linear Model I</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2500,7 +2501,8 @@ Notes
 <li><a href="#basic-markdown-elements">Basic Markdown Elements</a>
 <ul>
 <li><a href="#italic-and-bolded-texts">Italic and bolded texts</a></li>
-<li><a href="#lists-ordered-and-unordered">Lists (Ordered and Unordered)</a></li>
+<li><a href="#lists-ordered-and-unordered">Lists (Ordered and
+Unordered)</a></li>
 <li><a href="#equations-latex">Equations (LaTeX)</a></li>
 </ul></li>
 <li><a href="#cheatsheet">Cheatsheet</a></li>
@@ -2521,7 +2523,8 @@ Notes
 <div class="figure"><span style="display:block;" id="fig:RvsRStudio"></span>
 <img src="https://moderndive.netlify.app/images/shutterstock/R_vs_RStudio_1.png" alt="Figure from https://moderndive.netlify.app/" class=external />
 <p class="caption">
-Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">https://moderndive.netlify.app/</a>
+Figure 1: Figure from <a href="https://moderndive.netlify.app/"
+class="uri">https://moderndive.netlify.app/</a>
 </p>
 </div>
 </div>
@@ -2529,7 +2532,9 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
 ![](https://moderndive.netlify.app/images/shutterstock/R_vs_RStudio_1.png)
 -->
 <ul>
-<li>If you’re new to R, follow the online ModernDrive chapter <a href="https://moderndive.netlify.app/1-getting-started.html" class="uri">https://moderndive.netlify.app/1-getting-started.html</a></li>
+<li>If you’re new to R, follow the online ModernDrive chapter <a
+href="https://moderndive.netlify.app/1-getting-started.html"
+class="uri">https://moderndive.netlify.app/1-getting-started.html</a></li>
 <li>Four Panes:
 <ol type="1">
 <li>Source panel</li>
@@ -2539,9 +2544,17 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
 </ol></li>
 </ul>
 <h3 id="use-projects">Use Projects</h3>
-<p>I strongly recommend you create an <a href="https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-Projects">RStudio project</a> for this course, and use separate projects for your future research/analysis projects. It sets working directory automatically and can save you a lot of troubles.</p>
-<p>To create a project, go to <code>File</code>, <code>New Project...</code>, select “New Directory”, “New Project”, and then type in the name of a new folder you want to create for the project as well as where you want the folder to locate on your computer.</p>
-<p>Next time you open RStudio, <strong>navigate to the top right and find the project you want to work on</strong></p>
+<p>I strongly recommend you create an <a
+href="https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-Projects">RStudio
+project</a> for this course, and use separate projects for your future
+research/analysis projects. It sets working directory automatically and
+can save you a lot of troubles.</p>
+<p>To create a project, go to <code>File</code>,
+<code>New Project...</code>, select “New Directory”, “New Project”, and
+then type in the name of a new folder you want to create for the project
+as well as where you want the folder to locate on your computer.</p>
+<p>Next time you open RStudio, <strong>navigate to the top right and
+find the project you want to work on</strong></p>
 <h3 id="recommended-options">Recommended Options</h3>
 <blockquote>
 <p>Tools –&gt; Global Options –&gt;</p>
@@ -2553,14 +2566,22 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
 </blockquote>
 <blockquote>
 <ul>
-<li>(Optional) Go to “R Markdown” on the left, and set “Show output preview in” to “Viewer Pane”.</li>
+<li>(Optional) Go to “R Markdown” on the left, and set “Show output
+preview in” to “Viewer Pane”.</li>
 </ul>
 </blockquote>
 <h2 id="r-markdown">R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
+<p>This is an R Markdown document. Markdown is a simple formatting
+syntax for authoring HTML, PDF, and MS Word documents. For more details
+on using R Markdown see <a href="http://rmarkdown.rstudio.com"
+class="uri">http://rmarkdown.rstudio.com</a>.</p>
+<p>When you click the <strong>Knit</strong> button a document will be
+generated that includes both content as well as the output of any
+embedded R code chunks within the document. You can embed an R code
+chunk like this:</p>
 <blockquote>
-<p>Note: R is case sensitive. So <code>Cars</code> and <code>cars</code> are different.</p>
+<p>Note: R is case sensitive. So <code>Cars</code> and <code>cars</code>
+are different.</p>
 </blockquote>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2587,7 +2608,9 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="r_markdown_files/figure-html5/pressure-1.png" width="624" /></p>
 </div>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+<p>Note that the <code>echo = FALSE</code> parameter was added to the
+code chunk to prevent printing of the R code that generated the
+plot.</p>
 <h2 id="install-packages">Install packages</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2596,9 +2619,12 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
 </div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="https://pbs.twimg.com/media/EVIZRvPU0AAwgdH?format=jpg" /><!-- --></p>
+<p><img
+src="https://pbs.twimg.com/media/EVIZRvPU0AAwgdH?format=jpg" /><!-- --></p>
 </div>
-<p>Check out <a href="https://rladiessydney.org/courses/ryouwithme/01-basicbasics-2/" class="uri">https://rladiessydney.org/courses/ryouwithme/01-basicbasics-2/</a></p>
+<p>Check out <a
+href="https://rladiessydney.org/courses/ryouwithme/01-basicbasics-2/"
+class="uri">https://rladiessydney.org/courses/ryouwithme/01-basicbasics-2/</a></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Install the tidyverse "meta" package</span>
@@ -2610,16 +2636,20 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
 </div>
 <h2 id="load-a-package">Load a package</h2>
 <blockquote>
-<p>Tip 1: Try the (PC) <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>I</kbd>/(Mac) <kbd>Cmd</kbd> + <kbd>Option</kbd> + <kbd>I</kbd> shortcut for a new code chunk</p>
+<p>Tip 1: Try the (PC) <kbd>Ctrl</kbd> + <kbd>Alt</kbd> +
+<kbd>I</kbd>/(Mac) <kbd>Cmd</kbd> + <kbd>Option</kbd> + <kbd>I</kbd>
+shortcut for a new code chunk</p>
 </blockquote>
 <blockquote>
 <p>Tip 2: Use <kbd>Tab</kbd> for code completeion</p>
 </blockquote>
 <blockquote>
-<p>Tip 3: Use <kbd>Ctrl</kbd> + <kbd>Enter</kbd>/(Mac) <kbd>Cmd</kbd> + <kbd>Return</kbd> for running a line of R code</p>
+<p>Tip 3: Use <kbd>Ctrl</kbd> + <kbd>Enter</kbd>/(Mac) <kbd>Cmd</kbd> +
+<kbd>Return</kbd> for running a line of R code</p>
 </blockquote>
 <blockquote>
-<p>Tip 4: Set <code>message = FALSE</code> to suppress messages in loading packages</p>
+<p>Tip 4: Set <code>message = FALSE</code> to suppress messages in
+loading packages</p>
 </blockquote>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2649,7 +2679,8 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
 </div>
 </div>
 <h2 id="basic-markdown-elements">Basic Markdown Elements</h2>
-<p>From RStudio, click <code>Help</code> –&gt; <code>Markdown Quick Reference</code></p>
+<p>From RStudio, click <code>Help</code> –&gt;
+<code>Markdown Quick Reference</code></p>
 <h3 id="italic-and-bolded-texts">Italic and bolded texts</h3>
 <p>This is <em>italic</em></p>
 <h3 id="lists-ordered-and-unordered">Lists (Ordered and Unordered)</h3>
@@ -2658,11 +2689,14 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
 <li>Item 2</li>
 </ul>
 <h3 id="equations-latex">Equations (LaTeX)</h3>
-<p>Inline: The correlation between <span class="math inline">\(a = b + c + \tau\)</span></p>
+<p>Inline: The correlation between <span class="math inline">\(a = b + c
++ \tau\)</span></p>
 <p>Display:</p>
 <p><span class="math display">\[a = b + c + \tau\]</span></p>
 <h2 id="cheatsheet">Cheatsheet</h2>
-<p>More detailed cheatsheet: <a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/rmarkdown.pdf" class="uri">https://raw.githubusercontent.com/rstudio/cheatsheets/main/rmarkdown.pdf</a></p>
+<p>More detailed cheatsheet: <a
+href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/rmarkdown.pdf"
+class="uri">https://raw.githubusercontent.com/rstudio/cheatsheets/main/rmarkdown.pdf</a></p>
 <hr />
 <h2 id="exercise">Exercise</h2>
 <ol type="1">
@@ -2670,8 +2704,13 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
 <li>Change the name on line 3 to yours.</li>
 <li>Complete the following in this R Markdown document:
 <ol type="a">
-<li><p>Copy the following LaTeX equation to below: <code>\Delta K = \frac{1}{2} mv^2_i</code>. How does this say about writing Greek letters, fractions, and subscripts/superscripts in LaTeX? <span class="math display">\[[Insert equation here]\]</span></p></li>
-<li><p>Run the following. You’ll need to remove <code>eval = FALSE</code> so that it runs. Write down what each line of the following code chunk does.</p>
+<li><p>Copy the following LaTeX equation to below:
+<code>\Delta K = \frac{1}{2} mv^2_i</code>. How does this say about
+writing Greek letters, fractions, and subscripts/superscripts in LaTeX?
+<span class="math display">\[[Insert equation here]\]</span></p></li>
+<li><p>Run the following. You’ll need to remove
+<code>eval = FALSE</code> so that it runs. Write down what each line of
+the following code chunk does.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Install and load the knitr package first; otherwise it won't run</span>
@@ -2681,7 +2720,9 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
  </code></pre>
 </div>
 </div></li>
-<li><p>Run the following. You’ll need to remove <code>eval = FALSE</code> so that it runs. Find out what this code chunk does.</p>
+<li><p>Run the following. You’ll need to remove
+<code>eval = FALSE</code> so that it runs. Find out what this code chunk
+does.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>pacman</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/pacman/man/p_load.html'>p_load</a></span><span class='op'>(</span><span class='va'>ggplot2</span><span class='op'>)</span>
@@ -2692,9 +2733,16 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
  </code></pre>
 </div>
 </div></li>
-<li><p>Add a code chunk below to show the output of running <code>sessionInfo()</code>, which prints out the session information of your computer. Make the code chunk to show only the output, but not the code.</p></li>
-<li><p>Knit the document to HTML, PDF, and Word. If you run into an error when knitting to any one of the formats, record the error message. Which format do you prefer? [Note: You may be prompted to install the <code>tinytex</code> package for PDF output.]</p></li>
-<li><p>Go to the top of this Rmd file, and change the part inside YAML</p>
+<li><p>Add a code chunk below to show the output of running
+<code>sessionInfo()</code>, which prints out the session information of
+your computer. Make the code chunk to show only the output, but not the
+code.</p></li>
+<li><p>Knit the document to HTML, PDF, and Word. If you run into an
+error when knitting to any one of the formats, record the error message.
+Which format do you prefer? [Note: You may be prompted to install the
+<code>tinytex</code> package for PDF output.]</p></li>
+<li><p>Go to the top of this Rmd file, and change the part inside
+YAML</p>
 <pre><code>output:
   html_document: default</code></pre>
 <p>to</p>
@@ -2703,11 +2751,13 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
       toc: TRUE
       toc_float: TRUE</code></pre>
 <p>Knit the document again. What does it do?</p></li>
-<li><p>Submit the knitted document to Blackboard in your preferred format (HTML, PDF, or WORD)</p></li>
+<li><p>Submit the knitted document to Blackboard in your preferred
+format (HTML, PDF, or WORD)</p></li>
 </ol></li>
 </ol>
 <!-- The following chunk is only used in the website -->
-<section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
+<section id="last-updated" class="appendix layout-chunk"
+data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
 <pre><code>[1] &quot;January 13, 2022&quot;</code></pre>
@@ -2715,9 +2765,11 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 </section>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -2748,7 +2800,10 @@ Figure 1: Figure from <a href="https://moderndive.netlify.app/" class="uri">http
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
 <p>© Copyright 2022 Hok Chio (Mark) Lai</p>
-<p>Template by <a href="https://github.com/distillpub/template/blob/master/AUTHORS">The Distill Template Authors</a> and <a href="https://www.rstudio.com">RStudio, Inc</a>.</p>
+<p>Template by <a
+href="https://github.com/distillpub/template/blob/master/AUTHORS">The
+Distill Template Authors</a> and <a
+href="https://www.rstudio.com">RStudio, Inc</a>.</p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 

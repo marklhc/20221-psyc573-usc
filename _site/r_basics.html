@@ -2370,7 +2370,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
   <script src="site_libs/clipboard-2.0.6/clipboard.min.js"></script>
   <link href="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
   <script src="site_libs/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
@@ -2453,6 +2453,7 @@ Notes
 <a href="hmc_stan.html">HMC and Stan</a>
 <a href="hierarchical_models.html">Hierarchical Models</a>
 <a href="group_comparisons.html">Group Comparisons</a>
+<a href="glm.html">Generalized Linear Model I</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2480,9 +2481,11 @@ Notes
 <h3>Contents</h3>
 <ul>
 <li><a href="#load-packages">Load Packages</a></li>
-<li><a href="#create-an-object-and-get-object-information">Create an Object and Get Object Information</a></li>
+<li><a href="#create-an-object-and-get-object-information">Create an
+Object and Get Object Information</a></li>
 <li><a href="#piping">Piping</a></li>
-<li><a href="#vector-matrix-array-list-and-data-frames">Vector, Matrix, Array, List, and Data Frames</a></li>
+<li><a href="#vector-matrix-array-list-and-data-frames">Vector, Matrix,
+Array, List, and Data Frames</a></li>
 <li><a href="#plotting">Plotting</a>
 <ul>
 <li><a href="#scatter-plot">Scatter plot</a></li>
@@ -2493,7 +2496,8 @@ Notes
 <li><a href="#for-loop"><code>for</code> Loop</a></li>
 <li><a href="#custom-function">Custom Function</a>
 <ul>
-<li><a href="#example-1-a2-b">Example 1: <span class="math inline">\(a^2 + b\)</span></a></li>
+<li><a href="#example-1-a2-b">Example 1: <span class="math inline">\(a^2
++ b\)</span></a></li>
 <li><a href="#when-to-use-a-function">When to use a function?</a></li>
 </ul></li>
 <li><a href="#last-updated">Last updated</a></li>
@@ -2504,7 +2508,9 @@ Notes
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:programming-pic"></span>
 <img src="https://www.phdcomics.com/comics/archive/phd031714s.gif" alt="Figure from https://www.phdcomics.com/comics/archive/phd031714s.gif" width="70%" class=external />
 <p class="caption">
-Figure 1: Figure from <a href="https://www.phdcomics.com/comics/archive/phd031714s.gif" class="uri">https://www.phdcomics.com/comics/archive/phd031714s.gif</a>
+Figure 1: Figure from <a
+href="https://www.phdcomics.com/comics/archive/phd031714s.gif"
+class="uri">https://www.phdcomics.com/comics/archive/phd031714s.gif</a>
 </p>
 </div>
 </div>
@@ -2517,7 +2523,8 @@ Figure 1: Figure from <a href="https://www.phdcomics.com/comics/archive/phd03171
 </code></pre>
 </div>
 </div>
-<h2 id="create-an-object-and-get-object-information">Create an Object and Get Object Information</h2>
+<h2 id="create-an-object-and-get-object-information">Create an Object
+and Get Object Information</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Create an object named `x`, using the assignment operator `&lt;-`</span>
@@ -2568,7 +2575,10 @@ Figure 1: Figure from <a href="https://www.phdcomics.com/comics/archive/phd03171
 </div>
 </div>
 <h2 id="piping">Piping</h2>
-<p>A pipe operator is an alternative way to do multiple operations on an object. For example, the following code (a) transforms <code>y</code> to numbers, (b) recodes the value 99 to missing, and (c) obtains the mean. The traditional way to do it in R is through nested parentheses:</p>
+<p>A pipe operator is an alternative way to do multiple operations on an
+object. For example, the following code (a) transforms <code>y</code> to
+numbers, (b) recodes the value 99 to missing, and (c) obtains the mean.
+The traditional way to do it in R is through nested parentheses:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 3. Get the mean</span>
@@ -2584,7 +2594,10 @@ Figure 1: Figure from <a href="https://www.phdcomics.com/comics/archive/phd03171
 </div>
 <pre><code>#&gt; [1] 5.5</code></pre>
 </div>
-<p>What’s inconvenient is that the last operation needs to be put first. Also, it’s hard to keep track of the parentheses. Some users, including myself, prefer the alternative way of doing the same as the above code:</p>
+<p>What’s inconvenient is that the last operation needs to be put first.
+Also, it’s hard to keep track of the parentheses. Some users, including
+myself, prefer the alternative way of doing the same as the above
+code:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>y</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
@@ -2598,11 +2611,21 @@ Figure 1: Figure from <a href="https://www.phdcomics.com/comics/archive/phd03171
 </div>
 <pre><code>#&gt; [1] 5.5</code></pre>
 </div>
-<p>The pipe operator works by taking the object before <code>%&gt;%</code> as the first argument for the function after <code>%&gt;%</code>. So <code>y %&gt;% as.numeric()</code> is the same as <code>as.numeric(y)</code>, and <code>y2 %&gt;% na_if(99)</code> is the same as <code>na_if(y2, 99)</code>.</p>
+<p>The pipe operator works by taking the object before
+<code>%&gt;%</code> as the first argument for the function after
+<code>%&gt;%</code>. So <code>y %&gt;% as.numeric()</code> is the same
+as <code>as.numeric(y)</code>, and <code>y2 %&gt;% na_if(99)</code> is
+the same as <code>na_if(y2, 99)</code>.</p>
 <aside>
-The <code>%&gt;%</code> operator requires loading the <code>tidyverse</code> package (specifically <code>magrittr</code> package). Since R 4.1.0, one can use <code>|&gt;</code> for piping without loading any packages. While in the future, <code>|&gt;</code> may be the preferred way, for now, we’ll stick to <code>%&gt;%</code> to make things compatible for older versions of R.
+The <code>%&gt;%</code> operator requires loading the
+<code>tidyverse</code> package (specifically <code>magrittr</code>
+package). Since R 4.1.0, one can use <code>|&gt;</code> for piping
+without loading any packages. While in the future, <code>|&gt;</code>
+may be the preferred way, for now, we’ll stick to <code>%&gt;%</code> to
+make things compatible for older versions of R.
 </aside>
-<h2 id="vector-matrix-array-list-and-data-frames">Vector, Matrix, Array, List, and Data Frames</h2>
+<h2 id="vector-matrix-array-list-and-data-frames">Vector, Matrix, Array,
+List, and Data Frames</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Vector</span>
@@ -2851,13 +2874,20 @@ The <code>%&gt;%</code> operator requires loading the <code>tidyverse</code> pac
 #&gt; row5    5</code></pre>
 </div>
 <h2 id="plotting">Plotting</h2>
-<p>The popular <code>ggplot2</code> package uses the “grammar of graphics” approach to plotting. It is an elegant and comprehensive system for graphics but requires mastering some vocabulary. As a quick start, each plot requires specifying</p>
+<p>The popular <code>ggplot2</code> package uses the “grammar of
+graphics” approach to plotting. It is an elegant and comprehensive
+system for graphics but requires mastering some vocabulary. As a quick
+start, each plot requires specifying</p>
 <ul>
-<li>Some layer(s) of <strong>geometric</strong> elements (e.g., points, lines, boxplots, etc)</li>
-<li>Mapping of some data/variables to some <strong>aesthetic</strong> attributes (e.g., axis, color, point shape)</li>
+<li>Some layer(s) of <strong>geometric</strong> elements (e.g., points,
+lines, boxplots, etc)</li>
+<li>Mapping of some data/variables to some <strong>aesthetic</strong>
+attributes (e.g., axis, color, point shape)</li>
 </ul>
 <aside>
-To learn more, please take a look at the cheatsheet: <a href="https://www.rstudio.com/resources/cheatsheets/" class="uri">https://www.rstudio.com/resources/cheatsheets/</a>
+To learn more, please take a look at the cheatsheet: <a
+href="https://www.rstudio.com/resources/cheatsheets/"
+class="uri">https://www.rstudio.com/resources/cheatsheets/</a>
 </aside>
 <p>For example, consider the <code>airquality</code> data set:</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2873,7 +2903,10 @@ To learn more, please take a look at the cheatsheet: <a href="https://www.rstudi
 #&gt; 5    NA      NA 14.3   56     5   5
 #&gt; 6    28      NA 14.9   66     5   6</code></pre>
 </div>
-<p>One can show the distribution of <code>Ozone</code>. On a 2-D Cartesian coordinate system, if we want to show the data in points, each point needs the x- and the y-coordinates. Therefore, the following gives an error as it only maps <code>Ozone</code> to the x-axis:</p>
+<p>One can show the distribution of <code>Ozone</code>. On a 2-D
+Cartesian coordinate system, if we want to show the data in points, each
+point needs the x- and the y-coordinates. Therefore, the following gives
+an error as it only maps <code>Ozone</code> to the x-axis:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
@@ -2885,7 +2918,8 @@ To learn more, please take a look at the cheatsheet: <a href="https://www.rstudi
 #&gt; ! geom_point requires the following missing aesthetics: y</code></pre>
 <p><img src="r_basics_files/figure-html5/plot-error-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>While not very interesting, we can instead specify every point to have a y-coordinate of 0:</p>
+<p>While not very interesting, we can instead specify every point to
+have a y-coordinate of 0:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
@@ -2895,7 +2929,10 @@ To learn more, please take a look at the cheatsheet: <a href="https://www.rstudi
 </div>
 <p><img src="r_basics_files/figure-html5/plot-y-eq-1-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>Some geometric objects (<code>geom</code>) assign the y-coordinate automatically. For example, <code>geom_histogram</code> uses bars, with the x-coordinate based on the variable and the y-coordinate based on the counts of each bin.</p>
+<p>Some geometric objects (<code>geom</code>) assign the y-coordinate
+automatically. For example, <code>geom_histogram</code> uses bars, with
+the x-coordinate based on the variable and the y-coordinate based on the
+counts of each bin.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
@@ -2918,7 +2955,9 @@ To learn more, please take a look at the cheatsheet: <a href="https://www.rstudi
 </div>
 <p><img src="r_basics_files/figure-html5/plot-scatter-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
-<p>The x- and y-coordinates are not the only attributes for the <code>points</code> geometric object. For example, we can map the sizes of the points to another variable:</p>
+<p>The x- and y-coordinates are not the only attributes for the
+<code>points</code> geometric object. For example, we can map the sizes
+of the points to another variable:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
@@ -2943,7 +2982,8 @@ To learn more, please take a look at the cheatsheet: <a href="https://www.rstudi
 <p><img src="r_basics_files/figure-html5/plot-scatter-2-labs-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h3 id="different-geom">Different <code>geom</code></h3>
-<p>We can use other geometric objects. For example, <code>geom_smooth</code> adds a smoothing trend</p>
+<p>We can use other geometric objects. For example,
+<code>geom_smooth</code> adds a smoothing trend</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># By putting `aes()` in the first line, all subsequent layers use the same</span>
@@ -2958,7 +2998,8 @@ To learn more, please take a look at the cheatsheet: <a href="https://www.rstudi
 <p><img src="r_basics_files/figure-html5/plot-line-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h3 id="facet">Facet</h3>
-<p>In many situations, we want to split the data into multiple plots through <code>facet</code>.</p>
+<p>In many situations, we want to split the data into multiple plots
+through <code>facet</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Wind</span>, y <span class='op'>=</span> <span class='va'>Ozone</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>airquality</span><span class='op'>)</span> <span class='op'>+</span>
@@ -2971,8 +3012,12 @@ To learn more, please take a look at the cheatsheet: <a href="https://www.rstudi
 <p><img src="r_basics_files/figure-html5/plot-facet-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h2 id="for-loop"><code>for</code> Loop</h2>
-<p>Using a loop allows one to perform some actions multiple times. See <a href="https://r4ds.had.co.nz/iteration.html#introduction-14" class="uri">https://r4ds.had.co.nz/iteration.html#introduction-14</a></p>
-<p>The following example shows an example of drawing a random variable from a normal distribution with <em>SD</em> = 1, mean = the previously generated number.</p>
+<p>Using a loop allows one to perform some actions multiple times. See
+<a href="https://r4ds.had.co.nz/iteration.html#introduction-14"
+class="uri">https://r4ds.had.co.nz/iteration.html#introduction-14</a></p>
+<p>The following example shows an example of drawing a random variable
+from a normal distribution with <em>SD</em> = 1, mean = the previously
+generated number.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2208</span><span class='op'>)</span>  <span class='co'># for reproducibility</span>
@@ -2998,9 +3043,12 @@ To learn more, please take a look at the cheatsheet: <a href="https://www.rstudi
 <p><img src="r_basics_files/figure-html5/simulate-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <h2 id="custom-function">Custom Function</h2>
-<p>A function in R is a named object that takes in some inputs, performs some operations, and gives some outputs.</p>
-<h3 id="example-1-a2-b">Example 1: <span class="math inline">\(a^2 + b\)</span></h3>
-<p>Here is an example of how you can define your own function, from p. 64 of the text</p>
+<p>A function in R is a named object that takes in some inputs, performs
+some operations, and gives some outputs.</p>
+<h3 id="example-1-a2-b">Example 1: <span class="math inline">\(a^2 +
+b\)</span></h3>
+<p>Here is an example of how you can define your own function, from
+p. 64 of the text</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>asqplusb</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>a</span>, <span class='va'>b</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>{</span>
@@ -3010,7 +3058,11 @@ To learn more, please take a look at the cheatsheet: <a href="https://www.rstudi
 </code></pre>
 </div>
 </div>
-<p>The above function <code>asqplusb()</code> takes two inputs: <code>a</code> and <code>b</code>. The names of these two are called <em>arguments</em>. So we say <code>a</code> and <code>b</code> are the arguments of <code>asqplusb()</code>. We can invoke the function like</p>
+<p>The above function <code>asqplusb()</code> takes two inputs:
+<code>a</code> and <code>b</code>. The names of these two are called
+<em>arguments</em>. So we say <code>a</code> and <code>b</code> are the
+arguments of <code>asqplusb()</code>. We can invoke the function
+like</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>asqplusb</span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>3</span><span class='op'>)</span>  <span class='co'># a = 2, b = 3, 2^2 + 3 = 7</span>
@@ -3031,9 +3083,13 @@ To learn more, please take a look at the cheatsheet: <a href="https://www.rstudi
 <pre><code>#&gt; [1] 11</code></pre>
 </div>
 <aside>
-In the function call, 2 and 3 are the <em>values</em> of the arguments, not the arguments themselves.
+In the function call, 2 and 3 are the <em>values</em> of the arguments,
+not the arguments themselves.
 </aside>
-<p>Also, when we define the function, we define the first argument as <code>a</code>, and the second argument as <code>b = 1</code>. The latter means the default value of <code>b</code> is 1. So when one calls the function without specifying <code>b</code>, like</p>
+<p>Also, when we define the function, we define the first argument as
+<code>a</code>, and the second argument as <code>b = 1</code>. The
+latter means the default value of <code>b</code> is 1. So when one calls
+the function without specifying <code>b</code>, like</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>asqplusb</span><span class='op'>(</span><span class='fl'>4</span><span class='op'>)</span>  <span class='co'># a = 4, b = 1, 4^2 + 1 = 17</span>
@@ -3050,7 +3106,14 @@ In the function call, 2 and 3 are the <em>values</em> of the arguments, not the 
 <pre><code>#&gt; [1] 17</code></pre>
 </div>
 <h3 id="when-to-use-a-function">When to use a function?</h3>
-<p>Writing one’s own function is very common in R programming, especially with Bayesian analysis, because often one needs to perform some procedures more than once, and it is tedious to write similar code every time. A rule of thumb is that if you have a few lines of code that you find yourself typing more than two times, you should write a function for it. As an example, we can wrap the simulation code above into a function that you can try out with different numbers of iterations:</p>
+<p>Writing one’s own function is very common in R programming,
+especially with Bayesian analysis, because often one needs to perform
+some procedures more than once, and it is tedious to write similar code
+every time. A rule of thumb is that if you have a few lines of code that
+you find yourself typing more than two times, you should write a
+function for it. As an example, we can wrap the simulation code above
+into a function that you can try out with different numbers of
+iterations:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>my_simulate</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>nsim</span> <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span> <span class='op'>{</span>
@@ -3077,7 +3140,8 @@ In the function call, 2 and 3 are the <em>values</em> of the arguments, not the 
 </div>
 <p>Try to call the above function.</p>
 <!-- The following chunk is only used in the website -->
-<section id="last-updated" class="appendix layout-chunk" data-layout="l-body">
+<section id="last-updated" class="appendix layout-chunk"
+data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
 <pre><code>#&gt; [1] &quot;January 13, 2022&quot;</code></pre>
@@ -3085,9 +3149,11 @@ In the function call, 2 and 3 are the <em>values</em> of the arguments, not the 
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb53"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 </section>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb54"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -3118,7 +3184,10 @@ In the function call, 2 and 3 are the <em>values</em> of the arguments, not the 
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
 <p>© Copyright 2022 Hok Chio (Mark) Lai</p>
-<p>Template by <a href="https://github.com/distillpub/template/blob/master/AUTHORS">The Distill Template Authors</a> and <a href="https://www.rstudio.com">RStudio, Inc</a>.</p>
+<p>Template by <a
+href="https://github.com/distillpub/template/blob/master/AUTHORS">The
+Distill Template Authors</a> and <a
+href="https://www.rstudio.com">RStudio, Inc</a>.</p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 

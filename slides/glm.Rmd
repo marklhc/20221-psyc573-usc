@@ -1,0 +1,633 @@
+---
+title: "Generalized Linear Model"
+subtitle: "PSYC 573"
+institute: "University of Southern California"
+date: "March 22, 2022"
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts, "my_style.css"]
+    lib_dir: libs
+    nature:
+      countIncrementalSlides: false
+params:
+  for_class: false
+---
+
+```{r, child = "slide_settings.RMarkdown"}
+```
+
+```{r xaringan-panelset, echo = FALSE}
+xaringanExtra::use_panelset()
+```
+
+```{r xaringan-scribble, echo = FALSE, eval = params$for_class}
+xaringanExtra::use_scribble()
+```
+
+# Regression for Prediction
+
+One outcome $Y$, one or more predictors $X_1$, $X_2$, $\ldots$
+
+E.g.,
+
+- What will a student's college GPA be given an SAT score of $x$?
+- How long will a person live if the person adopts diet $x$?
+- What will the earth's global temperature be if the carbon emission level is $x$?
+
+---
+
+# Keep These in Mind
+
+1. Likelihood function is defined for the outcome $Y$
+
+2. Prediction is probabilistic (i.e., uncertain) and contains error
+
+---
+class: center, middle, inverse
+
+# Generalized Linear Models (GLM)
+
+---
+
+# GLM
+
+Three components:
+
+- Conditional distribution of $Y$
+- Link function
+- Linear predictor
+
+---
+
+# Some Examples
+
+| Outcome type | Support          | Distributions | Link |
+|:------------:|:----------------:|:-------------:|:----:|
+| continuous | [`\(-\infty\)`, $\infty$] | Normal | Identity |
+| count (fixed duration) | {0, 1, $\ldots$} | Poisson | Log |
+| count (known # of trials) | {0, 1, $\ldots$, $N$} | Binomial | Logit |
+| binary | {0, 1} | Bernoulli | Logit |
+| ordinal | {0, 1, $\ldots$, $K$} | categorical | Logit |
+| nominal | $K$-vector of {0, 1} | categorical | Logit |
+| multinomial | $K$-vector of {0, 1, $\ldots$, $K$} | categorical | Logit |
+
+---
+
+# Mathematical Form (One Predictor)
+
+\begin{align}
+  Y_i & \sim \mathrm{Dist}(\mu_i, \tau)  \\
+  g(\mu_i) & = \eta_i \\
+  \eta_i & = \beta_0 + \beta_1 X_{i}
+\end{align}
+
+- $\mathrm{Dist}$: conditional distribution of $Y \mid X$ (e.g., normal, Bernoulli, $\ldots$)
+    * I.e., distribution of **prediction error**; not the marginal distribution of $Y$
+- $\mu_i$: mean parameter for the $i$th observation
+- $\eta_i$: linear predictor
+- $g(\cdot)$: link function
+- (`\(\tau\)`: dispersion parameter)
+
+---
+
+# Illustration
+
+Next few slides contain example GLMs, with the same predictor $X$
+
+```{r}
+set.seed(1817)
+library(ggplot2)
+```
+
+```{r generate-x, echo = TRUE}
+num_obs <- 100
+x <- runif(num_obs, min = 1, max = 5)  # uniform x
+beta0 <- 0.2; beta1 <- 0.5
+```
+
+---
+
+# Normal, Identity Link
+
+aka linear regression
+
+.panelset[
+.panel[.panel-name[Model]
+
+\begin{align}
+  Y_i & \sim N(\mu_i, \sigma) \\
+  \mu_i & = \eta_i \\
+  \eta_i & = \beta_0 + \beta_1 X_{i}
+\end{align}
+
+]
+
+.panel[.panel-name[Simulation]
+
+.font70[
+```{r lm, echo = TRUE}
+eta <- beta0 + beta1 * x
+mu <- eta
+y <- rnorm(num_obs, mean = mu, sd = 0.3)
+```
+]
+
+```{r plot-lm, out.width = "50%", fig.width = 4.29}
+qplot(x, y) +
+    geom_smooth(aes(y = mu, x = x))
+```
+
+]
+]
+
+---
+
+# Poisson, Log Link
+
+aka poisson regression
+
+.panelset[
+.panel[.panel-name[Model]
+
+\begin{align}
+  Y_i & \sim \mathrm{Pois}(\mu_i) \\
+  \log(\mu_i) & = \eta_i \\
+  \eta_i & = \beta_0 + \beta_1 X_{i}
+\end{align}
+
+]
+
+.panel[.panel-name[Simulation]
+
+.font70[
+
+```{r pois, echo = TRUE}
+eta <- beta0 + beta1 * x
+mu <- exp(eta)  # inverse link
+y <- rpois(num_obs, lambda = mu)
+```
+
+]
+
+```{r plot-pois, out.width = "50%", fig.width = 4.29}
+qplot(x, y) +
+    geom_smooth(aes(y = mu, x = x))
+```
+
+]
+]
+
+---
+
+# Bernoulli, Logit Link
+
+aka binary logistic regression
+
+.panelset[
+.panel[.panel-name[Model]
+
+\begin{align}
+  Y_i & \sim \mathrm{Bern}(\mu_i) \\
+  \log\left(\frac{\mu_i}{1 - \mu_i}\right) & = \eta_i \\
+  \eta_i & = \beta_0 + \beta_1 X_{i}
+\end{align}
+
+]
+
+.panel[.panel-name[Simulation]
+
+.font70[
+
+```{r bern-logit, echo = TRUE}
+eta <- beta0 + beta1 * x
+mu <- plogis(eta)  # inverse link is logistic
+y <- rbinom(num_obs, size = 1, prob = mu)
+```
+
+]
+
+```{r plot-bern-logit, out.width = "50%", fig.width = 4.29}
+qplot(x, y) +
+    geom_smooth(aes(y = mu, x = x))
+```
+
+]
+]
+
+---
+
+# Binomial, Logit Link
+
+aka binomial logistic regression
+
+.panelset[
+.panel[.panel-name[Model]
+
+\begin{align}
+  Y_i & \sim \mathrm{Bin}(N, \mu_i) \\
+  \log\left(\frac{\mu_i}{1 - \mu_i}\right) & = \eta_i \\
+  \eta_i & = \beta_0 + \beta_1 X_{i}
+\end{align}
+
+]
+
+.panel[.panel-name[Simulation]
+
+.font70[
+
+```{r bin-logit, echo = TRUE}
+num_trials <- 10
+eta <- beta0 + beta1 * x
+mu <- plogis(eta)  # inverse link is logistic
+y <- rbinom(num_obs, size = num_trials, prob = mu)
+```
+
+]
+
+```{r plot-bin-logit, out.width = "50%", fig.width = 4.29}
+qplot(x, y) +
+    geom_smooth(aes(y = mu * num_trials, x = x))
+```
+
+]
+]
+
+---
+
+# Remarks
+
+Different link functions can be used
+- E.g., identity link or probit link for Bernoulli variables
+
+Linearity is a strong assumption
+- GLM can allow $\eta$ and $X$ to be nonlinearly related, as long as it's linear in the coefficients
+    * E.g., $\eta_i = \beta_0 + \beta_1 \log(X_{i})$
+    * E.g., $\eta_i = \beta_0 + \beta_1 X_i + \beta_2 X_i^2$
+    * But not something like $\eta_i = \beta_0 \log(\beta_1 + x_i)$
+
+---
+class: inverse, middle, center
+
+# Linear Regression
+
+---
+class: clear
+
+Many relations can be approximated as linear
+
+But many relations cannot be approximated as linear
+
+---
+class: clear
+
+### Example: "Bread and peace" model
+
+```{r}
+# Economy and elections data
+hibbs <- read.table(
+    "https://github.com/avehtari/ROS-Examples/raw/master/ElectionsEconomy/data/hibbs.dat",
+    header = TRUE
+)
+```
+
+```{r}
+ggplot(hibbs, aes(x = growth, y = vote, label = year)) +
+    geom_point() +
+    ggrepel::geom_text_repel() +
+    labs(x = "Average recent growth in personal income",
+         y = "Incumbent party's vote share (%)")
+```
+
+---
+
+# Linear Regression Model
+
+Model:
+
+\begin{align}
+  \text{vote}_i & \sim N(\mu_i, \sigma) \\
+  \mu_i & = \beta_0 + \beta_1 \text{growth}_i
+\end{align}
+
+$\sigma$: SD (margin) of prediction error
+
+Prior:
+
+\begin{align}
+  \beta_0 & \sim N(45, 10)  \\
+  \beta_1 & \sim N(0, 10)  \\
+  \sigma & \sim t^+_4(0, 5)
+\end{align}
+
+---
+class: clear
+
+.panelset[
+.panel[.panel-name[Stan]
+
+```{r m1, eval = FALSE}
+library(rstan)
+rstan_options(auto_write = TRUE)
+m1 <- stan(
+    here::here("stan", "linear_reg.stan"),
+    data = list(N = nrow(hibbs),
+                y = hibbs$vote,
+                x = hibbs$growth)
+)
+```
+
+.font60[
+
+```{stan, code = readLines(here::here("stan", "linear_reg.stan")), echo = TRUE, eval = FALSE, output.var = "lm_mod"}
+```
+
+]
+
+]
+
+.panel[.panel-name[`brms`]
+
+.font70[
+
+```{r m1_brm, echo = TRUE}
+library(brms)
+m1_brm <- brm(vote ~ growth,
+              data = hibbs,
+              family = gaussian(link = "identity"),
+              prior = c(
+                  prior(normal(45, 10), class = "Intercept"),
+                  prior(normal(0, 10), class = "b"),
+                  prior(student_t(4, 0, 5), class = "sigma")
+              ),
+              iter = 4000,
+              seed = 31143)
+```
+
+]
+]
+
+.panel[.panel-name[`brms` results]
+
+.font70[
+
+```{r print-m1_brm}
+print(m1_brm)
+```
+
+]
+]
+]
+
+---
+class: clear
+
+.pull-left[
+
+```{r, fig.asp = 1.236, fig.width = 4.29, out.width = "100%"}
+library(bayesplot)
+mcmc_trace(m1_brm,
+           pars = c("b_Intercept", "b_growth", "sigma"),
+           facet_args = list(ncol = 1))
+```
+
+]
+
+.pull-right[
+
+```{r, fig.asp = 1.236, fig.width = 4.29, out.width = "100%"}
+mcmc_dens(m1_brm,
+          pars = c("b_Intercept", "b_growth", "sigma"),
+          facet_args = list(ncol = 1))
+```
+
+]
+
+---
+
+# Meaning of Coefficients
+
+When growth = 0, $\text{vote} \sim N(\beta_0, \sigma)$
+
+When growth = 1, $\text{vote} \sim N(\beta_0 + \beta_1, \sigma)$
+
+```{r, warning = FALSE}
+sigma <- 3.99
+b0 <- 46.21
+b1 <- 3.05
+ggplot(
+  data.frame(x = c(40, 70), y = c(0, 4)),
+  aes(x = x, y = y)
+) +
+  geom_abline(intercept = -b0 / b1, slope = 1 / b1) +
+  stat_function(
+    fun = function(x) dnorm(x, mean = b0, sd = sigma) * 2,
+    xlim = c(-2, 2) * sigma + b0,
+  ) +
+  stat_function(
+    fun = function(x) dnorm(x, mean = b0 + b1, sd = sigma) * 2 + 1,
+    xlim = c(-2, 2) * sigma + b0 + b1,
+  ) +
+  geom_segment(x = 0, xend = b0, y = 0, yend = 0, col = "red") +
+  geom_text(x = b0 - 2, y = -0.05,
+            label = "beta[0]",
+            parse = TRUE, size = 4) +
+  geom_segment(x = b0, xend = b0 + b1,
+               y = 1, yend = 1, col = "red",
+               arrow = arrow(length = unit(0.03, "npc"), ends = "both")) +
+  geom_segment(x = b0, xend = b0,
+               y = 0, yend = 1, col = "red") +
+  geom_text(x = b0 + b1 - 1.5, y = 1.1,
+            label = "beta[1]",
+            parse = TRUE, size = 4) +
+  lims(x = c(40, 70), y = c(0, 4)) +
+  labs(x = "vote", y = "growth") +
+  coord_flip()
+```
+
+---
+
+# Posterior Predictive Check
+
+```{r}
+library(bayesplot)
+pp_check(
+    m1_brm,
+    type = "intervals",
+    x = "growth"
+) +
+    ggrepel::geom_label_repel(
+        aes(y = hibbs$vote, label = hibbs$year)
+    )
+```
+
+The model fits a majority of the data, but not everyone. The biggest discrepancy is 1952.
+
+---
+
+# Prediction
+
+.font70[
+
+Predicted vote share when growth = 2: $\tilde y \mid y \sim N(\beta_0 + \beta_1 \times 2, \sigma)$
+
+```{r, echo = TRUE}
+pp_growth_eq_2 <- posterior_predict(m1_brm,
+    newdata = list(growth = 2)
+)
+```
+
+]
+
+```{r, out.width = "50%", fig.width = 4.29}
+colnames(pp_growth_eq_2) <- "y_tilde"
+mcmc_dens(pp_growth_eq_2)
+```
+
+Probability of incumbent's vote share > 50% = `r mean(pp_growth_eq_2 > 50)`
+
+---
+
+# Table
+
+.font70[
+
+```{r, echo = TRUE, warning = FALSE}
+library(modelsummary)
+msummary(m1_brm, estimate = "{estimate} [{conf.low}, {conf.high}]",
+         statistic = NULL, fmt = 2)
+```
+
+]
+
+---
+
+# Prediction vs. Explanation
+
+Is personal income growth a reason a candidate/party got more vote share?
+
+If so, what is the mechanism?
+
+If not, what is responsible for the association?
+
+---
+
+# Additional Notes
+
+Outlier: use $Y_i \sim t_\nu(\mu_i, \sigma)$
+
+Nonconstant $\sigma$
+- One option is $\log(\sigma_i) = \beta^{s}_0 + \beta^{s}_1 X_i$
+
+Check whether linearity holds
+- Other options: splines, quadratic, log transform (i.e., lognormal model), etc
+
+---
+class: inverse, middle, center
+
+# Poisson Regression
+
+---
+class: clear
+
+.font70[
+
+- `count`: The seizure count between two visits
+- `Trt`: Either 0 or 1 indicating if the patient received anticonvulsant therapy
+
+]
+
+\begin{align}
+  \text{count}_i & \sim \mathrm{Pois}(\mu_i)  \\
+  \log(\mu_i) & = \eta_i \\
+  \eta_i & = \beta_0 + \beta_1 \text{Trt}_{i}
+\end{align}
+
+```{r}
+set.seed(1417)
+epilepsy4 <- dplyr::filter(epilepsy, visit == 4)
+epilepsy4$Trt <- factor(epilepsy4$Trt)
+ggplot(epilepsy4, aes(x = Trt, y = count)) +
+    geom_boxplot() +
+    geom_jitter(width = 0.05)
+```
+
+---
+class: clear
+
+### Poisson with log link
+
+Predicted seizure rate = $\exp(\beta_0 + \beta_1) = \exp(\beta_0) \exp(\beta_1)$ for Trt = 1; $\exp(\beta_0)$ for Trt = 0
+
+$\beta_1$ = mean difference in **log** rate of seizure; $\exp(\beta_1)$ = ratio in rate of seizure 
+
+```{r, echo = TRUE, results = "hide"}
+m2 <- brm(count ~ Trt, data = epilepsy4,
+          family = poisson(link = "log"))
+```
+
+---
+class: clear
+
+### Poisson with identity link
+
+In this case, with one binary predictor, the link does not matter to the fit
+
+\begin{align}
+  \text{count}_i & \sim \mathrm{Pois}(\mu_i)  \\
+  \mu_i & = \eta_i \\
+  \eta_i & = \beta_0 + \beta_1 \text{Trt}_{i}
+\end{align}
+
+$\beta_1$ = mean difference in the rate of seizure in two weeks
+
+```{r, echo = TRUE, results = "hide"}
+m3 <- brm(count ~ Trt, data = epilepsy4,
+          family = poisson(link = "identity"))
+```
+
+---
+exclude: `r !params$for_class`
+class: clear
+
+.pull-left[
+
+Prediction With Log Link
+
+```{r, out.width = "100%", fig.width = 4.28}
+set.seed(1847)
+plot(
+    conditional_effects(m2),
+    points = TRUE,
+    point_args = list(size = 0.5, width = 0.05)
+)
+```
+
+]
+
+.pull-right[
+
+Prediction With Identity Link
+
+```{r, out.width = "100%", fig.width = 4.28}
+set.seed(1847)
+plot(
+    conditional_effects(m3),
+    points = TRUE,
+    point_args = list(size = 0.5, width = 0.05)
+)
+```
+
+]
+
+---
+class: clear
+
+.font70[
+
+```{r}
+msummary(list(`log link` = m2,
+              `identity link` = m3),
+         statistic = "conf.int", fmt = 2)
+```
+
+]

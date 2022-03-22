@@ -2367,7 +2367,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
   <link href="site_libs/panelset-0.2.6/panelset.css" rel="stylesheet" />
   <script src="site_libs/panelset-0.2.6/panelset.js"></script>
   <script src="site_libs/fitvids-2.1.1/fitvids.min.js"></script>
@@ -2447,6 +2447,7 @@ Notes
 <a href="hmc_stan.html">HMC and Stan</a>
 <a href="hierarchical_models.html">Hierarchical Models</a>
 <a href="group_comparisons.html">Group Comparisons</a>
+<a href="glm.html">Generalized Linear Model I</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2481,22 +2482,31 @@ Notes
 <li>Navigate the course website and Blackboard site</li>
 <li>Identify the Slack channels relevant for the course</li>
 <li>Describe the historical origin of Bayesian statistics</li>
-<li>Identify components in research papers involving Bayesian analyses</li>
+<li>Identify components in research papers involving Bayesian
+analyses</li>
 <li>Knit a simple R Markdown file</li>
 </ul>
 <h2 id="task-lists">Task Lists</h2>
 <ol type="1">
 <li>Review the <a href="syllabus.html">syllabus</a></li>
-<li>Review the resources (slides and <a href="r_markdown.html">note</a>)</li>
+<li>Review the resources (slides and <a
+href="r_markdown.html">note</a>)</li>
 <li>Install/Update R and RStudio on your computer</li>
 <li>Attend the Tuesday and Thursday class meetings</li>
 <li>Complete the assigned readings
 <ul>
-<li><a href="https://drive.google.com/file/d/1tr7XpIVf04S44o5ZploxJcd37Fg1GygV/view">Kruschke ch. 2</a></li>
-<li>Supplemental (i.e., optional) reading: <a href="https://jim-stone.staff.shef.ac.uk/BookBayes2012/bookbayesch01.pdf">James ch. 1</a></li>
-<li><a href="https://web.mit.edu/r/current/RStudio/resources/markdown_help.html">Markdown Quick Reference</a></li>
+<li><a
+href="https://drive.google.com/file/d/1tr7XpIVf04S44o5ZploxJcd37Fg1GygV/view">Kruschke
+ch. 2</a></li>
+<li>Supplemental (i.e., optional) reading: <a
+href="https://jim-stone.staff.shef.ac.uk/BookBayes2012/bookbayesch01.pdf">James
+ch. 1</a></li>
+<li><a
+href="https://web.mit.edu/r/current/RStudio/resources/markdown_help.html">Markdown
+Quick Reference</a></li>
 </ul></li>
-<li>Introduce yourself on the #introduction Slack channel (as part of HW 1)</li>
+<li>Introduce yourself on the #introduction Slack channel (as part of HW
+1)</li>
 <li>Complete Homework 1 (see instruction on Blackboard)</li>
 </ol>
 <h2 id="slides">Slides</h2>
@@ -2513,11 +2523,16 @@ Notes
 <h2 id="week-learning-objectives-1">Week Learning Objectives</h2>
 <p>By the end of this module, you will be able to</p>
 <ul>
-<li>Explain the <strong>three axioms/properties</strong> of probability</li>
-<li>Describe the <strong>subjectivist</strong> interpretation of probability, and contrast it with the <strong>frequentist</strong> interpretation</li>
-<li>Explain the difference between <strong>probability mass</strong> and <strong>probability density</strong></li>
+<li>Explain the <strong>three axioms/properties</strong> of
+probability</li>
+<li>Describe the <strong>subjectivist</strong> interpretation of
+probability, and contrast it with the <strong>frequentist</strong>
+interpretation</li>
+<li>Explain the difference between <strong>probability mass</strong> and
+<strong>probability density</strong></li>
 <li>Compute probability density using <strong>simulations</strong></li>
-<li>Compute <strong>joint, marginal, and conditional probabilities</strong> with two variables</li>
+<li>Compute <strong>joint, marginal, and conditional
+probabilities</strong> with two variables</li>
 <li>Write an R function and use loops for repeating computations</li>
 </ul>
 <h2 id="task-lists-1">Task Lists</h2>
@@ -2525,9 +2540,13 @@ Notes
 <li>Complete the assigned readings
 <ul>
 <li>Kruschke ch. 4</li>
-<li>Wickham &amp; Grolemund ch. <a href="https://r4ds.had.co.nz/exploratory-data-analysis.html">7</a>, <a href="https://r4ds.had.co.nz/functions.html">19.1-19.5</a></li>
+<li>Wickham &amp; Grolemund ch. <a
+href="https://r4ds.had.co.nz/exploratory-data-analysis.html">7</a>, <a
+href="https://r4ds.had.co.nz/functions.html">19.1-19.5</a></li>
 </ul></li>
-<li>Review the resources (slides and notes on <a href="probability.html">probability</a> and <a href="r_basics.html">R basics</a>)</li>
+<li>Review the resources (slides and notes on <a
+href="probability.html">probability</a> and <a href="r_basics.html">R
+basics</a>)</li>
 <li>Attend the Tuesday and Thursday class meetings</li>
 <li>Complete Homework 2 (see instruction on Blackboard)</li>
 </ol>
@@ -2545,23 +2564,32 @@ Notes
 <h2 id="week-learning-objectives-2">Week Learning Objectives</h2>
 <p>By the end of this module, you will be able to</p>
 <ul>
-<li>Derive <strong>Bayes’ rule</strong> from the definition of conditional probability</li>
-<li>Apply Bayes’ rule to obtain <strong>posterior</strong> from prior and data</li>
-<li>Explain what <strong>data-order invariance</strong> and <strong>exchangeability</strong> are</li>
-<li>Use <strong>grid approximation</strong> to obtain the posterior for a <strong>Bernoulli</strong> model</li>
-<li>Describe the influence of <strong>sample size</strong> and <strong>prior</strong> on the posterior</li>
+<li>Derive <strong>Bayes’ rule</strong> from the definition of
+conditional probability</li>
+<li>Apply Bayes’ rule to obtain <strong>posterior</strong> from prior
+and data</li>
+<li>Explain what <strong>data-order invariance</strong> and
+<strong>exchangeability</strong> are</li>
+<li>Use <strong>grid approximation</strong> to obtain the posterior for
+a <strong>Bernoulli</strong> model</li>
+<li>Describe the influence of <strong>sample size</strong> and
+<strong>prior</strong> on the posterior</li>
 <li>Use R to perform <strong>prior predictive checks</strong></li>
 </ul>
 <h2 id="task-lists-2">Task Lists</h2>
 <ol type="1">
 <li>Complete the assigned readings
 <ul>
-<li><a href="https://pure.mpg.de/rest/items/item_2101336/component/file_2101335/content">Gigerenzer (2004)</a></li>
+<li><a
+href="https://pure.mpg.de/rest/items/item_2101336/component/file_2101335/content">Gigerenzer
+(2004)</a></li>
 <li>Kruschke ch. 5</li>
 </ul></li>
-<li>Review the resources (slides and <a href="bayes_rule.html">note</a>)</li>
+<li>Review the resources (slides and <a
+href="bayes_rule.html">note</a>)</li>
 <li>Attend the Tuesday and Thursday class meetings</li>
-<li>No homework for this week, but you may work on Q1 and Q2 for Homework 3 (see instruction on Blackboard)</li>
+<li>No homework for this week, but you may work on Q1 and Q2 for
+Homework 3 (see instruction on Blackboard)</li>
 </ol>
 <h2 id="slides-2">Slides</h2>
 <p><a href="slides/bayes_rule.pdf" target="_blank">PDF version</a></p>
@@ -2577,10 +2605,13 @@ Notes
 <h2 id="week-learning-objectives-3">Week Learning Objectives</h2>
 <p>By the end of this module, you will be able to</p>
 <ul>
-<li>Apply <strong>Bayesian workflow</strong> to analyze real data with a <strong>Bernoulli</strong> model</li>
+<li>Apply <strong>Bayesian workflow</strong> to analyze real data with a
+<strong>Bernoulli</strong> model</li>
 <li>Explain the idea of a <strong>conjugate prior</strong></li>
-<li>Summarize the posterior distribution using <strong>simulations</strong></li>
-<li>Apply Bayesian <strong>terminology</strong> in summarizing the posterior</li>
+<li>Summarize the posterior distribution using
+<strong>simulations</strong></li>
+<li>Apply Bayesian <strong>terminology</strong> in summarizing the
+posterior</li>
 <li>Use R to perform <strong>posterior predictive checks</strong></li>
 </ul>
 <h2 id="task-lists-3">Task Lists</h2>
@@ -2588,17 +2619,22 @@ Notes
 <li>Complete the assigned readings
 <ul>
 <li>Kruschke ch. 6</li>
-<li><a href="https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssa.12378">Gabry et al. (2019)</a> for an example of posterior predictive checks</li>
+<li><a
+href="https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssa.12378">Gabry
+et al. (2019)</a> for an example of posterior predictive checks</li>
 </ul></li>
-<li>Review the resources (slides and <a href="beta_Bernoulli_model.html">note</a>)
+<li>Review the resources (slides and <a
+href="beta_Bernoulli_model.html">note</a>)
 <ul>
-<li>If interested, check out the <a href="Poisson_model.html">bonus note on the Poisson model</a></li>
+<li>If interested, check out the <a href="Poisson_model.html">bonus note
+on the Poisson model</a></li>
 </ul></li>
 <li>Attend the Tuesday and Thursday class meetings</li>
 <li>Complete Homework 3 (see instruction on Blackboard)</li>
 </ol>
 <h2 id="slides-3">Slides</h2>
-<p><a href="slides/one_parameter_models.pdf" target="_blank">PDF version</a></p>
+<p><a href="slides/one_parameter_models.pdf" target="_blank">PDF
+version</a></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="shareagain" style="min-width:300px;margin:1em auto;">
 <iframe src="slides/one_parameter_models.html" width="400" height="300" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
@@ -2611,10 +2647,15 @@ Notes
 <h2 id="week-learning-objectives-4">Week Learning Objectives</h2>
 <p>By the end of this module, you will be able to</p>
 <ul>
-<li>Explain <em>what</em> is unique for samples using <strong>Markov Chain Monte Carlo (MCMC)</strong></li>
-<li>Explain <em>why</em> we need MCMC to <strong>approximate the posterior</strong></li>
-<li>Describe <em>when</em> MCMC samples are <strong>representative</strong> and <strong>accurate</strong> for approximating the posterior</li>
-<li>Use R to perform <strong>convergence diagnostics</strong> for MCMC samples</li>
+<li>Explain <em>what</em> is unique for samples using <strong>Markov
+Chain Monte Carlo (MCMC)</strong></li>
+<li>Explain <em>why</em> we need MCMC to <strong>approximate the
+posterior</strong></li>
+<li>Describe <em>when</em> MCMC samples are
+<strong>representative</strong> and <strong>accurate</strong> for
+approximating the posterior</li>
+<li>Use R to perform <strong>convergence diagnostics</strong> for MCMC
+samples</li>
 </ul>
 <h2 id="task-lists-4">Task Lists</h2>
 <ol type="1">
@@ -2640,7 +2681,8 @@ Notes
 <h2 id="week-learning-objectives-5">Week Learning Objectives</h2>
 <p>By the end of this module, you will be able to</p>
 <ul>
-<li>Apply <strong>Gibbs sampling</strong> to summarize parameters of a <strong>normal model</strong> <!--
+<li>Apply <strong>Gibbs sampling</strong> to summarize parameters of a
+<strong>normal model</strong> <!--
 - Describe, conceptually, how the **Hamiltonian Monte Carlo (HMC)** algorithm achieves a better efficiency with the use of the gradients
 - Explain how tuning the **step size** and the **tree depth** affects HMC
 - Program a simple Bayesian model in **STAN**
@@ -2670,8 +2712,11 @@ Notes
 <h2 id="week-learning-objectives-6">Week Learning Objectives</h2>
 <p>By the end of this module, you will be able to</p>
 <ul>
-<li>Describe, conceptually, how the <strong>Hamiltonian Monte Carlo (HMC)</strong> algorithm achieves a better efficiency with the use of the gradients</li>
-<li>Explain how tuning the <strong>step size</strong> and the <strong>tree depth</strong> affects HMC</li>
+<li>Describe, conceptually, how the <strong>Hamiltonian Monte Carlo
+(HMC)</strong> algorithm achieves a better efficiency with the use of
+the gradients</li>
+<li>Explain how tuning the <strong>step size</strong> and the
+<strong>tree depth</strong> affects HMC</li>
 <li>Program a simple Bayesian model in <strong>Stan</strong></li>
 </ul>
 <h2 id="task-lists-6">Task Lists</h2>
@@ -2680,7 +2725,8 @@ Notes
 <ul>
 <li>Kruschke ch. 14</li>
 </ul></li>
-<li>Review the resources (slides and <a href="hmc_stan.html">note</a>)</li>
+<li>Review the resources (slides and <a
+href="hmc_stan.html">note</a>)</li>
 <li>Attend the Tuesday and Thursday class meetings</li>
 </ol>
 <h2 id="slides-6">Slides</h2>
@@ -2698,9 +2744,11 @@ Notes
 <p>By the end of this module, you will be able to</p>
 <ul>
 <li>Explain the logic of a <strong>hierarchical model</strong></li>
-<li>Apply the <strong>binomial distribution</strong> to describe the sum of multiple Bernoulli trials</li>
+<li>Apply the <strong>binomial distribution</strong> to describe the sum
+of multiple Bernoulli trials</li>
 <li>Program a hierarchical binomial model in Stan</li>
-<li>Analyze secondary data using a hierarchical normal model (i.e., random-effect meta-analysis)</li>
+<li>Analyze secondary data using a hierarchical normal model (i.e.,
+random-effect meta-analysis)</li>
 </ul>
 <h2 id="task-lists-7">Task Lists</h2>
 <ol type="1">
@@ -2708,7 +2756,8 @@ Notes
 <ul>
 <li>Kruschke ch. 9</li>
 </ul></li>
-<li>Review the resources (slides and <a href="hierarchical_models.html">note</a>)</li>
+<li>Review the resources (slides and <a
+href="hierarchical_models.html">note</a>)</li>
 <li>Attend the Tuesday and Thursday class meetings</li>
 <li>Start thinking about the class project
 <ul>
@@ -2716,7 +2765,8 @@ Notes
 </ul></li>
 </ol>
 <h2 id="slides-7">Slides</h2>
-<p><a href="slides/hierarchical_models.pdf" target="_blank">PDF version</a></p>
+<p><a href="slides/hierarchical_models.pdf" target="_blank">PDF
+version</a></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="shareagain" style="min-width:300px;margin:1em auto;">
 <iframe src="slides/hierarchical_models.html" width="400" height="300" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
@@ -2758,9 +2808,11 @@ Notes
 <p>By the end of this module, you will be able to</p>
 <ul>
 <li>Conduct a Bayesian <strong>comparison</strong> of two groups</li>
-<li>Apply a <strong><span class="math inline">\(t\)</span> model</strong> for robust modeling</li>
+<li>Apply a <strong><span class="math inline">\(t\)</span>
+model</strong> for robust modeling</li>
 <li>Select an appropriate distribution for different kinds of data</li>
-<li>Conduct comparisons with hierarchical data (e.g., within-subject designs)</li>
+<li>Conduct comparisons with hierarchical data (e.g., within-subject
+designs)</li>
 </ul>
 <h2 id="task-lists-8">Task Lists</h2>
 <ol type="1">
@@ -2768,7 +2820,8 @@ Notes
 <ul>
 <li>Kruschke ch. 12.1, 16</li>
 </ul></li>
-<li>Review the resources (<a href="group_comparisons.html">note</a>)</li>
+<li>Review the resources (<a
+href="group_comparisons.html">note</a>)</li>
 <li>Attend class meetings</li>
 <li>Start thinking about the class project
 <ul>
@@ -2776,12 +2829,48 @@ Notes
 </ul></li>
 </ol>
 </section>
+<section id="week-11" class="panel">
+<h1>Week 11</h1>
+<h2 id="week-learning-objectives-9">Week Learning Objectives</h2>
+<p>By the end of this module, you will be able to</p>
+<ul>
+<li>Describe the three components of the <strong>generalized linear
+model (GLM)</strong></li>
+<li>Name examples of the GLM (e.g., linear regression, Poisson
+regression)</li>
+<li>Interpret the coefficients in a linear regression model</li>
+<li>Obtain posterior predictive distributions and checks</li>
+<li>Perform Bayesian regression with the R package
+<code>brms</code></li>
+</ul>
+<h2 id="task-lists-9">Task Lists</h2>
+<ol type="1">
+<li>Complete the assigned readings
+<ul>
+<li>Kruschke ch. 15, 17</li>
+</ul></li>
+<li>Review the resources (<a href="glm.html">note</a>)</li>
+<li>Attend class meetings</li>
+<li>Complete Homework 7 (see instruction on Blackboard)</li>
+<li>Schedule a meeting with the instructor for your prospectus (see
+sign-up link on Blackboard)</li>
+</ol>
+<h2 id="slides-8">Slides</h2>
+<p><a href="slides/glm.pdf" target="_blank">PDF version</a></p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="shareagain" style="min-width:300px;margin:1em auto;">
+<iframe src="slides/glm.html" width="400" height="300" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
+<script>fitvids('.shareagain', {players: 'iframe'});</script>
+</div>
+</div>
+</section>
 </div>
 <h2 class="appendix" id="last-updated">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code>[1] &quot;March 11, 2022&quot;</code></pre>
+<pre><code>[1] &quot;March 21, 2022&quot;</code></pre>
 </div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -2812,7 +2901,10 @@ Notes
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
 <p>© Copyright 2022 Hok Chio (Mark) Lai</p>
-<p>Template by <a href="https://github.com/distillpub/template/blob/master/AUTHORS">The Distill Template Authors</a> and <a href="https://www.rstudio.com">RStudio, Inc</a>.</p>
+<p>Template by <a
+href="https://github.com/distillpub/template/blob/master/AUTHORS">The
+Distill Template Authors</a> and <a
+href="https://www.rstudio.com">RStudio, Inc</a>.</p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 

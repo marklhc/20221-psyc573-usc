@@ -39,7 +39,7 @@ if (!file.exists(datfile)) {
         destfile = datfile
     )
 }
-lies <- readxl::read_excel(here("data_files", "ENDFILE.xlsx"))
+lies <- readxl::read_excel(datfile)
 ```
 
 ```{r lies_cc, layout="l-body-outset", out.width = "100%", fig.width = 8.57}
@@ -303,7 +303,7 @@ mcmc_areas(m1, pars = c("mu1", "mu2"))
 mcmc_areas(m1, pars = c("sigma1", "sigma2"))
 ```
 
-```{r, include = FALSE}
+```{r get_mean_ci, include = FALSE}
 get_mean_ci <- function(i, unit = "log(seconds)", summ = m1_summary) {
   paste0(round(summ[i, "mean"], 2), " ", unit,
          ", 90% CI [",
@@ -423,7 +423,7 @@ Parameters:
 - $\mu_1$: mean parameter for log(RT) for lying in Dutch condition
 - $\delta$: mean difference in log(RT) between the lying in English and lying in Dutch
 - $\sigma$: within-person standard deviation of log(RT)
-- $\eta_1$, $\ldots$, $\eta_63$: z-scores for individual mean response time
+- $\eta_1$, $\ldots$, $\eta_{63}$: z-scores for individual mean response time
 - $\tau$: standard deviation of individual differences
 
 This is an example of a hierarchical model with a non-centered parameterization (using $\eta$ instead of $\theta$ as a parameter). We're letting the data update our belief on how much individual difference there is.
