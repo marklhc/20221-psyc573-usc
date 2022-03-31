@@ -2452,6 +2452,7 @@ Notes
 <a href="hierarchical_models.html">Hierarchical Models</a>
 <a href="group_comparisons.html">Group Comparisons</a>
 <a href="glm.html">Generalized Linear Model I</a>
+<a href="causal_inference.html">Causal Inference</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2559,11 +2560,11 @@ Pre-Processing</h1>
 #&gt;   &lt;chr&gt; &lt;int&gt;
 #&gt; 1 2015    994
 #&gt; 2 2016    958
-#&gt; 3 2017    984
-#&gt; 4 2018    990
+#&gt; 3 2017    981
+#&gt; 4 2018    986
 #&gt; 5 2019    999
-#&gt; 6 2020   1021
-#&gt; 7 2021   1055</code></pre>
+#&gt; 6 2020   1020
+#&gt; 7 2021   1054</code></pre>
 </div>
 <h1 id="poisson-model">Poisson Model</h1>
 <p>Our interest is the rate of occurrence of fatal police shootings per
@@ -2672,7 +2673,7 @@ class="math inline">\(N\)</span>).</p>
 <pre><code>#&gt; # A tibble: 1 × 10
 #&gt;   variable  mean median    sd   mad    q5   q95  rhat ess_bulk
 #&gt;   &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 theta    1000.  1000.  11.6  11.5  981. 1018.  1.00    1075.
+#&gt; 1 theta     998.   998.  11.6  11.4  979. 1017.  1.00    1075.
 #&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 <p>So the estimated rate is 987 per year, with a 90% CI [967, 1006].</p>

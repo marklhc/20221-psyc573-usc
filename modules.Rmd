@@ -421,6 +421,34 @@ embed_xaringan("slides/glm.html", ratio = "4:3")
 
 :::
 
+::: {.panel}
+
+# Week 12
+
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Draw a **directed acyclic graph (DAG)** to represent causal assumptions
+- Use a DAG to guide analyses for obtaining **causal effects**
+- Describe how **randomization** can remove potential **confounders**
+- Explain how the **back-door criterion** can be used to identify a set of adjusted variables with nonexperimental data
+- Perform a **mediation analysis** and interpret the results
+
+## Task Lists
+
+1. Complete the assigned readings
+    * McElreath ch 5, 6
+2. Review the resources ([note][20])
+3. Attend class meetings
+4. Complete Homework 8 (see instruction on Blackboard)
+
+[20]: causal_inference.html
+
+## Slides
+
+:::
+
 :::
 
 ## Last updated {.appendix}

@@ -411,10 +411,10 @@ This is similar to a paired $t$ test, but uses a lognormal distribution.
   \text{LDMRT}_{i} & \sim \mathrm{Lognormal}(\theta_i, \sigma) \\
   \text{LEMRT}_{i} & \sim \mathrm{Lognormal}(\theta_i + \delta, \sigma) \\
   \theta_i & = \mu_1 + \tau \eta_i \\
-  \eta_i & \sim N(0, \tau) \\
+  \eta_i & \sim N(0, 1) \\
   \mu_1 & \sim N(0, 1) \\
   \delta & \sim N(0, 1) \\
-  \sigma & \sim N(0, 0.5) \\
+  \sigma & \sim N^+(0, 0.5) \\
   \tau & \sim t^+(4, 0, 0.5)
 \end{align}
 

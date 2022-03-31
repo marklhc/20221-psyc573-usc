@@ -273,7 +273,7 @@ dates <- paste(
 | Mar 22 & 24    |                        |                                  | - HW 8                                 |
 +----------------+------------------------+----------------------------------+----------------------------------------+
 | Week 12\       | - Multiple Regression  | - Kruschke ch. 18                | - Exercise: Interaction                |
-| Mar 29 & Apr 1 | - Causal Inference I   | - McElreath ch. 6                | - HW 9                                 |
+| Mar 29 & Apr 1 | - Causal Inference I   | - McElreath ch. 5, 6             | - HW 9                                 |
 +----------------+------------------------+----------------------------------+----------------------------------------+
 | Week 13\       | - Causal Inference II  | - McElreath ch. 7                | - Exercise: IC vs. BF                  |
 | Apr 5 & 7      | - Model Comparisons    | - Reference on Bayes Factor:     | - HW 10                                |

@@ -1,0 +1,428 @@
+---
+title: "Causal Inference"
+author: "Mark Lai"
+date: "March 26, 2022"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = "#>", collapse = TRUE,
+                      fig.width = 6, fig.asp = 0.618,
+                      out.width = "70%", fig.align = "center")
+comma <- function(x, digits. = 2L) {
+    format(x, digits = digits., big.mark = ",")
+}
+```
+
+```{r load-pkg, message = FALSE}
+library(tidyverse)
+library(here)
+library(dagitty)  # for drawing DAGs
+library(ggdag)  # render DAGs in ggplot style
+library(rstan)
+rstan_options(auto_write = TRUE)  # save compiled Stan object
+library(brms)  # simplify fitting Stan GLM models
+library(posterior)  # for summarizing draws
+library(bayesplot)  # for plotting
+library(modelsummary)  # table for brms
+theme_set(theme_classic() +
+    theme(panel.grid.major.y = element_line(color = "grey92")))
+```
+
+Causal inference is an important topic in statistics, but it also has a complicated history with statistics. Early-day statisticians see causality as a taboo such that researchers were discouraged from drawing any causal conclusions in nonexperimental research. In the past few decades, much progress has been made on causal inference in epidemiology, computer science, and statistics, with several frameworks proposed and many tools developed for experimental and nonexperimental data. This note will introduce the causal diagram framework for encoding causal assumptions, which can be used to guide analysis for drawing causal conclusions. The goal is to give you some basic ideas so that you can learn more from other sources, such as the book [*Causality* by Pearl](http://bayes.cs.ucla.edu/BOOK-2K/).
+
+<aside>
+See this paper: https://doi.org/10.1177/1745691620921521 for an argument of how the taboo against causal inference has impeded the progress of psychology research.
+</aside>
+
+<aside>
+Another prominent framework for causal inference is the potential outcome framework, which is thoroughly described in the book [*Causal Inference for Statistics, Social, and Biomedical Sciences: An Introduction* by Imbens and Rubin](https://doi.org/10.1017/CBO9781139025751).
+</aside>
+
+# What is Causal Inference?
+
+Causal inference is the process of determining the causal effect of one variable on another, based on data and causal assumptions. Two common ways of interpreting a causal effect are (a) *intervention*: how $Y$ will change if $X$ is manipulated to be $x$; (b) *counterfactual*: what would $Y$ be if $X$ were set to $x$. 
+
+# Directed Acyclic Graph (DAG)
+
+DAG is a tool for encoding causal assumptions. It contains nodes and paths. A node is usually a variable that can be measured in the data or unmeasured. Generally, paths in a DAG are directional (as implied by *directed*), which indicates the directions of causal relations. Acyclic means the causal chain does not close in a loop. 
+
+We can use an example described in McElreath (2020, chapter 5) about data from 50 U.S. states from the 2009 American Community Survey (ACS).
+
+```{r waffle_divorce}
+waffle_divorce <- read_delim(  # read delimited files
+    "https://raw.githubusercontent.com/rmcelreath/rethinking/master/data/WaffleDivorce.csv",
+    delim = ";"
+)
+# Rescale Marriage and Divorce by dividing by 10
+waffle_divorce$Marriage <- waffle_divorce$Marriage / 10
+waffle_divorce$Divorce <- waffle_divorce$Divorce / 10
+waffle_divorce$MedianAgeMarriage <- waffle_divorce$MedianAgeMarriage / 10
+# See data description at https://rdrr.io/github/rmcelreath/rethinking/man/WaffleDivorce.html
+```
+
+The outcome of interest is the divorce rate. The plot shows how marriage rate is related to divorce rate at the state level.
+
+```{r scatter-marriage-divorce}
+ggplot(waffle_divorce,
+       aes(x = Marriage, y = Divorce)) +
+  geom_point() +
+  geom_smooth() +
+  labs(x = "Marriage rate (per 10 adults)",
+       y = "Divorce rate (per 10 adults)") +
+  ggrepel::geom_text_repel(aes(label = Loc))
+```
+
+It looks like marriage rate can predict divorce rate. A causal interpretation would be a stronger assertion, such that we expect to see a higher divorce rate if policymakers encourage more people to get married. In order to make a causal claim, we need to remove potential confounders. 
+
+A potential confounder is when people get married. If people are forced to get married later in life, fewer people in the population will be married, and people may have less time, opportunity, and motivation to get divorced (as it may be harder to find a new partner). Therefore, we can use the following DAG:
+
+```{r dag1}
+dag1 <- dagitty("dag{ A -> D; A -> M; M -> D }")
+coordinates(dag1) <- list(x = c(M = 0, A = 1, D = 2),
+                          y = c(M = 0, A = 1, D = 0))
+# Plot
+ggdag(dag1) + theme_dag()
+```
+
+We can look at how the median age people get married in different states relates to the divorce rate:
+
+```{r scatter-age-divorce}
+ggplot(waffle_divorce,
+       aes(x = MedianAgeMarriage, y = Divorce / 10)) +
+  geom_point() +
+  geom_smooth() +
+  labs(x = "Median age marriage (10 years)",
+       y = "Divorce rate (per 10 adults)") +
+  ggrepel::geom_text_repel(aes(label = Loc))
+```
+
+## Assumptions in a DAG
+
+In a graphical model, there are usually two kinds of assumptions conveyed. Perhaps counterintuitively, the weaker assumptions are the ones you can see, whereas the stronger assumptions are ones you **do not see**. 
+
+For example, a weak assumption is:
+- Marriage age *may* directly influence the number of people who are married
+
+On the other hand, examples of a strong assumption are:
+- Marriage rate does not directly influence the age people get married
+- there is no other variable in the causal pathway M &rarr; D
+
+The last assumption will not hold if there is a common cause of M and D other than A.
+
+## Basic Types of Junctions
+
+- Fork: A &larr; B &rarr; C
+    * A and C are correlated due to a common cause B
+
+- Chain/Pipe: A &rarr; B &rarr; C
+    * B is on the causal pathway of A to C
+
+- Collider: A &rarr; B &larr; C
+    * B is a *descendant* of both A and C
+
+Going back to our example, there is a fork relation: M &rarr; <span style="color:red">A</span> &rarr; D. In this case, A is a confounder when estimating the causal relation between M and D. In this case, the causal effect of M to D can be obtained by adjusting for A, which means looking at the subsets of data where A is constant. In regression, adjustment is obtained by including both M and A as predictors of D.
+
+## Multiple Regression Model
+
+$$
+  \begin{aligned}
+    D_i & \sim N(\mu_i, \sigma)  \\
+    \mu_i & = \beta_0 + \beta_1 A_i + \beta_2 M_i \\
+    \beta_0 & \sim N(0, 1) \\
+    \beta_1 & \sim N(0, 1) \\
+    \beta_2 & \sim N(0, 1) \\
+  \end{aligned}
+$$
+
+Assuming a correctly specified DAG, $\beta_2$ is the causal effect of M on D. Here is the Stan code:
+
+```{stan, code = readLines(here::here("stan", "multiple_reg.stan")), echo = TRUE, eval = FALSE, output.var = "mr_mod"}
+```
+
+```{r m1_stan, eval = FALSE}
+m1_stan <- stan(
+    here::here("stan", "multiple_reg.stan"),
+    data = list(
+        N = nrow(waffle_divorce),
+        p = 2,
+        y = waffle_divorce$Divorce,
+        x = waffle_divorce[c("MedianAgeMarriage", "Marriage")]
+    ),
+    seed = 941,
+    iter = 4000
+)
+```
+
+And using `brms`:
+
+```{r m1, results = "hide"}
+m1 <- brm(Divorce ~ MedianAgeMarriage + Marriage,
+    data = waffle_divorce,
+    prior = prior(std_normal(), class = "b") +
+        prior(normal(0, 5), class = "Intercept") +
+        prior(student_t(4, 0, 3), class = "sigma"),
+    seed = 941,
+    iter = 4000
+)
+```
+
+### Table
+
+```{r}
+msummary(m1,
+  estimate = "{estimate} [{conf.low}, {conf.high}]",
+  statistic = NULL, fmt = 2
+)
+```
+
+As shown in the table, when holding constant the median marriage age of states, marriage rate has only a small effect on divorce rate.
+
+### Posterior predictive checks
+
+```{r pp-check-m1}
+pp_check(m1, ndraws = 100) # density
+pp_check(m1, type = "intervals", x = "Marriage") +
+    labs(x = "Marriage", y = "Divorce")
+pp_check(m1, type = "intervals", x = "MedianAgeMarriage") +
+    labs(x = "MedianAgeMarriage", y = "Divorce")
+```
+
+The model does not fit every state (e.g., UT, ME, ID).
+
+## Predicting an Intervention
+
+If the causal assumption in our DAG is reasonable, we have obtained an estimate of the causal effect of marriage rate on divorce rate at the state level. This allows us to answer questions like
+
+> What would happen to the divorce rate if we encourage more people to get married (so the marriage rate increases by 10 percentage points)?
+
+We can use the Bayesian model, which is generative, to make such predictions. Consider a state with a marriage rate of 2 (per 10 adults). The predicted divorce rate is
+
+$$\beta_0 + \beta_1 A + \beta_2 (2)$$
+
+Consider an intervention that makes the marriage rate increase from 2 to 3. The predicted divorce rate will be
+
+$$\beta_0 + \beta_1 A + \beta_2 (3)$$
+
+The change in divorce rate is
+
+$$\beta_0 + \beta_1 A + \beta_2 (3) - \beta_0 + \beta_1 A + \beta_2 (2) = \beta_2$$
+
+Here is what the model would predict in terms of the change in the divorce rate (holding median marriage age to 25 years old), using R:
+
+```{r predict-m1-intervention}
+pred_df <- data.frame(
+  Marriage = c(2, 3),
+  MedianAgeMarriage = c(2.5, 2.5)
+)
+pred_df %>%
+  bind_cols(fitted(m1, newdata = pred_df)) %>%
+  knitr::kable()
+```
+
+The difference should be just the estimate of $\beta_2$, which has the following posterior distribution:
+
+```{r plot-post-beta2-m1}
+mcmc_dens(m1, pars = "b_Marriage")
+```
+
+# Randomization
+
+We'll use the `framing` data set from the `mediation` package, so you'll need to have the package installed first. The data were analyzed in a [report in the American Journal of Political Science](https://doi.org/10.1111/j.1540-5907.2008.00353.x). The study examined whether "news about the costs of immigration boosts white opposition" (p. 959).
+
+## Summary Statistics Tables
+
+I'll take a quick detour to introduce you to some useful functions for tabulating your data. The functions will be from the `modelsummary` package.
+
+```{r summ-framing}
+data(framing, package = "mediation")
+# Quick summary of selected variables
+datasummary_skim(framing)
+# Summary by treatment condition (`tone`)
+datasummary_balance(~ tone, data = framing)
+# More tailor-made table with selected variables by treatment condition
+datasummary(emo + p_harm + cong_mesg ~ Factor(tone) * (Mean + SD + Histogram),
+            data = framing)
+# Correlation table
+framing %>% select(tone, emo, cong_mesg) %>%
+    datasummary_correlation(method = "pearson")
+```
+
+## Randomization Removes Incoming Paths for Treatment
+
+Let's consider a DAG without randomization, for the following two variables:
+
+- X: exposure to a negatively framed news story about immigrants
+- Y: anti-immigration political action
+
+There are many possible confounders when we observe these two variables in data (e.g., the political affiliation of an individual, the state a person resides). We can represent these unobserved confounders as U, so the DAG will be something like
+
+```{r dag2}
+dag2 <- dagitty(
+  "dag{
+    X -> Y; U -> X; U -> Y
+    U [unobserved]
+  }"
+)
+coordinates(dag2) <- list(x = c(X = 0, U = 1, Y = 2),
+                          y = c(X = 0, U = 1, Y = 0))
+# Plot
+ggdag(dag2) + theme_dag()
+```
+
+The magic of randomization---randomly assigning individuals to a manipulated level of X---is that it blocks the path U &rarr; X. Therefore, with randomization, the reason a person sees a negatively-framed news story about immigrants is not related to reasons that the person may have intentions for anti-immigration actions. The DAG becomes
+
+```{r dag3}
+dag3 <- dagitty(
+  "dag{
+    X -> Y; U -> Y
+    U [unobserved]
+  }"
+)
+coordinates(dag3) <- list(x = c(X = 0, U = 1, Y = 2),
+                          y = c(X = 0, U = 1, Y = 0))
+# Plot
+ggdag(dag3) + theme_dag()
+```
+
+Therefore, when randomization is successful, the path coefficient of X &rarr; Y is the causal effect of X on Y. However, randomized experiments do not always rule out all confounding. For example, if participants are randomly assigned to different experimental conditions, but those who disagree with the presented news story dropped out, such attrition can induce a non-zero correlation in the remaining sample between X and Y.
+
+## The Back-Door Criterion: Estimating Causal Effect in Nonexperimental Data
+
+Randomization is one---but not the only---way to rule out confounding variables. Much progress has been made in clarifying that causal effects **can** be estimated in nonexperimental data. After all, researchers have not randomly assigned individuals to smoke $x$ cigarettes per day, but we are confident that smoking causes cancer; we never manipulated the gravitational force of the moon, but we are pretty sure that high and low tides are caused by the moon.
+
+In a DAG, the back-door criterion can be used to identify variables that we should adjust for to obtain a causal effect. The set of variables to be adjusted should (a) blocks every path between X and Y that contains an arrow entering X and (b) does not contain variables that are descendant of X.
+
+```{r dag4}
+dag4 <- dagitty(
+  "dag{
+    X -> Y; W1 -> X; U -> W2; W2 -> X; W1 -> Y; U -> Y
+  }"
+)
+latents(dag4) <- "U"
+coordinates(dag4) <- list(x = c(X = 0, W1 = 0.66, U = 1.32, W2 = 0.66, Y = 2),
+                          y = c(X = 0, W1 = 1, U = 1, W2 = 0.5, Y = 0))
+ggdag(dag4) + theme_dag()
+```
+
+We can use a function in the `daggity` package to identify the set of variables that satisfy the back-door criterion. In this case, we say that X and Y are $d$-separated by this set of adjusted variables:
+
+```{r dsep-dag4}
+adjustmentSets(dag4, exposure = "X", outcome = "Y",
+               effect = "direct")
+```
+
+# Mediation
+
+To be added
+
+<!-- 
+
+## Post-Treatment Bias
+
+
+
+```{r m_med, echo = TRUE, results = "hide"}
+data(framing, package = "mediation")
+m_med <- brm(
+  # Two equations for two outcomes
+  bf(cong_mesg ~ tone + emo) +
+    bf(emo ~ tone) +
+    set_rescor(FALSE),
+  data = framing,
+  seed = 1338,
+  iter = 4000,
+  family = list(bernoulli("logit"), gaussian("identity"))
+)
+```
+
+## Using Stan
+
+Here's some Stan code for running the same mediation model
+
+```{stan, code = readLines(here::here("stan", "mediation_logit_normal.stan")), echo = TRUE, eval = FALSE, output.var = "med_mod"}
+```
+
+```{r m_med_stan, eval = FALSE}
+# 1. form the data list for Stan
+stan_dat <- with(framing,
+    list(N0 = sum(tone == 0),
+         N1 = sum(tone == 1),
+         m0 = emo[which(tone == 0)],
+         m1 = emo[which(tone == 1)],
+         y0 = cong_mesg[which(tone == 0)],
+         y1 = cong_mesg[which(tone == 1)])
+)
+# 2. Run Stan
+m_med_stan <- stan(
+    file = here("stan", "mediation_logit_normal.stan"),
+    data = stan_dat,
+    seed = 1338,
+    iter = 4000
+)
+```
+
+Natural Direct Effect
+
+```{r nde-ave-pop}
+set.seed(1235)
+# Obtain posterior draws of parameters
+post_draws <- as.data.frame(m_med)
+# Simulated emo with tone = 0
+sim_emo0 <- rnorm(post_draws$b_emo_Intercept,
+                  mean = post_draws$b_emo_Intercept,
+                  sd = post_draws$sigma_emo)
+# Predicted cong_mesg for tone = 0, emo = sim_emo0
+pred_congmesg0 <- plogis(  # apply the inverse probit link
+    post_draws$b_congmesg_Intercept +
+        post_draws$b_congmesg_emo * sim_emo0
+)
+# Predicted cong_mesg for tone = 1, emo = sim_emo0
+pred_congmesg1 <- plogis(  # apply the inverse probit link
+    post_draws$b_congmesg_Intercept +
+        post_draws$b_congmesg_tone +
+        post_draws$b_congmesg_emo * sim_emo0
+)
+# Natural direct effect
+nde <- pred_congmesg1 - pred_congmesg0
+```
+
+Natural Indirect Effect
+
+```{r nie-ave-pop}
+set.seed(1235)
+# Simulated emo with tone = 0
+sim_emo0 <- rnorm(post_draws$b_emo_Intercept,
+                  mean = post_draws$b_emo_Intercept,
+                  sd = post_draws$sigma_emo)
+# Counterfactuals for the same individuals with tone = 1
+sim_emo1 <- sim_emo0 + post_draws$b_emo_tone
+# Predicted cong_mesg for tone = 0, emo = sim_emo0
+pred_congmesg0 <- plogis(  # apply the inverse probit link
+    post_draws$b_congmesg_Intercept +
+        post_draws$b_congmesg_emo * sim_emo0
+)
+# Predicted cong_mesg for tone = 0, emo = sim_emo1
+pred_congmesg1 <- plogis(  # apply the inverse probit link
+    post_draws$b_congmesg_Intercept +
+        post_draws$b_congmesg_emo * sim_emo1
+)
+# Natural direct effect
+nie <- pred_congmesg1 - pred_congmesg0
+as_draws(list(NDE = nde, NIE = nie)) %>%
+    mcmc_areas(bw = "SJ")
+```
+
+# Instrumental Variables
+
+-->
+
+<!-- The following chunk is only used in the website -->
+
+```{r, echo = FALSE, results = 'asis', eval = file.exists("distill-hack.RMarkdown")}
+knitrenv <- knitr::knit_global()
+assign("knit_input", knitr::current_input(), knitrenv)
+append_res <- knitr::knit_child("distill-hack.RMarkdown",
+    envir = knitrenv, quiet = TRUE
+)
+cat(append_res)
+```
