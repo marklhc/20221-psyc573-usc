@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Causal Inference</title>
+    <meta charset="utf-8" />
+    <meta name="date" content="2022-03-29" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my_style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Causal Inference
+## PSYC 573
+### University of Southern California
+### March 29, 2022
+
+---
+
+class: inverse, center, middle
+
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+--shareagain-twitter: none;
+--shareagain-facebook: none;
+--shareagain-linkedin: none;
+--shareagain-pinterest: none;
+--shareagain-pocket: none;
+--shareagain-reddit: none;
+}</style>
+
+
+
+
+
+# Causation
+
+&gt; Data are profoundly dumb about causal relationships
+
+.right[
+  --- Pearl &amp; Mackenzie (2018)
+]
+
+???
+
+Outline:
+
+- DAG
+- confounding
+- `\(d\)`-separation
+- mediation
+
+---
+class: clear
+
+Materials based on chapters 5 and 6 of McElreath (2020)
+
+
+
+---
+exclude: TRUE
+
+# Thought Experiment
+
+You have a group of 20 friends. You found out 10 have taken a "smart pill," and the others have not. When comparing the stat exam performance of the two groups, the "smart pill" group, on average, is better, with 90% CI [1, 5].
+
+&gt; Do you think the "smart pill" causes half of your friends to do better in stat?
+
+---
+exclude: TRUE
+
+# Thought Experiment (cont'd)
+
+A researcher conducts an experiment with 20 students. Ten are randomly assigned to take a "smart pill," and the other a placebo. When comparing the stat exam performance of the two groups, the "smart pill" group, on average, is better, with 90% CI [1, 5].
+
+&gt; Do you think the "smart pill" causes half of the students to do better in stat?
+
+---
+exclude: TRUE
+class: clear
+
+Is there any difference in the **statistical results** between the two scenarios?
+
+Is there any difference in **causal implications** between the two scenarios?
+
+---
+exclude: TRUE
+
+# Thought Experiment (cont'd)
+
+A researcher conducts a study with 20 students. Ten volunteers took a "smart pill," and then the researcher compared their stat exam performance with 10 other students who had similar stat background as the "smart pill" group but did not take the pill. The "smart pill" group, on average, is better, with 90% CI [1, 5].
+
+&gt; Do you think the "smart pill" causes the first 10 students to do better in stat?
+
+---
+
+# Causal Inference
+
+Obtaining an estimate of the causal effect of one variable on another
+
+--
+
+&gt; an hour more exercise per day causes an increase in happiness by 0.1 to 0.2 points
+
+--
+
+- Intervention: if I exercise one hour more, my happiness will increase by 0.1 to 0.2 points
+- Counterfactual: had I exercised one less hour, my happiness would have been 0.1 to 0.2 points less
+
+---
+class: inverse, middle, center
+
+# Directed Acyclic Graph
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+class: clear
+
+Data from the 2009 American Community Survey (ACS)
+
+
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+--
+
+Does marriage **cause** divorce? (pay attention to the unit of analysis)
+
+---
+class: clear
+
+Age at marriage?
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Directed Acyclic Graph (DAG)
+
+Allows researchers to encode **causal assumptions** of the data
+
+- Based on knowledge of the *data* and the *variables*
+
+--
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-6-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+class: clear
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-7-1.png" width="30%" style="display: block; margin: auto;" /&gt;
+
+--
+
+.pull-left[
+
+"Weak" assumptions
+- A *may* directly influence M
+- A *may* directly influence D
+- M *may* directly influence D
+
+]
+
+--
+
+.pull-right[
+
+"Strong" assumptions: things not shown in the graph
+- E.g., M does not directly influence A
+- E.g., A is the only relevant variable in the causal pathway M &amp;rarr; D
+
+]
+
+---
+
+# Basic Types of Junctions
+
+**Fork**: A &amp;larr; B &amp;rarr; C
+
+**Chain/Pipe**: A &amp;rarr; B &amp;rarr; C
+
+**Collider**: A &amp;rarr; B &amp;larr; C
+
+---
+
+# Fork
+
+aka Classic confounding
+- *Confound*: something that misleads us about a causal influence
+
+M &amp;larr; &lt;span style="color:red"&gt;A&lt;/span&gt; &amp;rarr; D
+
+--
+
+Assuming the DAG is correct,
+- the causal effect of M &amp;rarr; D can be obtained by holding constant A
+    * stratifying by A; "controlling" for A
+
+---
+class: clear
+
+.panelset[
+.panel[.panel-name[Model]
+
+`\begin{align}
+  D_i &amp; \sim N(\mu_i, \sigma)  \\
+  \mu_i &amp; = \beta_0 + \beta_1 A_i + \beta_2 M_i \\
+  \beta_0 &amp; \sim N(0, 5) \\
+  \beta_1 &amp; \sim N(0, 1) \\
+  \beta_2 &amp; \sim N(0, 1) \\
+  \sigma &amp; \sim t^+_4(0, 3) \\
+\end{align}`
+
+]
+
+.panel[.panel-name[brms]
+
+
+```r
+library(brms)
+m1 &lt;- brm(Divorce ~ MedianAgeMarriage + Marriage,
+  data = waffle_divorce,
+  prior = prior(std_normal(), class = "b") +
+    prior(normal(0, 5), class = "Intercept") +
+    prior(student_t(4, 0, 3), class = "sigma"),
+  seed = 941,
+  iter = 4000
+)
+```
+
+]
+
+.panel[.panel-name[Results]
+
+.font70[
+
+
+```
+&gt;#  Family: gaussian 
+&gt;#   Links: mu = identity; sigma = identity 
+&gt;# Formula: Divorce ~ MedianAgeMarriage + Marriage 
+&gt;#    Data: waffle_divorce (Number of observations: 50) 
+&gt;#   Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+&gt;#          total post-warmup draws = 8000
+&gt;# 
+&gt;# Population-Level Effects: 
+&gt;#                   Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+&gt;# Intercept             3.49      0.77     1.96     4.99 1.00     5179     5008
+&gt;# MedianAgeMarriage    -0.94      0.25    -1.42    -0.44 1.00     5605     5608
+&gt;# Marriage             -0.04      0.08    -0.20     0.12 1.00     5198     4900
+&gt;# 
+&gt;# Family Specific Parameters: 
+&gt;#       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+&gt;# sigma     0.15      0.02     0.12     0.19 1.00     6071     5326
+&gt;# 
+&gt;# Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+&gt;# and Tail_ESS are effective sample size measures, and Rhat is the potential
+&gt;# scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
+]
+]
+]
+
+---
+class: clear
+
+### Posterior predictive checks
+
+.pull-left[
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /&gt;&lt;img src="causal_inference_files/figure-html/unnamed-chunk-9-2.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Pedicting an Intervention
+
+&gt; What would happen to the divorce rate if we encourage more people to get married, so that marriage rate increases by 1 per 10 adults?
+
+--
+
+Based on our DAG, this should not change the median marriage age
+
+--
+
+
+| Marriage| MedianAgeMarriage| Estimate| Est.Error|  Q2.5| Q97.5|
+|--------:|-----------------:|--------:|---------:|-----:|-----:|
+|        2|               2.5|     1.07|     0.034| 0.999|  1.14|
+|        3|               2.5|     1.03|     0.068| 0.894|  1.16|
+
+---
+class: inverse, middle, center
+
+# Randomization
+
+---
+exclude: TRUE
+class: clear
+
+&lt;img src="images/Brader_etal_2008.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Framing Experiment
+
+- X: exposure to a negatively framed news story about immigrants
+- Y: anti-immigration political action
+
+--
+
+.pull-left[
+
+No Randomization
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+]
+
+???
+
+Potential confound:
+- Location
+- Usual outlet/source to acquire information
+
+--
+
+.pull-right[
+
+Randomization
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Back-Door Criterion
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-14-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+The causal effect of X &amp;rarr; Y can be obtained by blocking all the backdoor paths that do not involve descendants of X
+
+--
+
+- Randomization: (when done successfully) eliminates all paths entering X
+- Conditioning (holding constant)
+
+---
+exclude: TRUE
+
+&lt;img src="images/Grosz_etal_fig_study2.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+exclude: TRUE
+
+# Exercise
+
+&lt;img src="images/McElreath_2020_ch6_ex.jpg" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Dagitty
+
+
+```r
+library(dagitty)
+dag4 &lt;- dagitty("dag{
+  X -&gt; Y; W1 -&gt; X; U -&gt; W2; W2 -&gt; X; W1 -&gt; Y; U -&gt; Y
+}")
+latents(dag4) &lt;- "U"
+adjustmentSets(dag4, exposure = "X", outcome = "Y",
+               effect = "direct")
+```
+
+```
+&gt;# { W1, W2 }
+```
+
+
+```r
+impliedConditionalIndependencies(dag4)
+```
+
+```
+&gt;# W1 _||_ W2
+```
+
+---
+class: inverse, center, middle
+
+# Post-Treatment Bias
+
+---
+class: clear
+
+## Data for Framing Experiment
+
+- `cong_mesg`: binary variable indicating whether or not the participant agreed to send a letter about immigration policy to his or her member of Congress
+
+- `emo`: post-test anxiety about increased immigration (0-9)
+
+- `tone`: framing of news story (0 = positive, 1 = negative)
+
+---
+class: clear
+
+## Results
+
+
+
+&lt;table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; No adjustment &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Adjusting for feeling &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_Intercept &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −0.81 [−1.19, −0.45] &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −2.01 [−2.59, −1.41] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_tone &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.22 [−0.33, 0.72] &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −0.14 [−0.70, 0.43] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_emo &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.32 [0.22, 0.44] &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+???
+
+Negative framing: emphasizing costs
+Positive framing: emphasizing benefits
+
+--
+
+Which one estimates the causal effect?
+
+---
+
+# Mediation
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-21-1.png" width="35%" style="display: block; margin: auto;" /&gt;
+
+In the DAG, E is a post-treatment variable potentially influenced by T
+- E is a potential **mediator**
+
+--
+
+&gt; A mediator is very different from a confounder
+
+---
+
+# Mediation Analysis
+
+.panelset[
+
+.panel[.panel-name[Model]
+
+`\begin{align}
+  \text{emo}_i &amp; \sim N(\mu^\text{e}_i, \sigma) \\
+  \mu^\text{e}_i &amp; = \beta^\text{e}_0 + \beta_1 \text{tone}_i \\
+  \text{cong_mesg}_i &amp; \sim \mathrm{Bern}(\mu^\text{c}_i, \sigma^{c})  \\
+  \mathrm{logit}(\mu^\text{c}_i) &amp; = \eta_i \\
+  \eta_i &amp; = \beta^\text{c}_0 + \beta_2 \text{tone}_i + \beta_3 \text{emo}_i \\
+  \beta^\text{e}_0, \beta^\text{c}_0 &amp; \sim N(0, 5) \\
+  \beta_1, \beta_2, \beta_3 &amp; \sim N(0, 1) \\
+  \sigma &amp; \sim t^+_4(0, 3) \\
+\end{align}`
+
+]
+
+.panel[.panel-name[Code]
+
+
+```r
+m_med &lt;- brm(
+  # Two equations for two outcomes
+  bf(cong_mesg ~ tone + emo) +
+    bf(emo ~ tone) +
+    set_rescor(FALSE),
+  data = framing,
+  seed = 1338,
+  iter = 4000,
+  family = list(bernoulli("logit"), gaussian("identity"))
+)
+```
+
+]
+
+.panel[.panel-name[Output]
+
+.font60[
+
+
+```
+&gt;#  Family: MV(bernoulli, gaussian) 
+&gt;#   Links: mu = logit
+&gt;#          mu = identity; sigma = identity 
+&gt;# Formula: cong_mesg ~ tone + emo 
+&gt;#          emo ~ tone 
+&gt;#    Data: framing (Number of observations: 265) 
+&gt;#   Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+&gt;#          total post-warmup draws = 8000
+&gt;# 
+&gt;# Population-Level Effects: 
+&gt;#                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+&gt;# congmesg_Intercept    -2.01      0.30    -2.60    -1.42 1.00     9742     6632
+&gt;# emo_Intercept          3.40      0.24     2.93     3.86 1.00    10684     6756
+&gt;# congmesg_tone         -0.15      0.29    -0.73     0.41 1.00     9449     6097
+&gt;# congmesg_emo           0.32      0.06     0.21     0.43 1.00     9514     6710
+&gt;# emo_tone               1.14      0.33     0.47     1.79 1.00    10417     5856
+&gt;# 
+&gt;# Family Specific Parameters: 
+&gt;#           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+&gt;# sigma_emo     2.73      0.12     2.51     2.98 1.00    10496     6553
+&gt;# 
+&gt;# Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+&gt;# and Tail_ESS are effective sample size measures, and Rhat is the potential
+&gt;# scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
+]
+]
+]
+
+---
+
+# Direct Effect
+
+Causal effect when holding mediator at a specific level
+
+.font70[
+
+
+```r
+cond_df &lt;- data.frame(tone = c(0, 1, 0, 1),
+                      emo = c(0, 0, 9, 9))
+cond_df %&gt;%
+  bind_cols(
+    fitted(m_med, newdata = cond_df)[ , , "congmesg"]
+  ) %&gt;%
+  knitr::kable()
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; tone &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; emo &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Est.Error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Q2.5 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Q97.5 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.122 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.032 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.069 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.195 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.108 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.033 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.054 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.183 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.699 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.071 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.549 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.826 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.669 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.063 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.539 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.786 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+---
+
+# Indirect Effect
+
+Change in `\(Y\)` of the control group if their mediator level changes to what the treatment group *would have obtained*
+
+--
+
+Quick Demo using posterior means&lt;sup&gt;1&lt;/sup&gt;
+
+- T = 0, E(M) = 3.39
+- T = 1, E(M) = 3.39 + 1.14 = 4.53
+
+.footnote[
+
+[1]: Fully Bayesian analyses in the note
+
+]
+
+--
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; tone &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; emo &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Est.Error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Q2.5 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Q97.5 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.286 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.042 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.208 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.372 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.365 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.048 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.275 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.462 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Potential Confounding
+
+.pull-left[
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-24-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+.pull-right[
+
+Maybe age is related to both `emo` and `cong_mesg`?
+
+.font70[
+
+
+```r
+m_med2 &lt;- brm(
+  # Two equations for two outcomes
+  bf(cong_mesg ~ tone + emo + age) +
+    bf(emo ~ tone + age) +
+    set_rescor(FALSE),
+  data = framing,
+  seed = 1338,
+  iter = 4000,
+  family = list(bernoulli("logit"),
+                gaussian("identity"))
+)
+```
+
+]
+]
+
+---
+
+# Unobserved Confounding
+
+Can be incorporated by assigning priors to the unobserved confounding paths
+
+---
+class: inverse, middle, center
+
+# Collider Bias
+
+---
+class: clear
+
+.pull-left[
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-25-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+E.g., Is the most newsworthy research the least trustworthy?
+
+&lt;img src="causal_inference_files/figure-html/code-6-1-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+class: clear
+
+### Conditioning on a collider creates spurious associations
+
+- nice person &amp;rarr; date &amp;larr; good-looking person
+
+--
+
+- impulsivity &amp;rarr; high-risk youth &amp;larr; delinquency
+
+--
+
+- healthcare worker &amp;rarr; COVID-19 testing &amp;larr; COVID-19 severity&lt;sup&gt;2&lt;/sup&gt;
+
+--
+
+- standardized test &amp;rarr; admission &amp;larr; research skills
+
+--
+
+- maternal smoking &amp;rarr; birth weight &amp;rarr; birth defect &amp;larr; mortality
+
+.footnote[
+
+[2]: See https://www.nature.com/articles/s41467-020-19478-2
+
+]
+
+---
+class: inverse, middle, center
+
+# Final Example
+
+---
+exclude: TRUE
+class: clear
+
+&lt;img src="images/Bickel_etal_1975_science.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Student Admissions at UC Berkeley (1973)
+
+.font70[
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Dept &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; App_Male &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Admit_Male &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Percent_Male &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; App_Female &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Admit_Female &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Percent_Female &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; A &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 825 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 512 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 62.1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 108 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 89 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 82.41 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 560 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 353 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 63.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 68.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; C &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 325 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 120 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 593 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 202 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 34.06 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; D &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 417 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 138 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33.1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 375 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 131 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 34.93 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; E &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 191 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 393 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 94 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23.92 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; F &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 373 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 341 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.04 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Total &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2691 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1198 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1835 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 557 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 30.35 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+
+
+---
+
+# Causal Thinking
+
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-29-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+What do we mean by the causal effect of gender?
+
+What do we mean by gender bias?
+
+---
+
+# Remarks
+
+- Causal inference requires **causal assumptions**
+    * You need a DAG
+
+--
+
+- Blindly adjusting for covariates does not give better results
+    * post-treatment bias, collider bias, etc
+
+--
+
+- Think carefully about what causal quantity is of interest
+    * E.g., direct, indirect, total
+
+--
+
+- Causal inferences are possible with both experimental and non-experimental data
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

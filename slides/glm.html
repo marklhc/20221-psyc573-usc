@@ -386,8 +386,8 @@ m1_brm &lt;- brm(vote ~ growth,
 &gt;# 
 &gt;# SAMPLING FOR MODEL '11c459bfe9958a66b303e7ee3a15738a' NOW (CHAIN 1).
 &gt;# Chain 1: 
-&gt;# Chain 1: Gradient evaluation took 1.3e-05 seconds
-&gt;# Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.13 seconds.
+&gt;# Chain 1: Gradient evaluation took 1e-05 seconds
+&gt;# Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.1 seconds.
 &gt;# Chain 1: Adjust your expectations accordingly!
 &gt;# Chain 1: 
 &gt;# Chain 1: 
@@ -404,15 +404,15 @@ m1_brm &lt;- brm(vote ~ growth,
 &gt;# Chain 1: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 &gt;# Chain 1: Iteration: 4000 / 4000 [100%]  (Sampling)
 &gt;# Chain 1: 
-&gt;# Chain 1:  Elapsed Time: 0.034457 seconds (Warm-up)
-&gt;# Chain 1:                0.027577 seconds (Sampling)
-&gt;# Chain 1:                0.062034 seconds (Total)
+&gt;# Chain 1:  Elapsed Time: 0.029007 seconds (Warm-up)
+&gt;# Chain 1:                0.028928 seconds (Sampling)
+&gt;# Chain 1:                0.057935 seconds (Total)
 &gt;# Chain 1: 
 &gt;# 
 &gt;# SAMPLING FOR MODEL '11c459bfe9958a66b303e7ee3a15738a' NOW (CHAIN 2).
 &gt;# Chain 2: 
-&gt;# Chain 2: Gradient evaluation took 7e-06 seconds
-&gt;# Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
+&gt;# Chain 2: Gradient evaluation took 5e-06 seconds
+&gt;# Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 &gt;# Chain 2: Adjust your expectations accordingly!
 &gt;# Chain 2: 
 &gt;# Chain 2: 
@@ -429,15 +429,15 @@ m1_brm &lt;- brm(vote ~ growth,
 &gt;# Chain 2: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 &gt;# Chain 2: Iteration: 4000 / 4000 [100%]  (Sampling)
 &gt;# Chain 2: 
-&gt;# Chain 2:  Elapsed Time: 0.030574 seconds (Warm-up)
-&gt;# Chain 2:                0.039529 seconds (Sampling)
-&gt;# Chain 2:                0.070103 seconds (Total)
+&gt;# Chain 2:  Elapsed Time: 0.029802 seconds (Warm-up)
+&gt;# Chain 2:                0.028111 seconds (Sampling)
+&gt;# Chain 2:                0.057913 seconds (Total)
 &gt;# Chain 2: 
 &gt;# 
 &gt;# SAMPLING FOR MODEL '11c459bfe9958a66b303e7ee3a15738a' NOW (CHAIN 3).
 &gt;# Chain 3: 
-&gt;# Chain 3: Gradient evaluation took 9e-06 seconds
-&gt;# Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.09 seconds.
+&gt;# Chain 3: Gradient evaluation took 5e-06 seconds
+&gt;# Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 &gt;# Chain 3: Adjust your expectations accordingly!
 &gt;# Chain 3: 
 &gt;# Chain 3: 
@@ -454,9 +454,9 @@ m1_brm &lt;- brm(vote ~ growth,
 &gt;# Chain 3: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 &gt;# Chain 3: Iteration: 4000 / 4000 [100%]  (Sampling)
 &gt;# Chain 3: 
-&gt;# Chain 3:  Elapsed Time: 0.044672 seconds (Warm-up)
-&gt;# Chain 3:                0.033552 seconds (Sampling)
-&gt;# Chain 3:                0.078224 seconds (Total)
+&gt;# Chain 3:  Elapsed Time: 0.029756 seconds (Warm-up)
+&gt;# Chain 3:                0.029499 seconds (Sampling)
+&gt;# Chain 3:                0.059255 seconds (Total)
 &gt;# Chain 3: 
 &gt;# 
 &gt;# SAMPLING FOR MODEL '11c459bfe9958a66b303e7ee3a15738a' NOW (CHAIN 4).
@@ -479,9 +479,9 @@ m1_brm &lt;- brm(vote ~ growth,
 &gt;# Chain 4: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 &gt;# Chain 4: Iteration: 4000 / 4000 [100%]  (Sampling)
 &gt;# Chain 4: 
-&gt;# Chain 4:  Elapsed Time: 0.030567 seconds (Warm-up)
-&gt;# Chain 4:                0.03102 seconds (Sampling)
-&gt;# Chain 4:                0.061587 seconds (Total)
+&gt;# Chain 4:  Elapsed Time: 0.030512 seconds (Warm-up)
+&gt;# Chain 4:                0.03104 seconds (Sampling)
+&gt;# Chain 4:                0.061552 seconds (Total)
 &gt;# Chain 4:
 ```
 
@@ -641,6 +641,73 @@ msummary(m1_brm, estimate = "{estimate} [{conf.low}, {conf.high}]",
 
 ---
 
+# Diagnostics
+
+Linearity (functional form)
+
+.pull-left[
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+--
+
+.pull-right[
+
+.font70[
+
+
+```r
+pp_check(m_lin, type = "intervals", x = "x") +
+  geom_smooth(aes(x = x, y = y), se = FALSE)
+```
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-15-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+---
+
+# Residual Plots
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-16-1.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+
+
+--
+
+.font70[
+
+.pull-left[
+
+
+```r
+pp_check(m_lin_norm, ndraws = 100, bw = "SJ")
+```
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-18-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+
+```r
+pp_check(m_lin_norm, type = "error_scatter_avg_vs_x", x = "x")
+```
+
+&lt;img src="glm_files/figure-html/unnamed-chunk-19-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+---
+
+
 # Prediction vs. Explanation
 
 Is personal income growth a reason a candidate/party got more vote share?
@@ -682,7 +749,7 @@ class: clear
   \eta_i &amp; = \beta_0 + \beta_1 \text{Trt}_{i}
 \end{align}`
 
-&lt;img src="glm_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="glm_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: clear
@@ -693,11 +760,37 @@ Predicted seizure rate = `\(\exp(\beta_0 + \beta_1) = \exp(\beta_0) \exp(\beta_1
 
 `\(\beta_1\)` = mean difference in **log** rate of seizure; `\(\exp(\beta_1)\)` = ratio in rate of seizure 
 
+---
+class: clear
+
+.font70[
+
 
 ```r
 m2 &lt;- brm(count ~ Trt, data = epilepsy4,
           family = poisson(link = "log"))
 ```
+
+
+```
+&gt;#  Family: poisson 
+&gt;#   Links: mu = log 
+&gt;# Formula: count ~ Trt 
+&gt;#    Data: epilepsy4 (Number of observations: 59) 
+&gt;#   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+&gt;#          total post-warmup draws = 4000
+&gt;# 
+&gt;# Population-Level Effects: 
+&gt;#           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+&gt;# Intercept     2.07      0.07     1.95     2.20 1.00     3759     2833
+&gt;# Trt1         -0.17      0.10    -0.36     0.01 1.00     3082     2363
+&gt;# 
+&gt;# Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+&gt;# and Tail_ESS are effective sample size measures, and Rhat is the potential
+&gt;# scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
+]
 
 ---
 class: clear
@@ -728,7 +821,7 @@ class: clear
 
 Prediction With Log Link
 
-&lt;img src="glm_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="glm_files/figure-html/unnamed-chunk-24-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -736,7 +829,7 @@ Prediction With Log Link
 
 Prediction With Identity Link
 
-&lt;img src="glm_files/figure-html/unnamed-chunk-17-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="glm_files/figure-html/unnamed-chunk-25-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 

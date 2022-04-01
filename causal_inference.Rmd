@@ -235,6 +235,8 @@ I'll take a quick detour to introduce you to some useful functions for tabulatin
 
 ```{r summ-framing}
 data(framing, package = "mediation")
+# Subtract the `emo` variable by 3 so that it starts from 0-9
+framing$emo <- framing$emo - 3
 # Quick summary of selected variables
 datasummary_skim(framing)
 # Summary by treatment condition (`tone`)
@@ -311,18 +313,79 @@ adjustmentSets(dag4, exposure = "X", outcome = "Y",
                effect = "direct")
 ```
 
-# Mediation
-
-To be added
-
-<!-- 
+# Causal Chains
 
 ## Post-Treatment Bias
 
+Here's some key variables from the `framing` data set:
 
+- `cong_mesg`: binary variable indicating whether or not the participant agreed to send a letter about immigration policy to his or her member of Congress
+- `emo`: post-test anxiety about increased immigration (0-9)
+- `tone`: framing of news story (0 = positive, 1 = negative)
 
-```{r m_med, echo = TRUE, results = "hide"}
-data(framing, package = "mediation")
+We can compare the results of two models:
+
+1. `tone` &rarr; `cong_mesg`
+2. `tone` &rarr; `cong_mesg`, adjusting for `emo`
+
+Which model gives us the causal effect estimate for `tone`? Let's run the two models.
+
+```{r m-adjust-no-adjust, results = "hide"}
+m_no_adjust <- brm(cong_mesg ~ tone,
+  data = framing,
+  family = bernoulli(link = "logit"))
+m_adjust <- brm(cong_mesg ~ tone + emo,
+  data = framing,
+  family = bernoulli(link = "logit"))
+```
+
+We can combine the results in a table:
+
+```{r msummary-adjust-no-adjust, warning = FALSE}
+msummary(list(`No adjustment` = m_no_adjust,
+              `Adjusting for feeling` = m_adjust),
+  estimate = "{estimate} [{conf.low}, {conf.high}]",
+  statistic = NULL, fmt = 2
+)
+```
+
+We can see that the Bayes estimate of the coefficient for `tone` was positive without `emo`, but was negative with `emo`. Which one should we believe? The information criteria (LOOIC and WAIC) suggested that the model with `emo` was better for prediction, but just because something helps predict the outcome doesn't make it a causal variable. To repeat,
+
+> Coefficients in a predictive model are not causal effects.
+
+And to emphasize again,
+
+> Causal inference requires causal assumptions, and these assumptions are not in the data.
+
+So instead, we need a DAG. Given that we know `emo` is measured **after** the intervention, it seems reasonable to think that a negatively-framed story about immigrants would illicit some negative emotions about increased immigration, and that emotion may prompt people to take anti-immigrant actions. Therefore, we have the following DAG:
+
+```{r dag5}
+dag5 <- dagitty(
+  "dag{
+    T -> C; T -> E; E -> C
+  }"
+)
+coordinates(dag5) <- list(x = c(T = 0, E = 1, C = 2),
+                          y = c(T = 0, E = 1, C = 0))
+# Plot
+ggdag(dag5) + theme_dag()
+```
+
+This is an example of a pipe/chain. It is a causal chain going from T(one) &rarr; E(motion) &rarr; C(ongress message). If we are interested in the causal effect of T, we should not condition on E, because that would mean we are comparing those who saw the negatively-framed story and *those who saw the positively-framed story but had the same negative emotion towards immigrants.* In other words, adjusting for E would mean taking out part of the effect of T on C through E. 
+
+As another example, think about studying the effect of a drug that supposed to lower the risk of heart attack. Imagine someone conducting a study comparing drug/no drug conditions on their probability of getting heart attacks. Should we adjust for participants' blood pressure after the intervention? If we want to know the effect of the drug, and that the drug works by lowering blood pressure, we should not adjust for post-test blood pressure. Otherwise, we would be asking the question: does the drug help prevent heart attacks through something other than lowering one's blood pressure?
+
+The latter question can be answered in a mediation analysis.
+
+## Mediation
+
+In the DAG above, E is a post-treatment variable potentially influenced by T, which we call a **mediator**. 
+
+!!! This part and below are not finished and will be updated soon.
+
+### Using `brms`
+
+```{r m_med, results = "hide"}
 m_med <- brm(
   # Two equations for two outcomes
   bf(cong_mesg ~ tone + emo) +
@@ -331,11 +394,12 @@ m_med <- brm(
   data = framing,
   seed = 1338,
   iter = 4000,
+  # A list of two family arguments for two outcomes
   family = list(bernoulli("logit"), gaussian("identity"))
 )
 ```
 
-## Using Stan
+### Using Stan
 
 Here's some Stan code for running the same mediation model
 
@@ -359,6 +423,20 @@ m_med_stan <- stan(
     seed = 1338,
     iter = 4000
 )
+```
+
+### Direct and Indirect Effects
+
+Controlled Direct Effect
+
+```{r cde}
+cond_df <- data.frame(tone = c(0, 1, 0, 1),
+                      emo = c(0, 0, 9, 9))
+cond_df %>%
+  bind_cols(
+    fitted(m_med, newdata = cond_df)[ , , "congmesg"]
+  ) %>%
+  knitr::kable()
 ```
 
 Natural Direct Effect
@@ -411,6 +489,30 @@ nie <- pred_congmesg1 - pred_congmesg0
 as_draws(list(NDE = nde, NIE = nie)) %>%
     mcmc_areas(bw = "SJ")
 ```
+
+Sensitivity Analysis
+
+```{r m_med_sens}
+# 1. form the data list for Stan
+stan_dat <- with(framing,
+  list(N0 = sum(tone == 0),
+       N1 = sum(tone == 1),
+       m0 = emo[which(tone == 0)],
+       m1 = emo[which(tone == 1)],
+       y0 = cong_mesg[which(tone == 0)],
+       y1 = cong_mesg[which(tone == 1)])
+)
+# 2. Run Stan
+m_med_sens <- stan(
+  file = here("stan", "mediation_logit_normal_sensitivity.stan"),
+  data = stan_dat,
+  seed = 1338,
+  iter = 4000,
+  pars = c("u0", "u1"), include = FALSE
+  )
+```
+
+<!--
 
 # Instrumental Variables
 

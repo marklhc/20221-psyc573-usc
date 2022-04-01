@@ -13,6 +13,10 @@ data_files/
 Kay_etal_2016_fig2.png
 the_imitation_game.png
 Metropolis_algorithm.png
+Bickel_etal_1975_science.png
+Grosz_etal_fig_study2.png
+McElreath_2020_ch6_ex.jpg
+Brader_etal_2008.png
 
 # Compiled Stan files
 stan/*.rds

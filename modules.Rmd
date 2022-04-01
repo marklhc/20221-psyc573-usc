@@ -447,6 +447,12 @@ By the end of this module, you will be able to
 
 ## Slides
 
+[PDF version](slides/causal_inference.pdf){target="_blank"}
+
+```{r embed-12, echo = FALSE}
+embed_xaringan("slides/causal_inference.html", ratio = "4:3")
+```
+
 :::
 
 :::

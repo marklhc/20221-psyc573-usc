@@ -501,6 +501,78 @@ msummary(m1_brm, estimate = "{estimate} [{conf.low}, {conf.high}]",
 
 ---
 
+# Diagnostics
+
+Linearity (functional form)
+
+.pull-left[
+
+```{r, out.width = "100%", fig.width = 4.29}
+eta <- beta0 + beta1 * log(x)
+mu <- eta
+y <- rnorm(num_obs, mean = mu, sd = 0.2)
+qplot(x, y = y)
+```
+
+```{r, results = "hide"}
+m_lin <- brm(y ~ x, data = data.frame(y, x))
+```
+
+]
+
+--
+
+.pull-right[
+
+.font70[
+
+```{r, echo = TRUE, out.width = "90%", fig.width = 3.86}
+pp_check(m_lin, type = "intervals", x = "x") +
+  geom_smooth(aes(x = x, y = y), se = FALSE)
+```
+
+]
+]
+
+---
+
+# Residual Plots
+
+```{r, out.width = "45%", fig.width = 3.86}
+eta <- beta0 + beta1 * x
+mu <- eta
+y <- rpois(num_obs, lambda = mu)
+qplot(x, y = y)
+```
+
+```{r, results = "hide"}
+m_lin_norm <- brm(y ~ x, data = data.frame(y, x))
+```
+
+--
+
+.font70[
+
+.pull-left[
+
+```{r, echo = TRUE, out.width = "90%", fig.width = 3.86}
+pp_check(m_lin_norm, ndraws = 100, bw = "SJ")
+```
+
+]
+
+.pull-right[
+
+```{r, echo = TRUE, out.width = "90%", fig.width = 3.86}
+pp_check(m_lin_norm, type = "error_scatter_avg_vs_x", x = "x")
+```
+
+]
+]
+
+---
+
+
 # Prediction vs. Explanation
 
 Is personal income growth a reason a candidate/party got more vote share?
@@ -560,10 +632,21 @@ Predicted seizure rate = $\exp(\beta_0 + \beta_1) = \exp(\beta_0) \exp(\beta_1)$
 
 $\beta_1$ = mean difference in **log** rate of seizure; $\exp(\beta_1)$ = ratio in rate of seizure 
 
+---
+class: clear
+
+.font70[
+
 ```{r, echo = TRUE, results = "hide"}
 m2 <- brm(count ~ Trt, data = epilepsy4,
           family = poisson(link = "log"))
 ```
+
+```{r}
+m2
+```
+
+]
 
 ---
 class: clear

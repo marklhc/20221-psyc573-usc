@@ -1,0 +1,880 @@
+---
+title: "Causal Inference"
+subtitle: "PSYC 573"
+institute: "University of Southern California"
+date: "March 29, 2022"
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts, "my_style.css"]
+    lib_dir: libs
+    nature:
+      countIncrementalSlides: false
+params:
+  for_class: false
+---
+class: inverse, center, middle
+
+```{r, child = "slide_settings.RMarkdown"}
+```
+
+```{r xaringan-panelset, echo = FALSE}
+xaringanExtra::use_panelset()
+```
+
+```{r xaringan-scribble, echo = FALSE, eval = params$for_class}
+xaringanExtra::use_scribble()
+```
+
+# Causation
+
+> Data are profoundly dumb about causal relationships
+
+.right[
+  --- Pearl & Mackenzie (2018)
+]
+
+???
+
+Outline:
+
+- DAG
+- confounding
+- $d$-separation
+- mediation
+
+---
+class: clear
+
+Materials based on chapters 5 and 6 of McElreath (2020)
+
+```{r, eval = params$for_class, out.width = "30%"}
+knitr::include_graphics("https://xcelab.net/rm/wp-content/uploads/2019/12/sr2edcover-1-187x300.png")
+```
+
+---
+exclude: `r !params$for_class`
+
+# Thought Experiment
+
+You have a group of 20 friends. You found out 10 have taken a "smart pill," and the others have not. When comparing the stat exam performance of the two groups, the "smart pill" group, on average, is better, with 90% CI [1, 5].
+
+> Do you think the "smart pill" causes half of your friends to do better in stat?
+
+---
+exclude: `r !params$for_class`
+
+# Thought Experiment (cont'd)
+
+A researcher conducts an experiment with 20 students. Ten are randomly assigned to take a "smart pill," and the other a placebo. When comparing the stat exam performance of the two groups, the "smart pill" group, on average, is better, with 90% CI [1, 5].
+
+> Do you think the "smart pill" causes half of the students to do better in stat?
+
+---
+exclude: `r !params$for_class`
+class: clear
+
+Is there any difference in the **statistical results** between the two scenarios?
+
+Is there any difference in **causal implications** between the two scenarios?
+
+---
+exclude: `r !params$for_class`
+
+# Thought Experiment (cont'd)
+
+A researcher conducts a study with 20 students. Ten volunteers took a "smart pill," and then the researcher compared their stat exam performance with 10 other students who had similar stat background as the "smart pill" group but did not take the pill. The "smart pill" group, on average, is better, with 90% CI [1, 5].
+
+> Do you think the "smart pill" causes the first 10 students to do better in stat?
+
+---
+
+# Causal Inference
+
+Obtaining an estimate of the causal effect of one variable on another
+
+--
+
+> an hour more exercise per day causes an increase in happiness by 0.1 to 0.2 points
+
+--
+
+- Intervention: if I exercise one hour more, my happiness will increase by 0.1 to 0.2 points
+- Counterfactual: had I exercised one less hour, my happiness would have been 0.1 to 0.2 points less
+
+---
+class: inverse, middle, center
+
+# Directed Acyclic Graph
+
+```{r}
+library(dagitty)
+library(ggdag)
+dag1 <- dagitty("dag{ G -> A; A -> D; G -> D }")
+coordinates(dag1) <- list(x = c(G = 0, A = 1, D = 2),
+                          y = c(G = 0, A = 1, D = 0))
+p1 <- ggdag::ggdag(dag1) +
+  theme_dag_gray()
+p1
+```
+
+---
+class: clear
+
+Data from the 2009 American Community Survey (ACS)
+
+```{r WaffleDivorce}
+library(readr)
+waffle_divorce <- read_delim(  # read delimited files
+    "https://raw.githubusercontent.com/rmcelreath/rethinking/master/data/WaffleDivorce.csv",
+    delim = ";"
+)
+# Rescale Marriage and Divorce by dividing by 10
+waffle_divorce$Marriage <- waffle_divorce$Marriage / 10
+waffle_divorce$Divorce <- waffle_divorce$Divorce / 10
+waffle_divorce$MedianAgeMarriage <- waffle_divorce$MedianAgeMarriage / 10
+# See data description at https://rdrr.io/github/rmcelreath/rethinking/man/WaffleDivorce.html
+```
+
+```{r, warning = FALSE}
+library(ggplot2)
+ggplot(waffle_divorce,
+       aes(x = Marriage, y = Divorce)) +
+  geom_point() +
+  geom_smooth() +
+  labs(x = "Marriage rate (per 10 adults)",
+       y = "Divorce rate (per 10 adults)") +
+  ggrepel::geom_text_repel(aes(label = Loc))
+```
+
+--
+
+Does marriage **cause** divorce? (pay attention to the unit of analysis)
+
+---
+class: clear
+
+Age at marriage?
+
+```{r, warning = FALSE}
+library(ggplot2)
+ggplot(waffle_divorce,
+       aes(x = MedianAgeMarriage, y = Divorce / 10)) +
+  geom_point() +
+  geom_smooth() +
+  labs(x = "Median age marriage (10 years)",
+       y = "Divorce rate (per 10 adults)") +
+  ggrepel::geom_text_repel(aes(label = Loc))
+```
+
+---
+
+# Directed Acyclic Graph (DAG)
+
+Allows researchers to encode **causal assumptions** of the data
+
+- Based on knowledge of the *data* and the *variables*
+
+--
+
+```{r}
+dag1 <- dagitty("dag{ A -> D; A -> M; M -> D }")
+coordinates(dag1) <- list(x = c(M = 0, A = 1, D = 2),
+                          y = c(M = 0, A = 1, D = 0))
+# Plot
+p2 <- ggdag(dag1) + theme_dag()
+p2
+```
+
+---
+class: clear
+
+```{r, out.width = "30%", fig.width = 5}
+p2
+```
+
+--
+
+.pull-left[
+
+"Weak" assumptions
+- A *may* directly influence M
+- A *may* directly influence D
+- M *may* directly influence D
+
+]
+
+--
+
+.pull-right[
+
+"Strong" assumptions: things not shown in the graph
+- E.g., M does not directly influence A
+- E.g., A is the only relevant variable in the causal pathway M &rarr; D
+
+]
+
+---
+
+# Basic Types of Junctions
+
+**Fork**: A &larr; B &rarr; C
+
+**Chain/Pipe**: A &rarr; B &rarr; C
+
+**Collider**: A &rarr; B &larr; C
+
+---
+
+# Fork
+
+aka Classic confounding
+- *Confound*: something that misleads us about a causal influence
+
+M &larr; <span style="color:red">A</span> &rarr; D
+
+--
+
+Assuming the DAG is correct,
+- the causal effect of M &rarr; D can be obtained by holding constant A
+    * stratifying by A; "controlling" for A
+
+---
+class: clear
+
+.panelset[
+.panel[.panel-name[Model]
+
+\begin{align}
+  D_i & \sim N(\mu_i, \sigma)  \\
+  \mu_i & = \beta_0 + \beta_1 A_i + \beta_2 M_i \\
+  \beta_0 & \sim N(0, 5) \\
+  \beta_1 & \sim N(0, 1) \\
+  \beta_2 & \sim N(0, 1) \\
+  \sigma & \sim t^+_4(0, 3) \\
+\end{align}
+
+]
+
+.panel[.panel-name[brms]
+
+```{r m1, echo = TRUE, results = "hide"}
+library(brms)
+m1 <- brm(Divorce ~ MedianAgeMarriage + Marriage,
+  data = waffle_divorce,
+  prior = prior(std_normal(), class = "b") +
+    prior(normal(0, 5), class = "Intercept") +
+    prior(student_t(4, 0, 3), class = "sigma"),
+  seed = 941,
+  iter = 4000
+)
+```
+
+]
+
+.panel[.panel-name[Results]
+
+.font70[
+
+```{r print-m1}
+m1
+```
+
+]
+]
+]
+
+---
+class: clear
+
+### Posterior predictive checks
+
+.pull-left[
+
+```{r, out.width = "100%", fig.width = 4.29}
+pp_check(m1, ndraws = 100)
+```
+
+]
+
+.pull-right[
+
+```{r, out.width = "100%", fig.width = 4.29}
+pp_check(m1, type = "intervals", x = "Marriage") +
+  labs(x = "Marriage", y = "Divorce")
+pp_check(m1, type = "intervals", x = "MedianAgeMarriage") +
+  labs(x = "MedianAgeMarriage", y = "Divorce")
+```
+
+]
+
+---
+
+# Pedicting an Intervention
+
+> What would happen to the divorce rate if we encourage more people to get married, so that marriage rate increases by 1 per 10 adults?
+
+--
+
+Based on our DAG, this should not change the median marriage age
+
+--
+
+```{r}
+pred_df <- data.frame(
+  Marriage = c(2, 3),
+  MedianAgeMarriage = c(2.5, 2.5)
+)
+pred_df %>%
+  bind_cols(fitted(m1, newdata = pred_df)) %>%
+  knitr::kable()
+```
+
+---
+class: inverse, middle, center
+
+# Randomization
+
+---
+exclude: `r !params$for_class`
+class: clear
+
+```{r}
+knitr::include_graphics("images/Brader_etal_2008.png")
+```
+
+---
+
+# Framing Experiment
+
+- X: exposure to a negatively framed news story about immigrants
+- Y: anti-immigration political action
+
+--
+
+.pull-left[
+
+No Randomization
+
+```{r, fig.width = 5}
+dag2 <- dagitty("dag{
+  X -> Y; U -> X; U -> Y
+  U [unobserved]
+}")
+coordinates(dag2) <- list(x = c(X = 0, U = 1, Y = 2),
+                          y = c(X = 0, U = 1, Y = 0))
+# Plot
+p3 <- ggdag(dag2) + theme_dag()
+p3
+```
+
+]
+
+???
+
+Potential confound:
+- Location
+- Usual outlet/source to acquire information
+
+--
+
+.pull-right[
+
+Randomization
+
+```{r, fig.width = 5}
+dag3 <- dagitty("dag{
+  X -> Y; U -> Y
+  U [unobserved]
+}")
+coordinates(dag3) <- list(x = c(X = 0, U = 1, Y = 2),
+                          y = c(X = 0, U = 1, Y = 0))
+# Plot
+p4 <- ggdag(dag3) + theme_dag()
+p4
+```
+
+]
+
+---
+
+# Back-Door Criterion
+
+```{r, out.width = "50%", fig.width = 5}
+dag4 <- dagitty("dag{
+  X -> Y; W1 -> X; U -> W2; W2 -> X; W1 -> Y; U -> Y
+}")
+coordinates(dag4) <- list(x = c(X = 0, W1 = 0.66, U = 1.32, W2 = 0.66, Y = 2),
+                          y = c(X = 0, W1 = 1, U = 1, W2 = 0.5, Y = 0))
+# Plot
+p5 <- ggdag(dag4) + theme_dag()
+p5
+```
+
+The causal effect of X &rarr; Y can be obtained by blocking all the backdoor paths that do not involve descendants of X
+
+--
+
+- Randomization: (when done successfully) eliminates all paths entering X
+- Conditioning (holding constant)
+
+---
+exclude: `r !params$for_class`
+
+```{r}
+knitr::include_graphics("images/Grosz_etal_fig_study2.png")
+```
+
+---
+exclude: `r !params$for_class`
+
+# Exercise
+
+```{r}
+knitr::include_graphics("images/McElreath_2020_ch6_ex.jpg")
+```
+
+---
+
+# Dagitty
+
+```{r, echo = TRUE}
+library(dagitty)
+dag4 <- dagitty("dag{
+  X -> Y; W1 -> X; U -> W2; W2 -> X; W1 -> Y; U -> Y
+}")
+latents(dag4) <- "U"
+adjustmentSets(dag4, exposure = "X", outcome = "Y",
+               effect = "direct")
+```
+
+```{r, echo = TRUE}
+impliedConditionalIndependencies(dag4)
+```
+
+---
+class: inverse, center, middle
+
+# Post-Treatment Bias
+
+---
+class: clear
+
+## Data for Framing Experiment
+
+- `cong_mesg`: binary variable indicating whether or not the participant agreed to send a letter about immigration policy to his or her member of Congress
+
+- `emo`: post-test anxiety about increased immigration (0-9)
+
+- `tone`: framing of news story (0 = positive, 1 = negative)
+
+---
+class: clear
+
+## Results
+
+```{r, results = "hide"}
+data(framing, package = "mediation")
+framing$emo <- framing$emo - 3
+m1 <- brm(cong_mesg ~ tone,
+    data = framing,
+    family = bernoulli(link = "logit"))
+m2 <- brm(cong_mesg ~ tone + emo,
+    data = framing,
+    family = bernoulli(link = "logit"))
+```
+
+```{r, warning = FALSE}
+library(modelsummary)
+msummary(list(`No adjustment` = m1,
+              `Adjusting for feeling` = m2),
+  estimate = "{estimate} [{conf.low}, {conf.high}]",
+  statistic = NULL, fmt = 2,
+  gof_omit = "Num|ELPD|LOOIC|WAIC|RMSE"
+)
+```
+
+???
+
+Negative framing: emphasizing costs
+Positive framing: emphasizing benefits
+
+--
+
+Which one estimates the causal effect?
+
+---
+
+# Mediation
+
+```{r, out.width = "35%", fig.width = 5}
+dag5 <- dagitty("dag{
+  T -> C; T -> E; E -> C
+}")
+coordinates(dag5) <- list(x = c(T = 0, E = 1, C = 2),
+                          y = c(T = 0, E = 1, C = 0))
+# Plot
+p6 <- ggdag(dag5) + theme_dag()
+p6
+```
+
+In the DAG, E is a post-treatment variable potentially influenced by T
+- E is a potential **mediator**
+
+--
+
+> A mediator is very different from a confounder
+
+---
+
+# Mediation Analysis
+
+.panelset[
+
+.panel[.panel-name[Model]
+
+\begin{align}
+  \text{emo}_i & \sim N(\mu^\text{e}_i, \sigma) \\
+  \mu^\text{e}_i & = \beta^\text{e}_0 + \beta_1 \text{tone}_i \\
+  \text{cong_mesg}_i & \sim \mathrm{Bern}(\mu^\text{c}_i, \sigma^{c})  \\
+  \mathrm{logit}(\mu^\text{c}_i) & = \eta_i \\
+  \eta_i & = \beta^\text{c}_0 + \beta_2 \text{tone}_i + \beta_3 \text{emo}_i \\
+  \beta^\text{e}_0, \beta^\text{c}_0 & \sim N(0, 5) \\
+  \beta_1, \beta_2, \beta_3 & \sim N(0, 1) \\
+  \sigma & \sim t^+_4(0, 3) \\
+\end{align}
+
+]
+
+.panel[.panel-name[Code]
+
+```{r m_med, echo = TRUE, results = "hide"}
+m_med <- brm(
+  # Two equations for two outcomes
+  bf(cong_mesg ~ tone + emo) +
+    bf(emo ~ tone) +
+    set_rescor(FALSE),
+  data = framing,
+  seed = 1338,
+  iter = 4000,
+  family = list(bernoulli("logit"), gaussian("identity"))
+)
+```
+
+]
+
+.panel[.panel-name[Output]
+
+.font60[
+
+```{r print-m_med}
+m_med
+```
+
+]
+]
+]
+
+---
+
+# Direct Effect
+
+Causal effect when holding mediator at a specific level
+
+.font70[
+
+```{r, echo = TRUE}
+cond_df <- data.frame(tone = c(0, 1, 0, 1),
+                      emo = c(0, 0, 9, 9))
+cond_df %>%
+  bind_cols(
+    fitted(m_med, newdata = cond_df)[ , , "congmesg"]
+  ) %>%
+  knitr::kable()
+```
+
+]
+
+---
+
+# Indirect Effect
+
+Change in $Y$ of the control group if their mediator level changes to what the treatment group *would have obtained*
+
+--
+
+Quick Demo using posterior means<sup>1</sup>
+
+- T = 0, E(M) = 3.39
+- T = 1, E(M) = 3.39 + 1.14 = 4.53
+
+.footnote[
+
+[1]: Fully Bayesian analyses in the note
+
+]
+
+--
+
+```{r}
+cond_df <- data.frame(tone = c(0, 0),
+                      emo = c(3.39, 4.53))
+cond_df %>%
+  bind_cols(
+    fitted(m_med, newdata = cond_df)[ , , "congmesg"]
+  ) %>%
+  knitr::kable()
+```
+
+---
+
+# Potential Confounding
+
+.pull-left[
+
+```{r, out.width = "100%", fig.width = 5}
+dag6 <- dagitty("dag{
+  T -> C; T -> E; E -> C; U -> E; U -> C
+}")
+coordinates(dag6) <- list(x = c(T = 0, E = 1, C = 2, U = 2),
+                          y = c(T = 0, E = 1, C = 0, U = 1))
+# Plot
+p7 <- ggdag(dag6) + theme_dag()
+p7
+```
+
+]
+
+--
+
+.pull-right[
+
+Maybe age is related to both `emo` and `cong_mesg`?
+
+.font70[
+
+```{r m_med2, echo = TRUE, eval = FALSE}
+m_med2 <- brm(
+  # Two equations for two outcomes
+  bf(cong_mesg ~ tone + emo + age) +
+    bf(emo ~ tone + age) +
+    set_rescor(FALSE),
+  data = framing,
+  seed = 1338,
+  iter = 4000,
+  family = list(bernoulli("logit"),
+                gaussian("identity"))
+)
+```
+
+]
+]
+
+---
+
+# Unobserved Confounding
+
+Can be incorporated by assigning priors to the unobserved confounding paths
+
+---
+class: inverse, middle, center
+
+# Collider Bias
+
+---
+class: clear
+
+.pull-left[
+
+```{r, out.width = "100%", fig.width = 5}
+dag7 <- dagitty("dag{
+  X -> Y; X -> S; Y -> S
+}")
+coordinates(dag7) <- list(x = c(X = 0, S = 1, Y = 2),
+                          y = c(X = 0, S = -1, Y = 0))
+# Plot
+p8 <- ggdag(dag7) + theme_dag()
+p8
+```
+
+]
+
+.pull-right[
+
+E.g., Is the most newsworthy research the least trustworthy?
+
+```{r code-6-1, out.width = "100%", fig.width = 4.29, fig.asp = 1}
+set.seed(2221) # different seed from the text
+num_proposals <- 200 # number of grant proposals
+prop_selected <- 0.1 # proportion to select
+# Simulate independent newsworthiness and trustworthiness
+plot_dat <- tibble( # `tibble` is the tidyverse version of `data.frame`
+    nw = rnorm(num_proposals),
+    tw = rnorm(num_proposals)
+)
+plot_dat <- plot_dat %>%
+    mutate(
+        total = nw + tw
+    )
+sel_dat <- plot_dat %>%
+    # select top 10% of combined scores
+    slice_max(order_by = total, prop = prop_selected)
+plot_dat %>%
+    ggplot(aes(x = nw, y = tw)) +
+    geom_point() +
+    geom_point(data = sel_dat, shape = 1, size = 3,
+               color = "red") +
+    geom_smooth(method = "lm", se = FALSE) +
+    geom_smooth(data = sel_dat, method = "lm", se = FALSE,
+                col = "purple") +
+    labs(x = "newsworthiness", y = "trustworthiness")
+```
+
+]
+
+---
+class: clear
+
+### Conditioning on a collider creates spurious associations
+
+- nice person &rarr; date &larr; good-looking person
+
+--
+
+- impulsivity &rarr; high-risk youth &larr; delinquency
+
+--
+
+- healthcare worker &rarr; COVID-19 testing &larr; COVID-19 severity<sup>2</sup>
+
+--
+
+- standardized test &rarr; admission &larr; research skills
+
+--
+
+- maternal smoking &rarr; birth weight &rarr; birth defect &larr; mortality
+
+.footnote[
+
+[2]: See https://www.nature.com/articles/s41467-020-19478-2
+
+]
+
+---
+class: inverse, middle, center
+
+# Final Example
+
+---
+exclude: `r !params$for_class`
+class: clear
+
+```{r}
+knitr::include_graphics("images/Bickel_etal_1975_science.png")
+```
+
+---
+
+# Student Admissions at UC Berkeley (1973)
+
+.font70[
+
+```{r}
+tab <- UCBAdmissions %>%
+  as.data.frame() %>%
+  group_by(Gender, Dept) %>%
+  mutate(App = sum(Freq)) %>%
+  filter(Admit == "Admitted") %>%
+  ungroup() %>%
+  select(Gender, Dept, Admit = Freq, App) %>%
+  pivot_wider(names_from = Gender,
+              values_from = c(App, Admit))
+total_row <- data.frame(
+  Dept = "Total",
+  App_Male = sum(tab$App_Male),
+  Admit_Male = sum(tab$Admit_Male),
+  App_Female = sum(tab$App_Female),
+  Admit_Female = sum(tab$Admit_Female)
+)
+bind_rows(tab, total_row) %>%
+  mutate(Percent_Male = Admit_Male / App_Male * 100,
+         Percent_Female = Admit_Female / App_Female * 100) %>%
+  select(1, 2, 4, 6, 3, 5, 7) %>%
+  knitr::kable()
+```
+
+]
+
+```{r, eval = FALSE}
+berkeley_admit <- UCBAdmissions %>%
+  as.data.frame() %>%
+  group_by(Gender, Dept) %>%
+  mutate(App = sum(Freq)) %>%
+  filter(Admit == "Admitted") %>%
+  select(Gender, Dept, Admit = Freq, App)
+ggplot(berkeley_admit, aes(x = Gender)) +
+  geom_pointrange(
+    data = berkeley_admit %>%
+      group_by(Gender) %>%
+      summarise(padmit = sum(Admit) / sum(App),
+                padmit_se = sqrt(padmit * (1 - padmit) / sum(App))),
+    aes(y = padmit,
+        ymin = padmit - padmit_se, ymax = padmit + padmit_se)
+  ) +
+  labs(y = "Aggregated proportion admitted")
+# Gender --> Admission
+m1 <- brm(Admit | trials(App) ~ Gender,
+  data = berkeley_admit,
+  family = binomial("logit"),
+  iter = 4000
+)
+pp_check(m1, type = "intervals")
+# Gender --> Admission, within department
+m2 <- brm(Admit | trials(App) ~ Gender + (Gender | Dept),
+  data = berkeley_admit,
+  family = binomial("logit"),
+  iter = 4000
+)
+coef(m2)  # department-specific coefficients
+pp_check(m2, type = "intervals")
+```
+
+---
+
+# Causal Thinking
+
+```{r}
+dag8 <- dagitty("dag{
+  G -> A; G -> D; D -> A; U -> D; U -> A
+}")
+coordinates(dag8) <- list(x = c(G = 0, D = 1, A = 2, U = 2),
+                          y = c(G = 0, D = 1, A = 0, U = 1))
+# Plot
+p9 <- ggdag(dag8) + theme_dag()
+p9
+```
+
+What do we mean by the causal effect of gender?
+
+What do we mean by gender bias?
+
+---
+
+# Remarks
+
+- Causal inference requires **causal assumptions**
+    * You need a DAG
+
+--
+
+- Blindly adjusting for covariates does not give better results
+    * post-treatment bias, collider bias, etc
+
+--
+
+- Think carefully about what causal quantity is of interest
+    * E.g., direct, indirect, total
+
+--
+
+- Causal inferences are possible with both experimental and non-experimental data
