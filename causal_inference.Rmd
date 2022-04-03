@@ -141,15 +141,15 @@ Assuming a correctly specified DAG, $\beta_2$ is the causal effect of M on D. He
 
 ```{r m1_stan, eval = FALSE}
 m1_stan <- stan(
-    here::here("stan", "multiple_reg.stan"),
-    data = list(
-        N = nrow(waffle_divorce),
-        p = 2,
-        y = waffle_divorce$Divorce,
-        x = waffle_divorce[c("MedianAgeMarriage", "Marriage")]
-    ),
-    seed = 941,
-    iter = 4000
+  here::here("stan", "multiple_reg.stan"),
+  data = list(
+    N = nrow(waffle_divorce),
+    p = 2,
+    y = waffle_divorce$Divorce,
+    x = waffle_divorce[c("MedianAgeMarriage", "Marriage")]
+  ),
+  seed = 941,
+  iter = 4000
 )
 ```
 
@@ -157,12 +157,12 @@ And using `brms`:
 
 ```{r m1, results = "hide"}
 m1 <- brm(Divorce ~ MedianAgeMarriage + Marriage,
-    data = waffle_divorce,
-    prior = prior(std_normal(), class = "b") +
-        prior(normal(0, 5), class = "Intercept") +
-        prior(student_t(4, 0, 3), class = "sigma"),
-    seed = 941,
-    iter = 4000
+  data = waffle_divorce,
+  prior = prior(std_normal(), class = "b") +
+    prior(normal(0, 5), class = "Intercept") +
+    prior(student_t(4, 0, 3), class = "sigma"),
+  seed = 941,
+  iter = 4000
 )
 ```
 
@@ -182,9 +182,9 @@ As shown in the table, when holding constant the median marriage age of states, 
 ```{r pp-check-m1}
 pp_check(m1, ndraws = 100) # density
 pp_check(m1, type = "intervals", x = "Marriage") +
-    labs(x = "Marriage", y = "Divorce")
+  labs(x = "Marriage", y = "Divorce")
 pp_check(m1, type = "intervals", x = "MedianAgeMarriage") +
-    labs(x = "MedianAgeMarriage", y = "Divorce")
+  labs(x = "MedianAgeMarriage", y = "Divorce")
 ```
 
 The model does not fit every state (e.g., UT, ME, ID).
@@ -246,7 +246,7 @@ datasummary(emo + p_harm + cong_mesg ~ Factor(tone) * (Mean + SD + Histogram),
             data = framing)
 # Correlation table
 framing %>% select(tone, emo, cong_mesg) %>%
-    datasummary_correlation(method = "pearson")
+  datasummary_correlation(method = "pearson")
 ```
 
 ## Randomization Removes Incoming Paths for Treatment
@@ -290,7 +290,7 @@ Therefore, when randomization is successful, the path coefficient of X &rarr; Y 
 
 ## The Back-Door Criterion: Estimating Causal Effect in Nonexperimental Data
 
-Randomization is one---but not the only---way to rule out confounding variables. Much progress has been made in clarifying that causal effects **can** be estimated in nonexperimental data. After all, researchers have not randomly assigned individuals to smoke $x$ cigarettes per day, but we are confident that smoking causes cancer; we never manipulated the gravitational force of the moon, but we are pretty sure that high and low tides are caused by the moon.
+Randomization is one---but not the only---way to rule out confounding variables. Much progress has been made in clarifying that causal effects **can** be estimated in nonexperimental data. After all, researchers have not randomly assigned individuals to smoke $x$ cigarettes per day, but we are confident that smoking causes cancer; we never manipulated the moon's gravitational force, but we are pretty sure that the moon is a cause of high and low tides.
 
 In a DAG, the back-door criterion can be used to identify variables that we should adjust for to obtain a causal effect. The set of variables to be adjusted should (a) blocks every path between X and Y that contains an arrow entering X and (b) does not contain variables that are descendant of X.
 
@@ -317,10 +317,10 @@ adjustmentSets(dag4, exposure = "X", outcome = "Y",
 
 ## Post-Treatment Bias
 
-Here's some key variables from the `framing` data set:
+Here are some key variables from the `framing` data set:
 
 - `cong_mesg`: binary variable indicating whether or not the participant agreed to send a letter about immigration policy to his or her member of Congress
-- `emo`: post-test anxiety about increased immigration (0-9)
+- `emo`: posttest anxiety about increased immigration (0-9)
 - `tone`: framing of news story (0 = positive, 1 = negative)
 
 We can compare the results of two models:
@@ -357,7 +357,7 @@ And to emphasize again,
 
 > Causal inference requires causal assumptions, and these assumptions are not in the data.
 
-So instead, we need a DAG. Given that we know `emo` is measured **after** the intervention, it seems reasonable to think that a negatively-framed story about immigrants would illicit some negative emotions about increased immigration, and that emotion may prompt people to take anti-immigrant actions. Therefore, we have the following DAG:
+So instead, we need a DAG. Given that we know `emo` is measured **after** the intervention, it seems reasonable to think that a negatively-framed story about immigrants would elicit some negative emotions about increased immigration, and that emotion may prompt people to take anti-immigrant actions. Therefore, we have the following DAG:
 
 ```{r dag5}
 dag5 <- dagitty(
@@ -371,31 +371,37 @@ coordinates(dag5) <- list(x = c(T = 0, E = 1, C = 2),
 ggdag(dag5) + theme_dag()
 ```
 
-This is an example of a pipe/chain. It is a causal chain going from T(one) &rarr; E(motion) &rarr; C(ongress message). If we are interested in the causal effect of T, we should not condition on E, because that would mean we are comparing those who saw the negatively-framed story and *those who saw the positively-framed story but had the same negative emotion towards immigrants.* In other words, adjusting for E would mean taking out part of the effect of T on C through E. 
+This is an example of a pipe/chain. It is a causal chain going from T(one) &rarr; E(motion) &rarr; C(ongress message). If we are interested in the causal effect of T, we should not condition on E; conditioning on E would mean comparing those who saw the negatively-framed story and *those who saw the positively-framed story but had the same negative emotion towards immigrants.* In other words, adjusting for E would mean taking out part of the effect of T on C through E. 
 
-As another example, think about studying the effect of a drug that supposed to lower the risk of heart attack. Imagine someone conducting a study comparing drug/no drug conditions on their probability of getting heart attacks. Should we adjust for participants' blood pressure after the intervention? If we want to know the effect of the drug, and that the drug works by lowering blood pressure, we should not adjust for post-test blood pressure. Otherwise, we would be asking the question: does the drug help prevent heart attacks through something other than lowering one's blood pressure?
+As another example, think about a drug that is supposed to lower the risk of a heart attack. Imagine someone conducting a study comparing drug/no drug conditions on their probability of getting heart attacks. Should we adjust for participants' blood pressure after the intervention? If we want to know the drug's effect, and that the drug works by lowering blood pressure, we should not adjust for posttest blood pressure. Otherwise, we would be asking the question: does the drug help prevent heart attacks through something other than lowering one's blood pressure?
 
-The latter question can be answered in a mediation analysis.
+The latter question can be answered in mediation analysis.
 
 ## Mediation
 
-In the DAG above, E is a post-treatment variable potentially influenced by T, which we call a **mediator**. 
+In the DAG above, E is a post-treatment variable potentially influenced by T, which we call a **mediator**. Mediator is an important topic in causal inference, as it informs the mechanism of how a variable has a causal effect on an outcome. 
 
-!!! This part and below are not finished and will be updated soon.
+One thing to be careful is that statistically speaking, a mediator behaves very much like a confounder, and their difference is based on causal assumptions.
+
+Let's analyze the mediation model in Figure X. There are two variables that are on the receiving end of some causal effects: `emo` and `cong_mesg`. Whereas GLM handles one outcome, with `brms`, we can have a system of equations---one for each outcome---estimated simultaneously, as shown in the code below. 
 
 ### Using `brms`
 
 ```{r m_med, results = "hide"}
+prior_m <- prior(normal(0, 1), class = "b")
 m_med <- brm(
   # Two equations for two outcomes
   bf(cong_mesg ~ tone + emo) +
     bf(emo ~ tone) +
     set_rescor(FALSE),
-  data = framing,
-  seed = 1338,
-  iter = 4000,
   # A list of two family arguments for two outcomes
-  family = list(bernoulli("logit"), gaussian("identity"))
+  family = list(bernoulli("logit"), gaussian("identity")),
+  data = framing,
+  prior = prior(normal(0, 1), class = "b", resp = "emo") +
+    prior(student_t(4, 0, 5), class = "sigma", resp = "emo") +
+    prior(student_t(4, 0, 2.5), class = "b", resp = "congmesg"),
+  seed = 1338,
+  iter = 4000
 )
 ```
 
@@ -409,25 +415,39 @@ Here's some Stan code for running the same mediation model
 ```{r m_med_stan, eval = FALSE}
 # 1. form the data list for Stan
 stan_dat <- with(framing,
-    list(N0 = sum(tone == 0),
-         N1 = sum(tone == 1),
-         m0 = emo[which(tone == 0)],
-         m1 = emo[which(tone == 1)],
-         y0 = cong_mesg[which(tone == 0)],
-         y1 = cong_mesg[which(tone == 1)])
+  list(N0 = sum(tone == 0),
+       N1 = sum(tone == 1),
+       m0 = emo[which(tone == 0)],
+       m1 = emo[which(tone == 1)],
+       y0 = cong_mesg[which(tone == 0)],
+       y1 = cong_mesg[which(tone == 1)])
 )
 # 2. Run Stan
 m_med_stan <- stan(
-    file = here("stan", "mediation_logit_normal.stan"),
-    data = stan_dat,
-    seed = 1338,
-    iter = 4000
+  file = here("stan", "mediation_logit_normal.stan"),
+  data = stan_dat,
+  seed = 1338,
+  iter = 4000
 )
 ```
 
 ### Direct and Indirect Effects
 
-Controlled Direct Effect
+In a mediation model, the effect of X on Y has two mechanisms: 
+- Indirect effect: X causes Y because X causes M, and M causes Y
+- Direct effect: X causes Y without involving M
+
+More specifically, the direct effect is the change in Y for one unit change in X, *holding M constant*. In our example, it means comparing subsets of the treatment and the control groups, under the condition that both subsets have the same level of negative emotion about increased immigration. The indirect effect takes a bit more effort to understand: it is the change in Y for the control group (or the treatment group), if their mediator value is set to the level as the treatment group. In our example, it would mean comparing the control group and the *counterfactual* where the control group had their negative emotion changed to the same level as the treatment group.
+
+The *causal mediation* literature has some more distinctions on the different types of direct and indirect effects. Below I give codes for obtaining these effects without going into details. 
+
+<aside>
+You can find more information about causal mediation in this paper: https://ftp.cs.ucla.edu/pub/stat_ser/r389.pdf
+</aside>
+
+#### Controlled direct effect (CDE)
+
+CDE is the direct effect when the mediator is set to a specific level. Below shows the CDE for `emo` = 0 and `emo` = 9, respectively.
 
 ```{r cde}
 cond_df <- data.frame(tone = c(0, 1, 0, 1),
@@ -439,7 +459,9 @@ cond_df %>%
   knitr::kable()
 ```
 
-Natural Direct Effect
+#### Natural direct effect (NDE)
+
+The "natural" effects are quantities for some kind of population averages. NDE is the direct effect when the mediator is held constant at the level of the control group. Below we simulate some data to obtain the level of `emo` that would be "naturally" obtained for the `tone` = 0 group.
 
 ```{r nde-ave-pop}
 set.seed(1235)
@@ -450,21 +472,23 @@ sim_emo0 <- rnorm(post_draws$b_emo_Intercept,
                   mean = post_draws$b_emo_Intercept,
                   sd = post_draws$sigma_emo)
 # Predicted cong_mesg for tone = 0, emo = sim_emo0
-pred_congmesg0 <- plogis(  # apply the inverse probit link
-    post_draws$b_congmesg_Intercept +
-        post_draws$b_congmesg_emo * sim_emo0
+pred_congmesg0 <- plogis( # apply the inverse probit link
+  post_draws$b_congmesg_Intercept +
+    post_draws$b_congmesg_emo * sim_emo0
 )
 # Predicted cong_mesg for tone = 1, emo = sim_emo0
-pred_congmesg1 <- plogis(  # apply the inverse probit link
-    post_draws$b_congmesg_Intercept +
-        post_draws$b_congmesg_tone +
-        post_draws$b_congmesg_emo * sim_emo0
+pred_congmesg1 <- plogis( # apply the inverse probit link
+  post_draws$b_congmesg_Intercept +
+    post_draws$b_congmesg_tone +
+    post_draws$b_congmesg_emo * sim_emo0
 )
 # Natural direct effect
 nde <- pred_congmesg1 - pred_congmesg0
 ```
 
-Natural Indirect Effect
+#### Natural indirect effect (NIE)
+
+NDE is the difference in the outcome between the actual control group and a counterfactual control group. The counterfactual here is a control group that did not receive the treatment, but had their `emo` value set to be equal to the treatment group. 
 
 ```{r nie-ave-pop}
 set.seed(1235)
@@ -475,14 +499,14 @@ sim_emo0 <- rnorm(post_draws$b_emo_Intercept,
 # Counterfactuals for the same individuals with tone = 1
 sim_emo1 <- sim_emo0 + post_draws$b_emo_tone
 # Predicted cong_mesg for tone = 0, emo = sim_emo0
-pred_congmesg0 <- plogis(  # apply the inverse probit link
-    post_draws$b_congmesg_Intercept +
-        post_draws$b_congmesg_emo * sim_emo0
+pred_congmesg0 <- plogis( # apply the inverse probit link
+  post_draws$b_congmesg_Intercept +
+    post_draws$b_congmesg_emo * sim_emo0
 )
 # Predicted cong_mesg for tone = 0, emo = sim_emo1
-pred_congmesg1 <- plogis(  # apply the inverse probit link
-    post_draws$b_congmesg_Intercept +
-        post_draws$b_congmesg_emo * sim_emo1
+pred_congmesg1 <- plogis( # apply the inverse probit link
+  post_draws$b_congmesg_Intercept +
+    post_draws$b_congmesg_emo * sim_emo1
 )
 # Natural direct effect
 nie <- pred_congmesg1 - pred_congmesg0
@@ -490,9 +514,25 @@ as_draws(list(NDE = nde, NIE = nie)) %>%
     mcmc_areas(bw = "SJ")
 ```
 
-Sensitivity Analysis
+### Sensitivity analysis
 
-```{r m_med_sens}
+```{r dag6}
+dag6 <- dagitty(
+  "dag{
+    T -> C; T -> E; E -> C; U -> E; U -> C
+  }"
+)
+coordinates(dag6) <- list(x = c(T = 0, E = 1, C = 2, U = 2),
+                          y = c(T = 0, E = 1, C = 0, U = 1))
+ggdag(dag6) + theme_dag()
+```
+
+One important assumption in mediation is that there is no unobserved confounding variable between the mediator and the outcome. This assumption requires researchers' input, as usually we don't have studies that randomly assign both the treatment variable and the mediator. An additional technique is to ask: what would the effect be if there were unobserved confounding variables of a certain magnitude? With Bayesian, we can represent the strength of the confounding effect by a prior distribution. The following shows the mediation estimates assuming a N(0.5, 0.2) prior to the confounding effect.
+
+```{stan, code = readLines(here::here("stan", "mediation_logit_normal_sensitivity.stan")), echo = TRUE, eval = FALSE, output.var = "med_mod_sens"}
+```
+
+```{r m_med_sens, results = "hide"}
 # 1. form the data list for Stan
 stan_dat <- with(framing,
   list(N0 = sum(tone == 0),
@@ -508,15 +548,210 @@ m_med_sens <- stan(
   data = stan_dat,
   seed = 1338,
   iter = 4000,
+  # Exclude u0 and u1
   pars = c("u0", "u1"), include = FALSE
   )
 ```
 
-<!--
+```{r print-m_med_sens}
+m_med_sens
+```
 
-# Instrumental Variables
+As you can see, the prior of the confounding effect attenuates the coefficients from the mediator to the outcome, but the path from the mediator to the outcome remains pretty much above zero.
 
--->
+# Collider
+
+A collider is a descendant of two parent nodes. When one holds the collider constant, it induces a spurious association between the parents. This leads to many unexpected results in data analysis and daily lives. For example, consider people who are nice and who are good-looking. Is there an association between a person being nice and a person being good-looking? Maybe. But this association can be induced when we condition on a collider. Let's say a friend of yours only dates people who are either nice or good-looking. So we have this colliding relation:
+
+Nice &rarr; Dating &larr; Good looking
+
+If you look at just the people that your friend dated, they are either nice or good looking, but the fact that you select to look at (condition on) only the people that your friend dated would automatically eliminate people who are neither nice nor good looking. This induces a spurious negative association between nice and good looking, so your friend may believe that people who are nice would be less likely to have appearances that fit their taste, and vice versa.
+
+As another example, is research that is newsworthy less trustworthy? There could be a negative association due to collider bias, because people who select research to be reported, funded, or published, consider both newsworthiness and trustworthiness. Assume that trustworthiness has no causal relation with newsworthiness, below shows what happens when we only focus on papers that are either high on newsworthiness or trustworthiness:
+
+```{r code-6-1}
+set.seed(2221) # different seed from the text
+num_proposals <- 200 # number of grant proposals
+prop_selected <- 0.1 # proportion to select
+# Simulate independent newsworthiness and trustworthiness
+plot_dat <- tibble( # `tibble` is the tidyverse version of `data.frame`
+  nw = rnorm(num_proposals),
+  tw = rnorm(num_proposals)
+)
+plot_dat <- plot_dat %>%
+  mutate(
+      total = nw + tw
+  )
+sel_dat <- plot_dat %>%
+  # select top 10% of combined scores
+  slice_max(order_by = total, prop = prop_selected)
+plot_dat %>%
+  ggplot(aes(x = nw, y = tw)) +
+  geom_point() +
+  geom_point(data = sel_dat, shape = 1, size = 3,
+             color = "red") +
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_smooth(data = sel_dat, method = "lm", se = FALSE,
+              col = "purple") +
+  labs(x = "newsworthiness", y = "trustworthiness")
+```
+
+As you can see, a negative correlation happens. This is collider bias: spurious correlation due to conditioning on the common descendant. This also goes by the name Berkson's Paradox.
+
+<aside>
+See https://brilliant.org/wiki/berksons-paradox/ for some more examples of Berkson's Paradox.
+</aside>
+
+In the DAG below, X and Y have no causal association. Conditioning on S, however, induces a negative correlation between X and Y. With the DAG below,
+
+> Generally speaking, do not condition on a collider, unless you're going to de-confound the spurious association using other variables
+
+```{r dag7}
+dag7 <- dagitty(
+  "dag{
+    X -> Y; X -> S; Y -> S
+  }"
+)
+coordinates(dag7) <- list(x = c(X = 0, S = 1, Y = 2),
+                          y = c(X = 0, S = -1, Y = 0))
+ggdag(dag7) + theme_dag()
+```
+
+Some other collider examples:
+
+- impulsivity &rarr; high-risk youth &larr; delinquency
+- healthcare worker &rarr; COVID-19 testing &larr; COVID-19 severity<sup>2</sup>
+- standardized test &rarr; admission &larr; research skills
+- maternal smoking &rarr; birth weight &rarr; birth defect &larr; mortality
+
+# Instrumental Variable
+
+Consider the following diagram:
+
+```{r dag8}
+dag8 <- dagitty(
+  "dag{
+    Z -> X; X -> Y; U -> X; U -> Y
+  }"
+)
+latents(dag8) <- "U"
+coordinates(dag8) <- list(x = c(Z = 0, X = 1, Y = 3, U = 2),
+                          y = c(Z = 0, X = 0, Y = 0, U = 1))
+ggdag(dag8) + theme_dag()
+```
+
+We want to estimate the causal effect from X to Y. However, there is an unobserved confounder, U. Because U is not observed, we cannot block this path, so we cannot apply the back-door criterion.
+
+However, notice the variable Z in the DAG. In the diagram, Z has the causal effect of changing X through a mechanism that does not involve U. Therefore, any effect that Z has on Y will be through X, but does not involve U. In a linear model, if we can obtain the coefficient of Z &rarr; X, denoted as b1, and the coefficient of Z &rarr; Y, denoted as b2, then an estimate of the causal effect of X &rarr; Y is
+
+$$\text{causal effect}(X \to Y) = \frac{\text{causal effect}(Z \to Y)}{\text{causal effect}(Z \to X)}$$
+
+The `dagitty` package contains a function for identifying instrumental variables, given a specified DAG:
+
+```{r iv-dag8}
+dagitty::instrumentalVariables(dag8,
+                               exposure = "X",
+                               outcome = "Y")
+```
+
+Here's an example with the `jobs` data set from the `mediation` package. You can obtain more information from the documentation page.
+
+```{r jobs}
+data(jobs, package = "mediation")
+```
+
+Instrumental variables can be used for both experimental and nonexperimental studies. In this example, while individuals are randomly assigned to participate in a job training intervention, not everyone assigned to the intervention group participated. In this data,
+
+```{r count-comply}
+count(jobs, treat, comply)  # only 372 out of 600 complied
+```
+
+And those who decided to participate may have different characteristics from those who did not participate, and such differences may lead to differences in the outcome. Therefore, we can distinguish two kinds of effects when talking about intervention:
+
+- Intent-to-treat (ITT) effect: the average effect of *assigning* people to the job training intervention condition
+- Complier average causal eﬀect (CACE): the average effect of the intervention on those who complied with the intervention; also called the treatment-on-the-treated effect.
+
+In this example, Z is the random assignment, X is the actual participation in the program, and Y is a posttest measure of depressive symptoms. Z is a potential instrumental variable, which has to satisfy the following conditions:
+
+- No direct path from Z to Y; Z affects Y only through X (exclusion restriction)
+- No unobserved confounding between Z and Y (ignorability)
+
+In addition, a *strong instrument* is one where Z has a strong effect on X. If Z only slightly causes X, the instrumental variable approach is not good.
+
+In our example, the exclusion restriction assumption means being assigned to the intervention condition does not affect the outcome if participants never participate in the intervention. The ignorability assumption means that there is no common cause of a person being assigned to an intervention and their outcome, which is justified here given Z is randomized. In a nonexperimental study, this may require identifying confounders and adjusting for those confounders between Z and Y. 
+
+## Intention-To-Treat Effect
+
+```{r m_itt, results = "hide"}
+m_itt <- brm(depress2 ~ treat,
+  data = jobs,
+  prior = prior(normal(0, 2), class = "b") +
+    prior(student_t(4, 0, 3), class = "sigma"),
+  seed = 1244, iter = 4000
+)
+```
+
+```{r plot-itt}
+plot(m_itt, variable = "b_treat")
+```
+
+## Complier Average Causal Eﬀect
+
+If we only estimate `comply` &rarr; `despress2`, the coefficient may be confounded because `comply` is not randomly assigned. **So the following may not be an accurate causal effect estimate:**
+
+```{r m_comply, results = "hide"}
+m_comply <- brm(depress2 ~ comply,
+  prior = prior(normal(0, 2), class = "b") +
+    prior(student_t(4, 0, 3), class = "sigma"),
+  data = jobs, seed = 1244, iter = 4000
+)
+```
+
+We can use an instrumental variable approach. This can be done with `brms`:
+
+```{r m_iv, results = "hide"}
+f1 <- bf(comply ~ treat)  # Need to treat outcome as linear
+f2 <- bf(depress2 ~ comply)
+m_iv <- brm(
+  f1 + f2 + set_rescor(TRUE),  # need `set_rescor(TRUE)` for unobserved U
+  data = jobs,
+  prior = prior(student_t(4, 0, 2.5), class = "b", resp = "comply") +
+    prior(normal(0, 2), class = "b", resp = "depress2") +
+    prior(normal(0, 0.5), class = "sigma", resp = "comply") +
+    prior(student_t(4, 0, 3), class = "sigma", resp = "depress2"),
+  seed = 1244, iter = 4000
+)
+```
+
+The CACE effect was higher than the ITT effect, but also with more uncertainty:
+
+```{r plot-iv}
+plot(m_iv, variable = "b_depress2_comply")
+```
+
+Note: `brms` only supports IV for normal outcomes. A more general approach is to code the model in Stan, as below:
+
+```{stan, code = readLines(here::here("stan", "iv_logit_normal.stan")), echo = TRUE, eval = FALSE, output.var = "iv_mod"}
+```
+
+```{r m_iv_stan, eval = FALSE}
+# 1. form the data list for Stan
+stan_dat <- with(jobs,
+  list(N = nrow(jobs),
+       y = depress2,
+       x = comply,
+       z = treat)
+)
+# 2. Run Stan
+m_iv_stan <- stan(
+  file = here("stan", "iv_logit_normal.stan"),
+  data = stan_dat,
+  seed = 1338,
+  # Exclude u
+  pars = c("u"), include = FALSE,
+  iter = 4000
+)
+```
 
 <!-- The following chunk is only used in the website -->
 

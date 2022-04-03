@@ -2516,8 +2516,25 @@ href="#the-back-door-criterion-estimating-causal-effect-in-nonexperimental-data"
 Back-Door Criterion: Estimating Causal Effect in Nonexperimental
 Data</a></li>
 </ul></li>
+<li><a href="#causal-chains">Causal Chains</a>
+<ul>
+<li><a href="#post-treatment-bias">Post-Treatment Bias</a></li>
 <li><a href="#mediation">Mediation</a>
 <ul>
+<li><a href="#using-brms">Using <code>brms</code></a></li>
+<li><a href="#using-stan">Using Stan</a></li>
+<li><a href="#direct-and-indirect-effects">Direct and Indirect
+Effects</a></li>
+<li><a href="#sensitivity-analysis">Sensitivity analysis</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#collider">Collider</a></li>
+<li><a href="#instrumental-variable">Instrumental Variable</a>
+<ul>
+<li><a href="#intention-to-treat-effect">Intention-To-Treat
+Effect</a></li>
+<li><a href="#complier-average-causal-eﬀect">Complier Average Causal
+Eﬀect</a></li>
 <li><a href="#last-updated">Last updated</a></li>
 </ul></li>
 </ul>
@@ -2726,15 +2743,15 @@ class="sourceCode stan"><code class="sourceCode stan"><span id="cb1-1"><a href="
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m1_stan</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
-    <span class='fu'>here</span><span class='fu'>::</span><span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"multiple_reg.stan"</span><span class='op'>)</span>,
-    data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-        N <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>waffle_divorce</span><span class='op'>)</span>,
-        p <span class='op'>=</span> <span class='fl'>2</span>,
-        y <span class='op'>=</span> <span class='va'>waffle_divorce</span><span class='op'>$</span><span class='va'>Divorce</span>,
-        x <span class='op'>=</span> <span class='va'>waffle_divorce</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MedianAgeMarriage"</span>, <span class='st'>"Marriage"</span><span class='op'>)</span><span class='op'>]</span>
-    <span class='op'>)</span>,
-    seed <span class='op'>=</span> <span class='fl'>941</span>,
-    iter <span class='op'>=</span> <span class='fl'>4000</span>
+  <span class='fu'>here</span><span class='fu'>::</span><span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"multiple_reg.stan"</span><span class='op'>)</span>,
+  data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+    N <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>waffle_divorce</span><span class='op'>)</span>,
+    p <span class='op'>=</span> <span class='fl'>2</span>,
+    y <span class='op'>=</span> <span class='va'>waffle_divorce</span><span class='op'>$</span><span class='va'>Divorce</span>,
+    x <span class='op'>=</span> <span class='va'>waffle_divorce</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MedianAgeMarriage"</span>, <span class='st'>"Marriage"</span><span class='op'>)</span><span class='op'>]</span>
+  <span class='op'>)</span>,
+  seed <span class='op'>=</span> <span class='fl'>941</span>,
+  iter <span class='op'>=</span> <span class='fl'>4000</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
@@ -2743,12 +2760,12 @@ class="sourceCode stan"><code class="sourceCode stan"><span id="cb1-1"><a href="
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span><span class='va'>Divorce</span> <span class='op'>~</span> <span class='va'>MedianAgeMarriage</span> <span class='op'>+</span> <span class='va'>Marriage</span>,
-    data <span class='op'>=</span> <span class='va'>waffle_divorce</span>,
-    prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>std_normal</span><span class='op'>(</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span> <span class='op'>+</span>
-        <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"Intercept"</span><span class='op'>)</span> <span class='op'>+</span>
-        <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span><span class='op'>)</span>,
-    seed <span class='op'>=</span> <span class='fl'>941</span>,
-    iter <span class='op'>=</span> <span class='fl'>4000</span>
+  data <span class='op'>=</span> <span class='va'>waffle_divorce</span>,
+  prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>std_normal</span><span class='op'>(</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"Intercept"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span><span class='op'>)</span>,
+  seed <span class='op'>=</span> <span class='fl'>941</span>,
+  iter <span class='op'>=</span> <span class='fl'>4000</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
@@ -2875,13 +2892,13 @@ of states, marriage rate has only a small effect on divorce rate.</p>
 <img src="causal_inference_files/figure-html5/pp-check-m1-1.png" width="70%" style="display: block; margin: auto;" />
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/pkg/brms/man/pp_check.brmsfit.html'>pp_check</a></span><span class='op'>(</span><span class='va'>m1</span>, type <span class='op'>=</span> <span class='st'>"intervals"</span>, x <span class='op'>=</span> <span class='st'>"Marriage"</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Marriage"</span>, y <span class='op'>=</span> <span class='st'>"Divorce"</span><span class='op'>)</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Marriage"</span>, y <span class='op'>=</span> <span class='st'>"Divorce"</span><span class='op'>)</span>
 </code></pre>
 </div>
 <img src="causal_inference_files/figure-html5/pp-check-m1-2.png" width="70%" style="display: block; margin: auto;" />
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/pkg/brms/man/pp_check.brmsfit.html'>pp_check</a></span><span class='op'>(</span><span class='va'>m1</span>, type <span class='op'>=</span> <span class='st'>"intervals"</span>, x <span class='op'>=</span> <span class='st'>"MedianAgeMarriage"</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"MedianAgeMarriage"</span>, y <span class='op'>=</span> <span class='st'>"Divorce"</span><span class='op'>)</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"MedianAgeMarriage"</span>, y <span class='op'>=</span> <span class='st'>"Divorce"</span><span class='op'>)</span>
 </code></pre>
 </div>
 <p><img src="causal_inference_files/figure-html5/pp-check-m1-3.png" width="70%" style="display: block; margin: auto;" /></p>
@@ -3013,6 +3030,8 @@ for tabulating your data. The functions will be from the
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>framing</span>, package <span class='op'>=</span> <span class='st'>"mediation"</span><span class='op'>)</span>
+<span class='co'># Subtract the `emo` variable by 3 so that it starts from 0-9</span>
+<span class='va'>framing</span><span class='op'>$</span><span class='va'>emo</span> <span class='op'>&lt;-</span> <span class='va'>framing</span><span class='op'>$</span><span class='va'>emo</span> <span class='op'>-</span> <span class='fl'>3</span>
 <span class='co'># Quick summary of selected variables</span>
 <span class='fu'><a href='https://vincentarelbundock.github.io/modelsummary/reference/datasummary_skim.html'>datasummary_skim</a></span><span class='op'>(</span><span class='va'>framing</span><span class='op'>)</span>
 </code></pre>
@@ -3149,19 +3168,19 @@ emo
 0
 </td>
 <td style="text-align:right;">
-7.0
+4.0
 </td>
 <td style="text-align:right;">
 2.8
 </td>
 <td style="text-align:right;">
-3.0
+0.0
 </td>
 <td style="text-align:right;">
-7.0
+4.0
 </td>
 <td style="text-align:right;">
-12.0
+9.0
 </td>
 <td style="text-align:right;">
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="svglite" width="48.00pt" height="12.00pt" viewBox="0 0 48.00 12.00">
@@ -3606,13 +3625,13 @@ emo
 <td style="text-align:left;">
 </td>
 <td style="text-align:right;">
-6.4
+3.4
 </td>
 <td style="text-align:right;">
 2.6
 </td>
 <td style="text-align:right;">
-7.5
+4.5
 </td>
 <td style="text-align:right;">
 2.8
@@ -4475,7 +4494,7 @@ Histogram
 emo
 </td>
 <td style="text-align:right;">
-6.39
+3.39
 </td>
 <td style="text-align:right;">
 2.63
@@ -4484,7 +4503,7 @@ emo
 ▇▅▇▆▆▃▃▂▂▂
 </td>
 <td style="text-align:right;">
-7.53
+4.53
 </td>
 <td style="text-align:right;">
 2.81
@@ -4544,7 +4563,7 @@ cong_mesg
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Correlation table</span>
 <span class='va'>framing</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>tone</span>, <span class='va'>emo</span>, <span class='va'>cong_mesg</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
-    <span class='fu'><a href='https://vincentarelbundock.github.io/modelsummary/reference/datasummary_correlation.html'>datasummary_correlation</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"pearson"</span><span class='op'>)</span>
+  <span class='fu'><a href='https://vincentarelbundock.github.io/modelsummary/reference/datasummary_correlation.html'>datasummary_correlation</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"pearson"</span><span class='op'>)</span>
 </code></pre>
 </div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
@@ -4675,9 +4694,9 @@ variables. Much progress has been made in clarifying that causal effects
 <strong>can</strong> be estimated in nonexperimental data. After all,
 researchers have not randomly assigned individuals to smoke <span
 class="math inline">\(x\)</span> cigarettes per day, but we are
-confident that smoking causes cancer; we never manipulated the
-gravitational force of the moon, but we are pretty sure that high and
-low tides are caused by the moon.</p>
+confident that smoking causes cancer; we never manipulated the moon’s
+gravitational force, but we are pretty sure that the moon is a cause of
+high and low tides.</p>
 <p>In a DAG, the back-door criterion can be used to identify variables
 that we should adjust for to obtain a causal effect. The set of
 variables to be adjusted should (a) blocks every path between X and Y
@@ -4710,99 +4729,472 @@ by this set of adjusted variables:</p>
 </div>
 <pre><code>#&gt; { W1, W2 }</code></pre>
 </div>
-<h1 id="mediation">Mediation</h1>
-<p>To be added</p>
-<!-- 
-
-## Post-Treatment Bias
-
-
-
+<h1 id="causal-chains">Causal Chains</h1>
+<h2 id="post-treatment-bias">Post-Treatment Bias</h2>
+<p>Here are some key variables from the <code>framing</code> data
+set:</p>
+<ul>
+<li><code>cong_mesg</code>: binary variable indicating whether or not
+the participant agreed to send a letter about immigration policy to his
+or her member of Congress</li>
+<li><code>emo</code>: posttest anxiety about increased immigration
+(0-9)</li>
+<li><code>tone</code>: framing of news story (0 = positive, 1 =
+negative)</li>
+</ul>
+<p>We can compare the results of two models:</p>
+<ol type="1">
+<li><code>tone</code> → <code>cong_mesg</code></li>
+<li><code>tone</code> → <code>cong_mesg</code>, adjusting for
+<code>emo</code></li>
+</ol>
+<p>Which model gives us the causal effect estimate for
+<code>tone</code>? Let’s run the two models.</p>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>framing</span>, package <span class='op'>=</span> <span class='st'>"mediation"</span><span class='op'>)</span>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m_no_adjust</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span><span class='va'>cong_mesg</span> <span class='op'>~</span> <span class='va'>tone</span>,
+  data <span class='op'>=</span> <span class='va'>framing</span>,
+  family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsfamily.html'>bernoulli</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"logit"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>m_adjust</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span><span class='va'>cong_mesg</span> <span class='op'>~</span> <span class='va'>tone</span> <span class='op'>+</span> <span class='va'>emo</span>,
+  data <span class='op'>=</span> <span class='va'>framing</span>,
+  family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsfamily.html'>bernoulli</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"logit"</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+</div>
+<p>We can combine the results in a table:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://vincentarelbundock.github.io/modelsummary/reference/msummary.html'>msummary</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>`No adjustment` <span class='op'>=</span> <span class='va'>m_no_adjust</span>,
+              `Adjusting for feeling` <span class='op'>=</span> <span class='va'>m_adjust</span><span class='op'>)</span>,
+  estimate <span class='op'>=</span> <span class='st'>"{estimate} [{conf.low}, {conf.high}]"</span>,
+  statistic <span class='op'>=</span> <span class='cn'>NULL</span>, fmt <span class='op'>=</span> <span class='fl'>2</span>
+<span class='op'>)</span>
+</code></pre>
+</div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+No adjustment
+</th>
+<th style="text-align:center;">
+Adjusting for feeling
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+b_Intercept
+</td>
+<td style="text-align:center;">
+−0.81 [−1.20, −0.47]
+</td>
+<td style="text-align:center;">
+−2.01 [−2.58, −1.37]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+b_tone
+</td>
+<td style="text-align:center;">
+0.22 [−0.25, 0.78]
+</td>
+<td style="text-align:center;">
+−0.14 [−0.71, 0.44]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;box-shadow: 0px 1px">
+b_emo
+</td>
+<td style="text-align:center;box-shadow: 0px 1px">
+</td>
+<td style="text-align:center;box-shadow: 0px 1px">
+0.32 [0.21, 0.43]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Num.Obs.
+</td>
+<td style="text-align:center;">
+265
+</td>
+<td style="text-align:center;">
+265
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ELPD
+</td>
+<td style="text-align:center;">
+−170.1
+</td>
+<td style="text-align:center;">
+−152.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ELPD s.e.
+</td>
+<td style="text-align:center;">
+5.5
+</td>
+<td style="text-align:center;">
+7.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LOOIC
+</td>
+<td style="text-align:center;">
+340.2
+</td>
+<td style="text-align:center;">
+305.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LOOIC s.e.
+</td>
+<td style="text-align:center;">
+11.0
+</td>
+<td style="text-align:center;">
+14.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WAIC
+</td>
+<td style="text-align:center;">
+340.2
+</td>
+<td style="text-align:center;">
+305.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RMSE
+</td>
+<td style="text-align:center;">
+0.60
+</td>
+<td style="text-align:center;">
+0.59
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We can see that the Bayes estimate of the coefficient for
+<code>tone</code> was positive without <code>emo</code>, but was
+negative with <code>emo</code>. Which one should we believe? The
+information criteria (LOOIC and WAIC) suggested that the model with
+<code>emo</code> was better for prediction, but just because something
+helps predict the outcome doesn’t make it a causal variable. To
+repeat,</p>
+<blockquote>
+<p>Coefficients in a predictive model are not causal effects.</p>
+</blockquote>
+<p>And to emphasize again,</p>
+<blockquote>
+<p>Causal inference requires causal assumptions, and these assumptions
+are not in the data.</p>
+</blockquote>
+<p>So instead, we need a DAG. Given that we know <code>emo</code> is
+measured <strong>after</strong> the intervention, it seems reasonable to
+think that a negatively-framed story about immigrants would elicit some
+negative emotions about increased immigration, and that emotion may
+prompt people to take anti-immigrant actions. Therefore, we have the
+following DAG:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dag5</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/dagitty.html'>dagitty</a></span><span class='op'>(</span>
+  <span class='st'>"dag{
+    T -&gt; C; T -&gt; E; E -&gt; C
+  }"</span>
+<span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/coordinates.html'>coordinates</a></span><span class='op'>(</span><span class='va'>dag5</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>T <span class='op'>=</span> <span class='fl'>0</span>, E <span class='op'>=</span> <span class='fl'>1</span>, C <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
+                          y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>T <span class='op'>=</span> <span class='fl'>0</span>, E <span class='op'>=</span> <span class='fl'>1</span>, C <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
+<span class='co'># Plot</span>
+<span class='fu'><a href='https://rdrr.io/pkg/ggdag/man/ggdag.html'>ggdag</a></span><span class='op'>(</span><span class='va'>dag5</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/pkg/ggdag/man/theme_dag_blank.html'>theme_dag</a></span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="causal_inference_files/figure-html5/dag5-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<p>This is an example of a pipe/chain. It is a causal chain going from
+T(one) → E(motion) → C(ongress message). If we are interested in the
+causal effect of T, we should not condition on E; conditioning on E
+would mean comparing those who saw the negatively-framed story and
+<em>those who saw the positively-framed story but had the same negative
+emotion towards immigrants.</em> In other words, adjusting for E would
+mean taking out part of the effect of T on C through E.</p>
+<p>As another example, think about a drug that is supposed to lower the
+risk of a heart attack. Imagine someone conducting a study comparing
+drug/no drug conditions on their probability of getting heart attacks.
+Should we adjust for participants’ blood pressure after the
+intervention? If we want to know the drug’s effect, and that the drug
+works by lowering blood pressure, we should not adjust for posttest
+blood pressure. Otherwise, we would be asking the question: does the
+drug help prevent heart attacks through something other than lowering
+one’s blood pressure?</p>
+<p>The latter question can be answered in mediation analysis.</p>
+<h2 id="mediation">Mediation</h2>
+<p>In the DAG above, E is a post-treatment variable potentially
+influenced by T, which we call a <strong>mediator</strong>. Mediator is
+an important topic in causal inference, as it informs the mechanism of
+how a variable has a causal effect on an outcome.</p>
+<p>One thing to be careful is that statistically speaking, a mediator
+behaves very much like a confounder, and their difference is based on
+causal assumptions.</p>
+<p>Let’s analyze the mediation model in Figure X. There are two
+variables that are on the receiving end of some causal effects:
+<code>emo</code> and <code>cong_mesg</code>. Whereas GLM handles one
+outcome, with <code>brms</code>, we can have a system of equations—one
+for each outcome—estimated simultaneously, as shown in the code
+below.</p>
+<h3 id="using-brms">Using <code>brms</code></h3>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>prior_m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span>
 <span class='va'>m_med</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span>
   <span class='co'># Two equations for two outcomes</span>
   <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula.html'>bf</a></span><span class='op'>(</span><span class='va'>cong_mesg</span> <span class='op'>~</span> <span class='va'>tone</span> <span class='op'>+</span> <span class='va'>emo</span><span class='op'>)</span> <span class='op'>+</span>
     <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula.html'>bf</a></span><span class='op'>(</span><span class='va'>emo</span> <span class='op'>~</span> <span class='va'>tone</span><span class='op'>)</span> <span class='op'>+</span>
     <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula-helpers.html'>set_rescor</a></span><span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span>,
+  <span class='co'># A list of two family arguments for two outcomes</span>
+  family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsfamily.html'>bernoulli</a></span><span class='op'>(</span><span class='st'>"logit"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>gaussian</a></span><span class='op'>(</span><span class='st'>"identity"</span><span class='op'>)</span><span class='op'>)</span>,
   data <span class='op'>=</span> <span class='va'>framing</span>,
+  prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span>, resp <span class='op'>=</span> <span class='st'>"emo"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span>, resp <span class='op'>=</span> <span class='st'>"emo"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>2.5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span>, resp <span class='op'>=</span> <span class='st'>"congmesg"</span><span class='op'>)</span>,
   seed <span class='op'>=</span> <span class='fl'>1338</span>,
-  iter <span class='op'>=</span> <span class='fl'>4000</span>,
-  family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsfamily.html'>bernoulli</a></span><span class='op'>(</span><span class='st'>"logit"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>gaussian</a></span><span class='op'>(</span><span class='st'>"identity"</span><span class='op'>)</span><span class='op'>)</span>
+  iter <span class='op'>=</span> <span class='fl'>4000</span>
 <span class='op'>)</span>
-</code></pre></div>
-
+</code></pre>
 </div>
-
-
-## Using Stan
-
-Here's some Stan code for running the same mediation model
-
-<div class="layout-chunk" data-layout="l-body">
-
-```stan
-data {
-  int<lower=0> N0;  // number of observations (control)
-  int<lower=0> N1;  // number of observations (treatment)
-  int y0[N0];  // outcome (control);
-  int y1[N1];  // outcome (treatment);
-  vector[N0] m0;  // mediator (control);
-  vector[N1] m1;  // mediator (treatment);
-}
-parameters {
-  real alpham;  // regression intercept for M
-  real alphay;  // regression intercept for M
-  real beta1;   // X -> M
-  real beta2;   // X -> Y
-  real beta3;   // M -> Y
-  real<lower=0> sigmam;  // SD of prediction error for M
-}
-model {
-  // model
-  m0 ~ normal(alpham, sigmam);
-  m1 ~ normal(alpham + beta1, sigmam);
-  y0 ~ bernoulli_logit(alphay + beta3 * m0);
-  y1 ~ bernoulli_logit(alphay + beta2 + beta3 * m1);
-  // prior
-  alpham ~ normal(4.5, 4.5);
-  alphay ~ normal(0, 5);
-  beta1 ~ std_normal();
-  beta2 ~ std_normal();
-  beta3 ~ std_normal();
-  sigmam ~ student_t(4, 0, 5);
-}
-```
-
 </div>
-
-
+<h3 id="using-stan">Using Stan</h3>
+<p>Here’s some Stan code for running the same mediation model</p>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 1. form the data list for Stan</span>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode stan"><code class="sourceCode stan"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N0;  <span class="co">// number of observations (control)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N1;  <span class="co">// number of observations (treatment)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> y0[N0];  <span class="co">// outcome (control);</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> y1[N1];  <span class="co">// outcome (treatment);</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[N0] m0;  <span class="co">// mediator (control);</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[N1] m1;  <span class="co">// mediator (treatment);</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> alpham;  <span class="co">// regression intercept for M</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> alphay;  <span class="co">// regression intercept for M</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> beta1;   <span class="co">// X -&gt; M</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> beta2;   <span class="co">// X -&gt; Y</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> beta3;   <span class="co">// M -&gt; Y</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigmam;  <span class="co">// SD of prediction error for M</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">// model</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  m0 ~ normal(alpham, sigmam);</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  m1 ~ normal(alpham + beta1, sigmam);</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  y0 ~ bernoulli_logit(alphay + beta3 * m0);</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  y1 ~ bernoulli_logit(alphay + beta2 + beta3 * m1);</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">// prior</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  alpham ~ normal(<span class="fl">4.5</span>, <span class="fl">4.5</span>);</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  alphay ~ normal(<span class="dv">0</span>, <span class="dv">5</span>);</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  beta1 ~ std_normal();</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  beta2 ~ std_normal();</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  beta3 ~ std_normal();</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  sigmam ~ student_t(<span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">5</span>);</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 1. form the data list for Stan</span>
 <span class='va'>stan_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span><span class='op'>(</span><span class='va'>framing</span>,
-    <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>N0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span>,
-         N1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span>,
-         m0 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
-         m1 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span>,
-         y0 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
-         y1 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>N0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span>,
+       N1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span>,
+       m0 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
+       m1 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span>,
+       y0 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
+       y1 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
 <span class='op'>)</span>
 <span class='co'># 2. Run Stan</span>
 <span class='va'>m_med_stan</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
-    file <span class='op'>=</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"mediation_logit_normal.stan"</span><span class='op'>)</span>,
-    data <span class='op'>=</span> <span class='va'>stan_dat</span>,
-    seed <span class='op'>=</span> <span class='fl'>1338</span>,
-    iter <span class='op'>=</span> <span class='fl'>4000</span>
+  file <span class='op'>=</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"mediation_logit_normal.stan"</span><span class='op'>)</span>,
+  data <span class='op'>=</span> <span class='va'>stan_dat</span>,
+  seed <span class='op'>=</span> <span class='fl'>1338</span>,
+  iter <span class='op'>=</span> <span class='fl'>4000</span>
 <span class='op'>)</span>
-</code></pre></div>
-
+</code></pre>
 </div>
-
-
-Natural Direct Effect
-
+</div>
+<h3 id="direct-and-indirect-effects">Direct and Indirect Effects</h3>
+<p>In a mediation model, the effect of X on Y has two mechanisms: -
+Indirect effect: X causes Y because X causes M, and M causes Y - Direct
+effect: X causes Y without involving M</p>
+<p>More specifically, the direct effect is the change in Y for one unit
+change in X, <em>holding M constant</em>. In our example, it means
+comparing subsets of the treatment and the control groups, under the
+condition that both subsets have the same level of negative emotion
+about increased immigration. The indirect effect takes a bit more effort
+to understand: it is the change in Y for the control group (or the
+treatment group), if their mediator value is set to the level as the
+treatment group. In our example, it would mean comparing the control
+group and the <em>counterfactual</em> where the control group had their
+negative emotion changed to the same level as the treatment group.</p>
+<p>The <em>causal mediation</em> literature has some more distinctions
+on the different types of direct and indirect effects. Below I give
+codes for obtaining these effects without going into details.</p>
+<aside>
+You can find more information about causal mediation in this paper: <a
+href="https://ftp.cs.ucla.edu/pub/stat_ser/r389.pdf"
+class="uri">https://ftp.cs.ucla.edu/pub/stat_ser/r389.pdf</a>
+</aside>
+<h4 id="controlled-direct-effect-cde">Controlled direct effect
+(CDE)</h4>
+<p>CDE is the direct effect when the mediator is set to a specific
+level. Below shows the CDE for <code>emo</code> = 0 and <code>emo</code>
+= 9, respectively.</p>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1235</span><span class='op'>)</span>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>cond_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>tone <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,
+                      emo <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>9</span>, <span class='fl'>9</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>cond_df</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind.html'>bind_cols</a></span><span class='op'>(</span>
+    <span class='fu'><a href='https://rdrr.io/r/stats/fitted.values.html'>fitted</a></span><span class='op'>(</span><span class='va'>m_med</span>, newdata <span class='op'>=</span> <span class='va'>cond_df</span><span class='op'>)</span><span class='op'>[</span> , , <span class='st'>"congmesg"</span><span class='op'>]</span>
+  <span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+tone
+</th>
+<th style="text-align:right;">
+emo
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+<th style="text-align:right;">
+Est.Error
+</th>
+<th style="text-align:right;">
+Q2.5
+</th>
+<th style="text-align:right;">
+Q97.5
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.1223752
+</td>
+<td style="text-align:right;">
+0.0324562
+</td>
+<td style="text-align:right;">
+0.0683844
+</td>
+<td style="text-align:right;">
+0.1939118
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.1093674
+</td>
+<td style="text-align:right;">
+0.0334159
+</td>
+<td style="text-align:right;">
+0.0550752
+</td>
+<td style="text-align:right;">
+0.1854280
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.6961890
+</td>
+<td style="text-align:right;">
+0.0713012
+</td>
+<td style="text-align:right;">
+0.5462604
+</td>
+<td style="text-align:right;">
+0.8218189
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.6680737
+</td>
+<td style="text-align:right;">
+0.0634371
+</td>
+<td style="text-align:right;">
+0.5351279
+</td>
+<td style="text-align:right;">
+0.7848791
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="natural-direct-effect-nde">Natural direct effect (NDE)</h4>
+<p>The “natural” effects are quantities for some kind of population
+averages. NDE is the direct effect when the mediator is held constant at
+the level of the control group. Below we simulate some data to obtain
+the level of <code>emo</code> that would be “naturally” obtained for the
+<code>tone</code> = 0 group.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1235</span><span class='op'>)</span>
 <span class='co'># Obtain posterior draws of parameters</span>
 <span class='va'>post_draws</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>m_med</span><span class='op'>)</span>
 <span class='co'># Simulated emo with tone = 0</span>
@@ -4810,27 +5202,29 @@ Natural Direct Effect
                   mean <span class='op'>=</span> <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_emo_Intercept</span>,
                   sd <span class='op'>=</span> <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>sigma_emo</span><span class='op'>)</span>
 <span class='co'># Predicted cong_mesg for tone = 0, emo = sim_emo0</span>
-<span class='va'>pred_congmesg0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span>  <span class='co'># apply the inverse probit link</span>
-    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
-        <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo0</span>
+<span class='va'>pred_congmesg0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span> <span class='co'># apply the inverse probit link</span>
+  <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
+    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo0</span>
 <span class='op'>)</span>
 <span class='co'># Predicted cong_mesg for tone = 1, emo = sim_emo0</span>
-<span class='va'>pred_congmesg1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span>  <span class='co'># apply the inverse probit link</span>
-    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
-        <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_tone</span> <span class='op'>+</span>
-        <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo0</span>
+<span class='va'>pred_congmesg1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span> <span class='co'># apply the inverse probit link</span>
+  <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
+    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_tone</span> <span class='op'>+</span>
+    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo0</span>
 <span class='op'>)</span>
 <span class='co'># Natural direct effect</span>
 <span class='va'>nde</span> <span class='op'>&lt;-</span> <span class='va'>pred_congmesg1</span> <span class='op'>-</span> <span class='va'>pred_congmesg0</span>
-</code></pre></div>
-
+</code></pre>
 </div>
-
-
-Natural Indirect Effect
-
+</div>
+<h4 id="natural-indirect-effect-nie">Natural indirect effect (NIE)</h4>
+<p>NDE is the difference in the outcome between the actual control group
+and a counterfactual control group. The counterfactual here is a control
+group that did not receive the treatment, but had their <code>emo</code>
+value set to be equal to the treatment group.</p>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1235</span><span class='op'>)</span>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1235</span><span class='op'>)</span>
 <span class='co'># Simulated emo with tone = 0</span>
 <span class='va'>sim_emo0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_emo_Intercept</span>,
                   mean <span class='op'>=</span> <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_emo_Intercept</span>,
@@ -4838,42 +5232,464 @@ Natural Indirect Effect
 <span class='co'># Counterfactuals for the same individuals with tone = 1</span>
 <span class='va'>sim_emo1</span> <span class='op'>&lt;-</span> <span class='va'>sim_emo0</span> <span class='op'>+</span> <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_emo_tone</span>
 <span class='co'># Predicted cong_mesg for tone = 0, emo = sim_emo0</span>
-<span class='va'>pred_congmesg0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span>  <span class='co'># apply the inverse probit link</span>
-    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
-        <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo0</span>
+<span class='va'>pred_congmesg0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span> <span class='co'># apply the inverse probit link</span>
+  <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
+    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo0</span>
 <span class='op'>)</span>
 <span class='co'># Predicted cong_mesg for tone = 0, emo = sim_emo1</span>
-<span class='va'>pred_congmesg1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span>  <span class='co'># apply the inverse probit link</span>
-    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
-        <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo1</span>
+<span class='va'>pred_congmesg1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span> <span class='co'># apply the inverse probit link</span>
+  <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
+    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo1</span>
 <span class='op'>)</span>
 <span class='co'># Natural direct effect</span>
 <span class='va'>nie</span> <span class='op'>&lt;-</span> <span class='va'>pred_congmesg1</span> <span class='op'>-</span> <span class='va'>pred_congmesg0</span>
 <span class='fu'><a href='https://rdrr.io/pkg/brms/man/draws-brms.html'>as_draws</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>NDE <span class='op'>=</span> <span class='va'>nde</span>, NIE <span class='op'>=</span> <span class='va'>nie</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
     <span class='fu'><a href='https://mc-stan.org/bayesplot/reference/MCMC-intervals.html'>mcmc_areas</a></span><span class='op'>(</span>bw <span class='op'>=</span> <span class='st'>"SJ"</span><span class='op'>)</span>
-</code></pre></div>
-<img src="causal_inference_files/figure-html5/nie-ave-pop-1.png" width="70%" style="display: block; margin: auto;" />
-
+</code></pre>
 </div>
-
-
-# Instrumental Variables
-
--->
+<p><img src="causal_inference_files/figure-html5/nie-ave-pop-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<h3 id="sensitivity-analysis">Sensitivity analysis</h3>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dag6</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/dagitty.html'>dagitty</a></span><span class='op'>(</span>
+  <span class='st'>"dag{
+    T -&gt; C; T -&gt; E; E -&gt; C; U -&gt; E; U -&gt; C
+  }"</span>
+<span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/coordinates.html'>coordinates</a></span><span class='op'>(</span><span class='va'>dag6</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>T <span class='op'>=</span> <span class='fl'>0</span>, E <span class='op'>=</span> <span class='fl'>1</span>, C <span class='op'>=</span> <span class='fl'>2</span>, U <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
+                          y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>T <span class='op'>=</span> <span class='fl'>0</span>, E <span class='op'>=</span> <span class='fl'>1</span>, C <span class='op'>=</span> <span class='fl'>0</span>, U <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/ggdag/man/ggdag.html'>ggdag</a></span><span class='op'>(</span><span class='va'>dag6</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/pkg/ggdag/man/theme_dag_blank.html'>theme_dag</a></span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="causal_inference_files/figure-html5/dag6-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<p>One important assumption in mediation is that there is no unobserved
+confounding variable between the mediator and the outcome. This
+assumption requires researchers’ input, as usually we don’t have studies
+that randomly assign both the treatment variable and the mediator. An
+additional technique is to ask: what would the effect be if there were
+unobserved confounding variables of a certain magnitude? With Bayesian,
+we can represent the strength of the confounding effect by a prior
+distribution. The following shows the mediation estimates assuming a
+N(0.5, 0.2) prior to the confounding effect.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode stan"><code class="sourceCode stan"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N0;  <span class="co">// number of observations (control)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N1;  <span class="co">// number of observations (treatment)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> y0[N0];  <span class="co">// outcome (control);</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> y1[N1];  <span class="co">// outcome (treatment);</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[N0] m0;  <span class="co">// mediator (control);</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[N1] m1;  <span class="co">// mediator (treatment);</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> alpham;  <span class="co">// regression intercept for M</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> alphay;  <span class="co">// regression intercept for M</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> beta1;   <span class="co">// X -&gt; M</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> beta2;   <span class="co">// X -&gt; Y</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> beta3;   <span class="co">// M -&gt; Y</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[N0] u0;  <span class="co">// confounding variable</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[N1] u1;  <span class="co">// confounding variable</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> beta4;   <span class="co">// U -&gt; Y</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigmam;  <span class="co">// SD of prediction error for M</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">// model</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  u0 ~ std_normal();</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  u1 ~ std_normal();</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  m0 ~ normal(alpham + u0, sigmam);</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  m1 ~ normal(alpham + beta1 + u1, sigmam);</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  y0 ~ bernoulli_logit(alphay + beta3 * m0 + beta4 * u0);</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  y1 ~ bernoulli_logit(alphay + beta2 + beta3 * m1 + beta4 * u1);</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  <span class="co">// prior</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  alpham ~ normal(<span class="fl">4.5</span>, <span class="fl">4.5</span>);</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  alphay ~ normal(<span class="dv">0</span>, <span class="dv">5</span>);</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  beta1 ~ std_normal();</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  beta2 ~ std_normal();</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  beta3 ~ std_normal();</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  beta4 ~ normal(<span class="fl">0.5</span>, <span class="fl">0.2</span>);</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  sigmam ~ student_t(<span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">5</span>);</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 1. form the data list for Stan</span>
+<span class='va'>stan_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span><span class='op'>(</span><span class='va'>framing</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>N0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span>,
+       N1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span>,
+       m0 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
+       m1 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span>,
+       y0 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
+       y1 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
+<span class='op'>)</span>
+<span class='co'># 2. Run Stan</span>
+<span class='va'>m_med_sens</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
+  file <span class='op'>=</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"mediation_logit_normal_sensitivity.stan"</span><span class='op'>)</span>,
+  data <span class='op'>=</span> <span class='va'>stan_dat</span>,
+  seed <span class='op'>=</span> <span class='fl'>1338</span>,
+  iter <span class='op'>=</span> <span class='fl'>4000</span>,
+  <span class='co'># Exclude u0 and u1</span>
+  pars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"u0"</span>, <span class='st'>"u1"</span><span class='op'>)</span>, include <span class='op'>=</span> <span class='cn'>FALSE</span>
+  <span class='op'>)</span>
+</code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m_med_sens</span>
+</code></pre>
+</div>
+<pre><code>#&gt; Inference for Stan model: mediation_logit_normal_sensitivity.
+#&gt; 4 chains, each with iter=4000; warmup=2000; thin=1; 
+#&gt; post-warmup draws per chain=2000, total post-warmup draws=8000.
+#&gt; 
+#&gt;           mean se_mean    sd    2.5%     25%     50%     75%   97.5%
+#&gt; alpham    3.46    0.00  0.23    3.00    3.30    3.46    3.62    3.91
+#&gt; alphay   -1.87    0.00  0.32   -2.52   -2.08   -1.86   -1.65   -1.27
+#&gt; beta1     1.02    0.00  0.32    0.41    0.81    1.02    1.23    1.65
+#&gt; beta2    -0.08    0.00  0.29   -0.64   -0.28   -0.08    0.12    0.50
+#&gt; beta3     0.26    0.00  0.06    0.15    0.22    0.26    0.30    0.38
+#&gt; beta4     0.52    0.00  0.20    0.13    0.38    0.52    0.66    0.92
+#&gt; sigmam    2.54    0.00  0.13    2.30    2.45    2.54    2.62    2.80
+#&gt; lp__   -656.48    0.23 12.39 -681.63 -664.63 -656.25 -647.94 -633.03
+#&gt;        n_eff Rhat
+#&gt; alpham  8285    1
+#&gt; alphay  8779    1
+#&gt; beta1   7833    1
+#&gt; beta2  13005    1
+#&gt; beta3   8370    1
+#&gt; beta4   4808    1
+#&gt; sigmam 10344    1
+#&gt; lp__    2792    1
+#&gt; 
+#&gt; Samples were drawn using NUTS(diag_e) at Sat Apr  2 17:40:00 2022.
+#&gt; For each parameter, n_eff is a crude measure of effective sample size,
+#&gt; and Rhat is the potential scale reduction factor on split chains (at 
+#&gt; convergence, Rhat=1).</code></pre>
+</div>
+<p>As you can see, the prior of the confounding effect attenuates the
+coefficients from the mediator to the outcome, but the path from the
+mediator to the outcome remains pretty much above zero.</p>
+<h1 id="collider">Collider</h1>
+<p>A collider is a descendant of two parent nodes. When one holds the
+collider constant, it induces a spurious association between the
+parents. This leads to many unexpected results in data analysis and
+daily lives. For example, consider people who are nice and who are
+good-looking. Is there an association between a person being nice and a
+person being good-looking? Maybe. But this association can be induced
+when we condition on a collider. Let’s say a friend of yours only dates
+people who are either nice or good-looking. So we have this colliding
+relation:</p>
+<p>Nice → Dating ← Good looking</p>
+<p>If you look at just the people that your friend dated, they are
+either nice or good looking, but the fact that you select to look at
+(condition on) only the people that your friend dated would
+automatically eliminate people who are neither nice nor good looking.
+This induces a spurious negative association between nice and good
+looking, so your friend may believe that people who are nice would be
+less likely to have appearances that fit their taste, and vice
+versa.</p>
+<p>As another example, is research that is newsworthy less trustworthy?
+There could be a negative association due to collider bias, because
+people who select research to be reported, funded, or published,
+consider both newsworthiness and trustworthiness. Assume that
+trustworthiness has no causal relation with newsworthiness, below shows
+what happens when we only focus on papers that are either high on
+newsworthiness or trustworthiness:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2221</span><span class='op'>)</span> <span class='co'># different seed from the text</span>
+<span class='va'>num_proposals</span> <span class='op'>&lt;-</span> <span class='fl'>200</span> <span class='co'># number of grant proposals</span>
+<span class='va'>prop_selected</span> <span class='op'>&lt;-</span> <span class='fl'>0.1</span> <span class='co'># proportion to select</span>
+<span class='co'># Simulate independent newsworthiness and trustworthiness</span>
+<span class='va'>plot_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span> <span class='co'># `tibble` is the tidyverse version of `data.frame`</span>
+  nw <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>num_proposals</span><span class='op'>)</span>,
+  tw <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>num_proposals</span><span class='op'>)</span>
+<span class='op'>)</span>
+<span class='va'>plot_dat</span> <span class='op'>&lt;-</span> <span class='va'>plot_dat</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
+      total <span class='op'>=</span> <span class='va'>nw</span> <span class='op'>+</span> <span class='va'>tw</span>
+  <span class='op'>)</span>
+<span class='va'>sel_dat</span> <span class='op'>&lt;-</span> <span class='va'>plot_dat</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
+  <span class='co'># select top 10% of combined scores</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_max</a></span><span class='op'>(</span>order_by <span class='op'>=</span> <span class='va'>total</span>, prop <span class='op'>=</span> <span class='va'>prop_selected</span><span class='op'>)</span>
+<span class='va'>plot_dat</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>nw</span>, y <span class='op'>=</span> <span class='va'>tw</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>sel_dat</span>, shape <span class='op'>=</span> <span class='fl'>1</span>, size <span class='op'>=</span> <span class='fl'>3</span>,
+             color <span class='op'>=</span> <span class='st'>"red"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"lm"</span>, se <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>sel_dat</span>, method <span class='op'>=</span> <span class='st'>"lm"</span>, se <span class='op'>=</span> <span class='cn'>FALSE</span>,
+              col <span class='op'>=</span> <span class='st'>"purple"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"newsworthiness"</span>, y <span class='op'>=</span> <span class='st'>"trustworthiness"</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="causal_inference_files/figure-html5/code-6-1-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<p>As you can see, a negative correlation happens. This is collider
+bias: spurious correlation due to conditioning on the common descendant.
+This also goes by the name Berkson’s Paradox.</p>
+<aside>
+See <a href="https://brilliant.org/wiki/berksons-paradox/"
+class="uri">https://brilliant.org/wiki/berksons-paradox/</a> for some
+more examples of Berkson’s Paradox.
+</aside>
+<p>In the DAG below, X and Y have no causal association. Conditioning on
+S, however, induces a negative correlation between X and Y. With the DAG
+below,</p>
+<blockquote>
+<p>Generally speaking, do not condition on a collider, unless you’re
+going to de-confound the spurious association using other variables</p>
+</blockquote>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dag7</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/dagitty.html'>dagitty</a></span><span class='op'>(</span>
+  <span class='st'>"dag{
+    X -&gt; Y; X -&gt; S; Y -&gt; S
+  }"</span>
+<span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/coordinates.html'>coordinates</a></span><span class='op'>(</span><span class='va'>dag7</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>X <span class='op'>=</span> <span class='fl'>0</span>, S <span class='op'>=</span> <span class='fl'>1</span>, Y <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
+                          y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>X <span class='op'>=</span> <span class='fl'>0</span>, S <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>, Y <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/ggdag/man/ggdag.html'>ggdag</a></span><span class='op'>(</span><span class='va'>dag7</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/pkg/ggdag/man/theme_dag_blank.html'>theme_dag</a></span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="causal_inference_files/figure-html5/dag7-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<p>Some other collider examples:</p>
+<ul>
+<li>impulsivity → high-risk youth ← delinquency</li>
+<li>healthcare worker → COVID-19 testing ← COVID-19
+severity<sup>2</sup></li>
+<li>standardized test → admission ← research skills</li>
+<li>maternal smoking → birth weight → birth defect ← mortality</li>
+</ul>
+<h1 id="instrumental-variable">Instrumental Variable</h1>
+<p>Consider the following diagram:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dag8</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/dagitty.html'>dagitty</a></span><span class='op'>(</span>
+  <span class='st'>"dag{
+    Z -&gt; X; X -&gt; Y; U -&gt; X; U -&gt; Y
+  }"</span>
+<span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/VariableStatus.html'>latents</a></span><span class='op'>(</span><span class='va'>dag8</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='st'>"U"</span>
+<span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/coordinates.html'>coordinates</a></span><span class='op'>(</span><span class='va'>dag8</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>Z <span class='op'>=</span> <span class='fl'>0</span>, X <span class='op'>=</span> <span class='fl'>1</span>, Y <span class='op'>=</span> <span class='fl'>3</span>, U <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
+                          y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>Z <span class='op'>=</span> <span class='fl'>0</span>, X <span class='op'>=</span> <span class='fl'>0</span>, Y <span class='op'>=</span> <span class='fl'>0</span>, U <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/ggdag/man/ggdag.html'>ggdag</a></span><span class='op'>(</span><span class='va'>dag8</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/pkg/ggdag/man/theme_dag_blank.html'>theme_dag</a></span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="causal_inference_files/figure-html5/dag8-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<p>We want to estimate the causal effect from X to Y. However, there is
+an unobserved confounder, U. Because U is not observed, we cannot block
+this path, so we cannot apply the back-door criterion.</p>
+<p>However, notice the variable Z in the DAG. In the diagram, Z has the
+causal effect of changing X through a mechanism that does not involve U.
+Therefore, any effect that Z has on Y will be through X, but does not
+involve U. In a linear model, if we can obtain the coefficient of Z → X,
+denoted as b1, and the coefficient of Z → Y, denoted as b2, then an
+estimate of the causal effect of X → Y is</p>
+<p><span class="math display">\[\text{causal effect}(X \to Y) =
+\frac{\text{causal effect}(Z \to Y)}{\text{causal effect}(Z \to
+X)}\]</span></p>
+<p>The <code>dagitty</code> package contains a function for identifying
+instrumental variables, given a specified DAG:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>dagitty</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/instrumentalVariables.html'>instrumentalVariables</a></span><span class='op'>(</span><span class='va'>dag8</span>,
+                               exposure <span class='op'>=</span> <span class='st'>"X"</span>,
+                               outcome <span class='op'>=</span> <span class='st'>"Y"</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>#&gt;  Z</code></pre>
+</div>
+<p>Here’s an example with the <code>jobs</code> data set from the
+<code>mediation</code> package. You can obtain more information from the
+documentation page.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>jobs</span>, package <span class='op'>=</span> <span class='st'>"mediation"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</div>
+<p>Instrumental variables can be used for both experimental and
+nonexperimental studies. In this example, while individuals are randomly
+assigned to participate in a job training intervention, not everyone
+assigned to the intervention group participated. In this data,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://dplyr.tidyverse.org/reference/count.html'>count</a></span><span class='op'>(</span><span class='va'>jobs</span>, <span class='va'>treat</span>, <span class='va'>comply</span><span class='op'>)</span>  <span class='co'># only 372 out of 600 complied</span>
+</code></pre>
+</div>
+<pre><code>#&gt;   treat comply   n
+#&gt; 1     0      0 299
+#&gt; 2     1      0 228
+#&gt; 3     1      1 372</code></pre>
+</div>
+<p>And those who decided to participate may have different
+characteristics from those who did not participate, and such differences
+may lead to differences in the outcome. Therefore, we can distinguish
+two kinds of effects when talking about intervention:</p>
+<ul>
+<li>Intent-to-treat (ITT) effect: the average effect of
+<em>assigning</em> people to the job training intervention
+condition</li>
+<li>Complier average causal eﬀect (CACE): the average effect of the
+intervention on those who complied with the intervention; also called
+the treatment-on-the-treated effect.</li>
+</ul>
+<p>In this example, Z is the random assignment, X is the actual
+participation in the program, and Y is a posttest measure of depressive
+symptoms. Z is a potential instrumental variable, which has to satisfy
+the following conditions:</p>
+<ul>
+<li>No direct path from Z to Y; Z affects Y only through X (exclusion
+restriction)</li>
+<li>No unobserved confounding between Z and Y (ignorability)</li>
+</ul>
+<p>In addition, a <em>strong instrument</em> is one where Z has a strong
+effect on X. If Z only slightly causes X, the instrumental variable
+approach is not good.</p>
+<p>In our example, the exclusion restriction assumption means being
+assigned to the intervention condition does not affect the outcome if
+participants never participate in the intervention. The ignorability
+assumption means that there is no common cause of a person being
+assigned to an intervention and their outcome, which is justified here
+given Z is randomized. In a nonexperimental study, this may require
+identifying confounders and adjusting for those confounders between Z
+and Y.</p>
+<h2 id="intention-to-treat-effect">Intention-To-Treat Effect</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m_itt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span><span class='va'>depress2</span> <span class='op'>~</span> <span class='va'>treat</span>,
+  data <span class='op'>=</span> <span class='va'>jobs</span>,
+  prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span><span class='op'>)</span>,
+  seed <span class='op'>=</span> <span class='fl'>1244</span>, iter <span class='op'>=</span> <span class='fl'>4000</span>
+<span class='op'>)</span>
+</code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>m_itt</span>, variable <span class='op'>=</span> <span class='st'>"b_treat"</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="causal_inference_files/figure-html5/plot-itt-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<h2 id="complier-average-causal-eﬀect">Complier Average Causal
+Eﬀect</h2>
+<p>If we only estimate <code>comply</code> → <code>despress2</code>, the
+coefficient may be confounded because <code>comply</code> is not
+randomly assigned. <strong>So the following may not be an accurate
+causal effect estimate:</strong></p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m_comply</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span><span class='va'>depress2</span> <span class='op'>~</span> <span class='va'>comply</span>,
+  prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span><span class='op'>)</span>,
+  data <span class='op'>=</span> <span class='va'>jobs</span>, seed <span class='op'>=</span> <span class='fl'>1244</span>, iter <span class='op'>=</span> <span class='fl'>4000</span>
+<span class='op'>)</span>
+</code></pre>
+</div>
+</div>
+<p>We can use an instrumental variable approach. This can be done with
+<code>brms</code>:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>f1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula.html'>bf</a></span><span class='op'>(</span><span class='va'>comply</span> <span class='op'>~</span> <span class='va'>treat</span><span class='op'>)</span>  <span class='co'># Need to treat outcome as linear</span>
+<span class='va'>f2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula.html'>bf</a></span><span class='op'>(</span><span class='va'>depress2</span> <span class='op'>~</span> <span class='va'>comply</span><span class='op'>)</span>
+<span class='va'>m_iv</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span>
+  <span class='va'>f1</span> <span class='op'>+</span> <span class='va'>f2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula-helpers.html'>set_rescor</a></span><span class='op'>(</span><span class='cn'>TRUE</span><span class='op'>)</span>,  <span class='co'># need `set_rescor(TRUE)` for unobserved U</span>
+  data <span class='op'>=</span> <span class='va'>jobs</span>,
+  prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>2.5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span>, resp <span class='op'>=</span> <span class='st'>"comply"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span>, resp <span class='op'>=</span> <span class='st'>"depress2"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0.5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span>, resp <span class='op'>=</span> <span class='st'>"comply"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span>, resp <span class='op'>=</span> <span class='st'>"depress2"</span><span class='op'>)</span>,
+  seed <span class='op'>=</span> <span class='fl'>1244</span>, iter <span class='op'>=</span> <span class='fl'>4000</span>
+<span class='op'>)</span>
+</code></pre>
+</div>
+</div>
+<p>The CACE effect was higher than the ITT effect, but also with more
+uncertainty:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>m_iv</span>, variable <span class='op'>=</span> <span class='st'>"b_depress2_comply"</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="causal_inference_files/figure-html5/plot-iv-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<p>Note: <code>brms</code> only supports IV for normal outcomes. A more
+general approach is to code the model in Stan, as below:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode stan"><code class="sourceCode stan"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N;  <span class="co">// number of observations</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[N] y;  <span class="co">// outcome;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[N] z;  <span class="co">// instrument;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> x[N];  <span class="co">// binary treatment/causal variable;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed data</span> {</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[N] x_real = to_vector(x);</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> alphax;  <span class="co">// regression intercept for X</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> alphay;  <span class="co">// regression intercept for Y</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> beta1;   <span class="co">// Z -&gt; X</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> beta2;   <span class="co">// X -&gt; Y</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[N] u;  <span class="co">// confounding variable</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> beta3;   <span class="co">// U -&gt; Y</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma;  <span class="co">// SD of prediction error for Y</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">// model</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  u ~ std_normal();</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  x ~ bernoulli_logit(alphax + beta1 * z + u);</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  y ~ normal(alphay + beta2 * x_real + beta3 * u, sigma);</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="co">// prior</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  beta1 ~ student_t(<span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">5</span>);</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  beta2 ~ normal(<span class="dv">0</span>, <span class="dv">2</span>);</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  beta3 ~ normal(<span class="dv">0</span>, <span class="dv">2</span>);</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  sigma ~ student_t(<span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">3</span>);</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 1. form the data list for Stan</span>
+<span class='va'>stan_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span><span class='op'>(</span><span class='va'>jobs</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>N <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>jobs</span><span class='op'>)</span>,
+       y <span class='op'>=</span> <span class='va'>depress2</span>,
+       x <span class='op'>=</span> <span class='va'>comply</span>,
+       z <span class='op'>=</span> <span class='va'>treat</span><span class='op'>)</span>
+<span class='op'>)</span>
+<span class='co'># 2. Run Stan</span>
+<span class='va'>m_iv_stan</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
+  file <span class='op'>=</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"iv_logit_normal.stan"</span><span class='op'>)</span>,
+  data <span class='op'>=</span> <span class='va'>stan_dat</span>,
+  seed <span class='op'>=</span> <span class='fl'>1338</span>,
+  <span class='co'># Exclude u</span>
+  pars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"u"</span><span class='op'>)</span>, include <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  iter <span class='op'>=</span> <span class='fl'>4000</span>
+<span class='op'>)</span>
+</code></pre>
+</div>
+</div>
 <!-- The following chunk is only used in the website -->
 <section id="last-updated" class="appendix layout-chunk"
 data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code>#&gt; [1] &quot;March 30, 2022&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;April 02, 2022&quot;</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<div class="sourceCode" id="cb4"><pre
+<div class="sourceCode" id="cb10"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 </section>
-<div class="sourceCode" id="cb5"><pre
+<div class="sourceCode" id="cb11"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
