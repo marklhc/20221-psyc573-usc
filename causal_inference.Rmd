@@ -65,11 +65,11 @@ The outcome of interest is the divorce rate. The plot shows how marriage rate is
 ```{r scatter-marriage-divorce}
 ggplot(waffle_divorce,
        aes(x = Marriage, y = Divorce)) +
-  geom_point() +
-  geom_smooth() +
-  labs(x = "Marriage rate (per 10 adults)",
-       y = "Divorce rate (per 10 adults)") +
-  ggrepel::geom_text_repel(aes(label = Loc))
+    geom_point() +
+    geom_smooth() +
+    labs(x = "Marriage rate (per 10 adults)",
+         y = "Divorce rate (per 10 adults)") +
+    ggrepel::geom_text_repel(aes(label = Loc))
 ```
 
 It looks like marriage rate can predict divorce rate. A causal interpretation would be a stronger assertion, such that we expect to see a higher divorce rate if policymakers encourage more people to get married. In order to make a causal claim, we need to remove potential confounders. 
@@ -88,12 +88,12 @@ We can look at how the median age people get married in different states relates
 
 ```{r scatter-age-divorce}
 ggplot(waffle_divorce,
-       aes(x = MedianAgeMarriage, y = Divorce / 10)) +
-  geom_point() +
-  geom_smooth() +
-  labs(x = "Median age marriage (10 years)",
-       y = "Divorce rate (per 10 adults)") +
-  ggrepel::geom_text_repel(aes(label = Loc))
+       aes(x = MedianAgeMarriage, y = Divorce)) +
+    geom_point() +
+    geom_smooth() +
+    labs(x = "Median age marriage (10 years)",
+         y = "Divorce rate (per 10 adults)") +
+    ggrepel::geom_text_repel(aes(label = Loc))
 ```
 
 ## Assumptions in a DAG
@@ -141,15 +141,15 @@ Assuming a correctly specified DAG, $\beta_2$ is the causal effect of M on D. He
 
 ```{r m1_stan, eval = FALSE}
 m1_stan <- stan(
-  here::here("stan", "multiple_reg.stan"),
-  data = list(
-    N = nrow(waffle_divorce),
-    p = 2,
-    y = waffle_divorce$Divorce,
-    x = waffle_divorce[c("MedianAgeMarriage", "Marriage")]
-  ),
-  seed = 941,
-  iter = 4000
+    here::here("stan", "multiple_reg.stan"),
+    data = list(
+        N = nrow(waffle_divorce),
+        p = 2,
+        y = waffle_divorce$Divorce,
+        x = waffle_divorce[c("MedianAgeMarriage", "Marriage")]
+    ),
+    seed = 941,
+    iter = 4000
 )
 ```
 
@@ -157,12 +157,12 @@ And using `brms`:
 
 ```{r m1, results = "hide"}
 m1 <- brm(Divorce ~ MedianAgeMarriage + Marriage,
-  data = waffle_divorce,
-  prior = prior(std_normal(), class = "b") +
-    prior(normal(0, 5), class = "Intercept") +
-    prior(student_t(4, 0, 3), class = "sigma"),
-  seed = 941,
-  iter = 4000
+          data = waffle_divorce,
+          prior = prior(std_normal(), class = "b") +
+              prior(normal(0, 5), class = "Intercept") +
+              prior(student_t(4, 0, 3), class = "sigma"),
+          seed = 941,
+          iter = 4000
 )
 ```
 
@@ -170,8 +170,8 @@ m1 <- brm(Divorce ~ MedianAgeMarriage + Marriage,
 
 ```{r}
 msummary(m1,
-  estimate = "{estimate} [{conf.low}, {conf.high}]",
-  statistic = NULL, fmt = 2
+         estimate = "{estimate} [{conf.low}, {conf.high}]",
+         statistic = NULL, fmt = 2
 )
 ```
 
@@ -182,9 +182,9 @@ As shown in the table, when holding constant the median marriage age of states, 
 ```{r pp-check-m1}
 pp_check(m1, ndraws = 100) # density
 pp_check(m1, type = "intervals", x = "Marriage") +
-  labs(x = "Marriage", y = "Divorce")
+    labs(x = "Marriage", y = "Divorce")
 pp_check(m1, type = "intervals", x = "MedianAgeMarriage") +
-  labs(x = "MedianAgeMarriage", y = "Divorce")
+    labs(x = "MedianAgeMarriage", y = "Divorce")
 ```
 
 The model does not fit every state (e.g., UT, ME, ID).
@@ -211,12 +211,12 @@ Here is what the model would predict in terms of the change in the divorce rate 
 
 ```{r predict-m1-intervention}
 pred_df <- data.frame(
-  Marriage = c(2, 3),
-  MedianAgeMarriage = c(2.5, 2.5)
+    Marriage = c(2, 3),
+    MedianAgeMarriage = c(2.5, 2.5)
 )
 pred_df %>%
-  bind_cols(fitted(m1, newdata = pred_df)) %>%
-  knitr::kable()
+    bind_cols(fitted(m1, newdata = pred_df)) %>%
+    knitr::kable()
 ```
 
 The difference should be just the estimate of $\beta_2$, which has the following posterior distribution:
@@ -245,8 +245,9 @@ datasummary_balance(~ tone, data = framing)
 datasummary(emo + p_harm + cong_mesg ~ Factor(tone) * (Mean + SD + Histogram),
             data = framing)
 # Correlation table
-framing %>% select(tone, emo, cong_mesg) %>%
-  datasummary_correlation(method = "pearson")
+framing %>%
+    select(tone, emo, cong_mesg) %>%
+    datasummary_correlation(method = "pearson")
 ```
 
 ## Randomization Removes Incoming Paths for Treatment
@@ -260,10 +261,10 @@ There are many possible confounders when we observe these two variables in data 
 
 ```{r dag2}
 dag2 <- dagitty(
-  "dag{
-    X -> Y; U -> X; U -> Y
-    U [unobserved]
-  }"
+    "dag{
+      X -> Y; U -> X; U -> Y
+      U [unobserved]
+    }"
 )
 coordinates(dag2) <- list(x = c(X = 0, U = 1, Y = 2),
                           y = c(X = 0, U = 1, Y = 0))
@@ -275,10 +276,10 @@ The magic of randomization---randomly assigning individuals to a manipulated lev
 
 ```{r dag3}
 dag3 <- dagitty(
-  "dag{
-    X -> Y; U -> Y
-    U [unobserved]
-  }"
+    "dag{
+      X -> Y; U -> Y
+      U [unobserved]
+    }"
 )
 coordinates(dag3) <- list(x = c(X = 0, U = 1, Y = 2),
                           y = c(X = 0, U = 1, Y = 0))
@@ -296,9 +297,9 @@ In a DAG, the back-door criterion can be used to identify variables that we shou
 
 ```{r dag4}
 dag4 <- dagitty(
-  "dag{
-    X -> Y; W1 -> X; U -> W2; W2 -> X; W1 -> Y; U -> Y
-  }"
+    "dag{
+      X -> Y; W1 -> X; U -> W2; W2 -> X; W1 -> Y; U -> Y
+    }"
 )
 latents(dag4) <- "U"
 coordinates(dag4) <- list(x = c(X = 0, W1 = 0.66, U = 1.32, W2 = 0.66, Y = 2),
@@ -332,11 +333,11 @@ Which model gives us the causal effect estimate for `tone`? Let's run the two mo
 
 ```{r m-adjust-no-adjust, results = "hide"}
 m_no_adjust <- brm(cong_mesg ~ tone,
-  data = framing,
-  family = bernoulli(link = "logit"))
+                   data = framing,
+                   family = bernoulli(link = "logit"))
 m_adjust <- brm(cong_mesg ~ tone + emo,
-  data = framing,
-  family = bernoulli(link = "logit"))
+                data = framing,
+                family = bernoulli(link = "logit"))
 ```
 
 We can combine the results in a table:
@@ -344,8 +345,8 @@ We can combine the results in a table:
 ```{r msummary-adjust-no-adjust, warning = FALSE}
 msummary(list(`No adjustment` = m_no_adjust,
               `Adjusting for feeling` = m_adjust),
-  estimate = "{estimate} [{conf.low}, {conf.high}]",
-  statistic = NULL, fmt = 2
+         estimate = "{estimate} [{conf.low}, {conf.high}]",
+         statistic = NULL, fmt = 2
 )
 ```
 
@@ -361,9 +362,9 @@ So instead, we need a DAG. Given that we know `emo` is measured **after** the in
 
 ```{r dag5}
 dag5 <- dagitty(
-  "dag{
-    T -> C; T -> E; E -> C
-  }"
+    "dag{
+      T -> C; T -> E; E -> C
+    }"
 )
 coordinates(dag5) <- list(x = c(T = 0, E = 1, C = 2),
                           y = c(T = 0, E = 1, C = 0))
@@ -390,18 +391,18 @@ Let's analyze the mediation model in Figure X. There are two variables that are 
 ```{r m_med, results = "hide"}
 prior_m <- prior(normal(0, 1), class = "b")
 m_med <- brm(
-  # Two equations for two outcomes
-  bf(cong_mesg ~ tone + emo) +
-    bf(emo ~ tone) +
-    set_rescor(FALSE),
-  # A list of two family arguments for two outcomes
-  family = list(bernoulli("logit"), gaussian("identity")),
-  data = framing,
-  prior = prior(normal(0, 1), class = "b", resp = "emo") +
-    prior(student_t(4, 0, 5), class = "sigma", resp = "emo") +
-    prior(student_t(4, 0, 2.5), class = "b", resp = "congmesg"),
-  seed = 1338,
-  iter = 4000
+    # Two equations for two outcomes
+    bf(cong_mesg ~ tone + emo) +
+        bf(emo ~ tone) +
+        set_rescor(FALSE),
+    # A list of two family arguments for two outcomes
+    family = list(bernoulli("logit"), gaussian("identity")),
+    data = framing,
+    prior = prior(normal(0, 1), class = "b", resp = "emo") +
+        prior(student_t(4, 0, 5), class = "sigma", resp = "emo") +
+        prior(student_t(4, 0, 2.5), class = "b", resp = "congmesg"),
+    seed = 1338,
+    iter = 4000
 )
 ```
 
@@ -415,19 +416,19 @@ Here's some Stan code for running the same mediation model
 ```{r m_med_stan, eval = FALSE}
 # 1. form the data list for Stan
 stan_dat <- with(framing,
-  list(N0 = sum(tone == 0),
-       N1 = sum(tone == 1),
-       m0 = emo[which(tone == 0)],
-       m1 = emo[which(tone == 1)],
-       y0 = cong_mesg[which(tone == 0)],
-       y1 = cong_mesg[which(tone == 1)])
+                 list(N0 = sum(tone == 0),
+                      N1 = sum(tone == 1),
+                      m0 = emo[which(tone == 0)],
+                      m1 = emo[which(tone == 1)],
+                      y0 = cong_mesg[which(tone == 0)],
+                      y1 = cong_mesg[which(tone == 1)])
 )
 # 2. Run Stan
 m_med_stan <- stan(
-  file = here("stan", "mediation_logit_normal.stan"),
-  data = stan_dat,
-  seed = 1338,
-  iter = 4000
+    file = here("stan", "mediation_logit_normal.stan"),
+    data = stan_dat,
+    seed = 1338,
+    iter = 4000
 )
 ```
 
@@ -453,10 +454,10 @@ CDE is the direct effect when the mediator is set to a specific level. Below sho
 cond_df <- data.frame(tone = c(0, 1, 0, 1),
                       emo = c(0, 0, 9, 9))
 cond_df %>%
-  bind_cols(
-    fitted(m_med, newdata = cond_df)[ , , "congmesg"]
-  ) %>%
-  knitr::kable()
+    bind_cols(
+        fitted(m_med, newdata = cond_df)[ , , "congmesg"]
+    ) %>%
+    knitr::kable()
 ```
 
 #### Natural direct effect (NDE)
@@ -473,14 +474,14 @@ sim_emo0 <- rnorm(post_draws$b_emo_Intercept,
                   sd = post_draws$sigma_emo)
 # Predicted cong_mesg for tone = 0, emo = sim_emo0
 pred_congmesg0 <- plogis( # apply the inverse probit link
-  post_draws$b_congmesg_Intercept +
-    post_draws$b_congmesg_emo * sim_emo0
+    post_draws$b_congmesg_Intercept +
+        post_draws$b_congmesg_emo * sim_emo0
 )
 # Predicted cong_mesg for tone = 1, emo = sim_emo0
 pred_congmesg1 <- plogis( # apply the inverse probit link
-  post_draws$b_congmesg_Intercept +
-    post_draws$b_congmesg_tone +
-    post_draws$b_congmesg_emo * sim_emo0
+    post_draws$b_congmesg_Intercept +
+        post_draws$b_congmesg_tone +
+        post_draws$b_congmesg_emo * sim_emo0
 )
 # Natural direct effect
 nde <- pred_congmesg1 - pred_congmesg0
@@ -500,13 +501,13 @@ sim_emo0 <- rnorm(post_draws$b_emo_Intercept,
 sim_emo1 <- sim_emo0 + post_draws$b_emo_tone
 # Predicted cong_mesg for tone = 0, emo = sim_emo0
 pred_congmesg0 <- plogis( # apply the inverse probit link
-  post_draws$b_congmesg_Intercept +
-    post_draws$b_congmesg_emo * sim_emo0
+    post_draws$b_congmesg_Intercept +
+        post_draws$b_congmesg_emo * sim_emo0
 )
 # Predicted cong_mesg for tone = 0, emo = sim_emo1
 pred_congmesg1 <- plogis( # apply the inverse probit link
-  post_draws$b_congmesg_Intercept +
-    post_draws$b_congmesg_emo * sim_emo1
+    post_draws$b_congmesg_Intercept +
+        post_draws$b_congmesg_emo * sim_emo1
 )
 # Natural direct effect
 nie <- pred_congmesg1 - pred_congmesg0
@@ -518,9 +519,9 @@ as_draws(list(NDE = nde, NIE = nie)) %>%
 
 ```{r dag6}
 dag6 <- dagitty(
-  "dag{
-    T -> C; T -> E; E -> C; U -> E; U -> C
-  }"
+    "dag{
+      T -> C; T -> E; E -> C; U -> E; U -> C
+    }"
 )
 coordinates(dag6) <- list(x = c(T = 0, E = 1, C = 2, U = 2),
                           y = c(T = 0, E = 1, C = 0, U = 1))
@@ -535,22 +536,22 @@ One important assumption in mediation is that there is no unobserved confounding
 ```{r m_med_sens, results = "hide"}
 # 1. form the data list for Stan
 stan_dat <- with(framing,
-  list(N0 = sum(tone == 0),
-       N1 = sum(tone == 1),
-       m0 = emo[which(tone == 0)],
-       m1 = emo[which(tone == 1)],
-       y0 = cong_mesg[which(tone == 0)],
-       y1 = cong_mesg[which(tone == 1)])
+                 list(N0 = sum(tone == 0),
+                      N1 = sum(tone == 1),
+                      m0 = emo[which(tone == 0)],
+                      m1 = emo[which(tone == 1)],
+                      y0 = cong_mesg[which(tone == 0)],
+                      y1 = cong_mesg[which(tone == 1)])
 )
 # 2. Run Stan
 m_med_sens <- stan(
-  file = here("stan", "mediation_logit_normal_sensitivity.stan"),
-  data = stan_dat,
-  seed = 1338,
-  iter = 4000,
-  # Exclude u0 and u1
-  pars = c("u0", "u1"), include = FALSE
-  )
+    file = here("stan", "mediation_logit_normal_sensitivity.stan"),
+    data = stan_dat,
+    seed = 1338,
+    iter = 4000,
+    # Exclude u0 and u1
+    pars = c("u0", "u1"), include = FALSE
+)
 ```
 
 ```{r print-m_med_sens}
@@ -575,25 +576,23 @@ num_proposals <- 200 # number of grant proposals
 prop_selected <- 0.1 # proportion to select
 # Simulate independent newsworthiness and trustworthiness
 plot_dat <- tibble( # `tibble` is the tidyverse version of `data.frame`
-  nw = rnorm(num_proposals),
-  tw = rnorm(num_proposals)
+    nw = rnorm(num_proposals),
+    tw = rnorm(num_proposals)
 )
 plot_dat <- plot_dat %>%
-  mutate(
-      total = nw + tw
-  )
+    mutate(total = nw + tw)
 sel_dat <- plot_dat %>%
-  # select top 10% of combined scores
-  slice_max(order_by = total, prop = prop_selected)
+    # select top 10% of combined scores
+    slice_max(order_by = total, prop = prop_selected)
 plot_dat %>%
-  ggplot(aes(x = nw, y = tw)) +
-  geom_point() +
-  geom_point(data = sel_dat, shape = 1, size = 3,
-             color = "red") +
-  geom_smooth(method = "lm", se = FALSE) +
-  geom_smooth(data = sel_dat, method = "lm", se = FALSE,
-              col = "purple") +
-  labs(x = "newsworthiness", y = "trustworthiness")
+    ggplot(aes(x = nw, y = tw)) +
+    geom_point() +
+    geom_point(data = sel_dat, shape = 1, size = 3,
+               color = "red") +
+    geom_smooth(method = "lm", se = FALSE) +
+    geom_smooth(data = sel_dat, method = "lm", se = FALSE,
+                col = "purple") +
+    labs(x = "newsworthiness", y = "trustworthiness")
 ```
 
 As you can see, a negative correlation happens. This is collider bias: spurious correlation due to conditioning on the common descendant. This also goes by the name Berkson's Paradox.
@@ -608,9 +607,9 @@ In the DAG below, X and Y have no causal association. Conditioning on S, however
 
 ```{r dag7}
 dag7 <- dagitty(
-  "dag{
-    X -> Y; X -> S; Y -> S
-  }"
+    "dag{
+      X -> Y; X -> S; Y -> S
+    }"
 )
 coordinates(dag7) <- list(x = c(X = 0, S = 1, Y = 2),
                           y = c(X = 0, S = -1, Y = 0))
@@ -630,9 +629,9 @@ Consider the following diagram:
 
 ```{r dag8}
 dag8 <- dagitty(
-  "dag{
-    Z -> X; X -> Y; U -> X; U -> Y
-  }"
+    "dag{
+      Z -> X; X -> Y; U -> X; U -> Y
+    }"
 )
 latents(dag8) <- "U"
 coordinates(dag8) <- list(x = c(Z = 0, X = 1, Y = 3, U = 2),
@@ -684,10 +683,10 @@ In our example, the exclusion restriction assumption means being assigned to the
 
 ```{r m_itt, results = "hide"}
 m_itt <- brm(depress2 ~ treat,
-  data = jobs,
-  prior = prior(normal(0, 2), class = "b") +
-    prior(student_t(4, 0, 3), class = "sigma"),
-  seed = 1244, iter = 4000
+             data = jobs,
+             prior = prior(normal(0, 2), class = "b") +
+                 prior(student_t(4, 0, 3), class = "sigma"),
+             seed = 1244, iter = 4000
 )
 ```
 
@@ -701,9 +700,9 @@ If we only estimate `comply` &rarr; `despress2`, the coefficient may be confound
 
 ```{r m_comply, results = "hide"}
 m_comply <- brm(depress2 ~ comply,
-  prior = prior(normal(0, 2), class = "b") +
-    prior(student_t(4, 0, 3), class = "sigma"),
-  data = jobs, seed = 1244, iter = 4000
+                prior = prior(normal(0, 2), class = "b") +
+                    prior(student_t(4, 0, 3), class = "sigma"),
+                data = jobs, seed = 1244, iter = 4000
 )
 ```
 
@@ -713,13 +712,13 @@ We can use an instrumental variable approach. This can be done with `brms`:
 f1 <- bf(comply ~ treat)  # Need to treat outcome as linear
 f2 <- bf(depress2 ~ comply)
 m_iv <- brm(
-  f1 + f2 + set_rescor(TRUE),  # need `set_rescor(TRUE)` for unobserved U
-  data = jobs,
-  prior = prior(student_t(4, 0, 2.5), class = "b", resp = "comply") +
-    prior(normal(0, 2), class = "b", resp = "depress2") +
-    prior(normal(0, 0.5), class = "sigma", resp = "comply") +
-    prior(student_t(4, 0, 3), class = "sigma", resp = "depress2"),
-  seed = 1244, iter = 4000
+    f1 + f2 + set_rescor(TRUE),  # need `set_rescor(TRUE)` for unobserved U
+    data = jobs,
+    prior = prior(student_t(4, 0, 2.5), class = "b", resp = "comply") +
+        prior(normal(0, 2), class = "b", resp = "depress2") +
+        prior(normal(0, 0.5), class = "sigma", resp = "comply") +
+        prior(student_t(4, 0, 3), class = "sigma", resp = "depress2"),
+    seed = 1244, iter = 4000
 )
 ```
 
@@ -737,19 +736,19 @@ Note: `brms` only supports IV for normal outcomes. A more general approach is to
 ```{r m_iv_stan, eval = FALSE}
 # 1. form the data list for Stan
 stan_dat <- with(jobs,
-  list(N = nrow(jobs),
-       y = depress2,
-       x = comply,
-       z = treat)
+                 list(N = nrow(jobs),
+                      y = depress2,
+                      x = comply,
+                      z = treat)
 )
 # 2. Run Stan
 m_iv_stan <- stan(
-  file = here("stan", "iv_logit_normal.stan"),
-  data = stan_dat,
-  seed = 1338,
-  # Exclude u
-  pars = c("u"), include = FALSE,
-  iter = 4000
+    file = here("stan", "iv_logit_normal.stan"),
+    data = stan_dat,
+    seed = 1338,
+    # Exclude u
+    pars = c("u"), include = FALSE,
+    iter = 4000
 )
 ```
 

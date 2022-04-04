@@ -1,0 +1,573 @@
+---
+title: "Interaction"
+author: "Mark Lai"
+date: "April 2, 2022"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = "#>", collapse = TRUE,
+                      fig.width = 6, fig.asp = 0.618,
+                      out.width = "70%", fig.align = "center")
+comma <- function(x, digits. = 2L) {
+    format(x, digits = digits., big.mark = ",")
+}
+```
+
+```{r load-pkg, message = FALSE}
+library(tidyverse)
+library(here)
+library(brms)  # simplify fitting Stan GLM models
+library(posterior)  # for summarizing draws
+library(modelsummary)  # table for brms
+theme_set(theme_classic() +
+    theme(panel.grid.major.y = element_line(color = "grey92")))
+```
+
+```{r waffle_divorce}
+waffle_divorce <- read_delim(  # read delimited files
+    "https://raw.githubusercontent.com/rmcelreath/rethinking/master/data/WaffleDivorce.csv",
+    delim = ";"
+)
+# Rescale Marriage and Divorce by dividing by 10
+waffle_divorce$Marriage <- waffle_divorce$Marriage / 10
+waffle_divorce$Divorce <- waffle_divorce$Divorce / 10
+waffle_divorce$MedianAgeMarriage <- waffle_divorce$MedianAgeMarriage / 10
+# Recode `South` to a factor variable
+waffle_divorce$South <- factor(waffle_divorce$South,
+    levels = c(0, 1),
+    labels = c("non-south", "south")
+)
+# See data description at https://rdrr.io/github/rmcelreath/rethinking/man/WaffleDivorce.html
+```
+
+# Different Slopes Across Two Groups
+
+## Stratified Analysis
+
+Let's consider whether the association between `MedianAgeMarriage` and `Divorce` differs between Southern and non-Southern states. Because (and **only because**) the groups are **independent**, we can fit a linear regression for each subset of states.
+
+```{r smooth-south}
+ggplot(waffle_divorce,
+       aes(x = MedianAgeMarriage, y = Divorce, col = South)) +
+    geom_point() +
+    geom_smooth() +
+    labs(x = "Median age marriage (10 years)",
+         y = "Divorce rate (per 10 adults)") +
+    ggrepel::geom_text_repel(aes(label = Loc))
+```
+
+```{r m_nonsouth, results = "hide"}
+m_nonsouth <-
+    brm(Divorce ~ MedianAgeMarriage,
+        data = filter(waffle_divorce, South == "non-south"),
+        prior = prior(normal(0, 2), class = "b") +
+            prior(normal(0, 10), class = "Intercept") +
+            prior(student_t(4, 0, 3), class = "sigma"),
+        seed = 941,
+        iter = 4000
+    )
+m_south <-
+    brm(Divorce ~ MedianAgeMarriage,
+        data = filter(waffle_divorce, South == "south"),
+        prior = prior(normal(0, 2), class = "b") +
+            prior(normal(0, 10), class = "Intercept") +
+            prior(student_t(4, 0, 3), class = "sigma"),
+        seed = 2157,  # use a different seed
+        iter = 4000
+    )
+```
+
+```{r tab-south}
+msummary(list(South = m_south, `Non-South` = m_nonsouth),
+         estimate = "{estimate} [{conf.low}, {conf.high}]",
+         statistic = NULL, fmt = 2,
+         gof_omit = "^(?!Num)"  # only include number of observations
+)
+```
+
+We can now ask two questions:
+
+- Is the intercept different across southern and non-southern states?
+- Is the slope different across southern and non-southern states?
+
+The correct way to answer the above questions is to obtain the posterior distribution of the **difference** in the coefficients. Repeat: obtain the posterior distribution of the **difference**. The incorrect way is to compare whether the CIs overlap.
+
+Here are the posteriors of the differences:
+
+```{r diff-south}
+# Extract draws
+draws_south <- as_draws_matrix(m_south,
+    variable = c("b_Intercept", "b_MedianAgeMarriage")
+)
+draws_nonsouth <- as_draws_matrix(m_nonsouth,
+    variable = c("b_Intercept", "b_MedianAgeMarriage")
+)
+# Difference in coefficients
+draws_diff <- draws_south - draws_nonsouth
+# Rename the columns
+colnames(draws_diff) <- paste0("d", colnames(draws_diff))
+# Summarize
+summarize_draws(draws_diff)
+```
+
+As you can see, the southern states have a larger intercept and a lower slope.
+
+```{r cond-south}
+p1 <- plot(
+    conditional_effects(m_nonsouth),
+    points = TRUE, plot = FALSE
+)[[1]] + ggtitle("South") + lims(x = c(2.3, 3), y = c(0.6, 1.4))
+p2 <- plot(
+    conditional_effects(m_south),
+    points = TRUE, plot = FALSE
+)[[1]] + ggtitle("Non-South") + lims(x = c(2.3, 3), y = c(0.6, 1.4))
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+
+## Interaction Model
+
+An alternative is to include an interaction term
+
+$$
+  \begin{aligned}
+    D_i & \sim N(\mu_i, \sigma)  \\
+    \mu_i & = \beta_0 + \beta_1 S_i + \beta_2 A_i + \beta_3 S_i \times A_i \\
+    \beta_0 & \sim N(0, 10) \\
+    \beta_1 & \sim N(0, 10) \\
+    \beta_2 & \sim N(0, 1) \\
+    \beta_3 & \sim N(0, 2) \\
+    \sigma & \sim t^+_4(0, 3)
+  \end{aligned}
+$$
+
+- $\beta_1$: Difference in intercept between southern and non-southern states.
+- $\beta_3$: Difference in the coefficient for A &rarr; D between southern and non-southern states
+
+In the model, the variable S, southern state, is a dummy variable with 0 = non-southern and 1 = southern. Therefore, 
+
+> For non-southern states, $\mu = (\beta_0) + (\beta_2) A$;
+> for southern states, $\mu = (\beta_0 + \beta_1) + (\beta_2 + \beta_3) A$
+
+```{r m1, results = "hide"}
+m1 <- brm(
+    Divorce ~ South * MedianAgeMarriage,
+    data = waffle_divorce,
+    prior = prior(normal(0, 2), class = "b") +
+        prior(normal(0, 10), class = "b", coef = "Southsouth") +
+        prior(normal(0, 10), class = "Intercept") +
+        prior(student_t(4, 0, 3), class = "sigma"),
+    seed = 941,
+    iter = 4000
+)
+```
+
+The formula `Divorce ~ South * MedianAgeMarriage` is the same as
+
+```{r form1, eval = FALSE}
+Divorce ~ South + MedianAgeMarriage + South:MedianAgeMarriage
+```
+
+where `:` is the symbol in R for a product term.
+
+```{r print-m1}
+m1
+```
+
+### Posterior predictive checks
+
+```{r ppc-m1}
+# Check density (normality)
+pp_check(m1, type = "dens_overlay_grouped", group = "South")
+# Check prediction (a few outliers)
+pp_check(m1,
+    type = "ribbon_grouped", x = "MedianAgeMarriage",
+    group = "South"
+)
+# Check errors (no clear pattern)
+pp_check(m1,
+    type = "error_scatter_avg_vs_x", x = "MedianAgeMarriage"
+)
+```
+
+### Conditional effects/simple slopes
+
+Slope of `MedianAgeMarriage` when South = 0: $\beta_1$
+
+Slope of `MedianAgeMarriage` when South = 1: $\beta_1 + \beta_3$
+
+```{r summ-simple-slopes}
+as_draws(m1) %>%
+    mutate_variables(
+        b_nonsouth = b_MedianAgeMarriage,
+        b_south = b_MedianAgeMarriage + `b_Southsouth:MedianAgeMarriage`
+    ) %>%
+    posterior::subset_draws(
+        variable = c("b_nonsouth", "b_south")
+    ) %>%
+    summarize_draws()
+```
+
+```{r cond-eff-m1}
+plot(
+    conditional_effects(m1,
+        effects = "MedianAgeMarriage",
+        conditions = data.frame(South = c("south", "non-south"),
+                                cond__ = c("South", "Non-South"))
+    ),
+    points = TRUE
+)
+```
+
+# Interaction of Continuous Predictors
+
+```{r 3dscatter}
+plotly::plot_ly(waffle_divorce,
+                x = ~Marriage,
+                y = ~MedianAgeMarriage,
+                z = ~Divorce)
+```
+
+$$
+  \begin{aligned}
+    D_i & \sim N(\mu_i, \sigma)  \\
+    \mu_i & = \beta_0 + \beta_1 M_i + \beta_2 A_i + \beta_3 M_i \times A_i \\
+  \end{aligned}
+$$
+
+```{r m2, results = "hide"}
+# Use default priors (just for convenience here)
+m2 <- brm(Divorce ~ Marriage * MedianAgeMarriage,
+    data = waffle_divorce,
+    seed = 941,
+    iter = 4000
+)
+```
+
+## Centering
+
+In the previous model, $\beta_1$ is the slope of M &rarr; D when A is 0 (i.e., median marriage age = 0), and $\beta_2$ is the slope of A &rarr; D when M is 0 (i.e., marriage rate is 0). These two are not very meaningful. Therefore, it is common to make the zero values more meaningful by doing *centering*.
+
+Here, I use M - 2 as the predictor, so the zero point means a marriage rate of 2 per 10 adults; I use A - 2.5 as the other predictor, so the zero point means a median marriage rate of 25 years old.
+
+$$\mu_i = \beta_0 + \beta_1 (M_i - 2) + \beta_2 (A_i - 2.5) + \beta_3 (M_i - 2) \times (A_i - 2.5)$$
+
+```{r m2c, results = "hide"}
+# Use default priors (just for convenience here)
+m2c <- brm(Divorce ~ I(Marriage - 2) * I(MedianAgeMarriage - 2.5),
+    data = waffle_divorce,
+    seed = 941,
+    iter = 4000
+)
+```
+
+```{r tab-m2}
+msummary(list(`No centering` = m2, `centered` = m2c),
+         estimate = "{estimate} [{conf.low}, {conf.high}]",
+         statistic = NULL, fmt = 2)
+```
+
+As shown in the table above, while the two models are equivalent in fit and give the same posterior distribution for $\beta_3$, they differ in $\beta_0$, $\beta_1$, and $\beta_2$.
+
+```{r cond-eff-m2}
+plot(
+    conditional_effects(m2c,
+        effects = "Marriage:MedianAgeMarriage",
+        int_conditions = list(MedianAgeMarriage = c(2.3, 2.5, 2.7)),
+    ),
+    points = TRUE
+)
+```
+
+# Multilevel Model
+
+When data are naturally clustered in three or more segments or clusters, we can model interactions with a technique we have learned---hierarchical model with partial pooling. The difference is that we can have multiple parameters in each cluster. For example, consider the UC Berkeley admission data. 
+
+```{r berkeley_admit}
+berkeley_admit <- UCBAdmissions %>%
+    as.data.frame() %>%
+    group_by(Gender, Dept) %>%
+    mutate(App = sum(Freq)) %>%
+    filter(Admit == "Admitted") %>%
+    ungroup() %>%
+    select(Gender, Dept, Admit = Freq, App)
+```
+
+```{r plot-admit}
+ggplot(berkeley_admit, aes(x = Gender)) +
+    geom_pointrange(
+        data = berkeley_admit %>%
+            group_by(Gender) %>%
+            summarise(
+                padmit = sum(Admit) / sum(App),
+                padmit_se = sqrt(padmit * (1 - padmit) / sum(App))
+            ),
+        aes(
+            y = padmit,
+            ymin = padmit - padmit_se, ymax = padmit + padmit_se
+        )
+    ) +
+    labs(y = "Aggregated proportion admitted")
+```
+
+If we consider one department, we can model the number of admitted students for each gender as
+
+$$
+  \begin{aligned}
+    z_i & \sim \text{Bin}(N, \mu_i)  \\
+    \mathrm{logit}(\mu_i) & = \eta_i  \\
+    \eta_i & = \beta_0 + \beta_1 \text{Gender}_i
+  \end{aligned}
+$$
+
+So there are two coefficients, $\beta_0$ and $\beta_1$. We can then do the same for each of the six departments, and use partial pooling to pool the $\beta_0$'s into a common normal distribution, and the $\beta_1$'s into another common normal distribution. We can use $j$ = 1, 2, $\ldots$, $J$ to index department, and then we have the following multilevel model:
+
+$$
+  \begin{aligned}
+    z_{ij} & \sim \text{Bin}(N_j, \mu_{ij})  \\
+    \mathrm{logit}(\mu_{ij}) & = \eta_{ij}  \\
+    \eta_{ij} & = \beta_{0j} + \beta_{1j} \text{Gender}_{ij}
+  \end{aligned},
+$$
+
+and use a **multivariate normal** distribution to partially pool the $\beta_0$ and $\beta_1$ coefficients. The multivariate normal allows the $\beta_0$'s and $\beta_1$'s to be correlated:
+
+$$\begin{bmatrix}
+    \beta_{0j} \\
+    \beta_{1j} \\
+  \end{bmatrix} \sim N_2\left(
+  \begin{bmatrix} 
+    \gamma_0 \\
+    \gamma_1 \\
+  \end{bmatrix}, \mathbf{T}
+  \right)$$
+
+$N_2(\cdot)$ means a bivariate normal distribution, and $\mathbf{T}$ is a 2 $\times$ 2 covariance matrix for $\beta_0$ and $\beta_1$. To set priors for $\mathbf{T}$, we further decompose it into the standard deviations and the correlation matrix:
+
+$$\mathbf{T} = 
+  \begin{bmatrix}
+    \tau_0 & 0 \\
+    0 & \tau_1 \\
+  \end{bmatrix}
+  \begin{bmatrix}
+    1 &  \\
+    \rho_{10} & 1 \\
+  \end{bmatrix}
+  \begin{bmatrix}
+    \tau_0 & 0 \\
+    0 & \tau_1 \\
+  \end{bmatrix}$$
+
+We can use the same inverse-gamma or half-$t$ distributions for the $\tau$'s, as we've done in previous weeks. For $\rho$, we need to introduce a new distribution: the LKJ distribution.
+
+## LKJ Prior
+
+The LKJ Prior is a probability distribution for correlation matrices. A correlation matrix has 1 on all the diagonal elements. For example, a 2 $\times$ 2 correlation matrix is
+
+$$\begin{bmatrix}
+    1 & \\
+    0.35 & 1
+  \end{bmatrix}$$
+
+where the correlation is 0.35. Therefore, with two variables, there is one correlation; with three or more variables, the number of correlations will be $q (q - 1) / 2$, where $q$ is the number of variables. 
+
+For a correlation matrix of a given size, the LKJ prior has one shape parameter, $\eta$, where $\eta = 1$ corresponds to a uniform distribution of the correlations such that any correlations are equally likely, $\eta \geq 1$ favors a matrix closer to an identity matrix so that the correlations are closer to zero, and $\eta \leq 1$ favors a matrix with larger correlations. For a 2 $\times$ 2 matrix, the distribution of the correlation, $\rho$, with different $\eta$ values are shown in the graph below:
+
+```{r plot-lkj}
+dlkjcorr2 <- function(rho, eta = 1, log = FALSE) {
+    # Function to compute the LKJ density given a correlation
+    out <- (eta - 1) * log(1 - rho^2) -
+        1 / 2 * log(pi) - lgamma(eta) + lgamma(eta + 1 / 2)
+    if (!log) out <- exp(out)
+    out
+}
+ggplot(tibble(rho = c(-1, 1)), aes(x = rho)) +
+    stat_function(
+        fun = dlkjcorr2, args = list(eta = 0.1),
+        aes(col = "0.1"), n = 501
+    ) +
+    stat_function(
+        fun = dlkjcorr2, args = list(eta = 0.5),
+        aes(col = "0.5"), n = 501
+    ) +
+    stat_function(
+        fun = dlkjcorr2, args = list(eta = 1),
+        aes(col = "1"), n = 501
+    ) +
+    stat_function(
+        fun = dlkjcorr2, args = list(eta = 2),
+        aes(col = "2"), n = 501
+    ) +
+    stat_function(
+        fun = dlkjcorr2, args = list(eta = 10),
+        aes(col = "10"), n = 501
+    ) +
+    stat_function(
+        fun = dlkjcorr2, args = list(eta = 100),
+        aes(col = "100"), n = 501
+    ) +
+    labs(col = expression(eta), x = expression(rho), y = "Density")
+```
+
+As you can see, when $\eta$ increases, the correlation is more concentrated to zero. 
+
+The default in `brms` is to use $\eta$ = 1, which is non-informative. If you have a weak but informative belief that the correlations shouldn't be very large, using $\eta$ = 2 is reasonable.
+
+## Adding Cluster Means
+
+In the multilevel modeling tradition, it is common also to include the **cluster means** of the within-cluster predictors. In this example, it means including the proportion of female applicants, `pFemale`. So the equation becomes
+
+$$\eta_{ij} = \beta_{0j} + \beta_{1j} \text{Gender}_{ij} + \gamma_2 \text{pFemale}_j,$$
+
+with one additional $\gamma_2$ coefficient (no $j$ subscript).
+
+```{r pFemale}
+# Obtain mean gender ratio at department level
+berkeley_admit <- berkeley_admit %>%
+    group_by(Dept) %>%
+    mutate(pFemale = App[2] / sum(App)) %>%
+    ungroup()
+knitr::kable(berkeley_admit)
+```
+
+## Fitting the multilevel model in `brms`
+
+For this example, I'll use these priors:
+
+$$
+  \begin{aligned}
+    \gamma_0 & \sim t_4(0, 5) \\
+    \gamma_1 & \sim t_4(0, 2.5) \\
+    \gamma_2 & \sim t_4(0, 5) \\
+    \tau_0 & \sim t^+_4(0, 3) \\
+    \tau_1 & \sim t^+_4(0, 3) \\
+    \rho & \sim \mathrm{LKJ}(2) \\
+  \end{aligned},
+$$
+
+```{r m3, results = "hide"}
+m3 <- brm(Admit | trials(App) ~ Gender + pFemale + (Gender | Dept),
+    data = berkeley_admit,
+    family = binomial("logit"),
+    prior = prior(student_t(4, 0, 5), class = "Intercept") +
+        prior(student_t(4, 0, 2.5), class = "b", coef = "GenderFemale") +
+        prior(student_t(4, 0, 5), class = "sd") +
+        prior(lkj(2), class = "cor"),
+    seed = 1547,
+    iter = 4000,
+    # a larger adapt_delta usually needed for MLM
+    control = list(adapt_delta = .99, max_treedepth = 12)
+)
+```
+
+The estimated $\beta_0$ and $\beta_1$ for each department is
+
+```{r coef-m3}
+coef(m3)  # department-specific coefficients
+```
+
+And a posterior predictive check
+
+```{r ppc-m3}
+pp_check(m3, type = "intervals")
+```
+
+The plot below shows the predicted admission rate:
+
+```{r fitted-m3}
+berkeley_admit %>%
+    bind_cols(fitted(m3)) %>%
+    ggplot(aes(x = Dept, y = Admit / App,
+               col = Gender)) +
+    geom_errorbar(aes(ymin = `Q2.5` / App, ymax = `Q97.5` / App),
+    position = position_dodge(0.3), width = 0.2) +
+    geom_point(position = position_dodge(width = 0.3)) +
+    labs(y = "Posterior predicted acceptance rate")
+```
+
+## Bonus: Growth Model
+
+```{r sleepstudy}
+data(sleepstudy, package = "lme4")
+# Rescale reaction time
+sleepstudy <- sleepstudy %>%
+    mutate(Reaction100 = Reaction / 100)
+```
+
+- Data: Reaction times in a sleep deprivation study
+- Predictor: Number of days of sleep deprivation
+- Outcome: Daily average reaction time (ms)
+- Cluster: 18 individuals (10 observations each)
+
+$$
+  \begin{aligned}
+  \text{Repeated-measure level:}  \\
+    \text{Reaction10}_{ij} & \sim \mathrm{lognormal}(\mu_{ij}, \sigma)  \\
+    \mu_{ij} & = \beta_{0j} + \beta_{1j} \text{Days}_{ij}  \\
+  \text{Person level:}  \\
+    \begin{bmatrix}
+      \beta_{0j} \\
+      \beta_{1j} \\
+    \end{bmatrix} & \sim N_2\left(
+      \begin{bmatrix} 
+        \gamma_0 \\
+        \gamma_1 \\
+      \end{bmatrix}, \mathbf{T}
+      \right)  \\
+    \mathbf{T} T & = \mathrm{diag}(\boldsymbol{\tau}) \boldsymbol{\Omega} \mathrm{diag}(\boldsymbol{\tau}) \\
+  \text{Priors:}  \\
+    \gamma_0 & \sim N(0, 2) \\
+    \gamma_1 & \sim N(0, 1) \\
+    \tau_0, \tau_1 & \sim t^+_4(0, 2.5) \\
+    \boldsymbol{\Omega} & \sim \mathrm{LKJ}(2) \\
+    \sigma & \sim t^+_4(0, 2.5)
+  \end{aligned}
+$$
+
+```{r m4, results = "hide"}
+m4 <- brm(
+    Reaction100 ~ Days + (Days | Subject),
+    data = sleepstudy,
+    family = lognormal(),
+    prior = c( # for intercept
+        prior(normal(0, 2), class = "Intercept"),
+        # for slope
+        prior(std_normal(), class = "b"),
+        # for tau0 and tau1
+        prior(student_t(4, 0, 2.5), class = "sd"),
+        # for correlation
+        prior(lkj(2), class = "cor"),
+        # for sigma
+        prior(student_t(4, 0, 2.5), class = "sigma")
+    ),
+    control = list(adapt_delta = .95),
+    seed = 2107,
+    iter = 4000
+)
+```
+
+```{r print-m4}
+m4
+```
+
+Model estimate: the shaded band is the predicted mean trajectory
+
+```{r pred-mean-traj, out.width = "100%", fig.width = 8.57}
+sleepstudy %>%
+    bind_cols(fitted(m4)) %>%
+    ggplot(aes(x = Days, y = Reaction100)) +
+    geom_ribbon(aes(y = Estimate, ymin = `Q2.5`,
+                    ymax = `Q97.5`), alpha = 0.3) +
+    geom_point() +
+    facet_wrap(~ Subject)
+```
+
+<!-- The following chunk is only used on the website -->
+
+```{r, echo = FALSE, results = 'asis', eval = file.exists("distill-hack.RMarkdown")}
+knitrenv <- knitr::knit_global()
+assign("knit_input", knitr::current_input(), knitrenv)
+append_res <- knitr::knit_child("distill-hack.RMarkdown",
+    envir = knitrenv, quiet = TRUE
+)
+cat(append_res)
+```

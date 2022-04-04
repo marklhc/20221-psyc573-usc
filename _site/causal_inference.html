@@ -2455,6 +2455,7 @@ Notes
 <a href="group_comparisons.html">Group Comparisons</a>
 <a href="glm.html">Generalized Linear Model I</a>
 <a href="causal_inference.html">Causal Inference</a>
+<a href="interaction.html">Interactions</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2622,11 +2623,11 @@ marriage rate is related to divorce rate at the state level.</p>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>waffle_divorce</span>,
        <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Marriage</span>, y <span class='op'>=</span> <span class='va'>Divorce</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Marriage rate (per 10 adults)"</span>,
-       y <span class='op'>=</span> <span class='st'>"Divorce rate (per 10 adults)"</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>ggrepel</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html'>geom_text_repel</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>label <span class='op'>=</span> <span class='va'>Loc</span><span class='op'>)</span><span class='op'>)</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Marriage rate (per 10 adults)"</span>,
+         y <span class='op'>=</span> <span class='st'>"Divorce rate (per 10 adults)"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'>ggrepel</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html'>geom_text_repel</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>label <span class='op'>=</span> <span class='va'>Loc</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
 <p><img src="causal_inference_files/figure-html5/scatter-marriage-divorce-1.png" width="70%" style="display: block; margin: auto;" /></p>
@@ -2657,12 +2658,12 @@ states relates to the divorce rate:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>waffle_divorce</span>,
-       <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>MedianAgeMarriage</span>, y <span class='op'>=</span> <span class='va'>Divorce</span> <span class='op'>/</span> <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Median age marriage (10 years)"</span>,
-       y <span class='op'>=</span> <span class='st'>"Divorce rate (per 10 adults)"</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>ggrepel</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html'>geom_text_repel</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>label <span class='op'>=</span> <span class='va'>Loc</span><span class='op'>)</span><span class='op'>)</span>
+       <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>MedianAgeMarriage</span>, y <span class='op'>=</span> <span class='va'>Divorce</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Median age marriage (10 years)"</span>,
+         y <span class='op'>=</span> <span class='st'>"Divorce rate (per 10 adults)"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'>ggrepel</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html'>geom_text_repel</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>label <span class='op'>=</span> <span class='va'>Loc</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
 <p><img src="causal_inference_files/figure-html5/scatter-age-divorce-1.png" width="70%" style="display: block; margin: auto;" /></p>
@@ -2743,15 +2744,15 @@ class="sourceCode stan"><code class="sourceCode stan"><span id="cb1-1"><a href="
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m1_stan</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
-  <span class='fu'>here</span><span class='fu'>::</span><span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"multiple_reg.stan"</span><span class='op'>)</span>,
-  data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-    N <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>waffle_divorce</span><span class='op'>)</span>,
-    p <span class='op'>=</span> <span class='fl'>2</span>,
-    y <span class='op'>=</span> <span class='va'>waffle_divorce</span><span class='op'>$</span><span class='va'>Divorce</span>,
-    x <span class='op'>=</span> <span class='va'>waffle_divorce</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MedianAgeMarriage"</span>, <span class='st'>"Marriage"</span><span class='op'>)</span><span class='op'>]</span>
-  <span class='op'>)</span>,
-  seed <span class='op'>=</span> <span class='fl'>941</span>,
-  iter <span class='op'>=</span> <span class='fl'>4000</span>
+    <span class='fu'>here</span><span class='fu'>::</span><span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"multiple_reg.stan"</span><span class='op'>)</span>,
+    data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+        N <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>waffle_divorce</span><span class='op'>)</span>,
+        p <span class='op'>=</span> <span class='fl'>2</span>,
+        y <span class='op'>=</span> <span class='va'>waffle_divorce</span><span class='op'>$</span><span class='va'>Divorce</span>,
+        x <span class='op'>=</span> <span class='va'>waffle_divorce</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MedianAgeMarriage"</span>, <span class='st'>"Marriage"</span><span class='op'>)</span><span class='op'>]</span>
+    <span class='op'>)</span>,
+    seed <span class='op'>=</span> <span class='fl'>941</span>,
+    iter <span class='op'>=</span> <span class='fl'>4000</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
@@ -2760,12 +2761,12 @@ class="sourceCode stan"><code class="sourceCode stan"><span id="cb1-1"><a href="
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span><span class='va'>Divorce</span> <span class='op'>~</span> <span class='va'>MedianAgeMarriage</span> <span class='op'>+</span> <span class='va'>Marriage</span>,
-  data <span class='op'>=</span> <span class='va'>waffle_divorce</span>,
-  prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>std_normal</span><span class='op'>(</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"Intercept"</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span><span class='op'>)</span>,
-  seed <span class='op'>=</span> <span class='fl'>941</span>,
-  iter <span class='op'>=</span> <span class='fl'>4000</span>
+          data <span class='op'>=</span> <span class='va'>waffle_divorce</span>,
+          prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>std_normal</span><span class='op'>(</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span> <span class='op'>+</span>
+              <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"Intercept"</span><span class='op'>)</span> <span class='op'>+</span>
+              <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span><span class='op'>)</span>,
+          seed <span class='op'>=</span> <span class='fl'>941</span>,
+          iter <span class='op'>=</span> <span class='fl'>4000</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
@@ -2774,8 +2775,8 @@ class="sourceCode stan"><code class="sourceCode stan"><span id="cb1-1"><a href="
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://vincentarelbundock.github.io/modelsummary/reference/msummary.html'>msummary</a></span><span class='op'>(</span><span class='va'>m1</span>,
-  estimate <span class='op'>=</span> <span class='st'>"{estimate} [{conf.low}, {conf.high}]"</span>,
-  statistic <span class='op'>=</span> <span class='cn'>NULL</span>, fmt <span class='op'>=</span> <span class='fl'>2</span>
+         estimate <span class='op'>=</span> <span class='st'>"{estimate} [{conf.low}, {conf.high}]"</span>,
+         statistic <span class='op'>=</span> <span class='cn'>NULL</span>, fmt <span class='op'>=</span> <span class='fl'>2</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
@@ -2892,13 +2893,13 @@ of states, marriage rate has only a small effect on divorce rate.</p>
 <img src="causal_inference_files/figure-html5/pp-check-m1-1.png" width="70%" style="display: block; margin: auto;" />
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/pkg/brms/man/pp_check.brmsfit.html'>pp_check</a></span><span class='op'>(</span><span class='va'>m1</span>, type <span class='op'>=</span> <span class='st'>"intervals"</span>, x <span class='op'>=</span> <span class='st'>"Marriage"</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Marriage"</span>, y <span class='op'>=</span> <span class='st'>"Divorce"</span><span class='op'>)</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Marriage"</span>, y <span class='op'>=</span> <span class='st'>"Divorce"</span><span class='op'>)</span>
 </code></pre>
 </div>
 <img src="causal_inference_files/figure-html5/pp-check-m1-2.png" width="70%" style="display: block; margin: auto;" />
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/pkg/brms/man/pp_check.brmsfit.html'>pp_check</a></span><span class='op'>(</span><span class='va'>m1</span>, type <span class='op'>=</span> <span class='st'>"intervals"</span>, x <span class='op'>=</span> <span class='st'>"MedianAgeMarriage"</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"MedianAgeMarriage"</span>, y <span class='op'>=</span> <span class='st'>"Divorce"</span><span class='op'>)</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"MedianAgeMarriage"</span>, y <span class='op'>=</span> <span class='st'>"Divorce"</span><span class='op'>)</span>
 </code></pre>
 </div>
 <p><img src="causal_inference_files/figure-html5/pp-check-m1-3.png" width="70%" style="display: block; margin: auto;" /></p>
@@ -2930,12 +2931,12 @@ divorce rate (holding median marriage age to 25 years old), using R:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>pred_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
-  Marriage <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>3</span><span class='op'>)</span>,
-  MedianAgeMarriage <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.5</span>, <span class='fl'>2.5</span><span class='op'>)</span>
+    Marriage <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>3</span><span class='op'>)</span>,
+    MedianAgeMarriage <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.5</span>, <span class='fl'>2.5</span><span class='op'>)</span>
 <span class='op'>)</span>
 <span class='va'>pred_df</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind.html'>bind_cols</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/fitted.values.html'>fitted</a></span><span class='op'>(</span><span class='va'>m1</span>, newdata <span class='op'>=</span> <span class='va'>pred_df</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
-  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='op'>)</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind.html'>bind_cols</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/fitted.values.html'>fitted</a></span><span class='op'>(</span><span class='va'>m1</span>, newdata <span class='op'>=</span> <span class='va'>pred_df</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
+    <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='op'>)</span>
 </code></pre>
 </div>
 <table>
@@ -4562,8 +4563,9 @@ cong_mesg
 </table>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Correlation table</span>
-<span class='va'>framing</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>tone</span>, <span class='va'>emo</span>, <span class='va'>cong_mesg</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
-  <span class='fu'><a href='https://vincentarelbundock.github.io/modelsummary/reference/datasummary_correlation.html'>datasummary_correlation</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"pearson"</span><span class='op'>)</span>
+<span class='va'>framing</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>tone</span>, <span class='va'>emo</span>, <span class='va'>cong_mesg</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
+    <span class='fu'><a href='https://vincentarelbundock.github.io/modelsummary/reference/datasummary_correlation.html'>datasummary_correlation</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"pearson"</span><span class='op'>)</span>
 </code></pre>
 </div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
@@ -4644,10 +4646,10 @@ as U, so the DAG will be something like</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dag2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/dagitty.html'>dagitty</a></span><span class='op'>(</span>
-  <span class='st'>"dag{
-    X -&gt; Y; U -&gt; X; U -&gt; Y
-    U [unobserved]
-  }"</span>
+    <span class='st'>"dag{
+      X -&gt; Y; U -&gt; X; U -&gt; Y
+      U [unobserved]
+    }"</span>
 <span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/coordinates.html'>coordinates</a></span><span class='op'>(</span><span class='va'>dag2</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>X <span class='op'>=</span> <span class='fl'>0</span>, U <span class='op'>=</span> <span class='fl'>1</span>, Y <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
                           y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>X <span class='op'>=</span> <span class='fl'>0</span>, U <span class='op'>=</span> <span class='fl'>1</span>, Y <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
@@ -4665,10 +4667,10 @@ intentions for anti-immigration actions. The DAG becomes</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dag3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/dagitty.html'>dagitty</a></span><span class='op'>(</span>
-  <span class='st'>"dag{
-    X -&gt; Y; U -&gt; Y
-    U [unobserved]
-  }"</span>
+    <span class='st'>"dag{
+      X -&gt; Y; U -&gt; Y
+      U [unobserved]
+    }"</span>
 <span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/coordinates.html'>coordinates</a></span><span class='op'>(</span><span class='va'>dag3</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>X <span class='op'>=</span> <span class='fl'>0</span>, U <span class='op'>=</span> <span class='fl'>1</span>, Y <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
                           y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>X <span class='op'>=</span> <span class='fl'>0</span>, U <span class='op'>=</span> <span class='fl'>1</span>, Y <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
@@ -4705,9 +4707,9 @@ that are descendant of X.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dag4</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/dagitty.html'>dagitty</a></span><span class='op'>(</span>
-  <span class='st'>"dag{
-    X -&gt; Y; W1 -&gt; X; U -&gt; W2; W2 -&gt; X; W1 -&gt; Y; U -&gt; Y
-  }"</span>
+    <span class='st'>"dag{
+      X -&gt; Y; W1 -&gt; X; U -&gt; W2; W2 -&gt; X; W1 -&gt; Y; U -&gt; Y
+    }"</span>
 <span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/VariableStatus.html'>latents</a></span><span class='op'>(</span><span class='va'>dag4</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='st'>"U"</span>
 <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/coordinates.html'>coordinates</a></span><span class='op'>(</span><span class='va'>dag4</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>X <span class='op'>=</span> <span class='fl'>0</span>, W1 <span class='op'>=</span> <span class='fl'>0.66</span>, U <span class='op'>=</span> <span class='fl'>1.32</span>, W2 <span class='op'>=</span> <span class='fl'>0.66</span>, Y <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
@@ -4753,11 +4755,11 @@ negative)</li>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m_no_adjust</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span><span class='va'>cong_mesg</span> <span class='op'>~</span> <span class='va'>tone</span>,
-  data <span class='op'>=</span> <span class='va'>framing</span>,
-  family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsfamily.html'>bernoulli</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"logit"</span><span class='op'>)</span><span class='op'>)</span>
+                   data <span class='op'>=</span> <span class='va'>framing</span>,
+                   family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsfamily.html'>bernoulli</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"logit"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>m_adjust</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span><span class='va'>cong_mesg</span> <span class='op'>~</span> <span class='va'>tone</span> <span class='op'>+</span> <span class='va'>emo</span>,
-  data <span class='op'>=</span> <span class='va'>framing</span>,
-  family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsfamily.html'>bernoulli</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"logit"</span><span class='op'>)</span><span class='op'>)</span>
+                data <span class='op'>=</span> <span class='va'>framing</span>,
+                family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsfamily.html'>bernoulli</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"logit"</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
@@ -4766,8 +4768,8 @@ negative)</li>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://vincentarelbundock.github.io/modelsummary/reference/msummary.html'>msummary</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>`No adjustment` <span class='op'>=</span> <span class='va'>m_no_adjust</span>,
               `Adjusting for feeling` <span class='op'>=</span> <span class='va'>m_adjust</span><span class='op'>)</span>,
-  estimate <span class='op'>=</span> <span class='st'>"{estimate} [{conf.low}, {conf.high}]"</span>,
-  statistic <span class='op'>=</span> <span class='cn'>NULL</span>, fmt <span class='op'>=</span> <span class='fl'>2</span>
+         estimate <span class='op'>=</span> <span class='st'>"{estimate} [{conf.low}, {conf.high}]"</span>,
+         statistic <span class='op'>=</span> <span class='cn'>NULL</span>, fmt <span class='op'>=</span> <span class='fl'>2</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
@@ -4790,10 +4792,10 @@ Adjusting for feeling
 b_Intercept
 </td>
 <td style="text-align:center;">
-−0.81 [−1.20, −0.47]
+−0.81 [−1.20, −0.45]
 </td>
 <td style="text-align:center;">
-−2.01 [−2.58, −1.37]
+−2.00 [−2.60, −1.42]
 </td>
 </tr>
 <tr>
@@ -4801,10 +4803,10 @@ b_Intercept
 b_tone
 </td>
 <td style="text-align:center;">
-0.22 [−0.25, 0.78]
+0.22 [−0.28, 0.73]
 </td>
 <td style="text-align:center;">
-−0.14 [−0.71, 0.44]
+−0.14 [−0.71, 0.46]
 </td>
 </tr>
 <tr>
@@ -4836,7 +4838,7 @@ ELPD
 −170.1
 </td>
 <td style="text-align:center;">
-−152.7
+−152.6
 </td>
 </tr>
 <tr>
@@ -4858,7 +4860,7 @@ LOOIC
 340.2
 </td>
 <td style="text-align:center;">
-305.4
+305.2
 </td>
 </tr>
 <tr>
@@ -4869,7 +4871,7 @@ LOOIC s.e.
 11.0
 </td>
 <td style="text-align:center;">
-14.8
+14.7
 </td>
 </tr>
 <tr>
@@ -4880,7 +4882,7 @@ WAIC
 340.2
 </td>
 <td style="text-align:center;">
-305.4
+305.1
 </td>
 </tr>
 <tr>
@@ -4921,9 +4923,9 @@ following DAG:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dag5</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/dagitty.html'>dagitty</a></span><span class='op'>(</span>
-  <span class='st'>"dag{
-    T -&gt; C; T -&gt; E; E -&gt; C
-  }"</span>
+    <span class='st'>"dag{
+      T -&gt; C; T -&gt; E; E -&gt; C
+    }"</span>
 <span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/coordinates.html'>coordinates</a></span><span class='op'>(</span><span class='va'>dag5</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>T <span class='op'>=</span> <span class='fl'>0</span>, E <span class='op'>=</span> <span class='fl'>1</span>, C <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
                           y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>T <span class='op'>=</span> <span class='fl'>0</span>, E <span class='op'>=</span> <span class='fl'>1</span>, C <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
@@ -4969,18 +4971,18 @@ below.</p>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>prior_m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span>
 <span class='va'>m_med</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span>
-  <span class='co'># Two equations for two outcomes</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula.html'>bf</a></span><span class='op'>(</span><span class='va'>cong_mesg</span> <span class='op'>~</span> <span class='va'>tone</span> <span class='op'>+</span> <span class='va'>emo</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula.html'>bf</a></span><span class='op'>(</span><span class='va'>emo</span> <span class='op'>~</span> <span class='va'>tone</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula-helpers.html'>set_rescor</a></span><span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span>,
-  <span class='co'># A list of two family arguments for two outcomes</span>
-  family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsfamily.html'>bernoulli</a></span><span class='op'>(</span><span class='st'>"logit"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>gaussian</a></span><span class='op'>(</span><span class='st'>"identity"</span><span class='op'>)</span><span class='op'>)</span>,
-  data <span class='op'>=</span> <span class='va'>framing</span>,
-  prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span>, resp <span class='op'>=</span> <span class='st'>"emo"</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span>, resp <span class='op'>=</span> <span class='st'>"emo"</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>2.5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span>, resp <span class='op'>=</span> <span class='st'>"congmesg"</span><span class='op'>)</span>,
-  seed <span class='op'>=</span> <span class='fl'>1338</span>,
-  iter <span class='op'>=</span> <span class='fl'>4000</span>
+    <span class='co'># Two equations for two outcomes</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula.html'>bf</a></span><span class='op'>(</span><span class='va'>cong_mesg</span> <span class='op'>~</span> <span class='va'>tone</span> <span class='op'>+</span> <span class='va'>emo</span><span class='op'>)</span> <span class='op'>+</span>
+        <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula.html'>bf</a></span><span class='op'>(</span><span class='va'>emo</span> <span class='op'>~</span> <span class='va'>tone</span><span class='op'>)</span> <span class='op'>+</span>
+        <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula-helpers.html'>set_rescor</a></span><span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span>,
+    <span class='co'># A list of two family arguments for two outcomes</span>
+    family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsfamily.html'>bernoulli</a></span><span class='op'>(</span><span class='st'>"logit"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>gaussian</a></span><span class='op'>(</span><span class='st'>"identity"</span><span class='op'>)</span><span class='op'>)</span>,
+    data <span class='op'>=</span> <span class='va'>framing</span>,
+    prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span>, resp <span class='op'>=</span> <span class='st'>"emo"</span><span class='op'>)</span> <span class='op'>+</span>
+        <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span>, resp <span class='op'>=</span> <span class='st'>"emo"</span><span class='op'>)</span> <span class='op'>+</span>
+        <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>2.5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span>, resp <span class='op'>=</span> <span class='st'>"congmesg"</span><span class='op'>)</span>,
+    seed <span class='op'>=</span> <span class='fl'>1338</span>,
+    iter <span class='op'>=</span> <span class='fl'>4000</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
@@ -5024,19 +5026,19 @@ class="sourceCode stan"><code class="sourceCode stan"><span id="cb3-1"><a href="
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 1. form the data list for Stan</span>
 <span class='va'>stan_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span><span class='op'>(</span><span class='va'>framing</span>,
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>N0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span>,
-       N1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span>,
-       m0 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
-       m1 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span>,
-       y0 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
-       y1 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
+                 <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>N0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span>,
+                      N1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span>,
+                      m0 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
+                      m1 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span>,
+                      y0 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
+                      y1 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
 <span class='op'>)</span>
 <span class='co'># 2. Run Stan</span>
 <span class='va'>m_med_stan</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
-  file <span class='op'>=</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"mediation_logit_normal.stan"</span><span class='op'>)</span>,
-  data <span class='op'>=</span> <span class='va'>stan_dat</span>,
-  seed <span class='op'>=</span> <span class='fl'>1338</span>,
-  iter <span class='op'>=</span> <span class='fl'>4000</span>
+    file <span class='op'>=</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"mediation_logit_normal.stan"</span><span class='op'>)</span>,
+    data <span class='op'>=</span> <span class='va'>stan_dat</span>,
+    seed <span class='op'>=</span> <span class='fl'>1338</span>,
+    iter <span class='op'>=</span> <span class='fl'>4000</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
@@ -5073,10 +5075,10 @@ level. Below shows the CDE for <code>emo</code> = 0 and <code>emo</code>
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>cond_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>tone <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,
                       emo <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>9</span>, <span class='fl'>9</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>cond_df</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind.html'>bind_cols</a></span><span class='op'>(</span>
-    <span class='fu'><a href='https://rdrr.io/r/stats/fitted.values.html'>fitted</a></span><span class='op'>(</span><span class='va'>m_med</span>, newdata <span class='op'>=</span> <span class='va'>cond_df</span><span class='op'>)</span><span class='op'>[</span> , , <span class='st'>"congmesg"</span><span class='op'>]</span>
-  <span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
-  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='op'>)</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind.html'>bind_cols</a></span><span class='op'>(</span>
+        <span class='fu'><a href='https://rdrr.io/r/stats/fitted.values.html'>fitted</a></span><span class='op'>(</span><span class='va'>m_med</span>, newdata <span class='op'>=</span> <span class='va'>cond_df</span><span class='op'>)</span><span class='op'>[</span> , , <span class='st'>"congmesg"</span><span class='op'>]</span>
+    <span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
+    <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='op'>)</span>
 </code></pre>
 </div>
 <table>
@@ -5203,14 +5205,14 @@ the level of <code>emo</code> that would be “naturally” obtained for the
                   sd <span class='op'>=</span> <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>sigma_emo</span><span class='op'>)</span>
 <span class='co'># Predicted cong_mesg for tone = 0, emo = sim_emo0</span>
 <span class='va'>pred_congmesg0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span> <span class='co'># apply the inverse probit link</span>
-  <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
-    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo0</span>
+    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
+        <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo0</span>
 <span class='op'>)</span>
 <span class='co'># Predicted cong_mesg for tone = 1, emo = sim_emo0</span>
 <span class='va'>pred_congmesg1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span> <span class='co'># apply the inverse probit link</span>
-  <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
-    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_tone</span> <span class='op'>+</span>
-    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo0</span>
+    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
+        <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_tone</span> <span class='op'>+</span>
+        <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo0</span>
 <span class='op'>)</span>
 <span class='co'># Natural direct effect</span>
 <span class='va'>nde</span> <span class='op'>&lt;-</span> <span class='va'>pred_congmesg1</span> <span class='op'>-</span> <span class='va'>pred_congmesg0</span>
@@ -5233,13 +5235,13 @@ value set to be equal to the treatment group.</p>
 <span class='va'>sim_emo1</span> <span class='op'>&lt;-</span> <span class='va'>sim_emo0</span> <span class='op'>+</span> <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_emo_tone</span>
 <span class='co'># Predicted cong_mesg for tone = 0, emo = sim_emo0</span>
 <span class='va'>pred_congmesg0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span> <span class='co'># apply the inverse probit link</span>
-  <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
-    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo0</span>
+    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
+        <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo0</span>
 <span class='op'>)</span>
 <span class='co'># Predicted cong_mesg for tone = 0, emo = sim_emo1</span>
 <span class='va'>pred_congmesg1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span> <span class='co'># apply the inverse probit link</span>
-  <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
-    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo1</span>
+    <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_Intercept</span> <span class='op'>+</span>
+        <span class='va'>post_draws</span><span class='op'>$</span><span class='va'>b_congmesg_emo</span> <span class='op'>*</span> <span class='va'>sim_emo1</span>
 <span class='op'>)</span>
 <span class='co'># Natural direct effect</span>
 <span class='va'>nie</span> <span class='op'>&lt;-</span> <span class='va'>pred_congmesg1</span> <span class='op'>-</span> <span class='va'>pred_congmesg0</span>
@@ -5253,9 +5255,9 @@ value set to be equal to the treatment group.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dag6</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/dagitty.html'>dagitty</a></span><span class='op'>(</span>
-  <span class='st'>"dag{
-    T -&gt; C; T -&gt; E; E -&gt; C; U -&gt; E; U -&gt; C
-  }"</span>
+    <span class='st'>"dag{
+      T -&gt; C; T -&gt; E; E -&gt; C; U -&gt; E; U -&gt; C
+    }"</span>
 <span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/coordinates.html'>coordinates</a></span><span class='op'>(</span><span class='va'>dag6</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>T <span class='op'>=</span> <span class='fl'>0</span>, E <span class='op'>=</span> <span class='fl'>1</span>, C <span class='op'>=</span> <span class='fl'>2</span>, U <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
                           y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>T <span class='op'>=</span> <span class='fl'>0</span>, E <span class='op'>=</span> <span class='fl'>1</span>, C <span class='op'>=</span> <span class='fl'>0</span>, U <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
@@ -5316,22 +5318,22 @@ class="sourceCode stan"><code class="sourceCode stan"><span id="cb4-1"><a href="
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 1. form the data list for Stan</span>
 <span class='va'>stan_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span><span class='op'>(</span><span class='va'>framing</span>,
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>N0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span>,
-       N1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span>,
-       m0 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
-       m1 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span>,
-       y0 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
-       y1 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
+                 <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>N0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span>,
+                      N1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span>,
+                      m0 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
+                      m1 <span class='op'>=</span> <span class='va'>emo</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span>,
+                      y0 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>]</span>,
+                      y1 <span class='op'>=</span> <span class='va'>cong_mesg</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>tone</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
 <span class='op'>)</span>
 <span class='co'># 2. Run Stan</span>
 <span class='va'>m_med_sens</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
-  file <span class='op'>=</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"mediation_logit_normal_sensitivity.stan"</span><span class='op'>)</span>,
-  data <span class='op'>=</span> <span class='va'>stan_dat</span>,
-  seed <span class='op'>=</span> <span class='fl'>1338</span>,
-  iter <span class='op'>=</span> <span class='fl'>4000</span>,
-  <span class='co'># Exclude u0 and u1</span>
-  pars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"u0"</span>, <span class='st'>"u1"</span><span class='op'>)</span>, include <span class='op'>=</span> <span class='cn'>FALSE</span>
-  <span class='op'>)</span>
+    file <span class='op'>=</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"mediation_logit_normal_sensitivity.stan"</span><span class='op'>)</span>,
+    data <span class='op'>=</span> <span class='va'>stan_dat</span>,
+    seed <span class='op'>=</span> <span class='fl'>1338</span>,
+    iter <span class='op'>=</span> <span class='fl'>4000</span>,
+    <span class='co'># Exclude u0 and u1</span>
+    pars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"u0"</span>, <span class='st'>"u1"</span><span class='op'>)</span>, include <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
 </code></pre>
 </div>
 </div>
@@ -5363,7 +5365,7 @@ class="sourceCode stan"><code class="sourceCode stan"><span id="cb4-1"><a href="
 #&gt; sigmam 10344    1
 #&gt; lp__    2792    1
 #&gt; 
-#&gt; Samples were drawn using NUTS(diag_e) at Sat Apr  2 17:40:00 2022.
+#&gt; Samples were drawn using NUTS(diag_e) at Sun Apr  3 17:24:21 2022.
 #&gt; For each parameter, n_eff is a crude measure of effective sample size,
 #&gt; and Rhat is the potential scale reduction factor on split chains (at 
 #&gt; convergence, Rhat=1).</code></pre>
@@ -5404,25 +5406,23 @@ newsworthiness or trustworthiness:</p>
 <span class='va'>prop_selected</span> <span class='op'>&lt;-</span> <span class='fl'>0.1</span> <span class='co'># proportion to select</span>
 <span class='co'># Simulate independent newsworthiness and trustworthiness</span>
 <span class='va'>plot_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span> <span class='co'># `tibble` is the tidyverse version of `data.frame`</span>
-  nw <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>num_proposals</span><span class='op'>)</span>,
-  tw <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>num_proposals</span><span class='op'>)</span>
+    nw <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>num_proposals</span><span class='op'>)</span>,
+    tw <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>num_proposals</span><span class='op'>)</span>
 <span class='op'>)</span>
 <span class='va'>plot_dat</span> <span class='op'>&lt;-</span> <span class='va'>plot_dat</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
-      total <span class='op'>=</span> <span class='va'>nw</span> <span class='op'>+</span> <span class='va'>tw</span>
-  <span class='op'>)</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>total <span class='op'>=</span> <span class='va'>nw</span> <span class='op'>+</span> <span class='va'>tw</span><span class='op'>)</span>
 <span class='va'>sel_dat</span> <span class='op'>&lt;-</span> <span class='va'>plot_dat</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
-  <span class='co'># select top 10% of combined scores</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_max</a></span><span class='op'>(</span>order_by <span class='op'>=</span> <span class='va'>total</span>, prop <span class='op'>=</span> <span class='va'>prop_selected</span><span class='op'>)</span>
+    <span class='co'># select top 10% of combined scores</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_max</a></span><span class='op'>(</span>order_by <span class='op'>=</span> <span class='va'>total</span>, prop <span class='op'>=</span> <span class='va'>prop_selected</span><span class='op'>)</span>
 <span class='va'>plot_dat</span> <span class='op'><a href='https://rdrr.io/pkg/ggdag/man/pipe.html'>%&gt;%</a></span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>nw</span>, y <span class='op'>=</span> <span class='va'>tw</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>sel_dat</span>, shape <span class='op'>=</span> <span class='fl'>1</span>, size <span class='op'>=</span> <span class='fl'>3</span>,
-             color <span class='op'>=</span> <span class='st'>"red"</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"lm"</span>, se <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>sel_dat</span>, method <span class='op'>=</span> <span class='st'>"lm"</span>, se <span class='op'>=</span> <span class='cn'>FALSE</span>,
-              col <span class='op'>=</span> <span class='st'>"purple"</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"newsworthiness"</span>, y <span class='op'>=</span> <span class='st'>"trustworthiness"</span><span class='op'>)</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>nw</span>, y <span class='op'>=</span> <span class='va'>tw</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>sel_dat</span>, shape <span class='op'>=</span> <span class='fl'>1</span>, size <span class='op'>=</span> <span class='fl'>3</span>,
+               color <span class='op'>=</span> <span class='st'>"red"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"lm"</span>, se <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>sel_dat</span>, method <span class='op'>=</span> <span class='st'>"lm"</span>, se <span class='op'>=</span> <span class='cn'>FALSE</span>,
+                col <span class='op'>=</span> <span class='st'>"purple"</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"newsworthiness"</span>, y <span class='op'>=</span> <span class='st'>"trustworthiness"</span><span class='op'>)</span>
 </code></pre>
 </div>
 <p><img src="causal_inference_files/figure-html5/code-6-1-1.png" width="70%" style="display: block; margin: auto;" /></p>
@@ -5445,9 +5445,9 @@ going to de-confound the spurious association using other variables</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dag7</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/dagitty.html'>dagitty</a></span><span class='op'>(</span>
-  <span class='st'>"dag{
-    X -&gt; Y; X -&gt; S; Y -&gt; S
-  }"</span>
+    <span class='st'>"dag{
+      X -&gt; Y; X -&gt; S; Y -&gt; S
+    }"</span>
 <span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/coordinates.html'>coordinates</a></span><span class='op'>(</span><span class='va'>dag7</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>X <span class='op'>=</span> <span class='fl'>0</span>, S <span class='op'>=</span> <span class='fl'>1</span>, Y <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
                           y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>X <span class='op'>=</span> <span class='fl'>0</span>, S <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>, Y <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
@@ -5469,9 +5469,9 @@ severity<sup>2</sup></li>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dag8</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/dagitty.html'>dagitty</a></span><span class='op'>(</span>
-  <span class='st'>"dag{
-    Z -&gt; X; X -&gt; Y; U -&gt; X; U -&gt; Y
-  }"</span>
+    <span class='st'>"dag{
+      Z -&gt; X; X -&gt; Y; U -&gt; X; U -&gt; Y
+    }"</span>
 <span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/VariableStatus.html'>latents</a></span><span class='op'>(</span><span class='va'>dag8</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='st'>"U"</span>
 <span class='fu'><a href='https://rdrr.io/pkg/dagitty/man/coordinates.html'>coordinates</a></span><span class='op'>(</span><span class='va'>dag8</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>Z <span class='op'>=</span> <span class='fl'>0</span>, X <span class='op'>=</span> <span class='fl'>1</span>, Y <span class='op'>=</span> <span class='fl'>3</span>, U <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
@@ -5563,10 +5563,10 @@ and Y.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m_itt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span><span class='va'>depress2</span> <span class='op'>~</span> <span class='va'>treat</span>,
-  data <span class='op'>=</span> <span class='va'>jobs</span>,
-  prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span><span class='op'>)</span>,
-  seed <span class='op'>=</span> <span class='fl'>1244</span>, iter <span class='op'>=</span> <span class='fl'>4000</span>
+             data <span class='op'>=</span> <span class='va'>jobs</span>,
+             prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span> <span class='op'>+</span>
+                 <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span><span class='op'>)</span>,
+             seed <span class='op'>=</span> <span class='fl'>1244</span>, iter <span class='op'>=</span> <span class='fl'>4000</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
@@ -5587,9 +5587,9 @@ causal effect estimate:</strong></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m_comply</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span><span class='va'>depress2</span> <span class='op'>~</span> <span class='va'>comply</span>,
-  prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span><span class='op'>)</span>,
-  data <span class='op'>=</span> <span class='va'>jobs</span>, seed <span class='op'>=</span> <span class='fl'>1244</span>, iter <span class='op'>=</span> <span class='fl'>4000</span>
+                prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span> <span class='op'>+</span>
+                    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span><span class='op'>)</span>,
+                data <span class='op'>=</span> <span class='va'>jobs</span>, seed <span class='op'>=</span> <span class='fl'>1244</span>, iter <span class='op'>=</span> <span class='fl'>4000</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
@@ -5601,13 +5601,13 @@ causal effect estimate:</strong></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>f1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula.html'>bf</a></span><span class='op'>(</span><span class='va'>comply</span> <span class='op'>~</span> <span class='va'>treat</span><span class='op'>)</span>  <span class='co'># Need to treat outcome as linear</span>
 <span class='va'>f2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula.html'>bf</a></span><span class='op'>(</span><span class='va'>depress2</span> <span class='op'>~</span> <span class='va'>comply</span><span class='op'>)</span>
 <span class='va'>m_iv</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span>
-  <span class='va'>f1</span> <span class='op'>+</span> <span class='va'>f2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula-helpers.html'>set_rescor</a></span><span class='op'>(</span><span class='cn'>TRUE</span><span class='op'>)</span>,  <span class='co'># need `set_rescor(TRUE)` for unobserved U</span>
-  data <span class='op'>=</span> <span class='va'>jobs</span>,
-  prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>2.5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span>, resp <span class='op'>=</span> <span class='st'>"comply"</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span>, resp <span class='op'>=</span> <span class='st'>"depress2"</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0.5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span>, resp <span class='op'>=</span> <span class='st'>"comply"</span><span class='op'>)</span> <span class='op'>+</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span>, resp <span class='op'>=</span> <span class='st'>"depress2"</span><span class='op'>)</span>,
-  seed <span class='op'>=</span> <span class='fl'>1244</span>, iter <span class='op'>=</span> <span class='fl'>4000</span>
+    <span class='va'>f1</span> <span class='op'>+</span> <span class='va'>f2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brmsformula-helpers.html'>set_rescor</a></span><span class='op'>(</span><span class='cn'>TRUE</span><span class='op'>)</span>,  <span class='co'># need `set_rescor(TRUE)` for unobserved U</span>
+    data <span class='op'>=</span> <span class='va'>jobs</span>,
+    prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>2.5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span>, resp <span class='op'>=</span> <span class='st'>"comply"</span><span class='op'>)</span> <span class='op'>+</span>
+        <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span>, resp <span class='op'>=</span> <span class='st'>"depress2"</span><span class='op'>)</span> <span class='op'>+</span>
+        <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>normal</span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0.5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span>, resp <span class='op'>=</span> <span class='st'>"comply"</span><span class='op'>)</span> <span class='op'>+</span>
+        <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>3</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"sigma"</span>, resp <span class='op'>=</span> <span class='st'>"depress2"</span><span class='op'>)</span>,
+    seed <span class='op'>=</span> <span class='fl'>1244</span>, iter <span class='op'>=</span> <span class='fl'>4000</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
@@ -5659,19 +5659,19 @@ class="sourceCode stan"><code class="sourceCode stan"><span id="cb8-1"><a href="
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># 1. form the data list for Stan</span>
 <span class='va'>stan_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span><span class='op'>(</span><span class='va'>jobs</span>,
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>N <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>jobs</span><span class='op'>)</span>,
-       y <span class='op'>=</span> <span class='va'>depress2</span>,
-       x <span class='op'>=</span> <span class='va'>comply</span>,
-       z <span class='op'>=</span> <span class='va'>treat</span><span class='op'>)</span>
+                 <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>N <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>jobs</span><span class='op'>)</span>,
+                      y <span class='op'>=</span> <span class='va'>depress2</span>,
+                      x <span class='op'>=</span> <span class='va'>comply</span>,
+                      z <span class='op'>=</span> <span class='va'>treat</span><span class='op'>)</span>
 <span class='op'>)</span>
 <span class='co'># 2. Run Stan</span>
 <span class='va'>m_iv_stan</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://mc-stan.org/rstan/reference/stan.html'>stan</a></span><span class='op'>(</span>
-  file <span class='op'>=</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"iv_logit_normal.stan"</span><span class='op'>)</span>,
-  data <span class='op'>=</span> <span class='va'>stan_dat</span>,
-  seed <span class='op'>=</span> <span class='fl'>1338</span>,
-  <span class='co'># Exclude u</span>
-  pars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"u"</span><span class='op'>)</span>, include <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  iter <span class='op'>=</span> <span class='fl'>4000</span>
+    file <span class='op'>=</span> <span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='st'>"stan"</span>, <span class='st'>"iv_logit_normal.stan"</span><span class='op'>)</span>,
+    data <span class='op'>=</span> <span class='va'>stan_dat</span>,
+    seed <span class='op'>=</span> <span class='fl'>1338</span>,
+    <span class='co'># Exclude u</span>
+    pars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"u"</span><span class='op'>)</span>, include <span class='op'>=</span> <span class='cn'>FALSE</span>,
+    iter <span class='op'>=</span> <span class='fl'>4000</span>
 <span class='op'>)</span>
 </code></pre>
 </div>
