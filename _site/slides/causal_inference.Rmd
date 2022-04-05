@@ -158,7 +158,7 @@ Age at marriage?
 ```{r, warning = FALSE}
 library(ggplot2)
 ggplot(waffle_divorce,
-       aes(x = MedianAgeMarriage, y = Divorce / 10)) +
+       aes(x = MedianAgeMarriage, y = Divorce)) +
   geom_point() +
   geom_smooth() +
   labs(x = "Median age marriage (10 years)",
@@ -338,7 +338,7 @@ class: inverse, middle, center
 exclude: `r !params$for_class`
 class: clear
 
-```{r}
+```{r, out.width = "90%"}
 knitr::include_graphics("images/Brader_etal_2008.png")
 ```
 
@@ -418,22 +418,6 @@ The causal effect of X &rarr; Y can be obtained by blocking all the backdoor pat
 - Conditioning (holding constant)
 
 ---
-exclude: `r !params$for_class`
-
-```{r}
-knitr::include_graphics("images/Grosz_etal_fig_study2.png")
-```
-
----
-exclude: `r !params$for_class`
-
-# Exercise
-
-```{r}
-knitr::include_graphics("images/McElreath_2020_ch6_ex.jpg")
-```
-
----
 
 # Dagitty
 
@@ -449,6 +433,15 @@ adjustmentSets(dag4, exposure = "X", outcome = "Y",
 
 ```{r, echo = TRUE}
 impliedConditionalIndependencies(dag4)
+```
+
+---
+exclude: `r !params$for_class`
+
+# Exercise
+
+```{r}
+knitr::include_graphics("images/McElreath_2020_ch6_ex.jpg")
 ```
 
 ---
@@ -615,6 +608,8 @@ Quick Demo using posterior means<sup>1</sup>
 
 --
 
+.font70[
+
 ```{r}
 cond_df <- data.frame(tone = c(0, 0),
                       emo = c(3.39, 4.53))
@@ -624,6 +619,8 @@ cond_df %>%
   ) %>%
   knitr::kable()
 ```
+
+]
 
 ---
 
@@ -746,6 +743,12 @@ class: clear
 
 - healthcare worker &rarr; COVID-19 testing &larr; COVID-19 severity<sup>2</sup>
 
+.footnote[
+
+[2]: See https://www.nature.com/articles/s41467-020-19478-2
+
+]
+
 --
 
 - standardized test &rarr; admission &larr; research skills
@@ -753,12 +756,6 @@ class: clear
 --
 
 - maternal smoking &rarr; birth weight &rarr; birth defect &larr; mortality
-
-.footnote[
-
-[2]: See https://www.nature.com/articles/s41467-020-19478-2
-
-]
 
 ---
 class: inverse, middle, center
@@ -857,6 +854,24 @@ p9
 What do we mean by the causal effect of gender?
 
 What do we mean by gender bias?
+
+---
+
+# Instrumental Variables
+
+```{r dag9}
+dag9 <- dagitty(
+    "dag{
+      Z -> X; X -> Y; U -> X; U -> Y
+    }"
+)
+latents(dag9) <- "U"
+coordinates(dag9) <- list(x = c(Z = 0, X = 1, Y = 3, U = 2),
+                          y = c(Z = 0, X = 0, Y = 0, U = 1))
+ggdag(dag9) + theme_dag()
+```
+
+See more in the note
 
 ---
 

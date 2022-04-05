@@ -324,7 +324,7 @@ class: inverse, middle, center
 exclude: TRUE
 class: clear
 
-&lt;img src="images/Brader_etal_2008.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="images/Brader_etal_2008.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -373,18 +373,6 @@ The causal effect of X &amp;rarr; Y can be obtained by blocking all the backdoor
 - Conditioning (holding constant)
 
 ---
-exclude: TRUE
-
-&lt;img src="images/Grosz_etal_fig_study2.png" width="70%" style="display: block; margin: auto;" /&gt;
-
----
-exclude: TRUE
-
-# Exercise
-
-&lt;img src="images/McElreath_2020_ch6_ex.jpg" width="70%" style="display: block; margin: auto;" /&gt;
-
----
 
 # Dagitty
 
@@ -411,6 +399,13 @@ impliedConditionalIndependencies(dag4)
 ```
 &gt;# W1 _||_ W2
 ```
+
+---
+exclude: TRUE
+
+# Exercise
+
+&lt;img src="images/McElreath_2020_ch6_ex.jpg" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: inverse, center, middle
@@ -446,18 +441,18 @@ class: clear
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; b_Intercept &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; −0.81 [−1.19, −0.45] &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; −2.01 [−2.59, −1.41] &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −0.81 [−1.18, −0.45] &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −2.01 [−2.60, −1.40] &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; b_tone &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.22 [−0.33, 0.72] &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; −0.14 [−0.70, 0.43] &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.22 [−0.29, 0.74] &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −0.14 [−0.71, 0.42] &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; b_emo &lt;/td&gt;
    &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.32 [0.22, 0.44] &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.32 [0.21, 0.43] &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -475,7 +470,7 @@ Which one estimates the causal effect?
 
 # Mediation
 
-&lt;img src="causal_inference_files/figure-html/unnamed-chunk-21-1.png" width="35%" style="display: block; margin: auto;" /&gt;
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-20-1.png" width="35%" style="display: block; margin: auto;" /&gt;
 
 In the DAG, E is a post-treatment variable potentially influenced by T
 - E is a potential **mediator**
@@ -648,6 +643,8 @@ Quick Demo using posterior means&lt;sup&gt;1&lt;/sup&gt;
 
 --
 
+.font70[
+
 &lt;table&gt;
  &lt;thead&gt;
   &lt;tr&gt;
@@ -679,13 +676,15 @@ Quick Demo using posterior means&lt;sup&gt;1&lt;/sup&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
+]
+
 ---
 
 # Potential Confounding
 
 .pull-left[
 
-&lt;img src="causal_inference_files/figure-html/unnamed-chunk-24-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-23-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -731,7 +730,7 @@ class: clear
 
 .pull-left[
 
-&lt;img src="causal_inference_files/figure-html/unnamed-chunk-25-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-24-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -758,6 +757,12 @@ class: clear
 
 - healthcare worker &amp;rarr; COVID-19 testing &amp;larr; COVID-19 severity&lt;sup&gt;2&lt;/sup&gt;
 
+.footnote[
+
+[2]: See https://www.nature.com/articles/s41467-020-19478-2
+
+]
+
 --
 
 - standardized test &amp;rarr; admission &amp;larr; research skills
@@ -765,12 +770,6 @@ class: clear
 --
 
 - maternal smoking &amp;rarr; birth weight &amp;rarr; birth defect &amp;larr; mortality
-
-.footnote[
-
-[2]: See https://www.nature.com/articles/s41467-020-19478-2
-
-]
 
 ---
 class: inverse, middle, center
@@ -876,11 +875,19 @@ class: clear
 
 # Causal Thinking
 
-&lt;img src="causal_inference_files/figure-html/unnamed-chunk-29-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="causal_inference_files/figure-html/unnamed-chunk-28-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 What do we mean by the causal effect of gender?
 
 What do we mean by gender bias?
+
+---
+
+# Instrumental Variables
+
+&lt;img src="causal_inference_files/figure-html/dag9-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+See more in the note
 
 ---
 
