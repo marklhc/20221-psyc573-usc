@@ -5,8 +5,9 @@ description: |
 output_dir: "_site"
 theme: theme.css
 include: ["slides"]
-exclude: ["distill-hack.RMarkdown", "glm2.Rmd", "stan"]
+exclude: ["distill-hack.RMarkdown", "glm2.Rmd", "model_comparison.Rmd", "missing_data.Rmd", "stan"]
 base_url: https://psyc573-2022spring.netlify.app
+google_analytics: "UA-225295148-2"
 repository_url: https://github.com/marklhc/20221-psyc573-usc
 creative_commons: CC BY-NC-SA
 navbar:
