@@ -423,7 +423,7 @@ embed_xaringan("slides/glm.html", ratio = "4:3")
 
 ::: {.panel}
 
-# Week 12
+# Week 12--13
 
 ## Week Learning Objectives
 
@@ -451,6 +451,40 @@ By the end of this module, you will be able to
 
 ```{r embed-12, echo = FALSE}
 embed_xaringan("slides/causal_inference.html", ratio = "4:3")
+```
+
+:::
+
+::: {.panel}
+
+# Week 14
+
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Describe the difference between **subgroup analyses** and an **interaction model**
+- Interpret results from an interaction model using **plots** and **posterior predictions**
+- Explain how **information criteria** approximates **out-of-sample** **divergence** from the "true" model
+- Use **WAIC** and **LOO-IC** to compare models
+
+## Task Lists
+
+1. Complete the assigned readings
+    * McElreath ch. 7
+2. Review the resources (notes on [interaction][21] and [model comparison][22])
+3. Attend class meetings
+4. Complete Homework 9 (see instruction on Blackboard)
+
+[21]: interaction.html
+[22]: model_comparison.html
+
+## Slides
+
+[PDF version](slides/model_comparison.pdf){target="_blank"}
+
+```{r embed-14, echo = FALSE}
+embed_xaringan("slides/model_comparison.html", ratio = "4:3")
 ```
 
 :::

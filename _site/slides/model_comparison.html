@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Model Comparison</title>
+    <meta charset="utf-8" />
+    <meta name="date" content="2022-04-14" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my_style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Model Comparison
+## PSYC 573
+### University of Southern California
+### April 14, 2022
+
+---
+
+
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+--shareagain-twitter: none;
+--shareagain-facebook: none;
+--shareagain-linkedin: none;
+--shareagain-pinterest: none;
+--shareagain-pocket: none;
+--shareagain-reddit: none;
+}</style>
+
+
+
+
+
+# Guiding Questions
+
+- What is *overfitting* and why is it problematic?
+
+- How to measure *closeness* of a model to the true model?
+    * What do *information criteria* do?
+
+---
+class: clear
+
+## In-Sample and Out-Of-Sample Prediction
+
+
+
+- Randomly sample 10 states
+
+&lt;img src="model_comparison_files/figure-html/plot-wd-sub-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Underfitting and Overfitting
+
+- Complex models require more data
+    * Too few data for a complex model: **overfitting**
+    * A model being too simple: **underfitting**
+
+&lt;img src="model_comparison_files/figure-html/overfit-data-1.png" width="85%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Prediction of Future Observations
+
+- The more a model captures the noise in the original data, the less likely it predicts future observations well
+
+&lt;img src="model_comparison_files/figure-html/overfit-generalize-1.png" width="85%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# What Is A Good Model?
+
+- Closeness from the proposed model (`\(M_1\)`) to a "true" model (`\(M_0\)`)
+    * *Kullback-Leibler Divergence* (`\(D_\textrm{KL}\)`) = `\(\text{Entropy of }M_0 - \text{elpd of }M_1\)`
+    * elpd: expected log predictive density: `\(E_{M_0}[\log P_{M_1}(\tilde {\mathbf{y}})]\)`
+
+--
+
+- Choose a model with *smallest `\(D_\textrm{KL}\)`*
+    * When `\(M_0 = M_1\)`, `\(D_\textrm{KL} = 0\)`
+    * `\(\Rightarrow\)` choose a model with largest elpd
+
+---
+exclude: TRUE
+class: clear
+
+### Example
+
+- True model of data: `\(M_0\)`: `\(y \sim N(3, 2)\)`
+- `\(M_1\)`: `\(y \sim N(3.5, 2.5)\)`
+- `\(M_2\)`: `\(y \sim \mathrm{Cauchy}(3, 2)\)`
+
+.pull-left[
+
+&lt;img src="model_comparison_files/figure-html/divergence-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+
+
+.font70[
+
+Entropy of `\(M_0\)` = -2.112
+
+- Theoretical elpd of `\(M_1\)`: -2.175
+- `\(D_\textrm{KL}(M_0 \mid M_1)\)` = 0.063
+
+- Theoretical elpd of `\(M_2\)`: -2.371
+- `\(D_\textrm{KL}(M_0 \mid M_2)\)` = 0.259
+
+]
+]
+
+---
+class: clear
+
+### Expected log *pointwise* predictive density
+
+`$$\sum_i \log P_{M_1} (y_i)$$`
+
+Note: ELPD is a function of sample size
+
+--
+
+- Problem: elpd depends on `\(M_0\)`, which is unknown
+    * Estimate elpd using the current sample `\(\rightarrow\)` underestimate discrepancy
+    * Need to estimate elpd using an *independent sample*
+
+---
+
+# Overfitting
+
+Training set: 25 states; Test set: 25 remaining states
+
+
+
+&lt;img src="model_comparison_files/figure-html/elpd_df-plot-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+--
+
+- More complex model = more discrepancy between in-sample and out-of-sample elpd
+
+---
+
+# Information Criteria (IC)
+
+Approximate discrepancy between in-sample and out-of-sample elpd
+
+IC = -2 `\(\times\)` in-sample elpd + `\(p\)`
+
+`\(p\)` = penalty for model complexity
+- function of number of parameters
+
+--
+
+Choose a model with **smaller** IC
+
+--
+
+Bayesian ICs: DIC, WAIC, etc
+
+---
+
+# Cross-Validation
+
+- Split the sample into `\(K\)` parts
+
+- Fit a model with `\(K\)` - 1 parts, and obtain elpd for the "hold-out" part
+
+--
+
+Leave-one-out: `\(K\)` = `\(N\)`
+
+- Very computationally intensive
+
+- `loo` package: approximation using Pareto smoothed importance sampling
+
+---
+class: clear
+
+
+
+
+```r
+loo(m1)
+```
+
+```
+&gt;# 
+&gt;# Computed from 8000 by 50 log-likelihood matrix
+&gt;# 
+&gt;#          Estimate  SE
+&gt;# elpd_loo     15.1 4.9
+&gt;# p_loo         3.3 1.0
+&gt;# looic       -30.2 9.9
+&gt;# ------
+&gt;# Monte Carlo SE of elpd_loo is 0.0.
+&gt;# 
+&gt;# All Pareto k estimates are good (k &lt; 0.5).
+&gt;# See help('pareto-k-diagnostic') for details.
+```
+
+---
+
+# Comparing Models
+
+`$$\texttt{Divorce}_i \sim N(\mu_i, \sigma)$$`
+
+- M1: `Marriage`
+- M2: `Marriage`, `South`, `Marriage` `\(\times\)` `South`
+- M3: `South`, smoothing spline of `Marriage` by `South`
+- M4: `Marriage`, `South`, `MedianAgeMarriage`, `Marriage` `\(\times\)` `South`, `Marriage` `\(\times\)` `MedianAgeMarriage`, `South` `\(\times\)` `MedianAgeMarriage`, `Marriage` `\(\times\)` `South` `\(\times\)` `MedianAgeMarriage`
+
+---
+class: clear
+
+
+
+.font50[
+
+&lt;table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; M1 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; M2 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; M3 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; M4 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_Intercept &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.61 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.67 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.94 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5.53 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_Marriage &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.18 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.13 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −1.21 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_Southsouth &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −0.62 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.10 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.32 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_Marriage × Southsouth &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.36 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.52 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; bs_sMarriage × SouthnonMsouth_1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −0.55 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; bs_sMarriage × Southsouth_1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1.27 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; sds_sMarriageSouthnonMsouth_1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.91 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; sds_sMarriageSouthsouth_1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.48 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_MedianAgeMarriage &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −1.73 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_Marriage × MedianAgeMarriage &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.45 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; b_MedianAgeMarriage × Southsouth &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −0.36 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;box-shadow: 0px 1px"&gt; b_Marriage × MedianAgeMarriage × Southsouth &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1px"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1px"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1px"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1px"&gt; −0.08 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ELPD &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 15.1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 18.3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 17.7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 23.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ELPD s.e. &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.9 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5.5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5.8 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; LOOIC &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −30.2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −36.6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −35.3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −47.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; LOOIC s.e. &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 9.9 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 11.0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 11.7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 12.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; WAIC &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −30.3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −36.9 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −37.1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −48.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; RMSE &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.17 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.15 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.14 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.13 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+---
+
+# Notes for Using ICs
+
+- Same outcome variable and transformation
+- Same sample size
+- Cannot compare discrete and continuous models
+    * E.g., Poisson vs. normal
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

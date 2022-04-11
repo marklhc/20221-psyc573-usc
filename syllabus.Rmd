@@ -276,7 +276,7 @@ dates <- paste(
 | Mar 29 & Mar 31| - Causal Inference I   | - McElreath ch. 5, 6             | - HW 9                                 |
 +----------------+------------------------+----------------------------------+----------------------------------------+
 | Week 13\       | - Causal Inference II  | - McElreath ch. 7                | - Exercise: IC vs. BF                  |
-| Apr 5 & 7      | - Model Comparisons    | - Reference on Bayes Factor:     | - HW 10                                |
+| Apr 5 & 7      | - Model Comparison     | - Reference on Bayes Factor:     | - HW 10                                |
 |                |                        | Kruschke ch. 10                  |                                        |
 +----------------+------------------------+----------------------------------+----------------------------------------+
 | Week 14\       | - Missing Data         | - McElreath ch. 15               | - Exercise: Multiple Imputation        |

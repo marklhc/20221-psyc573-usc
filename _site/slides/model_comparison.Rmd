@@ -1,0 +1,400 @@
+---
+title: "Model Comparison"
+subtitle: "PSYC 573"
+institute: "University of Southern California"
+date: "April 14, 2022"
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts, "my_style.css"]
+    lib_dir: libs
+    nature:
+      countIncrementalSlides: false
+params:
+  for_class: false
+---
+
+```{r, child = "slide_settings.RMarkdown"}
+```
+
+```{r xaringan-panelset, echo = FALSE}
+xaringanExtra::use_panelset()
+```
+
+```{r xaringan-scribble, echo = FALSE, eval = params$for_class}
+xaringanExtra::use_scribble()
+```
+
+# Guiding Questions
+
+- What is *overfitting* and why is it problematic?
+
+- How to measure *closeness* of a model to the true model?
+    * What do *information criteria* do?
+
+---
+class: clear
+
+## In-Sample and Out-Of-Sample Prediction
+
+```{r waffle_divorce}
+waffle_divorce <- read_delim(  # read delimited files
+    "https://raw.githubusercontent.com/rmcelreath/rethinking/master/data/WaffleDivorce.csv",
+    delim = ";"
+)
+# Rescale Marriage and Divorce by dividing by 10
+waffle_divorce$Marriage <- waffle_divorce$Marriage / 10
+waffle_divorce$Divorce <- waffle_divorce$Divorce / 10
+waffle_divorce$MedianAgeMarriage <- waffle_divorce$MedianAgeMarriage / 10
+# Recode `South` to a factor variable
+waffle_divorce$South <- factor(waffle_divorce$South,
+    levels = c(0, 1),
+    labels = c("non-south", "south")
+)
+```
+
+- Randomly sample 10 states
+
+```{r plot-wd-sub}
+set.seed(1547)  # set the seed for reproducibility
+# Sample 10 observations
+train <- sample.int(nrow(waffle_divorce), 10L)
+wd_sub <- waffle_divorce[train, ]
+base <- ggplot(aes(x = Marriage, y = Divorce),
+               data = wd_sub) +
+    geom_point() +
+    coord_cartesian(ylim = c(0.6, 1.4)) +
+    xlim(range(waffle_divorce$Marriage))
+ggplot(waffle_divorce,
+       aes(x = Marriage, y = Divorce)) + 
+    geom_point(col = "lightblue") +
+    geom_point(size = 1.5, data = wd_sub, col = "red") +
+    coord_cartesian(ylim = c(0.6, 1.4)) +
+    xlim(range(waffle_divorce$Marriage))
+```
+
+---
+
+# Underfitting and Overfitting
+
+- Complex models require more data
+    * Too few data for a complex model: **overfitting**
+    * A model being too simple: **underfitting**
+
+```{r overfit-data, out.width = "85%", fig.width = 7.29}
+r2 <- function(object, newresp, newdata) {
+    # Function for computing R^2
+    ypred <- predict(object, newdata = newdata)
+    cor(ypred, newresp)^2
+}
+rmse <- function(object, newresp, newdata) {
+    # Function for RMSE
+    ypred <- predict(object, newdata = newdata)
+    sqrt(mean((ypred - newresp)^2))
+}
+# Create six plots through a loop
+p_list <- map(1:6, function(i) {
+    # Use frequentist analyses for speed
+    mod <- lm(Divorce ~ poly(Marriage, degree = i), data = wd_sub)
+    base +
+        geom_smooth(method = "lm", formula = y ~ poly(x, i), level = .80,
+                    fullrange = TRUE) +
+        annotate("text", x = 1.7, y = 1.4,
+                 label = paste0("italic(R)^2 == ",
+                                round(r2(mod, wd_sub$Divorce), 2)),
+                 parse = TRUE) +
+        annotate("text", x = 1.8, y = 1.2,
+                 label = paste0("RMSE == ",
+                                round(rmse(mod, wd_sub$Divorce), 2)),
+                 parse = TRUE)
+})
+do.call(grid.arrange, c(p_list, nrow = 2))
+```
+
+---
+
+# Prediction of Future Observations
+
+- The more a model captures the noise in the original data, the less likely it predicts future observations well
+
+```{r overfit-generalize, out.width = "85%", fig.width = 7.29}
+base2 <- ggplot(aes(x = Marriage, y = Divorce),
+               data = waffle_divorce[-train, ]) +
+    geom_point() +
+    coord_cartesian(ylim = c(0.6, 1.4)) +
+    xlim(range(waffle_divorce$Marriage))
+# Create six plots through a loop
+p_list2 <- map(1:6, function(i) {
+    # Use frequentist analyses for speed
+    mod <- lm(Divorce ~ poly(Marriage, degree = i), data = wd_sub)
+    # New data and response
+    test_dat <- waffle_divorce[-train, ]
+    ynew <- test_dat$Divorce
+    base2 +
+        geom_smooth(data = wd_sub, method = "lm", formula = y ~ poly(x, i),
+                    level = .80, fullrange = TRUE) +
+        annotate("text", x = 1.7, y = 1.4,
+                 label = paste0("italic(R)^2 == ",
+                                round(r2(mod, ynew, test_dat), 2)),
+                 parse = TRUE) +
+        annotate("text", x = 1.8, y = 1.2,
+                 label = paste0("RMSE == ",
+                                round(rmse(mod, ynew, test_dat), 2)),
+                 parse = TRUE)
+})
+do.call(grid.arrange, c(p_list2, nrow = 2))
+```
+
+---
+
+# What Is A Good Model?
+
+- Closeness from the proposed model (`\(M_1\)`) to a "true" model (`\(M_0\)`)
+    * *Kullback-Leibler Divergence* (`\(D_\textrm{KL}\)`) = $\text{Entropy of }M_0 - \text{elpd of }M_1$
+    * elpd: expected log predictive density: $E_{M_0}[\log P_{M_1}(\tilde {\mathbf{y}})]$
+
+--
+
+- Choose a model with *smallest $D_\textrm{KL}$*
+    * When $M_0 = M_1$, $D_\textrm{KL} = 0$
+    * $\Rightarrow$ choose a model with largest elpd
+
+---
+exclude: `r !params$for_class`
+class: clear
+
+### Example
+
+- True model of data: $M_0$: $y \sim N(3, 2)$
+- $M_1$: $y \sim N(3.5, 2.5)$
+- $M_2$: $y \sim \mathrm{Cauchy}(3, 2)$
+
+.pull-left[
+
+```{r divergence, fig.width = 4.29, out.width = "100%"}
+set.seed(2303)
+x <- rnorm(100, mean = 3, sd = 2)
+ggplot(data.frame(x), aes(x = x)) +
+    geom_histogram(aes(y = ..density..)) +
+    stat_function(fun = dnorm, args = list(mean = 3, sd = 2),
+                  aes(col = "M0"), linetype = 2) + 
+    stat_function(fun = dnorm, args = list(mean = 3.5, sd = 2.5),
+                  aes(col = "M1"), size = 2) +
+    stat_function(fun = dcauchy, args = list(location = 3, scale = 2),
+                  aes(col = "M2"), size = 2) +
+    scale_color_manual(values = c("black", "red", "blue"),
+                       labels = c("M0", "M1", "M2")) +
+    labs(x = "y", y = "density", col = NULL)
+```
+
+]
+
+.pull-right[
+
+```{r f1-f2}
+f0 <- function(x) {
+    dnorm(x, 3, 2) * dnorm(x, 3, 2, log = TRUE)
+}
+f1 <- function(x) {
+    dnorm(x, 3, 2) * dnorm(x, 3.5, 2.5, log = TRUE)
+}
+f2 <- function(x) {
+    dnorm(x, 3, 2) * dcauchy(x, 3, 2, log = TRUE)
+}
+entropy_m0 <- integrate(f0, -Inf, Inf)$value
+elpd_m1 <- integrate(f1, -Inf, Inf)$value
+elpd_m2 <- integrate(f2, -Inf, Inf)$value
+```
+
+.font70[
+
+Entropy of $M_0$ = `r entropy_m0`
+
+- Theoretical elpd of $M_1$: `r elpd_m1`
+- $D_\textrm{KL}(M_0 \mid M_1)$ = `r entropy_m0 - elpd_m1`
+
+- Theoretical elpd of $M_2$: `r elpd_m2`
+- $D_\textrm{KL}(M_0 \mid M_2)$ = `r entropy_m0 - elpd_m2`
+
+]
+]
+
+---
+class: clear
+
+### Expected log *pointwise* predictive density
+
+$$\sum_i \log P_{M_1} (y_i)$$
+
+Note: ELPD is a function of sample size
+
+--
+
+- Problem: elpd depends on $M_0$, which is unknown
+    * Estimate elpd using the current sample $\rightarrow$ underestimate discrepancy
+    * Need to estimate elpd using an *independent sample*
+
+---
+
+# Overfitting
+
+Training set: 25 states; Test set: 25 remaining states
+
+```{r elpd_divorce}
+# Function for computing elpd with different polynomial
+elpd_divorce <- function(degree = 1,
+                             train = 10,
+                             y = waffle_divorce$Divorce,
+                             x = waffle_divorce$Marriage) {
+    N <- length(y)
+    # get training sample
+    if (length(train) == 1) {
+        train <- sample.int(N, train)
+    }
+    ntrain <- length(train)
+    # Obtain design matrix
+    X <- cbind(1, poly(x, degree, simple = TRUE))
+    # Get elpd for training sample
+    Xtrain <- X[train, ]
+    ytrain <- y[train]
+    betahat <- qr.solve(Xtrain, ytrain)  # estimated betas
+    res_train <- ytrain - Xtrain %*% betahat
+    sigmahat <- sqrt(sum(res_train^2) /
+        (ntrain - 1 - degree)) # estimated sigma
+    elpd_train <- sum(dnorm(res_train, sd = sigmahat, log = TRUE))
+    res_test <- y[-train] - X[-train, ] %*% betahat
+    elpd_test <- sum(dnorm(res_test, sd = sigmahat, log = TRUE))
+    tibble(degree = degree,
+           sample = c('in-sample', 'out-of-sample'),
+           elpd = c(elpd_train / ntrain,
+                        elpd_test / (N - ntrain))
+    )
+}
+```
+
+```{r elpd_df-plot}
+set.seed(1733)
+elpd_df <- map_df(
+    1:4,
+    ~ rerun(1000, elpd_divorce(degree = .x, train = 25L)) %>%
+        bind_rows()
+)
+# Plot the results
+elpd_df %>%
+    ggplot(aes(x = degree, y = elpd, col = sample)) +
+    stat_summary() +
+    stat_summary(geom = "line") +
+    labs(col = NULL)
+```
+
+--
+
+- More complex model = more discrepancy between in-sample and out-of-sample elpd
+
+---
+
+# Information Criteria (IC)
+
+Approximate discrepancy between in-sample and out-of-sample elpd
+
+IC = -2 $\times$ in-sample elpd + $p$
+
+$p$ = penalty for model complexity
+- function of number of parameters
+
+--
+
+Choose a model with **smaller** IC
+
+--
+
+Bayesian ICs: DIC, WAIC, etc
+
+---
+
+# Cross-Validation
+
+- Split the sample into $K$ parts
+
+- Fit a model with $K$ - 1 parts, and obtain elpd for the "hold-out" part
+
+--
+
+Leave-one-out: $K$ = $N$
+
+- Very computationally intensive
+
+- `loo` package: approximation using Pareto smoothed importance sampling
+
+---
+class: clear
+
+```{r m1, results = 'hide', warning = FALSE}
+library(brms)
+m1 <- brm(Divorce ~ Marriage, data = waffle_divorce,
+          prior = c(prior(student_t(4, 0, 5), class = "Intercept"),
+                    prior(normal(0, 2), class = "b"),
+                    prior(student_t(4, 0, 1), class = "sigma")),
+          iter = 4000,
+          seed = 2302
+)
+m1 <- add_criterion(m1, c("loo", "waic"))
+```
+
+```{r, echo = TRUE}
+loo(m1)
+```
+
+---
+
+# Comparing Models
+
+$$\texttt{Divorce}_i \sim N(\mu_i, \sigma)$$
+
+- M1: `Marriage`
+- M2: `Marriage`, `South`, `Marriage` $\times$ `South`
+- M3: `South`, smoothing spline of `Marriage` by `South`
+- M4: `Marriage`, `South`, `MedianAgeMarriage`, `Marriage` $\times$ `South`, `Marriage` $\times$ `MedianAgeMarriage`, `South` $\times$ `MedianAgeMarriage`, `Marriage` $\times$ `South` $\times$ `MedianAgeMarriage`
+
+---
+class: clear
+
+```{r m2-m3-m4, results = "hide", warning = FALSE}
+# Note, m1 has been fit before; the `update()` function
+# can be used to simply change the formula, and brms will
+# determine whether it needs re-compiling.
+# M2: Add South and interaction
+m2 <- update(m1, formula = Divorce ~ Marriage * South,
+             newdata = waffle_divorce)
+m2 <- add_criterion(m2, c("loo", "waic"))
+# M3: Spline function for Marriage
+m3 <- update(m1, formula = Divorce ~ South + s(Marriage, by = South),
+             newdata = waffle_divorce,
+             control = list(adapt_delta = .999))
+m3 <- add_criterion(m3, c("loo", "waic"))
+# M4: Three-way interactions
+m4 <- update(m1, formula = Divorce ~ Marriage * MedianAgeMarriage * South,
+             newdata = waffle_divorce,
+             control = list(max_treedepth = 12))  # increase due to warning
+m4 <- add_criterion(m4, c("loo", "waic"))
+```
+
+.font50[
+
+```{r loo-detail, warning = FALSE}
+library(modelsummary)
+msummary(list(M1 = m1, M2 = m2, M3 = m3, M4 = m4),
+         statistic = NULL, fmt = 2,
+         coef_omit = "sigma",
+         gof_omit = "Num")
+```
+
+]
+
+---
+
+# Notes for Using ICs
+
+- Same outcome variable and transformation
+- Same sample size
+- Cannot compare discrete and continuous models
+    * E.g., Poisson vs. normal
