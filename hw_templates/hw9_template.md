@@ -64,25 +64,43 @@ datasummary(profevaluation  *
 
 # Model
 
-Let *Y* = profevaluation, *G* = nonenglish
+Let
+![Y](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;Y "Y")
+= profevaluation,
+![G](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;G "G")
+= nonenglish
 
 Model:
-$$
+
+![
   \\begin{aligned}
     Y\_{i, G = 0} & \\sim N(\\mu_1, \\sigma_1) \\\\
     Y\_{i, G = 1} & \\sim N(\\mu_2, \\sigma_2)
   \\end{aligned}
-$$
+](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%0A%20%20%5Cbegin%7Baligned%7D%0A%20%20%20%20Y_%7Bi%2C%20G%20%3D%200%7D%20%26%20%5Csim%20N%28%5Cmu_1%2C%20%5Csigma_1%29%20%5C%5C%0A%20%20%20%20Y_%7Bi%2C%20G%20%3D%201%7D%20%26%20%5Csim%20N%28%5Cmu_2%2C%20%5Csigma_2%29%0A%20%20%5Cend%7Baligned%7D%0A "
+  \begin{aligned}
+    Y_{i, G = 0} & \sim N(\mu_1, \sigma_1) \\
+    Y_{i, G = 1} & \sim N(\mu_2, \sigma_2)
+  \end{aligned}
+")
 
 Prior:
-$$
+
+![
   \\begin{aligned}
     \\mu_1 & \\sim N(3, 2) \\\\
     \\mu_2 & \\sim N(3, 2) \\\\
     \\sigma_1 & \\sim N^+(0, 2) \\\\
     \\sigma_2 & \\sim N^+(0, 2)
   \\end{aligned}
-$$
+](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%0A%20%20%5Cbegin%7Baligned%7D%0A%20%20%20%20%5Cmu_1%20%26%20%5Csim%20N%283%2C%202%29%20%5C%5C%0A%20%20%20%20%5Cmu_2%20%26%20%5Csim%20N%283%2C%202%29%20%5C%5C%0A%20%20%20%20%5Csigma_1%20%26%20%5Csim%20N%5E%2B%280%2C%202%29%20%5C%5C%0A%20%20%20%20%5Csigma_2%20%26%20%5Csim%20N%5E%2B%280%2C%202%29%0A%20%20%5Cend%7Baligned%7D%0A "
+  \begin{aligned}
+    \mu_1 & \sim N(3, 2) \\
+    \mu_2 & \sim N(3, 2) \\
+    \sigma_1 & \sim N^+(0, 2) \\
+    \sigma_2 & \sim N^+(0, 2)
+  \end{aligned}
+")
 
 ## Running Stan
 
@@ -116,8 +134,12 @@ mcmc_rank_hist(m1, pars = c("mu1", "mu2", "sigma1", "sigma2"))
 ![](hw9_template_files/figure-gfm/rank-hist-m1-1.png)<!-- -->
 
 The following table shows the posterior distributions of
-*μ*<sub>1</sub>, *μ*<sub>2</sub>, *σ*<sub>1</sub>, *σ*<sub>2</sub>, and
-*μ*<sub>2</sub> − *μ*<sub>1</sub>.
+![\\mu_1](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu_1 "\mu_1"),
+![\\mu_2](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu_2 "\mu_2"),
+![\\sigma_1](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Csigma_1 "\sigma_1"),
+![\\sigma_2](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Csigma_2 "\sigma_2"),
+and
+![\\mu_2 - \\mu_1](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu_2%20-%20%5Cmu_1 "\mu_2 - \mu_1").
 
 ``` r
 summ_m1 <- as_draws_df(m1) %>%
@@ -293,7 +315,7 @@ sigma2
 </tr>
 <tr>
 <td style="text-align:left;">
-*μ*<sub>2</sub> − *μ*<sub>1</sub>
+![\\mu_2 - \\mu_1](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu_2%20-%20%5Cmu_1 "\mu_2 - \mu_1")
 </td>
 <td style="text-align:right;">
 -0.25

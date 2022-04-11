@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   github_document:
     toc: true
-    math_method: NULL
+    math_method: webtex
 ---
 
 ```{r setup, include=FALSE}
