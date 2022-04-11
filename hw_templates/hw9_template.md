@@ -144,7 +144,7 @@ and
 ``` r
 summ_m1 <- as_draws_df(m1) %>%
     subset_draws(variable = c("mu1", "mu2", "sigma1", "sigma2")) %>%
-    mutate_variables(`$\\mu_2 - \\mu_1$` = mu2 - mu1) %>%
+    mutate_variables(`mu2 - mu1` = mu2 - mu1) %>%
     summarise_draws()
 knitr::kable(summ_m1, digits = 2)
 ```
