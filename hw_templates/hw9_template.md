@@ -315,7 +315,7 @@ sigma2
 </tr>
 <tr>
 <td style="text-align:left;">
-![\\mu_2 - \\mu_1](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu_2%20-%20%5Cmu_1 "\mu_2 - \mu_1")
+mu2 - mu1
 </td>
 <td style="text-align:right;">
 -0.25
