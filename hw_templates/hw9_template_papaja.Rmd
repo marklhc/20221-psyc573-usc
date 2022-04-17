@@ -2,20 +2,30 @@
 title: "HW 9 Template"
 shorttitle: "HW 9"
 author:
-  - name: "Mark Lai"
-    affiliation: "University of Southern California"
+  - name: "Your Name"
+    affiliation: "1"
+affiliation:
+  - id: "1"
+    institution: "University of Southern California"
 authornote:
 abstract:
+header-includes:
+  - \usepackage{siunitx}
 csl: "`r system.file('rmd', 'apa7.csl', package = 'papaja')`"
 documentclass: "apa7"
 output: papaja::apa6_pdf
+bibliography: "references.bib"
 ---
 
+<!-- This is a comment -->
+<!-- To use the `papaja::apa6_pdf` format, follow the instruction in https://github.com/crsh/papaja to install the `papaja` package -->
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r load-pkg, message = FALSE}
+library(papaja)
 library(ggplot2)  # for plots
 library(magrittr)  # for `%>%` operator
 library(here)
@@ -26,35 +36,47 @@ rstan_options(auto_write = TRUE)  # save compiled STAN object
 options(mc.cores = 2)  # use two cores
 library(posterior)
 library(bayesplot)
+library(kableExtra)
 theme_set(theme_classic() +
     theme(panel.grid.major.y = element_line(color = "grey92")))
 ```
 
-# Research Question
+# Introduction
+
+## Research Question
 
 > Is there difference in student evaluation rating for native and non-native English-speaking instructors?
 
-# Variables
+# Method
+
+## Variables
 
 - `profevaluation`: evaluation rating of the instructor: 1 (very unsatisfactory) to 5 (excellent)
 - `nonenglish`: 1 = non-native English speakers, 0 = native-English speakers
 
-## Import Data
-
 ```{r beauty}
+# Import data
 beauty <- read_excel(here("data", "ProfEvaltnsBeautyPublic.xls"))
 ```
 
 ## Variable Summary
 
+<!-- You can use \@ref(tab:xx) to reference a table with the chunk label "xx" -->
+
+Table\ \@ref(tab:summ-var) shows the summary statistics of evaluationg ratings by groups.
+
 ```{r summ-var}
 datasummary(profevaluation  * 
-                (N + Mean + SD + Min + Max + Histogram) ~ 
+                (N + Mean + SD + Min + Max) ~ 
                 factor(nonenglish, labels = c("Native", "Non-Native")),
-            data = beauty)
+            data = beauty,
+            # The `caption` argument adds caption to a table.
+            caption = "Summary Statistics") %>%
+    # add table note
+    add_footnote("SD = standard deviation", notation = "none")
 ```
 
-# Model
+## Model
 
 Let $Y$ = profevaluation, $G$ = nonenglish
 
@@ -99,20 +121,35 @@ m1 <- stan(
 
 # Results
 
-As shown in the graph below, the chains mixed well.
+<!-- Use [@xxx] for parenthetical citation. xxx is the label for the bibTeX citation key in "references.bib." See https://bookdown.org/yihui/rmarkdown-cookbook/bibliography.html for more information. -->
+<!-- You can use \@ref(fig:xx) to reference a figure with the chunk label "xx" -->
 
-```{r rank-hist-m1}
+As shown in the rank histograms [@vehtari2021] in Figure\ \@ref(fig:rank-hist-m1), the chains mixed well.
+
+```{r rank-hist-m1, fig.cap = "Rank histograms showing convergence of the MCMC chains."}
 mcmc_rank_hist(m1, pars = c("mu1", "mu2", "sigma1", "sigma2"))
 ```
 
-The following table shows the posterior distributions of $\mu_1$, $\mu_2$, $\sigma_1$, $\sigma_2$, and $\mu_2 - \mu_1$.
+Table\ \@ref(tab:summ-m1) shows the posterior distributions of $\mu_1$, $\mu_2$, $\sigma_1$, $\sigma_2$, and $\mu_2 - \mu_1$.
 
 ```{r summ-m1}
 summ_m1 <- as_draws_df(m1) %>%
     subset_draws(variable = c("mu1", "mu2", "sigma1", "sigma2")) %>%
     mutate_variables(`mu2 - mu1` = mu2 - mu1) %>%
     summarise_draws()
-knitr::kable(summ_m1, digits = 2)
+# Use `papaja::apa_table()` for APA formatted tables
+apa_table(summ_m1, digits = 2,
+          # table caption
+          caption = "Posterior summary of model parameters.",
+          # table note
+          note = "sd = standard deviation. ess = effective sample size.")
 ```
 
 The analysis showed that on average, non-native speaking instructors received a lower evaluation rating than native speaker instructors, with a posterior mean of `r round(summ_m1$mean[5], 2)` and a 90% CI of [`r round(summ_m1$q5[5], 2)`, `r round(summ_m1$q95[5], 2)`].
+
+\newpage
+
+# References
+
+::: {#refs custom-style="Bibliography"}
+:::
