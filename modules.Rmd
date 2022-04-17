@@ -489,6 +489,30 @@ embed_xaringan("slides/model_comparison.html", ratio = "4:3")
 
 :::
 
+::: {.panel}
+
+# Week 15
+
+## Week Learning Objectives
+
+By the end of this module, you will be able to 
+
+- Use DAGs to describe the different **missing data mechanisms**
+- Use the `mi()` syntax in `brms` to account for missing data based on a DAG
+- Explain the Bayesian ideas in the technique **multiple imputation**
+
+## Task Lists
+
+1. Complete the assigned readings
+    * McElreath ch. 15
+2. Review the resources (note[23])
+3. Attend class meetings
+4. Prepare your final project/paper
+
+[23]: missing_data.html
+
+:::
+
 :::
 
 ## Last updated {.appendix}

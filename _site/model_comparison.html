@@ -2464,6 +2464,8 @@ Notes
 <a href="causal_inference.html">Causal Inference</a>
 <a href="interaction.html">Interactions</a>
 <a href="model_comparison.html">Model Comparison</a>
+<a href="missing_data.html">Missing Data</a>
+<a href="glm2.html">Bonus: Generalized Linear Model II</a>
 </div>
 </div>
 <a href="https://github.com/marklhc/20221-psyc573-usc" aria-label="Link to source">
@@ -2888,7 +2890,7 @@ frequentist, just for speed) for polynomials of different degrees:</p>
     <span class='op'>}</span>
     <span class='va'>ntrain</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>train</span><span class='op'>)</span>
     <span class='co'># Obtain design matrix</span>
-    <span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/stats/poly.html'>poly</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>degree</span>, simple <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
+    <span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://amices.org/mice/reference/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/stats/poly.html'>poly</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>degree</span>, simple <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
     <span class='co'># Get elpd for training sample</span>
     <span class='va'>Xtrain</span> <span class='op'>&lt;-</span> <span class='va'>X</span><span class='op'>[</span><span class='va'>train</span>, <span class='op'>]</span>
     <span class='va'>ytrain</span> <span class='op'>&lt;-</span> <span class='va'>y</span><span class='op'>[</span><span class='va'>train</span><span class='op'>]</span>

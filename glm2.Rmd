@@ -1,0 +1,457 @@
+---
+title: "Generalized Linear Model II"
+author: "Mark Lai"
+date: "March 13, 2022"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = "#>", collapse = TRUE,
+                      fig.width = 6, fig.asp = 0.618,
+                      out.width = "70%", fig.align = "center")
+comma <- function(x, digits. = 2L) {
+    format(x, digits = digits., big.mark = ",")
+}
+# Helper for extracting results from brms
+get_mean_ci <- function(i, summ, unit = "", unit_ci = "") {
+    paste0(
+        round(summ[i, "mean"], 2), unit,
+        ", 90% CI [",
+        round(summ[i, "q5"], 2), unit_ci, ", ",
+        round(summ[i, "q95"], 2), unit_ci, "]"
+    )
+}
+```
+
+```{r load-pkg, message = FALSE}
+library(tidyverse)
+library(here)  # for easier management of file paths
+library(rstan)
+rstan_options(auto_write = TRUE)  # save compiled Stan object
+library(brms)  # simplify fitting Stan GLM models
+library(posterior)  # for summarizing draws
+library(bayesplot)  # for plotting
+library(modelsummary)  # table for brms
+theme_set(theme_classic() +
+    theme(panel.grid.major.y = element_line(color = "grey92")))
+```
+
+# Binary Logistic Regression
+
+We will use an example from this paper (https://journals.sagepub.com/doi/abs/10.1177/0956797616645672), which examines how common it was for researchers to report marginal $p$ values (i.e., .05 < $p$ $\leq$ .10). The outcome is whether a study reported one or more marginal $p$ values (1 = Yes, 0 = No). The researchers also categorized the studies into three subfields (Cognitive Psychology, Developmental Psychology, Social Psychology), and there were a total of 1,535 studies examined from 1970 to 2010. 
+
+```{r marginalp_describe, layout="l-body-outset", fig.width = 8.57, fig.asp = 0.5}
+# readxl package can be used to import excel files
+datfile <- here("data_files", "marginalp.xlsx")
+if (!file.exists(datfile)) {
+    dir.create(here("data_files"))
+    download.file("https://osf.io/r4njf/download",
+        destfile = datfile
+    )
+}
+marginalp <- readxl::read_excel(datfile)
+# Recode `Field` into a factor
+marginalp <- marginalp %>%
+    # Filter out studies without any experiments
+    filter(`Number of Experiments` >= 1) %>%
+    mutate(Field = factor(Field,
+        labels = c(
+            "Cognitive Psychology",
+            "Developmental Psychology",
+            "Social Psychology"
+        )
+    )) %>%
+    # Rename the outcome
+    rename(marginal_p = `Marginals Yes/No`)
+# Proportion of marginal p in each subfield across Years
+marginalp %>%
+    ggplot(aes(x = Year, y = marginal_p)) +
+    stat_summary(aes(fill = Field), geom = "ribbon", alpha = 0.3) +
+    stat_summary(aes(col = Field), geom = "line") +
+    stat_summary(aes(col = Field), geom = "point") +
+    coord_cartesian(ylim = c(0, 0.7)) +
+    facet_wrap(~ Field) +
+    theme(legend.position = "top")
+```
+
+## Centering
+
+The issue of centering applies for most regression models, including GLMs. Because the predictor `Year` has values 1970, 1980, etc, if we use this variable as a predictor, the intercept $\beta_0$ will be the predicted value of $\eta$ when `Year` = 0, which is like 2,000 years before the data were collected. So instead, we usually want the value 0 to be something meaningful and/or a possible value in the data. So we will center the variable year by making 0 the year 1970. In addition, we will divide the values by 10 so that one unit in the new predictor means 10 years.
+
+In other words, we will use a transformed predictor, `Year10` = (`Year` - 1970) / 10. So when `Year` = 1970, `Year10` = 10; when `Year` = 1990, `Year10` = 2.
+
+```{r recode-Year10}
+marginalp <- marginalp %>%
+  mutate(Year10 = (Year - 1970) / 10)
+# Check the recode
+distinct(marginalp, Year, Year10)
+```
+
+For this example, I'll look at the subset for developmental psychology. You may want to try with the other subsets of the data for practice.
+
+```{r marginalp_dev}
+marginalp_dev <- filter(marginalp,
+                        Field == "Developmental Psychology")
+head(marginalp_dev)
+```
+
+## Model and Priors
+
+As the name "logistic regression" suggested, the logistic function is used somewhere in the model. The logistic function, or the inverse logit function, is 
+$$\mu = g^{-1}(\eta) = \frac{\exp(\eta)}{1 + \exp(\eta)},$$
+which is a transformation from $\eta$ to $\mu$. The link function, which is a transformation from $\mu$ to $\eta$, is the logit function,
+$$\eta = g(\mu) = \log\frac{\mu}{1 - \mu},$$
+which converts $\mu$, which is in probability metric, to $\eta$, which is in log odds metric (odds = probability / [1 - probability]).
+
+Model:
+
+\begin{align}
+  \text{marginal_p}_i & \sim \mathrm{Bern}(\mu_i)  \\
+  \log(\mu_i) & = \eta_i \\
+  \eta_i & = \beta_0 + \beta_1 \text{Year10}_{i}
+\end{align}
+
+Priors:
+
+\begin{align}
+  \beta_0 & \sim t_4(0, 2.5)  \\
+  \beta_1 & \sim t_4(0, 1)
+\end{align}
+
+There has been previous literature on what choices of prior on the $\beta$ coefficients for logistic regressions would be appropriate (see [this paper](https://projecteuclid.org/journals/annals-of-applied-statistics/volume-2/issue-4/A-weakly-informative-default-prior-distribution-for-logistic-and-other/10.1214/08-AOAS191.full)). $\beta$ coefficients in logistic regression can be relatively large, unlike in normal regression. Therefore, it's pointed out that a heavy tail distribution, like Cauchy and $t$, would be more appropriate. Recent discussions have settled on priors such as $t$ distributions with a small degrees of freedom as a good balance between heavy tails and efficiency for MCMC sampling. I use $t_4(4, 0, 2.5)$ for $\beta_0$, which puts more density to be in [-2.5, 2.5] on the log odds unit. This means, in the year 1970, our belief is that the probability of marginally significant results would be somewhere between `r plogis(-2.5)` to `r plogis(2.5)`, which seems to cover a reasonable range. For $\beta_1$, I use $t_4(4, 0, 1)$, which suggests that a 10 year difference like corresponds to a difference in log odds between -1 and 1. While it's hard to interpret difference in log odds, a quick rule of thumb is to divide $\beta_1$ by 4, which roughly corresponds to the maximum difference in probability for unit difference in the predictor. So if $\beta_1$ = 1, the maximum difference in probability will be no more than 25 percentage points. So my prior says that it's unlikely that the probability of reporting marginal $p$ values would increase or decrease by 25 percentage points every 10 years, which again is a weak prior. If you're uncertain, you can consider something weaker.
+
+The priors are chosen to be weakly informative. 
+
+```{r m4, results = "hide"}
+m4 <- brm(marginal_p ~ Year10,
+    data = marginalp_dev,
+    family = bernoulli(link = "logit"),
+    prior = c(
+        prior(student_t(4, 0, 1), class = "b"),
+        prior(student_t(4, 0, 2.5), class = "Intercept")
+    ),
+    # Note: no sigma
+    iter = 4000,
+    seed = 1340
+)
+```
+
+Note that in `brms` we used `family = bernoulli()`. In other R functions, such as `glm`, they do not distinguish between bernoulli and Binomial and only recognize `family = binomial()`, as a Bernoulli variable is a binomial variable with $n = 1$.
+
+## Interpreting the results
+
+Any non-linear relationships will involve more work in interpretations, and the coefficients in logistic regressions are no exceptions. 
+
+### Posterior predictions
+
+A good way to start is to plot the model-implied association on the original unit of the data. The `conditional_effects()` function in `brms` comes in very handy, and I recommend you always start with that:
+
+```{r cond-eff-m4}
+plot(
+    conditional_effects(m4, prob = .90),
+    points = TRUE,
+    point_args = list(height = 0.01, width = 0.05, alpha = 0.05)
+)
+```
+
+As you can see, the logistic model implies a somewhat non-linear association between `Year10` and the outcome. From the graph, when `Year10` = 2, which is the Year 1990, the predicted probability of marginal significant results is about 25%, with a 90% credible interval of about 21 to 28%. We can get that using
+
+```{r pred-m4-2}
+posterior_epred(m4, newdata = list(Year10 = 2)) %>%
+    summarise_draws()
+```
+
+### Intercept
+
+From the equation, when all predictors are zero, we have
+$$\mathrm{logit}(\mu_i) = \beta_0.$$
+Therefore, the intercept is the log odds that a study reported a marginally significant $p$ value when `Year10` = 0 (i.e, in 1970), which was estimated to be `r get_mean_ci(1, summarize_draws(m4))`. As log odds are not as intuitive as probability, it is common to instead interpret $\hat{\mu} = \mathrm{logistic}(\beta_0)$, which is the conditional probability of being `marginal_p` = 1 in 1970. For Bayesian, that means obtaining the posterior distribution of $\mathrm{logistic}(\beta_0)$, which can be done by
+
+```{r logistic_beta0}
+m4_draws <- as_draws_array(m4)
+m4_draws <- m4_draws %>%
+    mutate_variables(logistic_beta0 = plogis(b_Intercept))
+summarize_draws(m4_draws)
+```
+
+The `bayesplot` package allow you to plot transformed parameters quickly:
+
+```{r areas_logistic_beta0, echo=TRUE}
+mcmc_areas(m4, pars = "b_Intercept",
+           transformations = list("b_Intercept" = "plogis"),
+           bw = "SJ")
+```
+
+### Interpreting $\exp(\beta_1)$ as odds ratio
+
+The slope, $\beta_1$, represents the difference in the predicted log odds between two observations with 1 unit difference in the predictor. For example, for two individuals with 1 unit difference in `Year10` (i.e., 10 years), we have
+$$\mathrm{logit}(\mu_{\text{marginal_p} = 1}) - 
+  \mathrm{logit}(\mu_{\text{marginal_p} = 0}) = \beta_1.$$
+  
+Again, difference in log odds are hard to interpret, and so we will exponentiate to get
+$$\frac{\mathrm{odds}_{\text{marginal_p} = 1}}
+       {\mathrm{odds}_{\text{marginal_p} = 0}} = \exp(\beta_1).$$
+       
+The fraction on the left hand side is the *odds ratio* of reporting a marginal $p$ value associated with a one unit difference in `Year10` (i.e., 10 years). An odds of 1.0 means that the probability of success and failure is equal; an odds > 1 means success is more likely than failures; and an odds < 1 means success is less likely than failures. Again, for Bayesian, we can obtain the
+posterior distribution of $\exp(\beta_1)$ by
+
+```{r exp_beta1}
+m4_draws <- m4_draws %>%
+    mutate_variables(exp_beta1 = exp(b_Year10))
+summarize_draws(m4_draws)
+```
+
+Using the posterior mean, we predict that the odds of reporting a marginal $p$ value for a study that is 10 years later is multiplied by `r get_mean_ci(5, summarize_draws(m4_draws), unit = " times")`; in other words, every 10 years, the odds increased by `r (summarize_draws(m4_draws)[5, "mean"] - 1) * 100`%. Here's the posterior density plot for the odds ratio:
+
+```{r areas_logistic_beta1, echo=TRUE}
+mcmc_areas(m4, pars = "b_Year10",
+           transformations = list("b_Year10" = "exp"),
+           bw = "SJ")
+```
+
+Odds ratio (OR) is popular as the multiplicative effect is constant, thus making interpretations easier. Also, in medical research and some other research areas, OR can be an excellent approximation of the relative risk, which is the probability ratio of two groups, of some rare disease or events. However, odds and odds ratio are never intuitive metrics for people, and in many situations a large odds ratio may be misleading as it corresponds to a very small effect. Therefore, in general I would recommend you to interpret coefficients in probability unit, even though that means more work.
+
+### Interpreting Coefficients in Probability Units
+
+Another way to interpret the results of logistic regression coefficient is to examine the change in probability. Because the predicted probability is a non-linear function of the predictors, a one unit difference in the predictor has different meanings depending on the values on $X$ you chose for interpretations. You can see that in the `conditional_effects()` plot earlier.
+
+Consider the change in the predicted probability of reporting a marginal $p$ value with `Year10` = 0 (1970), `Year10` = 1 (1980), to `Year10` = 4, respectively:
+
+```{r pred-m4-multiple}
+m4_pred <- posterior_epred(m4, list(Year10 = 0:4))
+colnames(m4_pred) <- paste0("Year10=", 0:4)
+summarise_draws(m4_pred)
+```
+
+As you can see, the predicted difference in probability is smaller when comparing `Year10` = 0 and 1, but is larger when comparing `Year10` = 3 and 4.
+
+#### The "divide by 4 rule"
+
+A quick approximation is to divide the coefficient by 4 to get an upper bound on the change in probability associated with a one unit change in the predictor. In our example, this corresponds to `r fixef(m4)[2]` / 4 = `r fixef(m4)[2] / 4`, which is very close to the predicted difference in probability from `Year10` = 3 to `Year10` = 4.
+
+## Posterior Predictive Check
+
+```{r m4-pp-check}
+pp_check(
+    m4,
+    type = "error_binned"
+)
+```
+
+The linear model is not the best fit.
+
+## Linear Spline
+
+Use `bs()` to specify a linear spline (degree = 1) with one turning point (knots = 3). 
+
+```{r m5, results = "hide"}
+library(splines)
+m5 <- brm(marginal_p ~ bs(Year10, degree = 1, knots = 3),
+    data = marginalp_dev,
+    family = bernoulli(link = "logit"),
+    prior = prior(student_t(4, 0, .875), class = "b"),
+    # Note: no sigma
+    iter = 4000,
+    seed = 1340
+)
+```
+
+## Posterior Prediction
+
+```{r cond-eff-m5}
+plot(
+    conditional_effects(m5),
+    points = TRUE,
+    point_args = list(height = 0.01, width = 0.05, alpha = 0.05)
+)
+```
+
+```{r m5-pp-check}
+pp_check(
+    m5,
+    type = "error_binned",
+    x = "Year10"
+)
+```
+
+### Model Comparison
+
+```{r msummary-m4-m5}
+msummary(list(linear = m4, `linear spline` = m5),
+         estimate = "{estimate} [{conf.low}, {conf.high}]",
+         statistic = NULL, fmt = 2)
+```
+
+The linear spline is better according to information criteria.
+
+# Binomial Logistic Regression
+
+- Individual data: Bernoulli
+- Grouped data: Binomial
+
+The two above are equivalent
+
+## Model
+
+\begin{align}
+  \text{marginal_p}_j & \sim \mathrm{Bin}(N_j, \mu_j)  \\
+  \log(\mu_j) & = \eta_j \\
+  \eta_j & = \beta_0 + \beta_1 \text{Year10}_{j}
+\end{align}
+
+Priors:
+
+\begin{align}
+  \beta_0 & \sim t_3(0, 2.5)  \\
+  \beta_1 & \sim t_4(0, 1)
+\end{align}
+
+```{r marginalp_dev_grouped}
+# The group should only be done for observations with
+# the same predicted probabilities
+marginalp_dev_grouped <-
+    marginalp_dev %>%
+    group_by(Year10) %>%
+    summarize(
+        marginal_p = sum(marginal_p),  # number of "successes"
+        n = n()  # number of trials
+    )
+```
+
+```{r m5_bin, results = "hide"}
+m5_bin <- brm(
+    marginal_p | trials(n) ~ bs(Year10, degree = 1, knots = 3),
+    data = marginalp_dev_grouped,
+    family = binomial(link = "logit"),
+    prior = prior(student_t(4, 0, 1), class = "b"),
+    # Note: no sigma
+    iter = 4000,
+    seed = 1340
+)
+```
+
+```{r ppc-m5_bin, fig.cap = "Posterior predictive check using the predicted and observed counts."}
+pp_check(m5_bin, type = "intervals", x = "Year10")
+```
+
+# Ordinal Regression
+
+Check out this paper: https://journals.sagepub.com/doi/full/10.1177/2515245918823199
+
+```{r stemcell}
+stemcell <- read.csv("https://osf.io/vxw73/download")
+stemcell <- stemcell %>%
+    mutate(
+        belief = factor(belief,
+            levels = c("moderate", "fundamentalist", "liberal")
+        )
+    )
+```
+
+```{r plot-stemcell}
+stemcell %>%
+    ggplot(aes(x = rating)) +
+    geom_bar() +
+    facet_wrap(~ belief)
+```
+
+https://www.thearda.com/archive/files/Codebooks/GSS2006_CB.asp
+
+The outcome is attitude towards stem cells research, and the predictor is religious belief.
+
+> Recently, there has been controversy over whether the government should provide any funds at all for scientific research that uses stem cells taken from human embryos. Would you say the government . . .
+
+- 1 = Definitely, should fund such research
+- 2 = Probably should fund such research
+- 3 = Probably should not fund such research
+- 4 = Definitely should not fund such research
+
+## Model
+
+\begin{align}
+  \text{rating}_i & \sim \mathrm{Categorical}(\pi^1_i, \pi^2_i, \pi^3_i, \pi^4_i)  \\
+  \pi^1_{i} & = \mathrm{logit}^{-1}(\tau^1 - \eta_i)  \\
+  \pi^2_{i} & = \mathrm{logit}^{-1}(\tau^2 - \eta_i) - \mathrm{logit}^{-1}(\tau^1 - \eta_i)  \\
+  \pi^3_{i} & = \mathrm{logit}^{-1}(\tau^3 - \eta_i) - \mathrm{logit}^{-1}(\tau^2 - \eta_i)  \\
+  \pi^4_{i} & = 1 - \mathrm{logit}^{-1}(\tau^3 - \eta_i)  \\
+  \eta_i & = \beta_1 \text{fundamentalist}_{i} + \beta_2 \text{liberal}_{i}
+\end{align}
+
+Priors:
+
+\begin{align}
+  \tau^1, \tau^2, \tau^3 & \sim t_3(0, 2.5)  \\
+  \beta_1 & \sim N(0, 1)
+\end{align}
+
+```{r m6, results = "hide"}
+m6 <- brm(
+    rating ~ belief,
+    data = stemcell,
+    family = cumulative(link = "logit"),
+    prior = prior(std_normal(), class = "b")
+)
+```
+
+## Posterior Predictive Check
+
+```{r ppc-m6}
+pp_check(m6, type = "bars_grouped", group = "belief",
+         ndraws = 100)
+```
+
+The fit was reasonable.
+
+## Plot
+
+```{r cond-eff-m6}
+conditional_effects(m6, categorical = TRUE)
+```
+
+# Nominal Logistic Regression
+
+Ordinal regression is a special case of nominal regression with the proportional odds assumption.
+
+## Model
+
+\begin{align}
+  \text{rating}_i & \sim \mathrm{Categorical}(\pi^1_{i}, \pi^2_{i}, \pi^3_{i}, \pi^4_{i})  \\
+  \pi^1_{i} & = \frac{1}{\exp(\eta^2_{i}) + \exp(\eta^3_{i}) + \exp(\eta^4_{i}) + 1}  \\
+  \pi^2_{i} & = \frac{\exp(\eta^2_{i})}{\exp(\eta^2_{i}) + \exp(\eta^3_{i}) + \exp(\eta^4_{i}) + 1}  \\
+  \pi^3_{i} & = \frac{\exp(\eta^3_{i})}{\exp(\eta^2_{i}) + \exp(\eta^3_{i}) + \exp(\eta^4_{i}) + 1}  \\
+  \pi^4_{i} & = \frac{\exp(\eta^4_{i})}{\exp(\eta^2_{i}) + \exp(\eta^3_{i}) + \exp(\eta^4_{i}) + 1}  \\
+  \eta^2_{i} & = \beta^2_{0} + \beta^2_{1} \text{fundamentalist}_{i} + \beta^2_{2} \text{liberal}_{i}  \\
+  \eta^3_{i} & = \beta^3_{0} + \beta^3_{1} \text{belief}_{i} + \beta^3_{2} \text{liberal}_{i} \\
+  \eta^4_{i} & = \beta^4_{0} + \beta^4_{1} \text{belief}_{i} + \beta^4_{2} \text{liberal}_{i} \\
+\end{align}
+
+As you can see, it has two additional parameters for each predictor column.
+
+```{r m7, results = "hide"}
+m7 <- brm(
+    rating ~ belief,
+    data = stemcell,
+    family = categorical(link = "logit"),
+    prior = prior(std_normal(), class = "b", dpar = "mu2") +
+        prior(std_normal(), class = "b", dpar = "mu3") +
+        prior(std_normal(), class = "b", dpar = "mu4")
+)
+```
+
+## Model Comparison
+
+```{r msummary-m6-m7}
+msummary(list(`ordinal (proportional odds)` = m6, norminal = m7),
+         estimate = "{estimate} [{conf.low}, {conf.high}]",
+         statistic = NULL, fmt = 2)
+```
+
+<!-- The following chunk is only used in the website -->
+
+```{r, echo = FALSE, results = 'asis', eval = file.exists("distill-hack.RMarkdown")}
+knitrenv <- knitr::knit_global()
+assign("knit_input", knitr::current_input(), knitrenv)
+append_res <- knitr::knit_child("distill-hack.RMarkdown",
+    envir = knitrenv, quiet = TRUE
+)
+cat(append_res)
+```

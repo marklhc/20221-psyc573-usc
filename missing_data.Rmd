@@ -1,0 +1,495 @@
+---
+title: "Missing Data"
+author: "Mark Lai"
+date: "April 14, 2022"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = "#>", collapse = TRUE,
+                      fig.width = 6, fig.asp = 0.618,
+                      out.width = "70%", fig.align = "center")
+comma <- function(x, digits. = 2L) {
+    format(x, digits = digits., big.mark = ",")
+}
+```
+
+```{r load-pkg, message = FALSE}
+library(tidyverse)
+library(here)
+library(gridExtra)  # for printing multiple ggplots
+library(dagitty)
+library(ggdag)
+library(rstan)
+rstan_options(auto_write = TRUE)
+library(brms)  # simplify fitting Stan GLM models
+library(posterior)  # for summarizing draws
+library(bayesplot)  # for plotting posterior draws
+library(modelsummary)  # table for brms
+library(mice)  # for multiple imputation
+theme_set(theme_classic() +
+    theme(panel.grid.major.y = element_line(color = "grey92")))
+```
+
+Missing data are common in many research problems. Sometimes missing data arise from design, but more commonly, data are missing for reasons that are beyond researchers' control. 
+
+# Missing Data Mechanisms
+
+The treatment of missing data depends on the underlying causal structure (likely everything else), so you need some causal diagrams. The following examples are based on the ones in McElreath (2020, chapter 15.2). Let's say we have a sample of students. I want to study the association between the number of hours each student studied per day ($S$) and the quality of the homework ($H$). We have the following DAG:
+
+```{r dag1}
+dag1 <- dagitty("dag{ S -> H }")
+coordinates(dag1) <- list(x = c(S = 0, H = 1),
+                          y = c(S = 0, H = 0))
+# Plot
+ggdag(dag1) + theme_dag()
+```
+
+Let's say the actual data generating model is
+
+$$H_i \sim N(\beta_0 + \beta_1 S_i, \sigma),$$
+
+with $\beta_0$ = 5, $\beta_1$ = 1, $\sigma$ = 0.7.
+
+```{r full_data}
+set.seed(1551)
+num_obs <- 200
+full_data <- data.frame(
+    S = pmin(rgamma(num_obs, shape = 10, scale = 0.2), 5)
+) %>%
+    mutate(H = 5 + S + rnorm(S, sd = 0.7))
+```
+
+```{r plot-full-data}
+ggplot(full_data, aes(x = S, y = H)) +
+    geom_point() +
+    geom_smooth(method = "lm")
+```
+
+The statistical literature has generally distinguished three types of missing data mechanisms, with some confusing names: missing completely at random (MCAR), missing at random (MAR), and missing not at random (MNAR). Let's see each of them with the corresponding causal diagram.
+
+## Missing Completely At Random
+
+Let's say all students have dogs, and somehow for some of the students, their dogs would eat their homework, producing missing data. Let $D$ be an indicator for whether the dog ate the homework. To be consistent with the missing data literature, we set $D$ = 0 to mean that the dog ate the homework, so that there is missing homework. When $D$ = 1, the homework is turned in.
+
+The impact of missing data is through two things. First, it reduces the sample size. Second, and more importantly, it can lead to a biased sample that gives non-representative estimates, compared to what you would get with the full data. Think about why polls may get election results wrong, even if they have a large sample: the sample in the pool has different characteristics from the actual voters.
+
+The missing data mechanism that is relatively less harmful is missing completely at random (MCAR). It means that why the data are missing---or why the dog ate the homework---happens **completely** on a random basis. Let H* be 
+
+We have the following DAG:
+
+```{r dag2}
+dag2 <- dagitty('dag{ "S" -> "H" -> "H*" ; "D" -> "H*"}')
+latents(dag2) <- c("H")
+coordinates(dag2) <- list(x = c(S = 0, H = 1, `H*` = 1, D = 0),
+                          y = c(S = 1, H = 1, `H*` = 0, D = 0))
+# Plot
+ggdag(dag2) + theme_dag()
+```
+
+From the DAG, the association between S and H* is not confounded by D, so missing data won't bias the coefficient.
+
+Let's simulate ~ 25% completely random missing data.
+
+```{r mcar_data}
+mcar_data <- full_data %>%
+    mutate(D = rbinom(num_obs, size = 1, prob = .75),
+           Hs = if_else(D == 1, H, NA_real_))
+```
+
+```{r hist-mcar}
+ggplot(mcar_data) +
+    geom_histogram(aes(x = H, fill = "full data"), alpha = 0.5) +
+    geom_histogram(aes(x = Hs, fill = "observed data"), alpha = 0.5) +
+    labs(fill = NULL)
+```
+
+```{r plot-mcar}
+ggplot(full_data, aes(x = S, y = H)) +
+    geom_point(aes(col = "full data"), alpha = 0.2) +
+    geom_point(data = mcar_data, aes(y = Hs, col = "observed data")) +
+    geom_smooth(data = mcar_data,
+                aes(y = Hs, col = "observed data"),
+                method = "lm", size = 2, fill = "lightblue") +
+    geom_smooth(aes(col = "full data"),
+                method = "lm", alpha = 0.5, linetype = "dashed",
+                fill = "lightpink") +
+    labs(col = NULL)
+```
+
+The regression line is pretty much the same as what you got with the full data; just that the uncertainty bound is a bit wider.
+
+## Missing At Random
+
+Now, let's consider the situation where dogs are more dissatisfied when the students spend more time studying, and less time with them, so they are more likely to eat the homework. The term missing at random is a very confusing terminology, but it means that observed data in the model can explain the missingness. So if we include $S$ in the model, we account for the missing data mechanism. We can see the following DAG:
+
+```{r dag3}
+dag3 <- dagitty('dag{ "S" -> "H" -> "H*" ; "S" -> "D" -> "H*"}')
+latents(dag3) <- c("H")
+coordinates(dag3) <- list(x = c(S = 0, H = 1, `H*` = 1, D = 0),
+                          y = c(S = 1, H = 1, `H*` = 0, D = 0))
+# Plot
+ggdag(dag3) + theme_dag()
+```
+
+Another way to determine whether $S$ is sufficient to account for the missing data mechanism is to use the $d$-separation criteria, which you can find in the `dagitty` package with the `dseparated()` function. The goal is to find a variable set that makes $D$ and $H$ conditionally independent.
+
+```{r dsep-dag3}
+dseparated(dag3, "D", "H", Z = c("S"))  # d-separated
+```
+
+Let's simulate some data with the dogs eating homework for the most hardworking students (or those who study too much).
+
+```{r mar_data}
+mar_data <- full_data %>%
+    mutate(D = as.numeric(S < quantile(S, probs = .75)),
+           Hs = if_else(D == 1, H, NA_real_))
+```
+
+As you can see, the distribution of $H$ is now very different from that of $H*$:
+
+```{r hist-mar}
+ggplot(mar_data) +
+    geom_histogram(aes(x = H, fill = "full data"), alpha = 0.5) +
+    geom_histogram(aes(x = Hs, fill = "observed data"), alpha = 0.5) +
+    labs(fill = NULL)
+```
+
+But it does not distort the association between $S$ and $H$.
+
+```{r plot-mar}
+ggplot(full_data, aes(x = S, y = H)) +
+    geom_point(alpha = 0.2) +
+    geom_point(aes(col = "full data"), alpha = 0.2) +
+    geom_point(data = mar_data, aes(y = Hs, col = "observed data")) +
+    geom_smooth(data = mar_data,
+                aes(y = Hs, col = "observed data"),
+                method = "lm", size = 2, fill = "lightblue") +
+    geom_smooth(aes(col = "full data"),
+                method = "lm", alpha = 0.5, linetype = "dashed",
+                fill = "lightpink") +
+    labs(col = NULL)
+```
+
+## Missing Not At Random
+
+Now, let's imagine there is an additional variable, $X$, representing the noise level at the student's home. As you can guess, dogs are more likely to misbehave in noisier environments, and homework quality may suffer in a noisier environment. So we have
+
+```{r dag4}
+dag4 <- dagitty('dag{ "S" -> "H" -> "H*" ; "S" -> "D" -> "H*"; 
+                      "D" <- "X" -> "H" }')
+latents(dag4) <- c("H")
+coordinates(dag4) <- list(x = c(S = 0, H = 1, `H*` = 1, D = 0, X = 0.5),
+                          y = c(S = 1, H = 1, `H*` = 0, D = 0, X = 0.5))
+# Plot
+ggdag(dag4) + theme_dag()
+```
+
+If we only include $ S$ to predict $ H*$ in our model, this mechanism is called **missing not at random (MNAR)**. Here, even when we condition on $S$, there is still an association between $D$ and $H$, due to the shared parent $X$. We can see this in R:
+
+```{r dsep-dag4}
+dseparated(dag4, "D", "H", Z = c("S"))  # not d-separated
+```
+
+So the missing data will lead to biased results. Let's simulate some data.
+
+```{r mnar_data1}
+set.seed(1551)
+full_data2 <- data.frame(
+    S = pmin(rgamma(num_obs, shape = 10, scale = 0.2), 5),
+    X = rnorm(num_obs)
+) %>%
+    mutate(H = 5.5 + S - X + rnorm(S, sd = 0.5))
+mnar_data1 <- full_data2 %>%
+    mutate(D = rbinom(num_obs, size = 1,
+                      prob = plogis(S - 2 * X)),
+           Hs = if_else(D == 1, H, NA_real_))
+```
+
+```{r plot-mnar1}
+ggplot(full_data2, aes(x = S, y = H)) +
+    geom_point(aes(col = "full data"), alpha = 0.2) +
+    geom_point(data = mnar_data1, aes(y = Hs, col = "observed data")) +
+    geom_smooth(data = mnar_data1,
+                aes(y = Hs, col = "observed data"),
+                method = "lm", size = 2, fill = "lightblue") +
+    geom_smooth(aes(col = "full data"),
+                method = "lm", alpha = 0.5, linetype = "dashed",
+                fill = "lightpink") +
+    labs(col = NULL)
+```
+
+As you can see, the red line gives a biased representation of the blue line. 
+
+In this case, if we have measured $X$, including $X$ also in our model would give the correct result. We can check for $d$-separation:
+
+```{r dsep-dag4-2}
+dseparated(dag4, "D", "H", Z = c("S", "X"))  # d-separated
+```
+
+So MNAR depends on whether our model fully accounts for the missing data mechanism. Here, it is MNAR if we do not include $X$, but it will be MAR if we include $X$. The following shows the results when conditioning on $X$.
+
+```{r plot-mnar1-2}
+# Prediction with X added to the equation
+full_data2 <- full_data2 %>%
+    mutate(Sres = residuals(lm(S ~ X, data = .)),
+           Hres = residuals(lm(H ~ X, data = .)))
+mnar_data1 <- mnar_data1 %>%
+    drop_na() %>%
+    mutate(Sres = residuals(lm(S ~ X, data = .)),
+           Hres = residuals(lm(Hs ~ X, data = .)))
+mnar_data1 <- cbind(
+    mnar_data1,
+    predict(lm(Hres ~ S, data = mnar_data1),
+        newdata = mnar_data1, interval = "confidence"
+    )
+)
+ggplot(full_data2, aes(x = Sres, y = Hres)) +
+    geom_point(aes(col = "full data"), alpha = 0.2) +
+    geom_point(data = mnar_data1, aes(y = Hres, col = "observed data")) +
+    geom_smooth(data = mnar_data1,
+                aes(col = "observed data"),
+                method = "lm", size = 2, fill = "lightblue") +
+    geom_smooth(aes(col = "full data"),
+                method = "lm", alpha = 0.5, linetype = "dashed",
+                fill = "lightpink") +
+    labs(col = NULL, x = "S (conditioned on X)", y = "H (conditioned on X)")
+```
+
+## Missing Not At Random (2)
+
+The more prototypical situation for MNAR, which is also the most problematic, is when missingness is directly related to the outcome variable, i.e., dogs like to eat bad homework. 
+
+```{r dag5}
+dag5 <- dagitty('dag{ "S" -> "H" -> "H*" ; "H" -> "D" -> "H*" }')
+latents(dag5) <- c("H")
+coordinates(dag5) <- list(x = c(S = 0, H = 1, `H*` = 1, D = 0),
+                          y = c(S = 1, H = 1, `H*` = 0, D = 0))
+# Plot
+ggdag(dag5) + theme_dag()
+```
+
+```{r mnar_data2}
+mnar_data2 <- full_data %>%
+    mutate(D = as.numeric(H > quantile(H, probs = .25)),
+           Hs = if_else(D == 1, H, NA_real_))
+```
+
+```{r plot-mnar2}
+ggplot(full_data, aes(x = S, y = H)) +
+    geom_point(alpha = 0.2) +
+    geom_point(aes(col = "full data"), alpha = 0.2) +
+    geom_point(data = mnar_data2, aes(y = Hs, col = "observed data")) +
+    geom_smooth(data = mnar_data2,
+                aes(y = Hs, col = "observed data"),
+                method = "lm", size = 2, fill = "lightblue") +
+    geom_smooth(aes(col = "full data"),
+                method = "lm", alpha = 0.5, linetype = "dashed",
+                fill = "lightpink") +
+    labs(col = NULL)
+```
+
+MNAR is sometimes called *missing not at random* or *non-ignorable missingness*, and as the name suggests, it refers to conditions where MAR does not hold. If you just look at the observed data, they may look very similar to the data with MAR. 
+
+> Generally speaking, there are no statistical procedures distinguishing between MAR in general and MNAR.
+
+# Example
+
+The data come from the upcoming second edition of the book [*Applied Missing Data Analysis*](https://www.appliedmissingdata.com/). It is from the National Institute of Mental Health Schizophrenia Collaborative Study on how treatment related to change in the severity of participants' conditions over six weeks. This paper: https://psycnet.apa.org/record/1997-07778-004 contains more descriptions of the data.
+
+```{r drug_data, layout = "l-body-outset"}
+zip_data <- here("data_files", "AMDA_Chapter5.zip")
+if (!file.exists(zip_data)) {
+    download.file("https://dl.dropboxusercontent.com/s/w09k08it48407yz/AMDA%20Chapter%205%20%E2%80%93%20Bayesian%20Estimation%20with%20Missing%20Data.zip",
+              zip_data)
+}
+drug_data <- read.table(
+  unz(zip_data,
+      "AMDA Chapter 5 – Bayesian Estimation with Missing Data/Example 5.8 – Bayes Estimation with Auxiliary Variables/drugtrial.dat"),
+      col.names = c("id", "male", "drug", "severe0", "severe1",
+                    "severe3", "severe6", "dropgrp", "edrop",
+                    "ldrop", "dropout", "sdrop3", "sdrop6"),
+      na.strings = "999")
+rmarkdown::paged_table(drug_data)
+```
+
+## Missing Data Pattern
+
+```{r md-pattern-drug}
+mice::md.pattern(drug_data, rotate.names = TRUE)
+```
+
+## Plausible Values of Missing Data
+
+First, consider the missing data in `severe0`, which consists of only three cases. In practice, this is likely not going to affect the results much. However, for pedagogical purposes, we'll see how Bayesian handle these. 
+
+Let's consider this plausible DAG with `drug` and `male` predicting both `severe0` and its missingness (Ds0).
+
+```{r}
+dag_drug1 <- dagitty(
+    'dag{ drug -> s0 -> "s0*" ; male -> s0 -> "s0*";
+          drug -> Ds0 -> "s0*"; male -> Ds0 -> "s0*" }'
+)
+latents(dag_drug1) <- c("s0")
+coordinates(dag_drug1) <- list(
+    x = c(drug = 0, male = 0.3, s0 = 1, `s0*` = 1, Ds0 = 0),
+    y = c(drug = 0.7, male = 1, s0 = 1, `s0*` = 0, Ds0 = 0)
+)
+# Plot
+ggdag(dag_drug1) + theme_dag()
+```
+
+From a Bayesian perspective, any unknown can be treated as a parameter. This includes missing data. So we can treat the missing values of `severe0` as parameters, which I will call `y_mis`. 
+
+### Using Stan
+
+Here's the Stan code
+
+```{stan, code = readLines(here::here("stan", "multiple_reg_mis.stan")), echo = TRUE, eval = FALSE, output.var = "mr_mis"}
+```
+
+Notice that the data are separated into those with `severe0` observed, and those missing `severe0`.
+
+```{r m1_stan, results = "hide"}
+# Indicator for missing `severe0`
+which_mis <- which(is.na(drug_data$severe0))
+which_obs <- which(!is.na(drug_data$severe0))
+m1_stan <- stan(
+    here::here("stan", "multiple_reg_mis.stan"),
+    data = list(
+        N_obs = length(which_obs),
+        N_mis = length(which_mis),
+        p = 2,
+        y_obs = drug_data$severe0[which_obs],
+        x_obs = drug_data[which_obs, c("drug", "male")],
+        x_mis = drug_data[which_mis, c("drug", "male")]
+    ),
+    seed = 2222,
+    iter = 4000
+)
+```
+
+Now, consider the posterior draws of `y_mis`
+
+```{r m1-draws}
+as_draws_df(m1_stan) %>%
+    subset_draws(variable = "y_mis") %>%
+    mcmc_areas()
+```
+
+### Using `brms`
+
+The same can be done in `brms` with the `mi()` syntax:
+
+```{r m1_brm, results = "hide"}
+m1_brm <- brm(severe0 | mi() ~ drug + male, data = drug_data,
+              iter = 4000, seed = 2234)
+```
+
+```{r m1_brm-draws}
+as_draws_df(m1_brm) %>%
+    subset_draws(variable = "Ymi") %>%
+    mcmc_areas()
+```
+
+### Multiple Imputations
+
+The technique of multiple imputation is a Bayesian technique widely applied in statistics. The idea is to obtain multiple draws from the posterior distributions of the missing values. For example, we can randomly obtain five draws of the three missing values:
+
+```{r m1-draws-subset}
+set.seed(937)
+as_draws_df(m1_stan) %>%
+    subset_draws(variable = "y_mis",
+                 draw = sample.int(8000, 5))
+```
+
+## Missing Both Predictors and Outcome
+
+```{r m2_brm, results = "hide"}
+m2_brm <- brm(
+    bf(severe6 | mi() ~ drug + male + mi(severe0)) +
+        bf(severe0 | mi() ~ drug + male) +
+        set_rescor(FALSE),
+    data = drug_data,
+    iter = 4000, seed = 2234
+)
+```
+
+### Analyses With Multiply-Imputed Data
+
+There are many packages for multiple imputation with different algorithms, including popular packages like `mice` and `mdmb`. Generally speaking, these packages also used the same Bayesian logic as discussed above, but employed some assumptions and techniques that make computations faster for large data sets. One possible workflow is to use these packages to perform multiple imputations, perform Bayesian analyses in each imputed data set, and then pool the results together. Below I provide an example of doing so in `mice` and `brms`.
+
+A word of caution is needed: the algorithms in `mice` and related packages involve a lot of choices, and there is a full manual on using `mice` that you should check out before you use the package: https://stefvanbuuren.name/fimd/. While software makes sensible defaults, in my experience, when the number of variables and the proportion of missing data is large, setting up a reasonable imputation model requires a lot of careful consideration, and still, you may run into convergence issues. One thing you should make sure to do is to check for convergence of the imputation, which is very similar to checking MCMC convergence (as imputations are kind of like MCMC draws).
+
+Another drawback of these algorithms is that, by default, they do not take into account the causal mechanism of why data are missing. Therefore, they may introduce bias due to, for example, conditioning on a collider. So **you should carefully specify which variables you want to include when imputing missing data.**
+
+<aside>
+See this paper: https://www.tandfonline.com/doi/abs/10.1080/00273171.2014.931799 for a discussion on potential biases when including descendants of the predictors in the imputation step.
+</aside>
+
+```{r imp}
+# First, obtain the default settings
+imp <- mice(drug_data, visit = "monotone", maxit = 0)
+# These are the default imputation method (predictive mean matching)
+imp$method
+# We should define which variables are used to impute which variables
+(pred <- imp$predictorMatrix)
+# Set imputation predictors to empty (0) for the four variables
+# `severe0` to `severe6`
+pred[c("severe0", "severe1", "severe3", "severe6"), ] <- 0
+# Use male, drug, dropout to predict missing data in severe1
+pred["severe0", c("male", "drug", "dropout")] <- 1
+pred["severe1", c("severe0", "male", "drug", "dropout")] <- 1
+pred["severe3", c("severe0", "severe1", "male", "drug", "dropout")] <- 1
+pred["severe6", c("severe0", "severe1", "severe3",
+                  "male", "drug", "dropout")] <- 1
+# Perform imputation
+imp <- mice(drug_data,
+            m = 20,  # 20 imputed data sets
+            predictorMatrix = pred,  # which variables to impute which
+            # order of imputation
+            visit = c("severe0", "severe1", "severe3", "severe6"),
+            print = FALSE)
+```
+
+Convergence: Check the mixing of the chains.
+
+```{r convergence-imp}
+plot(imp)  # the chains should mix well
+```
+
+After the imputations, we can fit a Bayesian model to *each* of the 20 imputed data sets. `brms` has a handy function `brm_multiple()` for doing it. With 20 data sets, 2 chains each, and 2,000 iterations (1,000 warm-ups) per chain, we should get a total of 20 * 2 * 1000  = 40000 draws.
+
+```{r m2_imp, results = "hide"}
+m2_imp <- brm_multiple(severe6 ~ drug + male + severe0,
+    data = imp, chains = 2, iter = 2000
+)
+```
+
+Note that because we pool estimates from different data sets, the rhat statistic is unlikely to be under 1.01, unless the imputed data sets are very similar or the missing proportion is small. On the other hand, you don't want to see high rhat values within each imputed data set, which would indicate real convergence issues.
+
+```{r convergence-imp-1}
+# Convergence with the first two chains (1st imputed data set)
+as_draws_df(m2_imp) %>%
+    subset_draws(chain = 1:2) %>%
+    summarize_draws()
+# And do it for each imputed data set
+```
+
+```{r summ-m2_imp}
+m2_imp
+```
+
+```{r plot-m2_imp, fig.asp = 1, out.width = "100%", fig.width = 8.57}
+plot(m2_imp)
+```
+
+<!-- The following chunk is only used on the website -->
+
+```{r, echo = FALSE, results = 'asis', eval = file.exists("distill-hack.RMarkdown")}
+knitrenv <- knitr::knit_global()
+assign("knit_input", knitr::current_input(), knitrenv)
+append_res <- knitr::knit_child("distill-hack.RMarkdown",
+    envir = knitrenv, quiet = TRUE
+)
+cat(append_res)
+```

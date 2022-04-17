@@ -50,6 +50,10 @@ navbar:
           href: interaction.html
         - text: "Model Comparison"
           href: model_comparison.html
+        - text: "Missing Data"
+          href: missing_data.html
+        - text: "Bonus: Generalized Linear Model II"
+          href: glm2.html
   source_url: https://github.com/marklhc/20221-psyc573-usc
 output:
   distill::distill_article:

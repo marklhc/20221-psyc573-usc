@@ -1,0 +1,118 @@
+---
+title: "HW 9 Template"
+shorttitle: "HW 9"
+author:
+  - name: "Mark Lai"
+    affiliation: "University of Southern California"
+authornote:
+abstract:
+csl: "`r system.file('rmd', 'apa7.csl', package = 'papaja')`"
+documentclass: "apa7"
+output: papaja::apa6_pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-pkg, message = FALSE}
+library(ggplot2)  # for plots
+library(magrittr)  # for `%>%` operator
+library(here)
+library(readxl)  # for reading excel files
+library(modelsummary)  # for summarizing data
+library(rstan)
+rstan_options(auto_write = TRUE)  # save compiled STAN object
+options(mc.cores = 2)  # use two cores
+library(posterior)
+library(bayesplot)
+theme_set(theme_classic() +
+    theme(panel.grid.major.y = element_line(color = "grey92")))
+```
+
+# Research Question
+
+> Is there difference in student evaluation rating for native and non-native English-speaking instructors?
+
+# Variables
+
+- `profevaluation`: evaluation rating of the instructor: 1 (very unsatisfactory) to 5 (excellent)
+- `nonenglish`: 1 = non-native English speakers, 0 = native-English speakers
+
+## Import Data
+
+```{r beauty}
+beauty <- read_excel(here("data", "ProfEvaltnsBeautyPublic.xls"))
+```
+
+## Variable Summary
+
+```{r summ-var}
+datasummary(profevaluation  * 
+                (N + Mean + SD + Min + Max + Histogram) ~ 
+                factor(nonenglish, labels = c("Native", "Non-Native")),
+            data = beauty)
+```
+
+# Model
+
+Let $Y$ = profevaluation, $G$ = nonenglish
+
+Model:
+$$
+  \begin{aligned}
+    Y_{i, G = 0} & \sim N(\mu_1, \sigma_1) \\
+    Y_{i, G = 1} & \sim N(\mu_2, \sigma_2)
+  \end{aligned}
+$$
+
+Prior:
+$$
+  \begin{aligned}
+    \mu_1 & \sim N(3, 2) \\
+    \mu_2 & \sim N(3, 2) \\
+    \sigma_1 & \sim N^+(0, 2) \\
+    \sigma_2 & \sim N^+(0, 2)
+  \end{aligned}
+$$
+
+## Running Stan
+
+We used 4 chains, each with 4,000 iterations (first 2,000 as warm-ups). 
+
+```{r m1, results = "hide"}
+# 1. form the data list for Stan
+stan_dat <- with(beauty,
+    list(N1 = sum(nonenglish == 0),
+         N2 = sum(nonenglish == 1),
+         y1 = profevaluation[which(nonenglish == 0)],
+         y2 = profevaluation[which(nonenglish == 1)])
+)
+# 2. Run Stan
+m1 <- stan(
+    file = here("hw/stan", "normal_2group.stan"),
+    data = stan_dat,
+    seed = 1234,  # for reproducibility
+    iter = 4000
+)
+```
+
+# Results
+
+As shown in the graph below, the chains mixed well.
+
+```{r rank-hist-m1}
+mcmc_rank_hist(m1, pars = c("mu1", "mu2", "sigma1", "sigma2"))
+```
+
+The following table shows the posterior distributions of $\mu_1$, $\mu_2$, $\sigma_1$, $\sigma_2$, and $\mu_2 - \mu_1$.
+
+```{r summ-m1}
+summ_m1 <- as_draws_df(m1) %>%
+    subset_draws(variable = c("mu1", "mu2", "sigma1", "sigma2")) %>%
+    mutate_variables(`mu2 - mu1` = mu2 - mu1) %>%
+    summarise_draws()
+knitr::kable(summ_m1, digits = 2)
+```
+
+The analysis showed that on average, non-native speaking instructors received a lower evaluation rating than native speaker instructors, with a posterior mean of `r round(summ_m1$mean[5], 2)` and a 90% CI of [`r round(summ_m1$q5[5], 2)`, `r round(summ_m1$q95[5], 2)`].
