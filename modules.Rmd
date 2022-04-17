@@ -59,7 +59,7 @@ By the end of this module, you will be able to
 - Identify components in research papers involving Bayesian analyses
 - Knit a simple R Markdown file
 
-## Task Lists
+## Task List
 
 1. Review the [syllabus](syllabus.html)
 2. Review the resources (slides and [note][5])
@@ -102,7 +102,7 @@ By the end of this module, you will be able to
 - Compute **joint, marginal, and conditional probabilities** with two variables
 - Write an R function and use loops for repeating computations
 
-## Task Lists
+## Task List
 
 1. Complete the assigned readings
     * Kruschke ch. 4
@@ -141,7 +141,7 @@ By the end of this module, you will be able to
 - Describe the influence of **sample size** and **prior** on the posterior
 - Use R to perform **prior predictive checks**
 
-## Task Lists
+## Task List
 
 1. Complete the assigned readings
     * [Gigerenzer (2004)][1]
@@ -177,7 +177,7 @@ By the end of this module, you will be able to
 - Apply Bayesian **terminology** in summarizing the posterior
 - Use R to perform **posterior predictive checks**
 
-## Task Lists
+## Task List
 
 1. Complete the assigned readings
     * Kruschke ch. 6
@@ -214,7 +214,7 @@ By the end of this module, you will be able to
 - Describe *when* MCMC samples are **representative** and **accurate** for approximating the posterior
 - Use R to perform **convergence diagnostics** for MCMC samples
 
-## Task Lists
+## Task List
 
 1. Complete the assigned readings
     * Kruschke ch. 7
@@ -249,7 +249,7 @@ By the end of this module, you will be able to
 - Program a simple Bayesian model in **STAN**
 -->
 
-## Task Lists
+## Task List
 
 1. Complete the assigned readings
     * Kruschke ch. 7
@@ -281,7 +281,7 @@ By the end of this module, you will be able to
 - Explain how tuning the **step size** and the **tree depth** affects HMC
 - Program a simple Bayesian model in **Stan**
 
-## Task Lists
+## Task List
 
 1. Complete the assigned readings
     * Kruschke ch. 14
@@ -313,7 +313,7 @@ By the end of this module, you will be able to
 - Program a hierarchical binomial model in Stan
 - Analyze secondary data using a hierarchical normal model (i.e., random-effect meta-analysis)
 
-## Task Lists
+## Task List
 
 1. Complete the assigned readings
     * Kruschke ch. 9
@@ -373,7 +373,7 @@ By the end of this module, you will be able to
 - Select an appropriate distribution for different kinds of data
 - Conduct comparisons with hierarchical data (e.g., within-subject designs)
 
-## Task Lists
+## Task List
 
 1. Complete the assigned readings
     * Kruschke ch. 12.1, 16
@@ -400,7 +400,7 @@ By the end of this module, you will be able to
 - Obtain posterior predictive distributions and checks
 - Perform Bayesian regression with the R package `brms`
 
-## Task Lists
+## Task List
 
 1. Complete the assigned readings
     * Kruschke ch. 15, 17
@@ -435,7 +435,7 @@ By the end of this module, you will be able to
 - Explain how the **back-door criterion** can be used to identify a set of adjusted variables with nonexperimental data
 - Perform a **mediation analysis** and interpret the results
 
-## Task Lists
+## Task List
 
 1. Complete the assigned readings
     * McElreath ch 5, 6
@@ -468,7 +468,7 @@ By the end of this module, you will be able to
 - Explain how **information criteria** approximates **out-of-sample** **divergence** from the "true" model
 - Use **WAIC** and **LOO-IC** to compare models
 
-## Task Lists
+## Task List
 
 1. Complete the assigned readings
     * McElreath ch. 7
@@ -501,13 +501,14 @@ By the end of this module, you will be able to
 - Use the `mi()` syntax in `brms` to account for missing data based on a DAG
 - Explain the Bayesian ideas in the technique **multiple imputation**
 
-## Task Lists
+## Task List
 
 1. Complete the assigned readings
     * McElreath ch. 15
 2. Review the resources (note[23])
 3. Attend class meetings
-4. Prepare your final project/paper
+4. Complete Homework 10 (see instruction on Blackboard)
+5. Prepare your final project/paper
 
 [23]: missing_data.html
 
