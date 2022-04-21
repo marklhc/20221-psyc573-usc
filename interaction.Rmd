@@ -116,11 +116,11 @@ As you can see, the southern states have a larger intercept and a lower slope.
 p1 <- plot(
     conditional_effects(m_nonsouth),
     points = TRUE, plot = FALSE
-)[[1]] + ggtitle("South") + lims(x = c(2.3, 3), y = c(0.6, 1.4))
+)[[1]] + ggtitle("Non-South") + lims(x = c(2.3, 3), y = c(0.6, 1.4))
 p2 <- plot(
     conditional_effects(m_south),
     points = TRUE, plot = FALSE
-)[[1]] + ggtitle("Non-South") + lims(x = c(2.3, 3), y = c(0.6, 1.4))
+)[[1]] + ggtitle("South") + lims(x = c(2.3, 3), y = c(0.6, 1.4))
 gridExtra::grid.arrange(p1, p2, ncol = 2)
 ```
 

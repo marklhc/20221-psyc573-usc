@@ -3260,15 +3260,16 @@ set, which would indicate real convergence issues.</p>
     <span class='fu'><a href='https://mc-stan.org/posterior/reference/draws_summary.html'>summarize_draws</a></span><span class='op'>(</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt; # A tibble: 6 × 10
+<pre><code>#&gt; # A tibble: 7 × 10
 #&gt;   variable        mean   median     sd    mad        q5      q95  rhat
 #&gt;   &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 b_Intercept    2.74     2.75  0.447  0.452     2.01      3.47   1.00
-#&gt; 2 b_drug        -1.43    -1.43  0.154  0.153    -1.68     -1.17   1.01
-#&gt; 3 b_male         0.156    0.158 0.133  0.132    -0.0585    0.373  1.00
-#&gt; 4 b_severe0      0.285    0.284 0.0769 0.0759    0.162     0.412  1.00
-#&gt; 5 sigma          1.39     1.39  0.0478 0.0473    1.31      1.47   1.00
-#&gt; 6 lp__        -766.    -766.    1.63   1.40   -770.     -765.     1.00
+#&gt; 1 b_Intercept    2.74     2.74  0.433  0.418     2.04      3.48  0.999
+#&gt; 2 b_drug        -1.43    -1.43  0.152  0.152    -1.68     -1.18  1.00 
+#&gt; 3 b_male         0.157    0.156 0.128  0.124    -0.0565    0.367 1.00 
+#&gt; 4 b_severe0      0.285    0.284 0.0754 0.0741    0.159     0.407 1.00 
+#&gt; 5 sigma          1.39     1.39  0.0489 0.0476    1.31      1.47  0.999
+#&gt; 6 lprior        -3.35    -3.35  0.0136 0.0133   -3.37     -3.32  0.999
+#&gt; 7 lp__        -766.    -766.    1.67   1.42   -770.     -765.    1.00 
 #&gt; # … with 2 more variables: ess_bulk &lt;dbl&gt;, ess_tail &lt;dbl&gt;</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># And do it for each imputed data set</span>
@@ -3289,14 +3290,14 @@ set, which would indicate real convergence issues.</p>
 #&gt; 
 #&gt; Population-Level Effects: 
 #&gt;           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-#&gt; Intercept     2.71      0.47     1.79     3.62 1.05      425     2254
-#&gt; drug         -1.45      0.18    -1.81    -1.11 1.15      171      616
-#&gt; male          0.22      0.15    -0.07     0.51 1.10      240     1013
-#&gt; severe0       0.29      0.08     0.13     0.46 1.06      364     1873
+#&gt; Intercept     2.71      0.46     1.81     3.63 1.06      418     2369
+#&gt; drug         -1.45      0.18    -1.80    -1.10 1.15      170      604
+#&gt; male          0.22      0.15    -0.07     0.51 1.10      240      898
+#&gt; severe0       0.29      0.08     0.13     0.45 1.06      359     1962
 #&gt; 
 #&gt; Family Specific Parameters: 
 #&gt;       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-#&gt; sigma     1.39      0.05     1.29     1.49 1.07      351     1231
+#&gt; sigma     1.39      0.05     1.29     1.49 1.06      373     1331
 #&gt; 
 #&gt; Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
 #&gt; and Tail_ESS are effective sample size measures, and Rhat is the potential

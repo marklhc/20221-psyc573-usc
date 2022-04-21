@@ -2772,7 +2772,7 @@ credible interval of about 21 to 28%. We can get that using</p>
 <pre><code>#&gt; # A tibble: 1 × 10
 #&gt;   variable  mean median     sd    mad    q5   q95  rhat ess_bulk
 #&gt;   &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 ...1     0.245  0.244 0.0195 0.0201 0.214 0.277  1.00    5908.
+#&gt; 1 ...1     0.246  0.245 0.0193 0.0190 0.214 0.278  1.00    5651.
 #&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 <h3 id="intercept">Intercept</h3>
@@ -2780,8 +2780,8 @@ credible interval of about 21 to 28%. We can get that using</p>
 class="math display">\[\mathrm{logit}(\mu_i) = \beta_0.\]</span>
 Therefore, the intercept is the log odds that a study reported a
 marginally significant <span class="math inline">\(p\)</span> value when
-<code>Year10</code> = 0 (i.e, in 1970), which was estimated to be -1.82,
-90% CI [-2.13, -1.52]. As log odds are not as intuitive as probability,
+<code>Year10</code> = 0 (i.e, in 1970), which was estimated to be -1.81,
+90% CI [-2.14, -1.51]. As log odds are not as intuitive as probability,
 it is common to instead interpret <span class="math inline">\(\hat{\mu}
 = \mathrm{logistic}(\beta_0)\)</span>, which is the conditional
 probability of being <code>marginal_p</code> = 1 in 1970. For Bayesian,
@@ -2796,13 +2796,14 @@ done by</p>
 <span class='fu'><a href='https://mc-stan.org/posterior/reference/draws_summary.html'>summarize_draws</a></span><span class='op'>(</span><span class='va'>m4_draws</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt; # A tibble: 4 × 10
+<pre><code>#&gt; # A tibble: 5 × 10
 #&gt;   variable         mean   median     sd    mad       q5      q95  rhat
 #&gt;   &lt;chr&gt;           &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 b_Intercept    -1.82    -1.82  0.188  0.192    -2.13    -1.52   1.00
-#&gt; 2 b_Year10        0.345    0.345 0.0687 0.0699    0.234    0.460  1.00
-#&gt; 3 lp__         -295.    -295.    1.02   0.726  -297.    -294.     1.00
-#&gt; 4 logistic_be…    0.141    0.140 0.0226 0.0230    0.106    0.180  1.00
+#&gt; 1 b_Intercept    -1.81    -1.81  0.191  0.194    -2.14    -1.51   1.00
+#&gt; 2 b_Year10        0.344    0.343 0.0687 0.0689    0.231    0.458  1.00
+#&gt; 3 lprior         -3.08    -3.08  0.0410 0.0406   -3.15    -3.02   1.00
+#&gt; 4 lp__         -295.    -295.    1.01   0.726  -297.    -294.     1.00
+#&gt; 5 logistic_be…    0.142    0.141 0.0229 0.0234    0.106    0.181  1.00
 #&gt; # … with 2 more variables: ess_bulk &lt;dbl&gt;, ess_tail &lt;dbl&gt;</code></pre>
 </div>
 <p>The <code>bayesplot</code> package allow you to plot transformed
@@ -2844,20 +2845,21 @@ class="math inline">\(\exp(\beta_1)\)</span> by</p>
 <span class='fu'><a href='https://mc-stan.org/posterior/reference/draws_summary.html'>summarize_draws</a></span><span class='op'>(</span><span class='va'>m4_draws</span><span class='op'>)</span>
 </code></pre>
 </div>
-<pre><code>#&gt; # A tibble: 5 × 10
+<pre><code>#&gt; # A tibble: 6 × 10
 #&gt;   variable         mean   median     sd    mad       q5      q95  rhat
 #&gt;   &lt;chr&gt;           &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 b_Intercept    -1.82    -1.82  0.188  0.192    -2.13    -1.52   1.00
-#&gt; 2 b_Year10        0.345    0.345 0.0687 0.0699    0.234    0.460  1.00
-#&gt; 3 lp__         -295.    -295.    1.02   0.726  -297.    -294.     1.00
-#&gt; 4 logistic_be…    0.141    0.140 0.0226 0.0230    0.106    0.180  1.00
-#&gt; 5 exp_beta1       1.42     1.41  0.0974 0.0983    1.26     1.58   1.00
+#&gt; 1 b_Intercept    -1.81    -1.81  0.191  0.194    -2.14    -1.51   1.00
+#&gt; 2 b_Year10        0.344    0.343 0.0687 0.0689    0.231    0.458  1.00
+#&gt; 3 lprior         -3.08    -3.08  0.0410 0.0406   -3.15    -3.02   1.00
+#&gt; 4 lp__         -295.    -295.    1.01   0.726  -297.    -294.     1.00
+#&gt; 5 logistic_be…    0.142    0.141 0.0229 0.0234    0.106    0.181  1.00
+#&gt; 6 exp_beta1       1.41     1.41  0.0974 0.0970    1.26     1.58   1.00
 #&gt; # … with 2 more variables: ess_bulk &lt;dbl&gt;, ess_tail &lt;dbl&gt;</code></pre>
 </div>
 <p>Using the posterior mean, we predict that the odds of reporting a
 marginal <span class="math inline">\(p\)</span> value for a study that
-is 10 years later is multiplied by 1.42 times, 90% CI [1.26, 1.58]; in
-other words, every 10 years, the odds increased by 41.5253619%. Here’s
+is 10 years later is multiplied by 0.14 times, 90% CI [0.11, 0.18]; in
+other words, every 10 years, the odds increased by -85.8139207%. Here’s
 the posterior density plot for the odds ratio:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2900,11 +2902,11 @@ marginal <span class="math inline">\(p\)</span> value with
 <pre><code>#&gt; # A tibble: 5 × 10
 #&gt;   variable  mean median     sd    mad    q5   q95  rhat ess_bulk
 #&gt;   &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 Year10=0 0.141  0.140 0.0226 0.0230 0.106 0.180  1.00    5243.
-#&gt; 2 Year10=1 0.187  0.187 0.0206 0.0209 0.155 0.223  1.00    5171.
-#&gt; 3 Year10=2 0.245  0.244 0.0195 0.0201 0.214 0.277  1.00    5908.
-#&gt; 4 Year10=3 0.314  0.314 0.0248 0.0249 0.274 0.355  1.00    8176.
-#&gt; 5 Year10=4 0.393  0.392 0.0374 0.0375 0.332 0.455  1.00    8759.
+#&gt; 1 Year10=0 0.142  0.141 0.0229 0.0234 0.106 0.181  1.00    4503.
+#&gt; 2 Year10=1 0.188  0.188 0.0208 0.0209 0.155 0.223  1.00    4674.
+#&gt; 3 Year10=2 0.246  0.245 0.0193 0.0190 0.214 0.278  1.00    5651.
+#&gt; 4 Year10=3 0.314  0.314 0.0240 0.0236 0.276 0.354  1.00    7305.
+#&gt; 5 Year10=4 0.393  0.393 0.0363 0.0363 0.334 0.453  1.00    6868.
 #&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 <p>As you can see, the predicted difference in probability is smaller
@@ -2913,8 +2915,8 @@ comparing <code>Year10</code> = 3 and 4.</p>
 <h4 id="the-divide-by-4-rule">The “divide by 4 rule”</h4>
 <p>A quick approximation is to divide the coefficient by 4 to get an
 upper bound on the change in probability associated with a one unit
-change in the predictor. In our example, this corresponds to 0.3449502 /
-4 = 0.0862376, which is very close to the predicted difference in
+change in the predictor. In our example, this corresponds to 0.3437533 /
+4 = 0.0859383, which is very close to the predicted difference in
 probability from <code>Year10</code> = 3 to <code>Year10</code> = 4.</p>
 <h2 id="posterior-predictive-check">Posterior Predictive Check</h2>
 <div class="layout-chunk" data-layout="l-body">
@@ -2995,10 +2997,10 @@ linear spline
 b_Intercept
 </td>
 <td style="text-align:center;">
-−1.82 [−2.19, −1.46]
+−1.81 [−2.19, −1.45]
 </td>
 <td style="text-align:center;">
-−1.96 [−2.39, −1.52]
+−1.95 [−2.36, −1.52]
 </td>
 </tr>
 <tr>
@@ -3006,7 +3008,7 @@ b_Intercept
 b_Year10
 </td>
 <td style="text-align:center;">
-0.35 [0.21, 0.48]
+0.34 [0.21, 0.48]
 </td>
 <td style="text-align:center;">
 </td>
@@ -3018,7 +3020,7 @@ b_bsYear10degreeEQ1knotsEQ31
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
-1.58 [0.89, 2.27]
+1.57 [0.95, 2.27]
 </td>
 </tr>
 <tr>
@@ -3028,7 +3030,7 @@ b_bsYear10degreeEQ1knotsEQ32
 <td style="text-align:center;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-1.23 [0.67, 1.76]
+1.22 [0.69, 1.79]
 </td>
 </tr>
 <tr>
@@ -3047,10 +3049,10 @@ Num.Obs.
 ELPD
 </td>
 <td style="text-align:center;">
-−293.0
+−292.9
 </td>
 <td style="text-align:center;">
-−290.2
+−290.1
 </td>
 </tr>
 <tr>
@@ -3069,7 +3071,7 @@ ELPD s.e.
 LOOIC
 </td>
 <td style="text-align:center;">
-586.0
+585.9
 </td>
 <td style="text-align:center;">
 580.3
@@ -3080,7 +3082,7 @@ LOOIC
 LOOIC s.e.
 </td>
 <td style="text-align:center;">
-22.5
+22.4
 </td>
 <td style="text-align:center;">
 22.2
@@ -3091,7 +3093,7 @@ LOOIC s.e.
 WAIC
 </td>
 <td style="text-align:center;">
-586.0
+585.9
 </td>
 <td style="text-align:center;">
 580.3
@@ -3146,7 +3148,7 @@ RMSE
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m5_bin</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span>
-    <span class='va'>marginal_p</span> <span class='op'>|</span> <span class='fu'>trials</span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/splines/bs.html'>bs</a></span><span class='op'>(</span><span class='va'>Year10</span>, degree <span class='op'>=</span> <span class='fl'>1</span>, knots <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>,
+    <span class='va'>marginal_p</span> <span class='op'>|</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/addition-terms.html'>trials</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/splines/bs.html'>bs</a></span><span class='op'>(</span><span class='va'>Year10</span>, degree <span class='op'>=</span> <span class='fl'>1</span>, knots <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>,
     data <span class='op'>=</span> <span class='va'>marginalp_dev_grouped</span>,
     family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>binomial</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"logit"</span><span class='op'>)</span>,
     prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span>,
@@ -3323,7 +3325,7 @@ norminal
 b_Intercept[1]
 </td>
 <td style="text-align:center;">
-−0.94 [−1.16, −0.72]
+−0.94 [−1.17, −0.71]
 </td>
 <td style="text-align:center;">
 </td>
@@ -3333,7 +3335,7 @@ b_Intercept[1]
 b_Intercept[2]
 </td>
 <td style="text-align:center;">
-1.04 [0.82, 1.28]
+1.04 [0.80, 1.27]
 </td>
 <td style="text-align:center;">
 </td>
@@ -3343,7 +3345,7 @@ b_Intercept[2]
 b_Intercept[3]
 </td>
 <td style="text-align:center;">
-2.14 [1.88, 2.42]
+2.14 [1.86, 2.43]
 </td>
 <td style="text-align:center;">
 </td>
@@ -3353,7 +3355,7 @@ b_Intercept[3]
 b_belieffundamentalist
 </td>
 <td style="text-align:center;">
-0.41 [0.12, 0.71]
+0.41 [0.08, 0.70]
 </td>
 <td style="text-align:center;">
 </td>
@@ -3363,7 +3365,7 @@ b_belieffundamentalist
 b_beliefliberal
 </td>
 <td style="text-align:center;">
-−0.56 [−0.87, −0.26]
+−0.55 [−0.85, −0.24]
 </td>
 <td style="text-align:center;">
 </td>
@@ -3375,7 +3377,7 @@ b_mu2_Intercept
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
-0.63 [0.36, 0.93]
+0.63 [0.35, 0.90]
 </td>
 </tr>
 <tr>
@@ -3385,7 +3387,7 @@ b_mu3_Intercept
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
-−0.57 [−0.94, −0.20]
+−0.57 [−0.94, −0.22]
 </td>
 </tr>
 <tr>
@@ -3395,7 +3397,7 @@ b_mu4_Intercept
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
-−1.05 [−1.47, −0.61]
+−1.06 [−1.47, −0.61]
 </td>
 </tr>
 <tr>
@@ -3405,7 +3407,7 @@ b_mu2_belieffundamentalist
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
-0.12 [−0.31, 0.53]
+0.12 [−0.30, 0.53]
 </td>
 </tr>
 <tr>
@@ -3415,7 +3417,7 @@ b_mu2_beliefliberal
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
-−0.69 [−1.05, −0.31]
+−0.69 [−1.07, −0.33]
 </td>
 </tr>
 <tr>
@@ -3425,7 +3427,7 @@ b_mu3_belieffundamentalist
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
-0.52 [0.03, 1.03]
+0.52 [0.00, 1.01]
 </td>
 </tr>
 <tr>
@@ -3435,7 +3437,7 @@ b_mu3_beliefliberal
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
-−0.77 [−1.27, −0.24]
+−0.76 [−1.31, −0.22]
 </td>
 </tr>
 <tr>
@@ -3445,7 +3447,7 @@ b_mu4_belieffundamentalist
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
-0.69 [0.11, 1.26]
+0.70 [0.16, 1.29]
 </td>
 </tr>
 <tr>
@@ -3455,7 +3457,7 @@ b_mu4_beliefliberal
 <td style="text-align:center;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-−0.58 [−1.19, −0.01]
+−0.58 [−1.15, 0.00]
 </td>
 </tr>
 <tr>
@@ -3474,10 +3476,10 @@ Num.Obs.
 ELPD
 </td>
 <td style="text-align:center;">
-−1019.2
+−1019.3
 </td>
 <td style="text-align:center;">
-−1021.0
+−1020.9
 </td>
 </tr>
 <tr>
@@ -3496,10 +3498,10 @@ ELPD s.e.
 LOOIC
 </td>
 <td style="text-align:center;">
-2038.4
+2038.6
 </td>
 <td style="text-align:center;">
-2042.0
+2041.9
 </td>
 </tr>
 <tr>
@@ -3507,10 +3509,10 @@ LOOIC
 LOOIC s.e.
 </td>
 <td style="text-align:center;">
-31.1
+31.0
 </td>
 <td style="text-align:center;">
-31.1
+31.2
 </td>
 </tr>
 <tr>
@@ -3518,10 +3520,10 @@ LOOIC s.e.
 WAIC
 </td>
 <td style="text-align:center;">
-2038.4
+2038.6
 </td>
 <td style="text-align:center;">
-2042.0
+2041.8
 </td>
 </tr>
 </tbody>

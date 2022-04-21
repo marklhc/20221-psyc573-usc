@@ -2638,10 +2638,10 @@ Non-South
 b_Intercept
 </td>
 <td style="text-align:center;">
-6.07 [3.68, 8.42]
+6.09 [3.79, 8.58]
 </td>
 <td style="text-align:center;">
-2.74 [1.75, 3.77]
+2.74 [1.77, 3.77]
 </td>
 </tr>
 <tr>
@@ -2649,10 +2649,10 @@ b_Intercept
 b_MedianAgeMarriage
 </td>
 <td style="text-align:center;">
-−1.96 [−2.88, −1.03]
+−1.96 [−2.95, −1.07]
 </td>
 <td style="text-align:center;">
-−0.69 [−1.10, −0.33]
+−0.69 [−1.08, −0.32]
 </td>
 </tr>
 <tr>
@@ -2660,7 +2660,7 @@ b_MedianAgeMarriage
 sigma
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-0.11 [0.06, 0.16]
+0.11 [0.07, 0.16]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
 0.15 [0.12, 0.20]
@@ -2712,8 +2712,8 @@ CIs overlap.</p>
 <pre><code>#&gt; # A tibble: 2 × 10
 #&gt;   variable         mean median    sd   mad    q5    q95  rhat ess_bulk
 #&gt;   &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 db_Intercept     3.31   3.31 1.33  1.30   1.12  5.46   1.00    6223.
-#&gt; 2 db_MedianAgeMa… -1.26  -1.26 0.519 0.506 -2.10 -0.408  1.00    6225.
+#&gt; 1 db_Intercept     3.33   3.34 1.33  1.28   1.16  5.49   1.00    6412.
+#&gt; 2 db_MedianAgeMa… -1.27  -1.27 0.519 0.499 -2.11 -0.424  1.00    6411.
 #&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 <p>As you can see, the southern states have a larger intercept and a
@@ -2723,11 +2723,11 @@ lower slope.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>p1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>
     <span class='fu'><a href='https://rdrr.io/pkg/brms/man/conditional_effects.brmsfit.html'>conditional_effects</a></span><span class='op'>(</span><span class='va'>m_nonsouth</span><span class='op'>)</span>,
     points <span class='op'>=</span> <span class='cn'>TRUE</span>, plot <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span><span class='op'>(</span><span class='st'>"South"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/lims.html'>lims</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.3</span>, <span class='fl'>3</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.6</span>, <span class='fl'>1.4</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span><span class='op'>(</span><span class='st'>"Non-South"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/lims.html'>lims</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.3</span>, <span class='fl'>3</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.6</span>, <span class='fl'>1.4</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>p2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>
     <span class='fu'><a href='https://rdrr.io/pkg/brms/man/conditional_effects.brmsfit.html'>conditional_effects</a></span><span class='op'>(</span><span class='va'>m_south</span><span class='op'>)</span>,
     points <span class='op'>=</span> <span class='cn'>TRUE</span>, plot <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span><span class='op'>(</span><span class='st'>"Non-South"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/lims.html'>lims</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.3</span>, <span class='fl'>3</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.6</span>, <span class='fl'>1.4</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span><span class='op'>(</span><span class='st'>"South"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/lims.html'>lims</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.3</span>, <span class='fl'>3</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.6</span>, <span class='fl'>1.4</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>gridExtra</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html'>grid.arrange</a></span><span class='op'>(</span><span class='va'>p1</span>, <span class='va'>p2</span>, ncol <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
 </code></pre>
 </div>
@@ -2799,19 +2799,19 @@ same as</p>
 #&gt; 
 #&gt; Population-Level Effects: 
 #&gt;                              Estimate Est.Error l-95% CI u-95% CI
-#&gt; Intercept                        2.79      0.46     1.87     3.69
-#&gt; Southsouth                       3.17      1.58     0.09     6.28
-#&gt; MedianAgeMarriage               -0.71      0.18    -1.05    -0.36
-#&gt; Southsouth:MedianAgeMarriage    -1.20      0.62    -2.41     0.00
+#&gt; Intercept                        2.77      0.45     1.86     3.64
+#&gt; Southsouth                       3.21      1.60     0.08     6.36
+#&gt; MedianAgeMarriage               -0.70      0.17    -1.03    -0.36
+#&gt; Southsouth:MedianAgeMarriage    -1.22      0.62    -2.46    -0.00
 #&gt;                              Rhat Bulk_ESS Tail_ESS
-#&gt; Intercept                    1.00     4606     4930
-#&gt; Southsouth                   1.00     3337     4310
-#&gt; MedianAgeMarriage            1.00     4644     4849
-#&gt; Southsouth:MedianAgeMarriage 1.00     3345     4384
+#&gt; Intercept                    1.00     5161     5030
+#&gt; Southsouth                   1.00     2932     3075
+#&gt; MedianAgeMarriage            1.00     5161     5149
+#&gt; Southsouth:MedianAgeMarriage 1.00     2936     3091
 #&gt; 
 #&gt; Family Specific Parameters: 
 #&gt;       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-#&gt; sigma     0.14      0.02     0.12     0.18 1.00     4854     5044
+#&gt; sigma     0.14      0.02     0.12     0.18 1.00     4786     4149
 #&gt; 
 #&gt; Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
 #&gt; and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -2865,8 +2865,8 @@ class="math inline">\(\beta_1 + \beta_3\)</span></p>
 <pre><code>#&gt; # A tibble: 2 × 10
 #&gt;   variable     mean median    sd   mad     q5    q95  rhat ess_bulk
 #&gt;   &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 b_nonsouth -0.708 -0.710 0.176 0.173 -0.991 -0.414  1.00    4644.
-#&gt; 2 b_south    -1.91  -1.92  0.595 0.592 -2.89  -0.932  1.00    3705.
+#&gt; 1 b_nonsouth -0.699 -0.699 0.173 0.174 -0.983 -0.412  1.00    5161.
+#&gt; 2 b_south    -1.92  -1.93  0.598 0.581 -2.92  -0.937  1.00    3152.
 #&gt; # … with 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
@@ -2894,7 +2894,7 @@ Predictors</h1>
 </code></pre>
 </div>
 <div id="htmlwidget-9f2d157ac46bd1772a74" style="width:70%;height:355.968px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9f2d157ac46bd1772a74">{"x":{"visdat":{"33682489ee6cf":["function () ","plotlyVisDat"]},"cur_data":"33682489ee6cf","attrs":{"33682489ee6cf":{"x":{},"y":{},"z":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20]}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"Marriage"},"yaxis":{"title":"MedianAgeMarriage"},"zaxis":{"title":"Divorce"}},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2.02,2.6,2.03,2.64,1.91,2.35,1.71,2.31,1.77,1.7,2.21,2.49,2.58,1.79,1.98,2.15,2.21,2.22,2.06,1.35,1.83,1.58,1.65,1.53,1.93,1.86,1.85,1.96,1.67,1.48,2.04,1.68,2.04,2.67,1.69,2.38,1.89,1.55,1.5,1.81,2.01,1.94,2.15,2.96,1.64,2.05,2.14,2.22,1.72,3.07],"y":[2.53,2.52,2.58,2.43,2.68,2.57,2.76,2.66,2.97,2.64,2.59,2.69,2.32,2.7,2.57,2.54,2.5,2.48,2.59,2.64,2.73,2.85,2.64,2.63,2.58,2.56,2.57,2.54,2.68,2.77,2.58,2.84,2.57,2.53,2.63,2.44,2.6,2.71,2.82,2.64,2.56,2.52,2.52,2.33,2.69,2.64,2.59,2.5,2.63,2.42],"z":[1.27,1.25,1.08,1.35,0.8,1.16,0.67,0.89,0.63,0.85,1.15,0.83,0.77,0.8,1.1,1.02,1.06,1.26,1.1,1.3,0.88,0.78,0.92,0.74,1.11,0.95,0.91,0.88,1.01,0.61,1.02,0.66,0.99,0.8,0.95,1.28,1.04,0.77,0.94,0.81,1.09,1.14,1,1.02,0.96,0.89,1,1.09,0.83,1.03],"type":"scatter3d","mode":"markers","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-9f2d157ac46bd1772a74">{"x":{"visdat":{"9117b30f531e9":["function () ","plotlyVisDat"]},"cur_data":"9117b30f531e9","attrs":{"9117b30f531e9":{"x":{},"y":{},"z":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20]}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"Marriage"},"yaxis":{"title":"MedianAgeMarriage"},"zaxis":{"title":"Divorce"}},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2.02,2.6,2.03,2.64,1.91,2.35,1.71,2.31,1.77,1.7,2.21,2.49,2.58,1.79,1.98,2.15,2.21,2.22,2.06,1.35,1.83,1.58,1.65,1.53,1.93,1.86,1.85,1.96,1.67,1.48,2.04,1.68,2.04,2.67,1.69,2.38,1.89,1.55,1.5,1.81,2.01,1.94,2.15,2.96,1.64,2.05,2.14,2.22,1.72,3.07],"y":[2.53,2.52,2.58,2.43,2.68,2.57,2.76,2.66,2.97,2.64,2.59,2.69,2.32,2.7,2.57,2.54,2.5,2.48,2.59,2.64,2.73,2.85,2.64,2.63,2.58,2.56,2.57,2.54,2.68,2.77,2.58,2.84,2.57,2.53,2.63,2.44,2.6,2.71,2.82,2.64,2.56,2.52,2.52,2.33,2.69,2.64,2.59,2.5,2.63,2.42],"z":[1.27,1.25,1.08,1.35,0.8,1.16,0.67,0.89,0.63,0.85,1.15,0.83,0.77,0.8,1.1,1.02,1.06,1.26,1.1,1.3,0.88,0.78,0.92,0.74,1.11,0.95,0.91,0.88,1.01,0.61,1.02,0.66,0.99,0.8,0.95,1.28,1.04,0.77,0.94,0.81,1.09,1.14,1,1.02,0.96,0.89,1,1.09,0.83,1.03],"type":"scatter3d","mode":"markers","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 <p><span class="math display">\[
   \begin{aligned}
@@ -2963,10 +2963,10 @@ centered
 b_Intercept
 </td>
 <td style="text-align:center;">
-7.43 [2.99, 11.59]
+7.38 [2.95, 11.39]
 </td>
 <td style="text-align:center;">
-1.09 [1.02, 1.16]
+1.10 [1.03, 1.17]
 </td>
 </tr>
 <tr>
@@ -2974,7 +2974,7 @@ b_Intercept
 b_Marriage
 </td>
 <td style="text-align:center;">
-−1.98 [−4.11, 0.07]
+−1.97 [−3.92, 0.10]
 </td>
 <td style="text-align:center;">
 </td>
@@ -2984,7 +2984,7 @@ b_Marriage
 b_MedianAgeMarriage
 </td>
 <td style="text-align:center;">
-−2.48 [−4.08, −0.75]
+−2.45 [−4.04, −0.79]
 </td>
 <td style="text-align:center;">
 </td>
@@ -2994,7 +2994,7 @@ b_MedianAgeMarriage
 b_Marriage × MedianAgeMarriage
 </td>
 <td style="text-align:center;">
-0.76 [−0.06, 1.59]
+0.75 [−0.05, 1.54]
 </td>
 <td style="text-align:center;">
 </td>
@@ -3017,7 +3017,7 @@ b_IMarriageM2
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
-−0.08 [−0.25, 0.08]
+−0.08 [−0.24, 0.09]
 </td>
 </tr>
 <tr>
@@ -3027,7 +3027,7 @@ b_IMedianAgeMarriageM2.5
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
-−0.94 [−1.45, −0.46]
+−0.95 [−1.47, −0.47]
 </td>
 </tr>
 <tr>
@@ -3037,7 +3037,7 @@ b_IMarriageM2 × IMedianAgeMarriageM2.5
 <td style="text-align:center;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-0.75 [−0.04, 1.57]
+0.76 [−0.05, 1.62]
 </td>
 </tr>
 <tr>
@@ -3059,7 +3059,7 @@ ELPD
 21.4
 </td>
 <td style="text-align:center;">
-21.5
+21.1
 </td>
 </tr>
 <tr>
@@ -3070,7 +3070,7 @@ ELPD s.e.
 6.1
 </td>
 <td style="text-align:center;">
-6.1
+6.2
 </td>
 </tr>
 <tr>
@@ -3081,7 +3081,7 @@ LOOIC
 −42.9
 </td>
 <td style="text-align:center;">
-−42.9
+−42.3
 </td>
 </tr>
 <tr>
@@ -3089,10 +3089,10 @@ LOOIC
 LOOIC s.e.
 </td>
 <td style="text-align:center;">
-12.2
+12.1
 </td>
 <td style="text-align:center;">
-12.3
+12.5
 </td>
 </tr>
 <tr>
@@ -3103,7 +3103,7 @@ WAIC
 −43.3
 </td>
 <td style="text-align:center;">
-−43.5
+−43.1
 </td>
 </tr>
 <tr>
@@ -3578,7 +3578,7 @@ model in <code>brms</code></h2>
 \]</span></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span><span class='va'>Admit</span> <span class='op'>|</span> <span class='fu'>trials</span><span class='op'>(</span><span class='va'>App</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>Gender</span> <span class='op'>+</span> <span class='va'>pFemale</span> <span class='op'>+</span> <span class='op'>(</span><span class='va'>Gender</span> <span class='op'>|</span> <span class='va'>Dept</span><span class='op'>)</span>,
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>m3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/brm.html'>brm</a></span><span class='op'>(</span><span class='va'>Admit</span> <span class='op'>|</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/addition-terms.html'>trials</a></span><span class='op'>(</span><span class='va'>App</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>Gender</span> <span class='op'>+</span> <span class='va'>pFemale</span> <span class='op'>+</span> <span class='op'>(</span><span class='va'>Gender</span> <span class='op'>|</span> <span class='va'>Dept</span><span class='op'>)</span>,
     data <span class='op'>=</span> <span class='va'>berkeley_admit</span>,
     family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>binomial</a></span><span class='op'>(</span><span class='st'>"logit"</span><span class='op'>)</span>,
     prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/set_prior.html'>prior</a></span><span class='op'>(</span><span class='fu'>student_t</span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>5</span><span class='op'>)</span>, class <span class='op'>=</span> <span class='st'>"Intercept"</span><span class='op'>)</span> <span class='op'>+</span>
@@ -3604,32 +3604,32 @@ class="math inline">\(\beta_1\)</span> for each department is</p>
 #&gt; , , Intercept
 #&gt; 
 #&gt;     Estimate Est.Error        Q2.5    Q97.5
-#&gt; A  0.8614450 0.4190666  0.01767779 1.717444
-#&gt; B  0.6631511 0.1773198  0.30770170 1.019485
-#&gt; C  1.3950564 2.3017914 -3.20590679 6.191727
-#&gt; D  0.7255582 1.6852709 -2.67776067 4.188871
-#&gt; E  1.0278696 2.3939600 -3.77417067 5.999614
-#&gt; F -1.2859014 1.6830882 -4.71393343 2.196662
+#&gt; A  0.8435257 0.4068035  0.02508813 1.681327
+#&gt; B  0.6560829 0.1741873  0.30299513 1.002269
+#&gt; C  1.2838795 2.2251880 -3.28413328 5.901322
+#&gt; D  0.6452240 1.6318918 -2.71918801 4.041556
+#&gt; E  0.9149422 2.3185424 -3.86584186 5.693197
+#&gt; F -1.3642409 1.6307569 -4.75616646 1.936458
 #&gt; 
 #&gt; , , GenderFemale
 #&gt; 
 #&gt;      Estimate Est.Error       Q2.5     Q97.5
-#&gt; A  0.83484569 0.2713616  0.3216658 1.3817853
-#&gt; B  0.24797844 0.3406497 -0.4161967 0.9503618
-#&gt; C -0.08692675 0.1376576 -0.3644580 0.1759311
-#&gt; D  0.09292745 0.1394797 -0.1762716 0.3640003
-#&gt; E -0.12796387 0.1889448 -0.5096155 0.2403602
-#&gt; F  0.14643259 0.2750805 -0.4002640 0.6899674
+#&gt; A  0.82483971 0.2761378  0.2760824 1.3718327
+#&gt; B  0.25341066 0.3442156 -0.4185388 0.9582454
+#&gt; C -0.08142035 0.1353693 -0.3459999 0.1837492
+#&gt; D  0.09441718 0.1420221 -0.1868562 0.3696995
+#&gt; E -0.12284653 0.1888107 -0.4999416 0.2357683
+#&gt; F  0.14464805 0.2746741 -0.3910050 0.6838107
 #&gt; 
 #&gt; , , pFemale
 #&gt; 
-#&gt;    Estimate Est.Error      Q2.5    Q97.5
-#&gt; A -3.032384  3.553513 -10.37552 4.169404
-#&gt; B -3.032384  3.553513 -10.37552 4.169404
-#&gt; C -3.032384  3.553513 -10.37552 4.169404
-#&gt; D -3.032384  3.553513 -10.37552 4.169404
-#&gt; E -3.032384  3.553513 -10.37552 4.169404
-#&gt; F -3.032384  3.553513 -10.37552 4.169404</code></pre>
+#&gt;   Estimate Est.Error      Q2.5    Q97.5
+#&gt; A -2.86759  3.440384 -10.04649 4.196067
+#&gt; B -2.86759  3.440384 -10.04649 4.196067
+#&gt; C -2.86759  3.440384 -10.04649 4.196067
+#&gt; D -2.86759  3.440384 -10.04649 4.196067
+#&gt; E -2.86759  3.440384 -10.04649 4.196067
+#&gt; F -2.86759  3.440384 -10.04649 4.196067</code></pre>
 </div>
 <p>And a posterior predictive check</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -3737,20 +3737,20 @@ class="math inline">\(\beta_1\)</span> for each department is</p>
 #&gt;                     Estimate Est.Error l-95% CI u-95% CI Rhat
 #&gt; sd(Intercept)           0.12      0.03     0.07     0.18 1.00
 #&gt; sd(Days)                0.02      0.00     0.01     0.03 1.00
-#&gt; cor(Intercept,Days)    -0.02      0.26    -0.50     0.48 1.00
+#&gt; cor(Intercept,Days)    -0.02      0.26    -0.51     0.49 1.00
 #&gt;                     Bulk_ESS Tail_ESS
-#&gt; sd(Intercept)           3915     4616
-#&gt; sd(Days)                4067     4401
-#&gt; cor(Intercept,Days)     3253     4474
+#&gt; sd(Intercept)           3591     4533
+#&gt; sd(Days)                3489     4923
+#&gt; cor(Intercept,Days)     2938     4135
 #&gt; 
 #&gt; Population-Level Effects: 
 #&gt;           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-#&gt; Intercept     0.93      0.03     0.87     0.98 1.00     3903     5079
-#&gt; Days          0.03      0.01     0.02     0.04 1.00     3819     4719
+#&gt; Intercept     0.92      0.03     0.86     0.99 1.00     3282     4921
+#&gt; Days          0.03      0.01     0.02     0.04 1.00     4103     4832
 #&gt; 
 #&gt; Family Specific Parameters: 
 #&gt;       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-#&gt; sigma     0.08      0.00     0.07     0.09 1.00     7615     5575
+#&gt; sigma     0.08      0.00     0.07     0.09 1.00     7678     6095
 #&gt; 
 #&gt; Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
 #&gt; and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -3775,7 +3775,7 @@ class="math inline">\(\beta_1\)</span> for each department is</p>
 data-layout="l-body">
 <h2 class="appendix">Last updated</h2>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code>#&gt; [1] &quot;April 03, 2022&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;April 21, 2022&quot;</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 
