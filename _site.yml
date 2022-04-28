@@ -16,6 +16,8 @@ navbar:
       href: index.html
     - text: "Syllabus"
       href: syllabus.html
+    - text: "Resources"
+      href: resources.html
     - text: "Modules"
       href: modules.html
     - text: "Notes"

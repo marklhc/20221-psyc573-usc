@@ -1,0 +1,24 @@
+---
+title: Resources
+description: |
+  Resources for Bayesian Data Analysis
+output:
+  distill::distill_article:
+    toc: false
+---
+
+Some recommended prior choices by the Stan team
+
+- https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations
+
+Stan Resources
+
+- User's guide [Start with Chapter 1 of this]: https://mc-stan.org/docs/2_29/stan-users-guide/index.html
+- Language Reference Manual: https://mc-stan.org/docs/2_29/reference-manual/index.html
+- Language Functions Reference: https://mc-stan.org/docs/2_29/functions-reference/index.html
+- Case studies: https://mc-stan.org/users/documentation/case-studies.html
+
+Reporting
+
+- APA Style JARS: https://apastyle.apa.org/jars/quant-table-8.pdf
+- Guidelines by Kruschke on Nature Human Behaviour: https://www.nature.com/articles/s41562-021-01177-7
